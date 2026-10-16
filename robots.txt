@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://innovaage.cn/sitemap.xml

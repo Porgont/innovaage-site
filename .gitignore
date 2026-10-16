@@ -1,0 +1,10 @@
+# 自检生成的临时文件
+.preview/
+.dsh-figures/
+
+# 编辑器 / 系统
+.vscode/
+.idea/
+Thumbs.db
+desktop.ini
+*.log

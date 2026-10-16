@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>公告 | 创想时代开发组</title>
+<meta name="description" content="创想时代开发组的官方公告：版本发布、招募通知、合作与联动信息。">
+<link rel="canonical" href="https://innovaage.cn/news.html">
+<meta name="theme-color" content="#0f1319">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="创想时代开发组">
+<meta property="og:title" content="公告 | 创想时代开发组">
+<meta property="og:description" content="版本发布、招募通知、合作与联动信息。">
+<meta property="og:url" content="https://innovaage.cn/news.html">
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230f1319'/%3E%3Crect x='4' y='4' width='24' height='24' fill='%235fbf4a'/%3E%3Crect x='4' y='4' width='24' height='6' fill='%2379d45f'/%3E%3Crect x='4' y='26' width='24' height='2' fill='%233f8c30'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body data-page="news">
+<a class="skip-link" href="#main">跳到主要内容</a>
+
+<header class="site-header">
+  <div class="wrap bar">
+    <a class="brand" href="index.html">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span class="brand-text">
+        <strong>创想时代开发组</strong>
+        <span>InnovaAge Studio</span>
+      </span>
+    </a>
+
+    <nav class="nav" aria-label="主导航">
+      <a href="index.html"   data-nav="home">首页</a>
+      <a href="news.html"    data-nav="news">公告</a>
+      <a href="join.html"    data-nav="join">加入我们</a>
+      <a href="join.html#panel-contact" data-nav="contact">联系我们</a>
+    </nav>
+
+    <a class="btn btn--sm header-cta" href="join.html#panel-form">报名加入</a>
+  </div>
+</header>
+
+<main id="main">
+
+  <section class="hero" style="padding:52px 0 40px">
+    <div class="wrap">
+      <p class="hero-badge"><span class="dot" aria-hidden="true"></span> 公告栏</p>
+      <h1 style="font-size:clamp(26px,4vw,38px)">公告与动态</h1>
+      <p class="lead">
+        版本发布、招募通知、合作与联动都发在这里。最新的一条在最上面，重要的会置顶。
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+
+      <!-- 分类筛选 -->
+      <div class="tag-row" style="margin-bottom:22px" id="notice-filter">
+        <button class="tab is-active" type="button" data-filter="">全部</button>
+        <button class="tab" type="button" data-filter="招募">招募</button>
+        <button class="tab" type="button" data-filter="版本发布">版本发布</button>
+        <button class="tab" type="button" data-filter="合作">合作</button>
+        <button class="tab" type="button" data-filter="站点">站点</button>
+      </div>
+
+      <!-- 公告列表（内容在 assets/js/site.js 的 ANNOUNCEMENTS 里维护） -->
+      <div class="notice-list" id="notice-list"></div>
+
+      <!-- 更新说明 -->
+      <div class="callout">
+        <span class="icon" aria-hidden="true">✏️</span>
+        <div>
+          <b>给管理员：</b>新增一条公告，打开 <code>assets/js/site.js</code>，
+          在 <code>ANNOUNCEMENTS</code> 数组最上面复制一段改内容即可，保存后推送到 GitHub 就会自动更新。
+          公告支持列表、链接、加粗，<code>pin: true</code> 可以置顶，<code>tags</code> 用于上面的分类筛选。
+        </div>
+      </div>
+
+      <!-- 订阅提示 -->
+      <div class="panel" style="margin-top:26px">
+        <h3>不想天天刷新？</h3>
+        <p style="color:var(--text-dim);margin-bottom:16px">
+          加我们的 QQ 群，每次发布公告都会在群里同步一次。
+        </p>
+        <div class="btn-row">
+          <a class="btn btn--sm" href="join.html#panel-contact">查看入群方式</a>
+          <a class="btn btn--ghost btn--sm" href="index.html#latest-news">回首页看最新</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <h4>创想时代开发组</h4>
+        <p style="margin:0">
+          InnovaAge Studio<br>
+          专注 Minecraft 地图、光影、材质与 Addon 制作。
+        </p>
+      </div>
+
+      <div>
+        <h4>站内导航</h4>
+        <ul>
+          <li><a href="index.html">首页</a></li>
+          <li><a href="news.html">公告</a></li>
+          <li><a href="join.html#panel-form">报名加入</a></li>
+          <li><a href="join.html#panel-contact">联系我们</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4>联系方式</h4>
+        <ul>
+          <li>QQ 群：<span data-fill="qq">—</span></li>
+          <li>邮箱：<a href="#" data-fill-href="email">联系邮箱</a></li>
+          <li>Discord：<a href="#" data-fill-href="discord">邀请链接</a></li>
+          <li>GitHub：<a href="#" data-fill-href="github">代码仓库</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>© <span data-year>2025</span> 创想时代开发组 · InnovaAge Studio</span>
+      <span>本站由 GitHub Pages 托管 · <a href="https://innovaage.cn">innovaage.cn</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/site.js"></script>
+</body>
+</html>
