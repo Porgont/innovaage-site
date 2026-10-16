@@ -13,23 +13,28 @@ innovaage-site/
 ├── index.html            首页：工作室介绍摘要、制作方向、作品展示、最新公告、加入入口
 ├── about.html            关于我们：团队沿革、平台与账号、制作方向、工作方式、合作
 ├── works.html            作品展示：光影 / 地图 / 皮肤 / 材质 / Addon
+├── tools.html            工具箱：图片压到指定分辨率以内（纯前端，图片不上传）
 ├── news.html             公告页：全部公告 + 分类筛选
-├── join.html             加入 / 联系页：报名问卷入口 + 三个 QQ 群（两个标签页）
+├── join.html             加入 / 联系页：报名问卷 + 代投投稿 + 联系方式 + 审核条例（四个标签页）
 ├── 404.html              GitHub Pages 自定义 404 页
 ├── CNAME                 自定义域名（内容必须是 innovaage.cn）
 ├── .nojekyll             让 GitHub Pages 跳过 Jekyll 处理
 ├── robots.txt            搜索引擎抓取规则
 ├── sitemap.xml           站点地图
-├── tools/                本地自检脚本（不需要发布，但留着方便以后改完检查）
+├── tools/                本地开发脚本（不会发布到网站）
 │   ├── serve.mjs         模拟 GitHub Pages 的本地服务器（含 404 处理）
-│   ├── check.mjs         结构与链接检查（含主题变量完整性、图片存在性）
-│   ├── browser-test.mjs  浏览器行为自检（65 项）
-│   └── process-shader-images.mjs  图片裁切压缩（一次性工具，见第六节）
+│   ├── check.mjs         结构与链接检查（含主题变量、图片与分享图检查）
+│   ├── browser-test.mjs  浏览器行为自检（101 项）
+│   ├── process-shader-images.mjs  渲染图裁切压缩（见第六节）
+│   ├── make-logo.mjs     logo 裁切与多尺寸生成
+│   ├── make-og-image.mjs 生成社交分享卡 og-image.jpg
+│   └── read-docx.mjs     读 docx 纯文本（看条例文件用）
 └── assets/
     ├── css/theme.css     ★ 主题变量：浅色 / 深色 / 跟随系统，三套取值
     ├── css/style.css     所有组件样式（终末地风格）
     ├── img/              所有图片（命名规范见该目录里的 README.md）
-    └── js/site.js        ★ 唯一需要改的文件：群号 + 公告 + 作品 + 问卷链接
+    ├── js/site.js        ★ 主要配置：群号 + 公告 + 作品 + 问卷链接
+    └── js/toolbox.js     工具箱逻辑（图片缩放，纯前端）
 ```
 
 ---
@@ -194,6 +199,22 @@ Resolve-DnsName www.innovaage.cn
 ---
 
 ## 六、日常维护
+
+### 工具箱（tools.html）
+
+投稿时常要把图压到平台规定的分辨率，所以做了个纯前端工具，默认上限 **宽 1000 × 高 4000**
+（竖长画布，**不是** 4000×1000）。图片全部在浏览器本地处理，不上传服务器。
+
+改默认值：编辑 `tools.html` 里两个输入框的 `value`，以及「1000 × 4000」那个预设按钮的
+`data-preset`。预设清单和缩放逻辑都在 `assets/js/toolbox.js` 里（`fitSize` 函数）。
+
+缩放规则（有自检断言守着，改的时候别破坏）：
+1. 两个方向都不超过上限；
+2. 等比，不变形；
+3. **只缩小不放大**——原图本来就在范围内就原样另存。
+
+要加新工具，在 `tools.html` 里复制一张「Tool 01」卡片，编号改成 `Tool 02` 即可；
+新工具的 JS 建议单独放一个 `assets/js/tool-xxx.js`。
 
 ### 加一张作品图
 

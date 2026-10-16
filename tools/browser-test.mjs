@@ -205,6 +205,76 @@ check('未填问卷星链接时按钮降级且显示备用提示',
   ss.disabled === 'true' && ss.fallbackShown === true && ss.href === '#panel-contact',
   JSON.stringify(ss));
 
+/* --- 品牌资源 --- */
+check('导航栏用的是真 logo 图（不再是 CSS 画的方块）',
+  await evalJs(`(function(){
+    var m = document.querySelector('.brand-mark');
+    return m && m.tagName === 'IMG' && m.complete && m.naturalWidth > 0;
+  })()`),
+  'naturalWidth=' + await evalJs("document.querySelector('.brand-mark')?.naturalWidth"));
+
+check('页面有 favicon 与 apple-touch-icon',
+  await evalJs(`!!document.querySelector('link[rel="icon"][href*="favicon-32"]') &&
+                !!document.querySelector('link[rel="apple-touch-icon"]')`));
+
+check('页面有 og:image 分享图且文件真实存在',
+  await evalJs(`(function(){
+    var m = document.querySelector('meta[property="og:image"]');
+    if (!m) return false;
+    // og:image 写的是线上绝对地址，这里把它换成本地服务地址再取一次，验证文件真的在
+    var path = new URL(m.content).pathname;
+    return new Promise(function (resolve) {
+      var probe = new Image();
+      probe.onload = function () { resolve(probe.naturalWidth > 0); };
+      probe.onerror = function () { resolve(false); };
+      probe.src = path;
+    });
+  })()`));
+
+check('关于我们页展示完整 logo 且已加载',
+  await open('/about.html').then(() => evalJs(`(function(){
+    var img = document.querySelector('.logo-plate img');
+    return !!img && img.complete && img.naturalWidth > 0;
+  })()`)));
+
+await open('/join.html');
+
+/* --- 四个标签页 --- */
+check('加入页有四个标签页',
+  await evalJs("document.querySelectorAll('.tabs .tab').length === 4"),
+  '实际 ' + await evalJs("document.querySelectorAll('.tabs .tab').length"));
+
+for (const [id, label] of [['panel-invest', '代投与投稿'], ['panel-rules', '审核条例']]) {
+  await evalJs(`document.querySelector('[aria-controls="${id}"]').click()`);
+  // 等面板真正显示出来再断言，否则会读到还没切过去的内容
+  const shown = await waitFor(`document.querySelector('#${id}').hidden === false`);
+  check(`能切到「${label}」面板`, shown);
+}
+
+check('代投面板写了授权要求',
+  await evalJs("document.querySelector('#panel-invest').innerText.includes('原作者授权')"));
+
+check('代投面板列出接收类型',
+  await evalJs(`['地图','皮肤','材质','光影','功能玩法组件']
+    .every(t => document.querySelector('#panel-invest').innerText.includes(t))`));
+
+check('审核条例面板有腾讯文档链接',
+  await evalJs(`!!document.querySelector('#panel-rules a[href*="docs.qq.com"]')`));
+
+check('审核条例面板列出五个部门',
+  await evalJs(`['皮肤部','地图部','技术部','文宣部','主席办']
+    .every(d => document.querySelector('#panel-rules').innerText.includes(d))`));
+
+check('审核条例面板写出三阶段流程',
+  await evalJs(`['初审','一审','二审'].every(s => document.querySelector('#panel-rules').innerText.includes(s))`));
+
+check('审核条例面板说明需自行阅读条例',
+  await evalJs("document.querySelector('#panel-rules').innerText.includes('自行阅读条例')"));
+
+// 切回报名面板
+await evalJs("document.querySelector('#tab-form').click()");
+await sleep(400);
+
 // 切到联系面板
 await evalJs("document.querySelector('#tab-contact').click()");
 await sleep(500);
@@ -254,7 +324,148 @@ check('首页页脚显示三个真实群号',
   '实际页脚: ' + (await evalJs("document.querySelector('.footer-grid').innerText")).replace(/\n/g, ' / '));
 
 /* ============================================================
-   3.6 作品页与首页大图
+   3.7 工具箱：图片压到 1000×4000 以内
+   ============================================================ */
+await open('/tools.html');
+
+check('工具箱页导航高亮「工具箱」',
+  await evalJs("document.querySelector('.nav a.is-active')?.textContent.trim() === '工具箱'"));
+
+check('默认上限是宽 1000 × 高 4000（不是 4000×1000）',
+  await evalJs("document.querySelector('#max-w').value === '1000' && document.querySelector('#max-h').value === '4000'"),
+  '实际 ' + await evalJs("document.querySelector('#max-w').value + '×' + document.querySelector('#max-h').value"));
+
+// 尺寸计算：四种典型情况
+const fit = JSON.parse(await evalJs(`JSON.stringify({
+  tall:    window.__toolbox.fitSize(2000, 8000, 1000, 4000),
+  wide:    window.__toolbox.fitSize(8000, 2000, 1000, 4000),
+  huge:    window.__toolbox.fitSize(4000, 4000, 1000, 4000),
+  small:   window.__toolbox.fitSize(300, 200, 1000, 4000),
+  exact:   window.__toolbox.fitSize(1000, 4000, 1000, 4000),
+  odd:     window.__toolbox.fitSize(3333, 7777, 1000, 4000),
+  // 一批奇形怪状的尺寸，用来自动校验「不越界 + 不变形 + 不放大」三条硬规矩。
+  // 注意：宽或高不足 1 像素时会被钳到 1px（像素不能是小数），
+  // 这类极端长条（如 9999×1）的比例天然对不上，所以不放进等比校验里。
+  batch: [
+    [3333, 7777], [1001, 4001], [2000, 1], [1, 2000], [1234, 5678],
+    [1600, 4800], [4000, 1000], [1000, 4000], [7, 7], [20000, 30000]
+  ].map(function (d) {
+    var r = window.__toolbox.fitSize(d[0], d[1], 1000, 4000);
+    return { in: d, out: [r.width, r.height], scale: r.scale };
+  })
+})`));
+
+check('竖长图 2000×8000 → 1000×4000',
+  fit.tall.width === 1000 && fit.tall.height === 4000, JSON.stringify(fit.tall));
+check('横图 8000×2000 → 1000×250',
+  fit.wide.width === 1000 && fit.wide.height === 250, JSON.stringify(fit.wide));
+check('正方图 4000×4000 → 1000×1000',
+  fit.huge.width === 1000 && fit.huge.height === 1000, JSON.stringify(fit.huge));
+check('小图 300×200 不被放大',
+  fit.small.width === 300 && fit.small.height === 200 && fit.small.scale === 1, JSON.stringify(fit.small));
+check('正好等于上限的图不变',
+  fit.exact.width === 1000 && fit.exact.height === 4000, JSON.stringify(fit.exact));
+check('非整除尺寸 3333×7777：宽度顶到 1000，高度按比例 2333',
+  fit.odd.width === 1000 && fit.odd.height === 2333, JSON.stringify(fit.odd));
+
+// 硬规矩一：永远不越界
+const overLimit = fit.batch.filter(b => b.out[0] > 1000 || b.out[1] > 4000);
+check('十组尺寸全部不超上限（宽 ≤1000 且 高 ≤4000）',
+  overLimit.length === 0, JSON.stringify(overLimit));
+
+// 硬规矩二：等比不变形。
+// 尺寸取整会带来最多 1px 的误差，对细长图来说这个误差占比不可忽略
+// （例如 2000×1 缩到 1000×0.5，高度只能取 1px）。
+// 所以只有当两个方向都够大、取整误差可以忽略时才做严格比对；
+// 其余情况只要求「符合取整后的最佳值」，不要求比例完美。
+const distort = fit.batch.filter(b => {
+  const [iw, ih] = b.in;
+  const [ow, oh] = b.out;
+  const ratio = iw / ih;
+  const expectedW = Math.floor(iw * b.scale);
+  const expectedH = Math.floor(ih * b.scale);
+  const quantError = Math.max(1 / ow, 1 / oh);     // 取整误差占比上限
+  if (quantError > 0.01) {                          // 太小，比例不可比
+    return ow !== Math.max(1, expectedW) || oh !== Math.max(1, expectedH);
+  }
+  return Math.abs(ratio - ow / oh) > 0.005;
+});
+check('十组尺寸全部等比不变形（细长图按取整最佳值）',
+  distort.length === 0, JSON.stringify(distort));
+
+// 硬规矩三：绝不放大
+const upscaled = fit.batch.filter(b => b.scale > 1);
+check('十组尺寸都没有被放大', upscaled.length === 0, JSON.stringify(upscaled));
+
+// 实际跑一遍：造一张 1600×4800 的图（比上限大，且是高长图）
+const runResult = await evalJs(`(async () => {
+  var c = document.createElement('canvas');
+  c.width = 1600; c.height = 4800;
+  var x = c.getContext('2d');
+  var grad = x.createLinearGradient(0, 0, 0, 4800);
+  grad.addColorStop(0, '#1a6b8a'); grad.addColorStop(1, '#f5c518');
+  x.fillStyle = grad; x.fillRect(0, 0, 1600, 4800);
+  var blob = await new Promise(function (r) { c.toBlob(r, 'image/png'); });
+  var file = new File([blob], 'test-tall.png', { type: 'image/png' });
+  window.__toolbox.addFiles([file]);
+  await window.__toolbox.run();
+  await new Promise(function (r) { setTimeout(r, 400); });
+
+  var img = document.querySelector('#preview-img');
+  var link = document.querySelector('#download-link');
+  var stats = document.querySelector('#stat-list').innerText;
+  return JSON.stringify({
+    filesListed: document.querySelectorAll('.file-item').length,
+    outW: window.__toolbox.state.results[0] ? window.__toolbox.state.results[0].outW : 0,
+    outH: window.__toolbox.state.results[0] ? window.__toolbox.state.results[0].outH : 0,
+    outName: link.getAttribute('download'),
+    hasUrl: !!link.getAttribute('href'),
+    previewW: img.naturalWidth,
+    previewH: img.naturalHeight,
+    statsText: stats,
+    statusText: document.querySelector('#tool-status').innerText
+  });
+})()`);
+
+const rr = JSON.parse(runResult);
+check('选图后文件进入列表', rr.filesListed === 1, '实际 ' + rr.filesListed);
+check('1600×4800 处理成 1000×3000（等比，不超上限）',
+  rr.outW === 1000 && rr.outH === 3000, rr.outW + '×' + rr.outH);
+check('结果文件名带上了尺寸', /-1000x3000\.(jpg|png|webp)$/.test(rr.outName || ''), rr.outName);
+check('预览图真的渲染出来了（宽 1000）',
+  rr.previewW === 1000 && rr.previewH === 3000, rr.previewW + '×' + rr.previewH);
+check('下载链接可用', rr.hasUrl === true);
+check('结果面板显示前后尺寸',
+  rr.statsText.includes('1600') && rr.statsText.includes('1000'), rr.statsText.replace(/\n/g, ' | '));
+check('处理完成有提示', rr.statusText.includes('处理完成'), rr.statusText.slice(0, 80));
+
+check('只有一张结果时不显示空白按钮',
+  await evalJs(`(function(){
+    var b = document.querySelector('#download-all');
+    return !b || getComputedStyle(b).display === 'none';
+  })()`),
+  'display=' + await evalJs("getComputedStyle(document.querySelector('#download-all')).display"));
+
+// 预设切换：切到横图预设后再算一次
+await evalJs(`document.querySelector('.chip[data-preset="4000x1000"]').click()`);
+await sleep(300);
+check('点横图预设后上限变成 4000×1000',
+  await evalJs("document.querySelector('#max-w').value === '4000' && document.querySelector('#max-h').value === '1000'"));
+
+check('切换预设后提示文案跟着变成横幅',
+  await evalJs("document.querySelector('#fit-note').innerText.includes('横幅')"));
+
+// 对调按钮
+await evalJs("document.querySelector('#swap-wh').click()");
+await sleep(300);
+check('对调按钮能把宽高换过来',
+  await evalJs("document.querySelector('#max-w').value === '1000' && document.querySelector('#max-h').value === '4000'"));
+
+check('工具箱页无横向溢出',
+  await evalJs('document.documentElement.scrollWidth <= window.innerWidth + 1'));
+
+/* ============================================================
+   3.8 作品页与首页大图
    ============================================================ */
 await open('/index.html');
 
@@ -463,9 +674,10 @@ await send('Emulation.setEmulatedMedia', {
 await open('/index.html');
 await open('/about.html');
 await open('/works.html');
+await open('/tools.html');
 await open('/news.html');
 await open('/join.html');
-check('五个页面在浅色下控制台无 JS 报错',
+check('六个页面在浅色下控制台无 JS 报错',
   consoleErrors.length === 0, consoleErrors.join(' | '));
 
 ws.close();
