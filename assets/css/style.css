@@ -247,6 +247,18 @@ code {
 .btn--sm { padding: 8px 15px; font-size: 13.5px; }
 .btn--block { width: 100%; }
 
+/* 未配置链接的按钮：变灰、不可点 */
+.btn.is-disabled,
+.btn[aria-disabled="true"] {
+  color: var(--text-mute);
+  background: rgba(255, 255, 255, .05);
+  border-color: var(--line-2);
+  box-shadow: 0 4px 0 #10161d;
+  cursor: not-allowed;
+  pointer-events: none;
+  filter: none;
+}
+
 .btn-row {
   display: flex;
   flex-wrap: wrap;

@@ -10,12 +10,12 @@ const errors = [];
 const warns = [];
 const ok = [];
 
-const pages = ['index.html', 'news.html', 'join.html', '404.html'];
+const pages = ['index.html', 'about.html', 'news.html', 'join.html', '404.html'];
 
 /* ---------- 1. 关键文件存在 ---------- */
 const required = [
-  'index.html', 'news.html', 'join.html', '404.html',
-  'CNAME', '.nojekyll', 'robots.txt', 'sitemap.xml', 'README.md',
+  'index.html', 'about.html', 'news.html', 'join.html', '404.html',
+  'CNAME', '.nojekyll', 'robots.txt', 'sitemap.xml', 'README.md', '.gitignore',
   'assets/css/style.css', 'assets/js/site.js'
 ];
 for (const f of required) {
@@ -113,13 +113,32 @@ if (!/id="notice-list"/.test(indexHtml)) errors.push('index.html 缺少 #notice-
 const newsHtml = readFileSync(join(root, 'news.html'), 'utf8');
 if (!/id="notice-filter"/.test(newsHtml)) errors.push('news.html 缺少 #notice-filter');
 
-/* ---------- 7. join.html 两个面板 ---------- */
+/* ---------- 7. join.html 两个面板 + 问卷入口 ---------- */
 const joinHtml = readFileSync(join(root, 'join.html'), 'utf8');
 for (const pid of ['panel-form', 'panel-contact']) {
   if (!joinHtml.includes(`id="${pid}"`)) errors.push(`join.html 缺少 #${pid}`);
 }
-if (!/id="join-form"/.test(joinHtml)) errors.push('join.html 缺少 #join-form');
-if (!/type="checkbox"[^>]*name="consent"/.test(joinHtml)) errors.push('join.html 缺少同意勾选框');
+if (!/id="survey-link"/.test(joinHtml)) errors.push('join.html 缺少问卷入口 #survey-link');
+if (/<form\b/i.test(joinHtml)) errors.push('join.html 不应再有 <form>（问卷已改为问卷星外链）');
+
+/* ---------- 7.5 三个 QQ 群号在四个页面都齐 ---------- */
+const allPages = ['index.html', 'about.html', 'news.html', 'join.html'];
+for (const page of allPages) {
+  const html = readFileSync(join(root, page), 'utf8');
+  for (const key of ['qqPublic', 'qqAudit', 'qqCouncil']) {
+    if (!html.includes(`data-fill="${key}"`) && !html.includes(`data-copy-target="${key}"`)) {
+      warns.push(`${page}: 没有出现 ${key}（页脚/正文可能漏了）`);
+    }
+  }
+}
+
+/* ---------- 7.6 配置里的三个群号与文案一致 ---------- */
+const jsText = readFileSync(join(root, 'assets/js/site.js'), 'utf8');
+for (const [key, num] of [['qqAudit', '1045216325'], ['qqPublic', '788233856'], ['qqCouncil', '1018260006']]) {
+  if (!new RegExp(`${key}:\\s*'${num}'`).test(jsText)) {
+    errors.push(`site.js 里 ${key} 不是 ${num}`);
+  }
+}
 
 /* ---------- 8. 起本地服务 + HTTP 请求 4 个页面 ---------- */
 const server = http.createServer((req, res) => {
@@ -141,7 +160,7 @@ await new Promise(r => server.listen(0, '127.0.0.1', r));
 const port = server.address().port;
 
 const fetched = [];
-for (const path of ['/', '/news.html', '/join.html', '/assets/css/style.css', '/assets/js/site.js', '/sitemap.xml', '/robots.txt']) {
+for (const path of ['/', '/about.html', '/news.html', '/join.html', '/assets/css/style.css', '/assets/js/site.js', '/sitemap.xml', '/robots.txt']) {
   const res = await fetch(`http://127.0.0.1:${port}${path}`);
   const body = await res.text();
   fetched.push(`${path} -> ${res.status} (${body.length} 字节)`);

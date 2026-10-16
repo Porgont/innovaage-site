@@ -150,31 +150,51 @@ const contacts = await evalJs(`JSON.stringify([...document.querySelectorAll('.co
 const contactList = JSON.parse(contacts);
 const visible = contactList.filter(c => !c.hidden).map(c => c.key);
 
-check('QQ 群联系方式显示出来（qqGroup 映射修复）',
-  visible.includes('qq'), '当前显示: ' + visible.join(', '));
-check('邮箱联系方式显示',
-  visible.includes('email'));
-check('GitHub 联系方式显示',
-  visible.includes('github'));
-check('未填写的 Discord 自动隐藏',
-  contactList.find(c => c.key === 'discord')?.hidden === true);
+check('对外审核群显示出来（qqAudit）',
+  visible.includes('qqAudit'), '当前显示: ' + visible.join(', '));
+check('GitHub 仓库链接显示',
+  visible.includes('siteRepo'));
+check('未填写的邮箱自动隐藏',
+  contactList.find(c => c.key === 'email')?.hidden === true);
 check('未填写的 B 站自动隐藏',
   contactList.find(c => c.key === 'bilibili')?.hidden === true);
 
-check('QQ 群号正确渲染为 000000000',
-  contactList.find(c => c.key === 'qq')?.value === '000000000',
-  '实际 ' + contactList.find(c => c.key === 'qq')?.value);
+check('报名面板里的审核群号渲染正确',
+  contactList.find(c => c.key === 'qqAudit')?.value === '1045216325',
+  '实际 ' + contactList.find(c => c.key === 'qqAudit')?.value);
 
-const copyVals = await evalJs(`JSON.stringify([...document.querySelectorAll('.copy-btn')].map(b => ({
-  target: b.getAttribute('data-copy-target'),
-  value: b.getAttribute('data-copy'),
-  rowHidden: b.closest('.contact-item').hidden
-})))`);
+const copyVals = await evalJs(`JSON.stringify([...document.querySelectorAll('.copy-btn')].map(b => {
+  var row = b.closest('.contact-item');
+  return {
+    target: b.getAttribute('data-copy-target'),
+    value: b.getAttribute('data-copy'),
+    rowHidden: row ? row.hidden : false,
+    btnVisible: !!(b.offsetWidth || b.offsetHeight)
+  };
+}))`);
 const copies = JSON.parse(copyVals);
-const qqCopy = copies.find(c => c.target === 'qqGroup');
-check('QQ 复制按钮带上了真实号码', qqCopy?.value === '000000000', '实际 ' + JSON.stringify(qqCopy?.value));
-check('隐藏行的复制按钮值为空（不会复制到「待填写」）',
-  copies.filter(c => c.rowHidden).every(c => c.value === ''));
+const auditCopy = copies.find(c => c.target === 'qqAudit');
+check('审核群复制按钮带上了真实群号', auditCopy?.value === '1045216325', '实际 ' + JSON.stringify(auditCopy?.value));
+
+check('所有可点的复制按钮都有真值（不会复制到「待填写」）',
+  copies.filter(c => c.btnVisible).every(c => c.value && !c.value.includes('待填写')),
+  copies.filter(c => c.btnVisible).map(c => c.target + '=' + JSON.stringify(c.value)).join(' | '));
+
+check('未填写的联系方式整行隐藏，复制按钮也没有值',
+  copies.filter(c => c.target === 'email' || c.target === 'bilibili')
+    .every(c => c.rowHidden === true && c.value === ''));
+
+/* --- 问卷入口（问卷星） --- */
+const surveyState = await evalJs(`JSON.stringify({
+  href: document.querySelector('#survey-link').getAttribute('href'),
+  target: document.querySelector('#survey-link').getAttribute('target'),
+  disabled: document.querySelector('#survey-link').getAttribute('aria-disabled'),
+  fallbackShown: !document.querySelector('#survey-fallback').hidden
+})`);
+const ss = JSON.parse(surveyState);
+check('未填问卷星链接时按钮降级且显示备用提示',
+  ss.disabled === 'true' && ss.fallbackShown === true && ss.href === '#panel-contact',
+  JSON.stringify(ss));
 
 // 切到联系面板
 await evalJs("document.querySelector('#tab-contact').click()");
@@ -184,69 +204,45 @@ check('点击「联系我们」切到联系面板',
 check('切换后地址栏哈希更新为 #panel-contact',
   await evalJs("location.hash === '#panel-contact'"), await evalJs('location.hash'));
 
-// 切回问卷面板
+const threeGroups = await evalJs(`JSON.stringify(
+  [...document.querySelectorAll('#panel-contact .contact-item')]
+    .filter(el => !el.hidden)
+    .map(el => el.querySelector('[data-fill]').getAttribute('data-fill') + '=' + el.querySelector('[data-fill]').textContent.trim())
+)`);
+const groups = JSON.parse(threeGroups);
+check('联系面板显示三个 QQ 群',
+  ['qqPublic=788233856', 'qqCouncil=1018260006', 'qqAudit=1045216325'].every(g => groups.includes(g)),
+  groups.join(' | '));
+
+// 切回报名面板
 await evalJs("document.querySelector('#tab-form').click()");
 await sleep(500);
 
-/* --- 表单校验 --- */
-// 1) 未勾选同意 → 拦截
-await evalJs(`(function(){
-  document.querySelector('#f-nickname').value = '测试员';
-  document.querySelector('#f-contact').value = 'QQ 123';
-  document.querySelector('#f-intro').value = '提交测试';
-  document.querySelector('input[name="consent"]').checked = false;
-})()`);
-await evalJs("document.querySelector('#join-submit').click()");
-await sleep(400);
-check('未勾选同意时拦截提交并提示',
-  (await evalJs("document.querySelector('#form-status').textContent")).includes('勾选'));
-
-// 2) 邮箱格式错误 → 拦截
-await evalJs(`(function(){
-  document.querySelector('input[name="consent"]').checked = true;
-  document.querySelector('#f-email').value = 'not-an-email';
-})()`);
-await evalJs("document.querySelector('#join-submit').click()");
-await sleep(400);
-check('邮箱格式错误时拦截提交',
-  (await evalJs("document.querySelector('#form-status').textContent")).includes('邮箱格式'));
-
-// 3) 合法数据 + 未配置 formEndpoint → 邮件兜底
-await evalJs(`(function(){
-  document.querySelector('#f-email').value = '';
-  document.querySelector('input[name="roles"][value="建筑 / 地形"]').checked = true;
-})()`);
-await evalJs("document.querySelector('#join-submit').click()");
-await sleep(500);
-const fallback = await evalJs("document.querySelector('#form-status').innerHTML");
-check('未配置接收地址时给出邮件兜底',
-  fallback.includes('mailto:') && fallback.includes('contact@innovaage.cn'));
-check('邮件兜底链接包含填写的昵称',
-  decodeURIComponent(fallback).includes('测试员') || decodeURIComponent(fallback).includes('建筑 / 地形'));
-
-// 4) 字数计数器
-await evalJs("document.querySelector('#f-intro').value='12345'; document.querySelector('#f-intro').dispatchEvent(new Event('input'))");
-await sleep(200);
-check('自我介绍字数计数器工作',
-  await evalJs("document.querySelector('#intro-count').textContent === '5'"),
-  '实际 ' + await evalJs("document.querySelector('#intro-count').textContent"));
-
-/* --- 表单字段完整性 --- */
-const fieldInfo = await evalJs(`JSON.stringify({
-  inputs: document.querySelectorAll('#join-form input:not([type=hidden]), #join-form select, #join-form textarea').length,
-  roleBoxes: document.querySelectorAll('input[name="roles"]').length,
-  required: document.querySelectorAll('#join-form [required]').length,
-  hasConsent: !!document.querySelector('input[name="consent"]'),
-  hasSubject: !!document.querySelector('input[name="_subject"]')
-})`);
-const fi = JSON.parse(fieldInfo);
-check('问卷字段齐全（≥12 个输入项）', fi.inputs >= 12, '实际 ' + fi.inputs);
-check('方向多选框 10 个', fi.roleBoxes === 10, '实际 ' + fi.roleBoxes);
-check('必填项 ≥ 4 个', fi.required >= 4, '实际 ' + fi.required);
-check('有同意勾选框与邮件主题隐藏字段', fi.hasConsent && fi.hasSubject);
-
 check('加入页无横向溢出（桌面）',
   await evalJs('document.documentElement.scrollWidth <= window.innerWidth + 1'));
+
+/* ============================================================
+   3.5 关于我们页
+   ============================================================ */
+await open('/about.html');
+const aboutText = await evalJs('document.body.innerText');
+check('关于我们页写有成立日期', aboutText.includes('2016 年 3 月 10 日'));
+check('关于我们页写有英文名', aboutText.includes('Innova Age Development Team'));
+check('关于我们页写有五千万下载量', aboutText.includes('五千万') || aboutText.includes('5000 万'));
+check('关于我们页写有团队宗旨', aboutText.includes('探索') && aboutText.includes('有想则创'));
+check('关于我们页写有创始人威廉', aboutText.includes('威廉'));
+check('关于我们页导航高亮正确',
+  await evalJs("document.querySelector('.nav a.is-active')?.textContent.trim() === '关于我们'"));
+check('关于我们页无横向溢出',
+  await evalJs('document.documentElement.scrollWidth <= window.innerWidth + 1'));
+
+await open('/index.html');
+const homeText = await evalJs('document.body.innerText');
+check('首页也带上了成立年份与下载量',
+  homeText.includes('2016') && (homeText.includes('5000 万') || homeText.includes('五千万')));
+check('首页页脚显示三个真实群号',
+  ['788233856', '1018260006', '1045216325'].every(n => homeText.includes(n)),
+  '实际页脚: ' + (await evalJs("document.querySelector('.footer-grid').innerText")).replace(/\n/g, ' / '));
 
 /* ============================================================
    4. 移动端
@@ -260,6 +256,10 @@ check('移动端导航横向可滚动且不换行错位',
 
 await open('/join.html', 390, 900, true);
 check('移动端加入页无横向溢出',
+  await evalJs('document.documentElement.scrollWidth <= window.innerWidth + 1'));
+
+await open('/about.html', 390, 900, true);
+check('移动端关于我们页无横向溢出',
   await evalJs('document.documentElement.scrollWidth <= window.innerWidth + 1'));
 
 /* ============================================================
@@ -278,9 +278,10 @@ check('404 页面样式已加载（站点字体生效）',
    6. 控制台错误
    ============================================================ */
 await open('/index.html');
+await open('/about.html');
 await open('/news.html');
 await open('/join.html');
-check('三个页面控制台无 JS 报错',
+check('四个页面控制台无 JS 报错',
   consoleErrors.length === 0, consoleErrors.join(' | '));
 
 ws.close();
