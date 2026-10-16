@@ -254,6 +254,58 @@ check('首页页脚显示三个真实群号',
   '实际页脚: ' + (await evalJs("document.querySelector('.footer-grid').innerText")).replace(/\n/g, ' / '));
 
 /* ============================================================
+   3.6 作品页与首页大图
+   ============================================================ */
+await open('/index.html');
+
+check('首页大图已加载出来',
+  await evalJs(`(function(){
+    var img = document.querySelector('#hero-figure img');
+    return !!img && img.complete && img.naturalWidth > 0;
+  })()`),
+  'naturalWidth=' + await evalJs("document.querySelector('#hero-figure img')?.naturalWidth"));
+
+check('首页大图体积在 500KB 以内',
+  await evalJs(`(async () => {
+    var img = document.querySelector('#hero-figure img');
+    if (!img) return false;
+    var r = await fetch(img.src);
+    var b = await r.blob();
+    return b.size <= 500 * 1024;
+  })()`));
+
+check('首页作品展示渲染 3 张',
+  await evalJs("document.querySelectorAll('#showcase-grid .work').length === 3"),
+  '实际 ' + await evalJs("document.querySelectorAll('#showcase-grid .work').length"));
+
+check('作品卡片带上了作者署名',
+  await evalJs("[...document.querySelectorAll('#showcase-grid .work-meta')].every(m => m.textContent.includes('Log坤'))"));
+
+// 必须真的加载出来（曾经因为 loading="lazy" 导致首屏外的图是空白块）
+const showcaseLoaded = await waitFor(
+  "[...document.querySelectorAll('#showcase-grid img')].every(i => i.complete && i.naturalWidth > 0)"
+);
+check('作品展示三张图都真正加载完成（不是空白块）', showcaseLoaded,
+  '各图 naturalWidth: ' + await evalJs("JSON.stringify([...document.querySelectorAll('#showcase-grid img')].map(i => i.naturalWidth))"));
+
+await open('/works.html');
+check('作品页导航高亮「作品」',
+  await evalJs("document.querySelector('.nav a.is-active')?.textContent.trim() === '作品'"));
+
+check('作品页渲染全部 3 件',
+  await evalJs("document.querySelectorAll('#showcase-grid .work').length === 3"));
+
+check('作品页显示总数',
+  await evalJs("document.querySelector('#work-count')?.textContent === '3'"),
+  '实际 ' + await evalJs("document.querySelector('#work-count')?.textContent"));
+
+check('作品页三张图都能加载',
+  await evalJs(`[...document.querySelectorAll('#showcase-grid img')].every(i => i.complete && i.naturalWidth > 0)`));
+
+check('作品页无横向溢出',
+  await evalJs('document.documentElement.scrollWidth <= window.innerWidth + 1'));
+
+/* ============================================================
    4. 移动端
    ============================================================ */
 await open('/index.html', 390, 900, true);
@@ -410,9 +462,10 @@ await send('Emulation.setEmulatedMedia', {
 
 await open('/index.html');
 await open('/about.html');
+await open('/works.html');
 await open('/news.html');
 await open('/join.html');
-check('四个页面在浅色下控制台无 JS 报错',
+check('五个页面在浅色下控制台无 JS 报错',
   consoleErrors.length === 0, consoleErrors.join(' | '));
 
 ws.close();

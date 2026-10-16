@@ -30,8 +30,50 @@
     discord: '',                    // Discord 邀请链接
     github: 'https://github.com/porgont',
     site: 'https://innovaage.cn',
-    siteRepo: 'https://github.com/porgont/innovaage-site'
+    siteRepo: 'https://github.com/porgont/innovaage-site',
+
+    // ★★★ 首页大图 ★★★
+    // 留空则首页只显示文字（不报错）。图片放在 assets/img/ 下面。
+    heroImage: 'assets/img/shader-2.jpg',
+    heroImageAlt: 'Log光影橡木SA 渲染效果：樱花林地里飘落的花瓣与透光树冠'
   };
+
+  /* ==========================================================
+     ③ 作品数据 —— 首页「作品展示」与作品页都用这份数据
+     字段：img / title / meta / category / desc(可选)
+     category 用下面 CATEGORIES 里的键，用于筛选
+     ========================================================== */
+  var CATEGORIES = {
+    shader: '光影',
+    map: '地图',
+    skin: '皮肤',
+    tex: '材质',
+    addon: 'Addon'
+  };
+
+  var SHOWCASE = [
+    {
+      img: 'assets/img/shader-3.jpg',
+      title: 'Log光影 · 橡木 SA',
+      meta: '作者：Log坤',
+      category: 'shader',
+      desc: '峡谷水道的镜面反射，水面对天空与地形的完整倒影。'
+    },
+    {
+      img: 'assets/img/shader-1.jpg',
+      title: 'Log光影 · 橡木 SA',
+      meta: '作者：Log坤',
+      category: 'shader',
+      desc: '雪山与松林的强光表现，天空过曝与积雪的明暗过渡。'
+    },
+    {
+      img: 'assets/img/shader-2.jpg',
+      title: 'Log光影 · 橡木 SA',
+      meta: '作者：Log坤',
+      category: 'shader',
+      desc: '樱花林地的透光树冠与飘落花瓣，草地与花簇的色彩层次。'
+    }
+  ];
 
   /* ==========================================================
      ② 公告数据 —— 公告页在这里增删改
@@ -444,6 +486,62 @@
     }
   }
 
+  /* ---------- 首页大图 ---------- */
+  function initHeroImage() {
+    var box = $('#hero-figure');
+    if (!box) return;
+
+    if (!SITE_CONFIG.heroImage) { box.hidden = true; return; }
+
+    var img = new Image();
+    img.src = SITE_CONFIG.heroImage;
+    img.alt = SITE_CONFIG.heroImageAlt || '';
+    img.loading = 'eager';
+    img.decoding = 'async';
+    // 图挂了就整块收起来，别留一个破图标
+    img.onerror = function () { box.hidden = true; };
+    box.appendChild(img);
+  }
+
+  /* ---------- 作品展示 ---------- */
+  function initShowcase() {
+    var host = $('#showcase-grid');
+    if (!host) return;
+
+    var filter = host.getAttribute('data-category') || '';
+    var limit = parseInt(host.getAttribute('data-limit'), 10);
+
+    var list = filter
+      ? SHOWCASE.filter(function (it) { return it.category === filter; })
+      : SHOWCASE.slice();
+    if (limit > 0) list = list.slice(0, limit);
+
+    // 作品页的「当前共 N 件」用总数，不受筛选影响
+    var counter = $('#work-count');
+    if (counter) counter.textContent = SHOWCASE.length;
+
+    if (!list.length) {
+      host.innerHTML = '<p style="color:var(--text-dim)">作品还在整理中。</p>';
+      return;
+    }
+
+    host.innerHTML = list.map(function (it) {
+      var cat = CATEGORIES[it.category] || '';
+      return '' +
+        '<article class="work">' +
+          '<div class="work-media"><img src="' + esc(it.img) + '" alt="' + esc(it.title + (it.meta ? ' ' + it.meta : '')) + '" decoding="async"></div>' +
+          '<div class="work-body">' +
+            '<h3>' + esc(it.title) + '</h3>' +
+            (it.desc ? '<p>' + esc(it.desc) + '</p>' : '') +
+            '<div class="work-meta">' +
+              (cat ? '<span class="tag tag--gold">' + esc(cat) + '</span>' : '') +
+              (it.meta ? '<span>' + esc(it.meta) + '</span>' : '') +
+            '</div>' +
+          '</div>' +
+        '</article>';
+    }).join('');
+  }
+
   /* ---------- 启动 ---------- */
   function boot() {
     markActiveNav();
@@ -455,6 +553,8 @@
     initCopy();
     initSurvey();
     initTheme();
+    initHeroImage();
+    initShowcase();
   }
 
   if (document.readyState === 'loading') {

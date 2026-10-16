@@ -8,3 +8,6 @@
 Thumbs.db
 desktop.ini
 *.log
+
+# 图片处理脚本产生的中间文件
+assets/img/.*.tmp

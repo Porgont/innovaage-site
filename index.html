@@ -49,6 +49,7 @@
     <nav class="nav" aria-label="主导航">
       <a href="index.html" data-nav="home">首页</a>
       <a href="about.html" data-nav="about">关于我们</a>
+      <a href="works.html" data-nav="works">作品</a>
       <a href="news.html"  data-nav="news">公告</a>
       <a href="join.html"  data-nav="join">加入我们</a>
       <a href="join.html#panel-contact" data-nav="contact">联系我们</a>
@@ -71,18 +72,25 @@
     <div class="wrap">
       <p class="hero-badge"><span class="dot" aria-hidden="true"></span> 长期招募中 · 地图 / 皮肤 / 材质 / 光影 / Addon / 美术 / 视频</p>
 
-      <h1>探索、突破、创意、想象，<br>用方块搭出<em>创想</em>。</h1>
+      <div class="hero-inner">
+        <div>
+          <h1>探索、突破、创意、想象，<br>用方块搭出<em>创想</em>。</h1>
 
-      <p class="lead">
-        创想时代开发组是一家致力于 Minecraft 基岩版（MCBE）的资源创作团队，
-        英译为 Innova Age Development Team。初次构想于 2015 年末，正式成立于 2016 年 3 月 10 日。
-        团队坚持高质量低价及免费资源的制作，力创最优秀的 BE 资源团队。
-      </p>
+          <p class="lead">
+            创想时代开发组是一家致力于 Minecraft 基岩版（MCBE）的资源创作团队，
+            英译为 Innova Age Development Team。初次构想于 2015 年末，正式成立于 2016 年 3 月 10 日。
+            团队坚持高质量低价及免费资源的制作，力创最优秀的 BE 资源团队。
+          </p>
 
-      <div class="btn-row">
-        <a class="btn" href="join.html#panel-form">加入我们</a>
-        <a class="btn btn--ghost" href="about.html">了解我们</a>
-        <a class="btn btn--ghost" href="news.html">查看公告</a>
+          <div class="btn-row">
+            <a class="btn" href="join.html#panel-form">加入我们</a>
+            <a class="btn btn--ghost" href="about.html">了解我们</a>
+            <a class="btn btn--ghost" href="news.html">查看公告</a>
+          </div>
+        </div>
+
+        <!-- 首页大图：图片路径在 assets/js/site.js 的 heroImage，留空则整块自动隐藏 -->
+        <aside class="hero-figure" id="hero-figure" aria-hidden="true"></aside>
       </div>
 
       <div class="hero-stats">
@@ -182,6 +190,23 @@
     </div>
   </section>
 
+  <!-- ============ 作品展示 ============ -->
+  <section class="section section--tight" id="showcase">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker">Showcase</span>
+        <h2>作品展示</h2>
+        <p>先放一组光影渲染图。数据在 assets/js/site.js 的 SHOWCASE 里，加一条就多一张。</p>
+      </div>
+
+      <div class="showcase" id="showcase-grid" data-limit="3"></div>
+
+      <div class="btn-row" style="margin-top:22px">
+        <a class="btn btn--ghost btn--sm" href="works.html">查看全部作品 →</a>
+      </div>
+    </div>
+  </section>
+
   <!-- ============ 最新公告 ============ -->
   <section class="section section--tight" id="latest-news">
     <div class="wrap">
@@ -236,6 +261,7 @@
         <ul>
           <li><a href="index.html">首页</a></li>
           <li><a href="about.html">关于我们</a></li>
+          <li><a href="works.html">作品展示</a></li>
           <li><a href="news.html">公告</a></li>
           <li><a href="join.html#panel-form">加入我们</a></li>
           <li><a href="join.html#panel-contact">联系我们</a></li>

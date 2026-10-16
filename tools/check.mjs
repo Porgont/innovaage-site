@@ -10,13 +10,14 @@ const errors = [];
 const warns = [];
 const ok = [];
 
-const pages = ['index.html', 'about.html', 'news.html', 'join.html', '404.html'];
+const pages = ['index.html', 'about.html', 'works.html', 'news.html', 'join.html', '404.html'];
 
 /* ---------- 1. 关键文件存在 ---------- */
 const required = [
-  'index.html', 'about.html', 'news.html', 'join.html', '404.html',
+  'index.html', 'about.html', 'works.html', 'news.html', 'join.html', '404.html',
   'CNAME', '.nojekyll', 'robots.txt', 'sitemap.xml', 'README.md', '.gitignore',
-  'assets/css/theme.css', 'assets/css/style.css', 'assets/js/site.js'
+  'assets/css/theme.css', 'assets/css/style.css', 'assets/js/site.js',
+  'assets/img/shader-1.jpg', 'assets/img/shader-2.jpg', 'assets/img/shader-3.jpg'
 ];
 for (const f of required) {
   if (!existsSync(join(root, f))) errors.push(`缺少文件: ${f}`);
@@ -144,7 +145,7 @@ for (const page of pages) {
   // 5.5b 主题三件套：样式表 + 防闪烁脚本 + （有导航的页面）切换按钮
   if (!/assets\/css\/theme\.css/.test(html)) errors.push(`${page}: 没引入 theme.css`);
   if (!/ia-theme/.test(html)) errors.push(`${page}: 缺少防闪烁的主题内联脚本`);
-  for (const p of ['index.html', 'about.html', 'news.html', 'join.html']) {
+  for (const p of ['index.html', 'about.html', 'works.html', 'news.html', 'join.html']) {
     if (page === p && !/id="theme-toggle"/.test(html)) errors.push(`${page}: 缺少主题切换按钮`);
   }
 
@@ -178,7 +179,7 @@ if (!/id="survey-link"/.test(joinHtml)) errors.push('join.html 缺少问卷入�
 if (/<form\b/i.test(joinHtml)) errors.push('join.html 不应再有 <form>（问卷已改为问卷星外链）');
 
 /* ---------- 7.5 三个 QQ 群号在四个页面都齐 ---------- */
-const allPages = ['index.html', 'about.html', 'news.html', 'join.html'];
+const allPages = ['index.html', 'about.html', 'works.html', 'news.html', 'join.html'];
 for (const page of allPages) {
   const html = readFileSync(join(root, page), 'utf8');
   for (const key of ['qqPublic', 'qqAudit', 'qqCouncil']) {
@@ -216,7 +217,7 @@ await new Promise(r => server.listen(0, '127.0.0.1', r));
 const port = server.address().port;
 
 const fetched = [];
-for (const path of ['/', '/about.html', '/news.html', '/join.html', '/assets/css/theme.css', '/assets/css/style.css', '/assets/js/site.js', '/sitemap.xml', '/robots.txt']) {
+for (const path of ['/', '/about.html', '/works.html', '/news.html', '/join.html', '/assets/css/theme.css', '/assets/css/style.css', '/assets/js/site.js', '/sitemap.xml', '/robots.txt']) {
   const res = await fetch(`http://127.0.0.1:${port}${path}`);
   const body = await res.text();
   fetched.push(`${path} -> ${res.status} (${body.length} 字节)`);

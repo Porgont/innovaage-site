@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>作品展示 | 创想时代开发组</title>
+<meta name="description" content="创想时代开发组的作品展示：光影、地图、皮肤、材质与 Addon。当前展示 Log光影·橡木 SA（作者 Log坤）的渲染效果图。">
+<meta name="keywords" content="创想时代开发组作品,MCBE光影,Log光影,橡木SA,Minecraft基岩版资源">
+<link rel="canonical" href="https://innovaage.cn/works.html">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0e1013" media="(prefers-color-scheme: dark)">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="创想时代开发组">
+<meta property="og:title" content="作品展示 | 创想时代开发组">
+<meta property="og:description" content="光影、地图、皮肤、材质与 Addon 作品展示。">
+<meta property="og:url" content="https://innovaage.cn/works.html">
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23ffffff'/%3E%3Crect x='5' y='5' width='22' height='22' fill='none' stroke='%231a1c20' stroke-width='3'/%3E%3Crect x='8' y='21' width='16' height='3' fill='%23f5c518'/%3E%3C/svg%3E">
+<!-- 主题：在页面渲染前决定用哪套，避免刷新时闪一下 -->
+<script>
+(function () {
+  try {
+    var t = localStorage.getItem('ia-theme');
+    if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+  } catch (e) {}
+})();
+</script>
+<link rel="stylesheet" href="assets/css/theme.css">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body data-page="works">
+<a class="skip-link" href="#main">跳到主要内容</a>
+
+<header class="site-header">
+  <div class="wrap bar">
+    <a class="brand" href="index.html">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span class="brand-text">
+        <strong>创想时代开发组</strong>
+        <span>Innova Age Development Team</span>
+      </span>
+    </a>
+
+    <nav class="nav" aria-label="主导航">
+      <a href="index.html" data-nav="home">首页</a>
+      <a href="about.html" data-nav="about">关于我们</a>
+      <a href="works.html" data-nav="works">作品</a>
+      <a href="news.html"  data-nav="news">公告</a>
+      <a href="join.html"  data-nav="join">加入我们</a>
+      <a href="join.html#panel-contact" data-nav="contact">联系我们</a>
+    </nav>
+
+    <button class="theme-toggle" id="theme-toggle" type="button"
+            aria-label="切换深浅主题" title="切换深浅主题">
+      <span class="ico" data-theme-icon aria-hidden="true">◐</span>
+      <span data-theme-label>主题</span>
+    </button>
+
+    <a class="btn btn--sm header-cta" href="join.html#panel-form">加入我们</a>
+  </div>
+</header>
+
+<main id="main">
+
+  <section class="hero" style="padding:52px 0 34px">
+    <div class="wrap">
+      <p class="hero-badge"><span class="dot" aria-hidden="true"></span> 作品展示</p>
+      <h1 style="font-size:clamp(26px,4vw,38px)">我们做过的东西</h1>
+      <p class="lead">
+        这里陈列工作室的光影、地图、皮肤、材质与 Addon 作品。
+        每一件都会写明资源名与作者，方便你找到原作者。
+      </p>
+    </div>
+  </section>
+
+  <section class="section section--tight">
+    <div class="wrap">
+
+      <div class="section-head">
+        <span class="kicker">All Works</span>
+        <h2>全部作品</h2>
+        <p>当前共 <span id="work-count">0</span> 件。持续更新中。</p>
+      </div>
+
+      <div class="showcase" id="showcase-grid"></div>
+
+      <div class="callout" style="margin-top:32px">
+        <span class="icon" aria-hidden="true">🛈</span>
+        <div>
+          <b>想用这些资源？</b>作品默认允许在服务器与整合包中使用，需注明原作者与出处；
+          二次修改与商用请先通过「联系我们」取得同意。
+        </div>
+      </div>
+
+      <div class="panel" style="margin-top:22px">
+        <h3>提交你的作品</h3>
+        <p style="color:var(--text-dim);margin-bottom:16px">
+          工作室成员或合作作者想把作品挂到这里，
+          把资源名、作者、类型和一两张成品图发到对外交流群就行。
+        </p>
+        <div class="btn-row">
+          <a class="btn btn--sm" href="join.html#panel-contact">联系方式</a>
+          <a class="btn btn--ghost btn--sm" href="about.html">了解工作室</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <h4>创想时代开发组</h4>
+        <p style="margin:0">
+          Innova Age Development Team<br>
+          专注 Minecraft 基岩版（MCBE）资源创作。<br>
+          成立于 2016 年 3 月 10 日。
+        </p>
+      </div>
+
+      <div>
+        <h4>站内导航</h4>
+        <ul>
+          <li><a href="index.html">首页</a></li>
+          <li><a href="about.html">关于我们</a></li>
+          <li><a href="works.html">作品展示</a></li>
+          <li><a href="news.html">公告</a></li>
+          <li><a href="join.html#panel-form">加入我们</a></li>
+          <li><a href="join.html#panel-contact">联系我们</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4>联系方式</h4>
+        <ul>
+          <li>对外交流群：<span data-fill="qqPublic">—</span></li>
+          <li>对外审核群：<span data-fill="qqAudit">—</span></li>
+          <li>开发理事会：<span data-fill="qqCouncil">—</span></li>
+          <li>GitHub：<a href="#" data-fill-href="siteRepo">本网站源码</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>© <span data-year>2026</span> 创想时代开发组 · Innova Age Development Team</span>
+      <span>本站由 GitHub Pages 托管 · <a href="https://innovaage.cn">innovaage.cn</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/site.js"></script>
+</body>
+</html>

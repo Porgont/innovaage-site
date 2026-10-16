@@ -10,8 +10,9 @@ Innova Age Development Team 的官方网站。纯静态站点（HTML + CSS + 原
 
 ```
 innovaage-site/
-├── index.html            首页：工作室介绍摘要、制作方向、最新公告、加入入口
+├── index.html            首页：工作室介绍摘要、制作方向、作品展示、最新公告、加入入口
 ├── about.html            关于我们：团队沿革、平台与账号、制作方向、工作方式、合作
+├── works.html            作品展示：光影 / 地图 / 皮肤 / 材质 / Addon
 ├── news.html             公告页：全部公告 + 分类筛选
 ├── join.html             加入 / 联系页：报名问卷入口 + 三个 QQ 群（两个标签页）
 ├── 404.html              GitHub Pages 自定义 404 页
@@ -21,12 +22,14 @@ innovaage-site/
 ├── sitemap.xml           站点地图
 ├── tools/                本地自检脚本（不需要发布，但留着方便以后改完检查）
 │   ├── serve.mjs         模拟 GitHub Pages 的本地服务器（含 404 处理）
-│   ├── check.mjs         结构与链接检查（含主题变量完整性）
-│   └── browser-test.mjs  浏览器行为自检（55 项）
+│   ├── check.mjs         结构与链接检查（含主题变量完整性、图片存在性）
+│   ├── browser-test.mjs  浏览器行为自检（65 项）
+│   └── process-shader-images.mjs  图片裁切压缩（一次性工具，见第六节）
 └── assets/
     ├── css/theme.css     ★ 主题变量：浅色 / 深色 / 跟随系统，三套取值
     ├── css/style.css     所有组件样式（终末地风格）
-    └── js/site.js        ★ 唯一需要改的文件：群号 + 公告 + 问卷链接
+    ├── img/              所有图片（命名规范见该目录里的 README.md）
+    └── js/site.js        ★ 唯一需要改的文件：群号 + 公告 + 作品 + 问卷链接
 ```
 
 ---
@@ -192,6 +195,50 @@ Resolve-DnsName www.innovaage.cn
 
 ## 六、日常维护
 
+### 加一张作品图
+
+图片放 `assets/img/`，然后在 `assets/js/site.js` 的 `SHOWCASE` 数组里加一条：
+
+```js
+{
+  img: 'assets/img/shader-4.jpg',
+  title: '资源名',
+  meta: '作者：xxx',
+  category: 'shader',          // shader / map / skin / tex / addon
+  desc: '一句话说明这张图展示什么。'
+}
+```
+
+首页「作品展示」只显示前 3 条（`data-limit="3"`），作品页显示全部。
+`category` 取自 `CATEGORIES` 对象，加新类型在那边补一行即可。
+
+**图片规范**：文件名英文小写 + 短横线，单张压到 500KB 以内，横构图建议 3:2。
+详细要求见 `assets/img/README.md`。
+
+### 换首页大图
+
+改 `SITE_CONFIG` 里的两行：
+
+```js
+heroImage: 'assets/img/你的图.jpg',
+heroImageAlt: '图片内容描述'      // 给屏幕阅读器和搜索引擎看
+```
+
+**留空 `heroImage` 则首页大图整块自动隐藏**，布局会变成单列，不会留下空框。
+
+### 图片裁切压缩（工具）
+
+如果拿到的截图带着游戏 UI（左上角 FPS、聊天栏等），用这个脚本处理：
+
+```powershell
+node tools/process-shader-images.mjs
+```
+
+它会：裁掉顶部 175px 的 UI 区域 → 从原图出发按「宽度×质量」候选逐个试 →
+取第一个 ≤ 450KB 的结果输出到 `assets/img/`。**原图不动。**
+
+脚本顶部的 `jobs` 数组是输入清单，换图时改那里的源路径和目标文件名即可。
+
 ### 发一条新公告
 
 打开 `assets/js/site.js`，找到 `ANNOUNCEMENTS` 数组，在最前面加一段：
@@ -236,7 +283,7 @@ node tools/serve.mjs 8099
 
 ```powershell
 node tools/check.mjs          # 文件、链接、id、语法、CSS 括号、主题变量完整性
-node tools/browser-test.mjs   # 真浏览器跑 55 项行为测试（需先起 serve.mjs）
+node tools/browser-test.mjs   # 真浏览器跑 65 项行为测试（需先起 serve.mjs）
 ```
 
 `browser-test.mjs` 会真开一个无头 Edge，检查：公告渲染与筛选、标签页切换、
