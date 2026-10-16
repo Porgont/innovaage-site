@@ -71,6 +71,40 @@
   </div>
 </header>
 
+<!-- mobile-drawer:start -->
+<!-- 手机端：汉堡按钮 + 可收起侧栏。纯 CSS（隐藏 checkbox + label），零 JS。
+     位置很关键：必须放在页眉元素之后。
+     页眉带 backdrop-filter，它会成为 position:fixed 子元素的包含块，
+     放进去抽屉就铺不满屏幕了。 -->
+<div class="mnav">
+  <input type="checkbox" id="mnav-toggle" class="mnav-toggle" aria-label="展开或收起导航菜单">
+
+  <label class="mnav-btn" for="mnav-toggle" aria-label="打开导航菜单">
+    <span class="mnav-bars" aria-hidden="true"><i></i><i></i><i></i></span>
+    <span class="mnav-label">菜单</span>
+  </label>
+
+  <label class="mnav-overlay" for="mnav-toggle" aria-label="关闭导航菜单"></label>
+
+  <div class="mnav-drawer">
+    <div class="mnav-head">
+      <span class="mnav-title">站内导航</span>
+      <label class="mnav-close" for="mnav-toggle" aria-label="关闭导航菜单">×</label>
+    </div>
+    <nav class="mnav-links" aria-label="手机端导航">
+      <a href="index.html" data-nav="home">首页</a>
+      <a href="about.html" data-nav="about">关于我们</a>
+      <a href="works.html" data-nav="works">作品</a>
+      <a href="tools.html" data-nav="tools">工具箱</a>
+      <a href="news.html" data-nav="news">公告</a>
+      <a href="join.html" data-nav="join">加入我们</a>
+      <a href="join.html#panel-contact" data-nav="contact">联系我们</a>
+    </nav>
+    <a class="btn btn--sm mnav-cta" href="join.html#panel-form">加入我们</a>
+  </div>
+</div>
+<!-- mobile-drawer:end -->
+
 <main id="main">
 
   <!-- ============ Hero ============ -->

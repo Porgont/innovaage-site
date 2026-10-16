@@ -69,6 +69,40 @@
   </div>
 </header>
 
+<!-- mobile-drawer:start -->
+<!-- 手机端：汉堡按钮 + 可收起侧栏。纯 CSS（隐藏 checkbox + label），零 JS。
+     位置很关键：必须放在页眉元素之后。
+     页眉带 backdrop-filter，它会成为 position:fixed 子元素的包含块，
+     放进去抽屉就铺不满屏幕了。 -->
+<div class="mnav">
+  <input type="checkbox" id="mnav-toggle" class="mnav-toggle" aria-label="展开或收起导航菜单">
+
+  <label class="mnav-btn" for="mnav-toggle" aria-label="打开导航菜单">
+    <span class="mnav-bars" aria-hidden="true"><i></i><i></i><i></i></span>
+    <span class="mnav-label">菜单</span>
+  </label>
+
+  <label class="mnav-overlay" for="mnav-toggle" aria-label="关闭导航菜单"></label>
+
+  <div class="mnav-drawer">
+    <div class="mnav-head">
+      <span class="mnav-title">站内导航</span>
+      <label class="mnav-close" for="mnav-toggle" aria-label="关闭导航菜单">×</label>
+    </div>
+    <nav class="mnav-links" aria-label="手机端导航">
+      <a href="index.html" data-nav="home">首页</a>
+      <a href="about.html" data-nav="about">关于我们</a>
+      <a href="works.html" data-nav="works">作品</a>
+      <a href="tools.html" data-nav="tools">工具箱</a>
+      <a href="news.html" data-nav="news">公告</a>
+      <a href="join.html" data-nav="join">加入我们</a>
+      <a href="join.html#panel-contact" data-nav="contact">联系我们</a>
+    </nav>
+    <a class="btn btn--sm mnav-cta" href="join.html#panel-form">加入我们</a>
+  </div>
+</div>
+<!-- mobile-drawer:end -->
+
 <main id="main">
 
   <!-- 这个容器是给 assets/js/site.js 的 initWorkDetail() 用的门闩：
@@ -134,6 +168,18 @@
               截图均为游戏内直接截取，未做后期调色（只裁掉了界面元素）。
               实际效果会随游戏版本、画质设置与设备性能而变化。
             </div>
+          </div>
+
+          <div class="panel" style="margin-top:18px">
+            <h3 style="margin-top:0">鸣谢与反馈</h3>
+            <dl class="stat-list" id="work-thanks" hidden>
+              <div><dt>开发作者</dt><dd>创想时代 Log坤</dd></div>
+              <div><dt>鸣谢</dt><dd>冷夜、被遗忘的青色剑士、关于本人、只问为何、老楚、范帛、柑柠、linlin</dd></div>
+              <div><dt>反馈途径</dt><dd>创想时代反馈群 1017068586</dd></div>
+            </dl>
+            <p style="color:var(--text-mute);font-size:12.5px;margin:12px 0 0">
+              鸣谢排名不分先后。反馈问题时请说明游戏版本、设备与复现步骤，便于定位。
+            </p>
           </div>
         </div>
 

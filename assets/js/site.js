@@ -97,37 +97,46 @@
   var WORKS = {
     'log-shader-sa': {
       name: 'Log光影 · 橡木 SA',
-      author: 'Log坤',
+      author: '创想时代 Log坤',
       type: '光影 / Shader',
-      tagline: '基岩版光影，主打水面反射与自然光过渡',
-      cover: 'assets/img/shader-2.jpg',
-      coverAlt: '樱花林地里的透光树冠与飘落花瓣',
+      tagline: 'Log 光影两周年特别版：方块卷云、氛围雨天、流动星辰、特调 ACES 色调映射',
+      cover: 'assets/img/shader-rain.jpg',
+      coverAlt: '雨天场景：石板路积水倒影、暖色窗光与雨幕',
       facts: [
-        { k: '作品名', v: 'Log光影 · 橡木 SA' },
-        { k: '作者', v: 'Log坤' },
+        { k: '作品名', v: 'LogSA（Log Second Anniversary）' },
+        { k: '作者', v: '创想时代 Log坤' },
         { k: '类型', v: '光影 / Shader' },
         { k: '平台', v: 'Minecraft 基岩版' },
-        { k: '发布', v: '通过创想时代开发组发布' }
+        { k: '前置', v: 'SRC 光影（组件码 0559302）' },
+        { k: '反馈群', v: '1017068586' },
+        { k: 'Log 光影外群', v: '822955272' },
+        { k: 'Log 光影内群', v: '980037287' }
       ],
       intro: [
-        '「橡木 SA」是 Log坤 制作的基岩版光影，整体走自然、通透的路线：天光与阳光的过渡偏柔和，' +
-        '草地、花簇这类细节的颜色层次给得比较足，不会一片死绿。',
+        'LogSA，即 Log Second Anniversary，Log 光影两周年特别版。' +
+        '拥有独特的方块卷云、氛围雨天、流动星辰、特调 ACES 色调映射。',
 
-        '水面是这套光影最值得看的部分。静止水面会形成近乎镜面的反射，' +
-        '能把天空、云和两侧地形一起映进去，倒影的清晰度与形变控制得比较克制，' +
-        '不会糊成一片。',
+        'LogSA 集合了 Log3、4、6、7 等系列的优点，萃取橡木、桦木、樱花木、原木等各家的精华，' +
+        '综合反馈群十余人的想法与提议，历经 Log坤 数个月的打磨与调制，' +
+        '最终呈现出 Log 光影迄今为止色彩最通透、技术最完善、风格最独特的 LogSA：两周年版本。',
 
-        '光照方面，强光环境下会保留一定程度的过曝（雪地、正对太阳的坡面），' +
-        '这是有意的取舍 —— 牺牲一点细节换取更接近真实的明暗对比。'
+        '⚠️ 使用前请注意：请务必搭配 SRC 光影前置（组件码 0559302），否则部分效果无法正常显示。'
       ],
       shots: [
-        { img: 'assets/img/shader-3.jpg', caption: '峡谷水道的镜面反射：天空、云与两侧地形完整倒映在水面上' },
-        { img: 'assets/img/shader-2.jpg', caption: '樱花林地：透光树冠、飘落花瓣与草地花簇的色彩层次' },
-        { img: 'assets/img/shader-1.jpg', caption: '雪山与松林：强光下的天空过曝与积雪明暗过渡' }
+        { img: 'assets/img/shader-rain.jpg', caption: '雨天：石板路面的积水倒影、雨幕与暖色窗光' },
+        { img: 'assets/img/shader-1.jpg', caption: '晴天：雪山与松林的强光表现，天空过曝与积雪明暗过渡' },
+        { img: 'assets/img/shader-3.jpg', caption: '水面：峡谷水道的镜面反射，天空与地形完整倒映' },
+        { img: 'assets/img/shader-2.jpg', caption: '林地：樱花树冠的透光与飘落花瓣，草地花簇的色彩层次' }
       ],
       notice:
-        '截图均为游戏内直接截取，未做后期调色（只裁掉了界面元素）。' +
-        '实际效果会随游戏版本、画质设置与设备性能而变化。'
+        '开发作者：创想时代 Log坤。' +
+        '鸣谢：冷夜、被遗忘的青色剑士、关于本人、只问为何、老楚、范帛、柑柠、linlin 等人' +
+        '的支持和帮助，同时也感谢各位玩家一直以来的陪伴与支持（排名不分先后）。',
+      thanks: [
+        { k: '开发作者', v: '创想时代 Log坤' },
+        { k: '鸣谢', v: '冷夜、被遗忘的青色剑士、关于本人、只问为何、老楚、范帛、柑柠、linlin' },
+        { k: '反馈途径', v: '创想时代反馈群 1017068586' }
+      ]
     }
   };
 
@@ -224,11 +233,12 @@
     }, 1800);
   }
 
-  /* ---------- 当前页高亮 ---------- */
+  /* ---------- 当前页高亮 ----------
+     桌面导航与手机侧栏都要高亮，所以两处一起扫。 */
   function markActiveNav() {
     var page = document.body.getAttribute('data-page');
     if (!page) return;
-    $$('.nav a').forEach(function (a) {
+    $$('.nav a, .mnav-links a').forEach(function (a) {
       if (a.getAttribute('data-nav') === page) {
         a.classList.add('is-active');
         a.setAttribute('aria-current', 'page');
@@ -278,6 +288,11 @@
 
       if (val) {
         el.setAttribute('href', name === 'email' ? 'mailto:' + val : val);
+        // 站外链接一律新窗口打开，别把访客从站点带走
+        if (name !== 'email') {
+          el.setAttribute('target', '_blank');
+          el.setAttribute('rel', 'noopener');
+        }
       } else {
         var row = el.closest('li') || el.closest('.contact-item') || el.parentElement;
         if (row) row.hidden = true;
@@ -743,6 +758,15 @@
     if (intro && work.intro && work.intro.length) {
       intro.innerHTML = work.intro.map(function (p) {
         return '<p>' + esc(p) + '</p>';
+      }).join('');
+    }
+
+    // 鸣谢 / 反馈渠道
+    var thanks = $('#work-thanks');
+    if (thanks && work.thanks && work.thanks.length) {
+      thanks.hidden = false;
+      thanks.innerHTML = work.thanks.map(function (t) {
+        return '<div><dt>' + esc(t.k) + '</dt><dd>' + esc(t.v) + '</dd></div>';
       }).join('');
     }
 

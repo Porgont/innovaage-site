@@ -759,6 +759,52 @@ html[data-theme="dark"] .tag--diamond { color: var(--gold); }
 
 .invest-facts dd { font-size: 12.5px; }
 
+/* ---------- 核心管理局名单 ---------- */
+.officer-grid {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr));
+}
+
+.officer {
+  position: relative;
+  display: grid;
+  gap: 3px;
+  padding: 16px 18px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--line-2);
+  border-radius: var(--radius);
+  transition: border-color .16s ease;
+}
+
+.officer:hover { border-color: var(--line-strong); }
+
+/* 主席那一张用黄条突出 */
+.officer--lead {
+  border-left-color: var(--gold);
+  background: var(--gold-soft);
+}
+
+.officer b {
+  font-size: 17px;
+  letter-spacing: .01em;
+  color: var(--text);
+}
+
+.officer-role {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .04em;
+  color: var(--text-dim);
+}
+
+.officer-note {
+  font-size: 12.5px;
+  color: var(--text-mute);
+  margin-top: 3px;
+}
+
 /* ---------- 作品详情页 ---------- */
 .work-hero {
   position: relative;
@@ -1179,6 +1225,233 @@ input[type="range"]::-webkit-slider-thumb {
   word-break: break-all;
 }
 
+/* 进度条（视频转换用） */
+.progress {
+  margin-top: 18px;
+  display: grid;
+  gap: 8px;
+}
+
+.progress[hidden] { display: none; }
+
+.progress-bar {
+  height: 6px;
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-bar i {
+  display: block;
+  height: 100%;
+  background: var(--gold);
+  transition: width .2s linear;
+}
+
+.progress span {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+/* 诊断结论里的通过 / 不通过颜色 */
+.stat-list dd.t-ok { color: var(--ok-fg); }
+.stat-list dd.t-danger { color: var(--err-fg); }
+
+/* ---------- 正文里的超链接 ----------
+   要让人一眼看出可以点：加下划线 + 一点底色，悬停时底色变黄、
+   后面跟一个 ↗ 表示会跳走。 */
+.wrap a:not(.btn):not(.brand):not(.work-more):not(.skip-link),
+.callout a,
+.notice-body a,
+.stat-list a {
+  color: var(--text);
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: var(--gold-dk);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+  background: linear-gradient(transparent 62%, var(--gold-soft) 62%);
+  padding: 0 1px;
+  border-bottom: 0;
+  border-radius: 2px;
+  transition: background-color .15s ease;
+}
+
+.wrap a:not(.btn):not(.brand):not(.work-more):not(.skip-link):hover,
+.callout a:hover,
+.notice-body a:hover,
+.stat-list a:hover {
+  background: var(--gold);
+  text-decoration-color: var(--text);
+}
+
+/* 跳到站外的链接尾巴上加个箭头 */
+.wrap a[target="_blank"]:not(.btn)::after,
+.callout a[target="_blank"]::after,
+.footer-grid a[target="_blank"]::after,
+.stat-list a[target="_blank"]::after {
+  content: " ↗";
+  font-size: .85em;
+  opacity: .7;
+}
+
+/* ---------- 手机端：汉堡按钮 + 可收起侧栏 ----------
+   纯 CSS：隐藏的 checkbox 记录开关状态，label 负责切换。
+   抽屉与遮罩默认 display:none，只有 :checked 时才显示。 */
+.mnav { display: none; }
+
+@media (max-width: 800px) {
+  .mnav { display: block; }
+
+  /* 真正的开关：藏起来但保留可访问性 */
+  .mnav-toggle {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* 汉堡按钮：固定右上角，不占文档流 */
+  .mnav-btn {
+    position: fixed;
+    top: 13px;
+    right: 14px;
+    z-index: 120;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 12px;
+    cursor: pointer;
+    user-select: none;
+    font-family: var(--mono);
+    font-size: 11.5px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--text);
+    background: var(--panel);
+    border: 1px solid var(--line-2);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .mnav-bars { display: grid; gap: 3px; }
+  .mnav-bars i {
+    display: block;
+    width: 16px;
+    height: 2px;
+    background: var(--text);
+  }
+
+  /* 默认都藏起来 */
+  .mnav-overlay,
+  .mnav-drawer { display: none; }
+
+  /* 打开时才出现 */
+  .mnav-toggle:checked ~ .mnav-overlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background: rgba(10, 12, 15, .55);
+    cursor: pointer;
+  }
+
+  .mnav-toggle:checked ~ .mnav-drawer {
+    display: flex;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 110;
+    width: min(84vw, 320px);
+    flex-direction: column;
+    gap: 6px;
+    padding: 16px 18px 24px;
+    background: var(--panel);
+    border-left: 1px solid var(--line);
+    box-shadow: -14px 0 40px rgba(0, 0, 0, .28);
+    overflow-y: auto;
+    animation: mnav-in .22s ease-out;
+  }
+
+  /* 打开后把汉堡藏掉，避免和抽屉里的关闭按钮打架 */
+  .mnav-toggle:checked ~ .mnav-btn { visibility: hidden; }
+
+  @keyframes mnav-in {
+    from { transform: translateX(100%); }
+    to   { transform: translateX(0); }
+  }
+
+  .mnav-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 12px;
+    margin-bottom: 8px;
+    border-bottom: 2px solid var(--line);
+  }
+
+  .mnav-title {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--text-mute);
+  }
+
+  .mnav-close {
+    width: 32px;
+    height: 32px;
+    display: grid;
+    place-items: center;
+    font-size: 22px;
+    line-height: 1;
+    color: var(--text-dim);
+    border: 1px solid var(--line-2);
+    border-radius: 2px;
+    cursor: pointer;
+  }
+  .mnav-close:hover { color: var(--text); border-color: var(--line-strong); }
+
+  .mnav-links {
+    display: grid;
+    gap: 2px;
+    margin: 0;
+  }
+
+  .mnav-links a {
+    padding: 13px 12px;
+    font-size: 15.5px;
+    font-weight: 600;
+    color: var(--text);
+    border: 0;
+    border-left: 3px solid transparent;
+    border-radius: var(--radius);
+    background: transparent;
+  }
+
+  .mnav-links a:hover {
+    background: var(--bg-2);
+    border-left-color: var(--line-2);
+  }
+
+  /* 当前页在侧栏里高亮 */
+  .mnav-links a.is-active {
+    background: var(--gold-soft);
+    border-left-color: var(--gold);
+  }
+
+  .mnav-cta { margin-top: 14px; }
+
+  /* 手机端把桌面导航整条藏起来，页眉只剩品牌 + 主题按钮 */
+  .site-header .nav { display: none; }
+  .site-header .header-cta { display: none; }
+  .site-header .bar { flex-wrap: nowrap; min-height: 60px; }
+}
+
 /* ---------- 公告列表 ---------- */
 .notice-list { display: grid; gap: 14px; }
 
@@ -1497,19 +1770,7 @@ td code { white-space: nowrap; }
 
   .brand-text span { display: none; }
 
-  .nav {
-    order: 4;
-    width: 100%;
-    margin-left: 0;
-    overflow-x: auto;
-    padding-bottom: 4px;
-  }
-
-  .nav a { padding: 7px 11px; font-size: 13.5px; }
-  .nav a.is-active::after { left: 11px; right: 11px; }
-
-  .theme-toggle { margin-left: auto; }
-  .header-cta { display: none; }
+  .theme-toggle { margin-left: auto; margin-right: 92px; }
 
   .hero { padding: 56px 0 46px; }
   .hero-stats { margin-top: 34px; }

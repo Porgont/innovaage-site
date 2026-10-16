@@ -69,6 +69,40 @@
   </div>
 </header>
 
+<!-- mobile-drawer:start -->
+<!-- 手机端：汉堡按钮 + 可收起侧栏。纯 CSS（隐藏 checkbox + label），零 JS。
+     位置很关键：必须放在页眉元素之后。
+     页眉带 backdrop-filter，它会成为 position:fixed 子元素的包含块，
+     放进去抽屉就铺不满屏幕了。 -->
+<div class="mnav">
+  <input type="checkbox" id="mnav-toggle" class="mnav-toggle" aria-label="展开或收起导航菜单">
+
+  <label class="mnav-btn" for="mnav-toggle" aria-label="打开导航菜单">
+    <span class="mnav-bars" aria-hidden="true"><i></i><i></i><i></i></span>
+    <span class="mnav-label">菜单</span>
+  </label>
+
+  <label class="mnav-overlay" for="mnav-toggle" aria-label="关闭导航菜单"></label>
+
+  <div class="mnav-drawer">
+    <div class="mnav-head">
+      <span class="mnav-title">站内导航</span>
+      <label class="mnav-close" for="mnav-toggle" aria-label="关闭导航菜单">×</label>
+    </div>
+    <nav class="mnav-links" aria-label="手机端导航">
+      <a href="index.html" data-nav="home">首页</a>
+      <a href="about.html" data-nav="about">关于我们</a>
+      <a href="works.html" data-nav="works">作品</a>
+      <a href="tools.html" data-nav="tools">工具箱</a>
+      <a href="news.html" data-nav="news">公告</a>
+      <a href="join.html" data-nav="join">加入我们</a>
+      <a href="join.html#panel-contact" data-nav="contact">联系我们</a>
+    </nav>
+    <a class="btn btn--sm mnav-cta" href="join.html#panel-form">加入我们</a>
+  </div>
+</div>
+<!-- mobile-drawer:end -->
+
 <main id="main">
 
   <!-- ============ Hero ============ -->
@@ -139,6 +173,56 @@
           <a class="btn btn--sm" href="join.html#panel-form">加入我们</a>
           <a class="btn btn--ghost btn--sm" href="join.html#panel-rules">看审核条例</a>
           <a class="btn btn--ghost btn--sm" href="join.html#panel-contact">进对外群聊聊</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 核心管理局 ============ -->
+  <section class="section section--tight">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker">Leadership</span>
+        <h2>核心管理局</h2>
+        <p>工作室的领导机构。开发、技术、运营、质量、宣传各条线分别由对应负责人分管。</p>
+      </div>
+
+      <div class="officer-grid">
+        <div class="officer officer--lead">
+          <b>威廉</b>
+          <span class="officer-role">核心管理局主席</span>
+        </div>
+
+        <div class="officer">
+          <b>柑柠</b>
+          <span class="officer-role">副主席 · 首席开发官</span>
+          <span class="officer-note">中国版开发事务总管，投稿总负责人</span>
+        </div>
+
+        <div class="officer">
+          <b>苏打</b>
+          <span class="officer-role">副主席 · 首席执行官</span>
+        </div>
+
+        <div class="officer">
+          <b>樱花</b>
+          <span class="officer-role">副主席 · 首席技术官</span>
+        </div>
+
+        <div class="officer">
+          <b>阿潇</b>
+          <span class="officer-role">名誉主席 · 首席运营官</span>
+        </div>
+
+        <div class="officer">
+          <b>Log_坤</b>
+          <span class="officer-role">首席质量官</span>
+          <span class="officer-note">Log光影系列作者</span>
+        </div>
+
+        <div class="officer">
+          <b>老赵</b>
+          <span class="officer-role">首席宣传官</span>
         </div>
       </div>
     </div>

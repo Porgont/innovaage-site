@@ -69,6 +69,40 @@
   </div>
 </header>
 
+<!-- mobile-drawer:start -->
+<!-- 手机端：汉堡按钮 + 可收起侧栏。纯 CSS（隐藏 checkbox + label），零 JS。
+     位置很关键：必须放在页眉元素之后。
+     页眉带 backdrop-filter，它会成为 position:fixed 子元素的包含块，
+     放进去抽屉就铺不满屏幕了。 -->
+<div class="mnav">
+  <input type="checkbox" id="mnav-toggle" class="mnav-toggle" aria-label="展开或收起导航菜单">
+
+  <label class="mnav-btn" for="mnav-toggle" aria-label="打开导航菜单">
+    <span class="mnav-bars" aria-hidden="true"><i></i><i></i><i></i></span>
+    <span class="mnav-label">菜单</span>
+  </label>
+
+  <label class="mnav-overlay" for="mnav-toggle" aria-label="关闭导航菜单"></label>
+
+  <div class="mnav-drawer">
+    <div class="mnav-head">
+      <span class="mnav-title">站内导航</span>
+      <label class="mnav-close" for="mnav-toggle" aria-label="关闭导航菜单">×</label>
+    </div>
+    <nav class="mnav-links" aria-label="手机端导航">
+      <a href="index.html" data-nav="home">首页</a>
+      <a href="about.html" data-nav="about">关于我们</a>
+      <a href="works.html" data-nav="works">作品</a>
+      <a href="tools.html" data-nav="tools">工具箱</a>
+      <a href="news.html" data-nav="news">公告</a>
+      <a href="join.html" data-nav="join">加入我们</a>
+      <a href="join.html#panel-contact" data-nav="contact">联系我们</a>
+    </nav>
+    <a class="btn btn--sm mnav-cta" href="join.html#panel-form">加入我们</a>
+  </div>
+</div>
+<!-- mobile-drawer:end -->
+
 <main id="main">
 
   <section class="hero" style="padding:52px 0 34px">
@@ -206,6 +240,122 @@
 
       </div>
 
+      <!-- ============================================================
+           Tool 02：视频转投稿规格
+           ============================================================ -->
+      <div class="section-head" style="margin-top:64px">
+        <span class="kicker">Tool 02</span>
+        <h2>视频转成投稿规格</h2>
+        <p>
+          投稿要求：<b>时长 1 分 30 秒以内、编码 H.264、MP4 格式、画面 16:9</b>。
+          这个工具先诊断你的文件哪里不符合，再一键转成合格版本。
+        </p>
+      </div>
+
+      <div class="tool">
+
+        <!-- ---------- 左：选文件与设置 ---------- -->
+        <div class="tool-col">
+          <div class="panel">
+            <h3 style="margin-top:0">1. 选择视频</h3>
+
+            <label class="dropzone" id="v-dropzone" for="v-file-input" tabindex="0">
+              <span class="dropzone-icon" aria-hidden="true">🎬</span>
+              <b>点这里选视频，或把视频拖进来</b>
+              <span>建议先自己压到 200MB 以内，太大的文件浏览器处理会很慢</span>
+              <input type="file" id="v-file-input" accept="video/*" hidden>
+            </label>
+
+            <div class="file-list" id="v-file-list" hidden></div>
+          </div>
+
+          <div class="panel" style="margin-top:18px">
+            <h3 style="margin-top:0">2. 诊断结果</h3>
+            <dl class="stat-list" id="v-diag">
+              <div><dt>状态</dt><dd>等待选择文件…</dd></div>
+            </dl>
+          </div>
+
+          <div class="panel" style="margin-top:18px">
+            <h3 style="margin-top:0">3. 转换设置</h3>
+
+            <div class="field">
+              <label>画面处理方式 <span class="hint">画面不是 16:9 时怎么处理</span></label>
+              <div class="preset-row">
+                <button class="chip is-active" type="button" data-fit="pad">加黑边（画面完整）</button>
+                <button class="chip" type="button" data-fit="crop">裁切填满（无黑边）</button>
+              </div>
+            </div>
+
+            <div class="size-row" style="margin-top:18px">
+              <div class="field">
+                <label for="v-max-dur">最长时长（秒）</label>
+                <input type="number" id="v-max-dur" value="90" min="1" max="600" step="1">
+              </div>
+              <span style="text-align:center;color:var(--text-mute);font-size:13px">≤</span>
+              <div class="field">
+                <label for="v-max-mb">最大体积（MB）<span class="hint">0 = 不限</span></label>
+                <input type="number" id="v-max-mb" value="0" min="0" max="2000" step="1">
+              </div>
+            </div>
+
+            <p class="note" id="v-plan">选好文件后会告诉你具体要改什么。</p>
+
+            <div class="btn-row" style="margin-top:20px">
+              <button class="btn" type="button" id="v-run-btn" disabled>开始转换</button>
+              <button class="btn btn--ghost" type="button" id="v-clear-btn" disabled>清空</button>
+            </div>
+
+            <div class="progress" id="v-progress" hidden>
+              <div class="progress-bar"><i id="v-progress-fill" style="width:0%"></i></div>
+              <span id="v-progress-text">准备中…</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ---------- 右：结果 ---------- -->
+        <div class="tool-col">
+          <div class="panel" style="display:flex;flex-direction:column;min-height:320px">
+            <h3 style="margin-top:0">4. 结果</h3>
+
+            <div class="preview-empty" id="v-preview-empty">
+              <span aria-hidden="true">🎞️</span>
+              <p>转换完成后这里会显示结果视频，并自动复检一遍是否符合投稿规格。</p>
+            </div>
+
+            <div class="preview-wrap" id="v-preview-wrap" hidden>
+              <div class="preview-box">
+                <video id="v-preview" controls playsinline style="max-width:100%;max-height:340px"></video>
+              </div>
+              <dl class="stat-list" id="v-result-stats"></dl>
+              <div class="btn-row">
+                <a class="btn" id="v-download" download>下载结果</a>
+              </div>
+            </div>
+
+            <div class="form-status" id="v-status" hidden role="status" aria-live="polite"></div>
+          </div>
+
+          <div class="callout" style="margin-top:18px">
+            <span class="icon" aria-hidden="true">⏱️</span>
+            <div>
+              <b>关于耗时：</b>转换是边播放边录制，耗时大致等于视频时长
+              （90 秒的视频约需 90 秒）。转换期间请保持页面在前台，不要切走。
+            </div>
+          </div>
+
+          <div class="callout" style="margin-top:14px">
+            <span class="icon" aria-hidden="true">ℹ️</span>
+            <div>
+              <b>已知限制：</b>编码检测基于 MP4 容器，只对 MP4 / MOV 类文件有效；
+              WebM、MKV 等会提示「不是 MP4 容器」。画面裁切与重编码会有画质损失，
+              能重录一遍最好还是重录。
+            </div>
+          </div>
+        </div>
+
+      </div>
+
     </div>
   </section>
 
@@ -258,7 +408,9 @@
   </div>
 </footer>
 
+<script src="assets/vendor/mp4box.all.min.js"></script>
 <script src="assets/js/site.js"></script>
 <script src="assets/js/toolbox.js"></script>
+<script src="assets/js/video-tool.js"></script>
 </body>
 </html>

@@ -20,10 +20,16 @@ function check(name, pass, detail = '') {
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 /* ---------- 启动 Edge + 连接 CDP ---------- */
+// 视频相关断言需要媒体解码能力：--autoplay-policy 放开自动播放，
+// 并且显式开启音频输出（无头模式下默认可能不给解码器）。
 const edge = spawn(EDGE, [
   '--headless=new', `--remote-debugging-port=${PORT}`,
   '--user-data-dir=' + join(process.env.TEMP, 'dsh-test-' + Date.now()),
-  '--no-first-run', '--no-default-browser-check', '--disable-gpu', 'about:blank'
+  '--no-first-run', '--no-default-browser-check', '--disable-gpu',
+  '--autoplay-policy=no-user-gesture-required',
+  '--use-fake-ui-for-media-stream',
+  '--mute-audio',
+  'about:blank'
 ], { stdio: 'ignore' });
 
 let wsUrl;
@@ -645,11 +651,32 @@ check('详情页头图加载完成',
 check('详情页有作品介绍正文',
   await evalJs("document.querySelectorAll('#work-intro p').length >= 3"),
   '实际 ' + await evalJs("document.querySelectorAll('#work-intro p').length") + ' 段');
-check('详情页信息栏有五条',
-  await evalJs("document.querySelectorAll('#work-facts > div').length === 5"),
+check('详情页信息栏有 8 条（含前置与三个群）',
+  await evalJs("document.querySelectorAll('#work-facts > div').length === 8"),
   '实际 ' + await evalJs("document.querySelectorAll('#work-facts > div').length"));
-check('详情页列出三张截图',
-  await evalJs("document.querySelectorAll('#work-shots .shot').length === 3"));
+
+check('详情页写了 SRC 前置要求',
+  await evalJs("document.querySelector('#work-facts').innerText.includes('0559302')"));
+
+check('详情页列出 4 张截图（雨景 + 原有三张）',
+  await evalJs("document.querySelectorAll('#work-shots .shot').length === 4"),
+  '实际 ' + await evalJs("document.querySelectorAll('#work-shots .shot').length"));
+
+check('原有三张图没被删掉',
+  await evalJs(`(function(){
+    var srcs = [...document.querySelectorAll('#work-shots img')].map(i => i.getAttribute('src')).join(' ');
+    return srcs.includes('shader-1') && srcs.includes('shader-2') && srcs.includes('shader-3');
+  })()`));
+
+check('封面换成了雨景图',
+  await evalJs("document.querySelector('#work-cover').getAttribute('src').includes('shader-rain')"),
+  await evalJs("document.querySelector('#work-cover').getAttribute('src')"));
+
+check('详情页有鸣谢与反馈渠道',
+  await evalJs(`(function(){
+    var t = document.querySelector('#work-thanks');
+    return t && !t.hidden && t.innerText.includes('Log坤') && t.innerText.includes('1017068586');
+  })()`));
 check('每张截图都有说明文字',
   await evalJs("[...document.querySelectorAll('#work-shots figcaption')].every(f => f.textContent.trim().length > 8)"));
 check('三张截图都真正加载完成',
@@ -666,7 +693,7 @@ await sleep(500);
 check('点截图能打开放大层',
   await evalJs("document.querySelector('#lightbox').hidden === false"));
 check('放大层里显示的是对应那张图',
-  await evalJs("document.querySelector('#lightbox-img').getAttribute('src').includes('shader-3')"),
+  await evalJs("document.querySelector('#lightbox-img').getAttribute('src').includes('shader-rain')"),
   await evalJs("document.querySelector('#lightbox-img').getAttribute('src')"));
 check('放大层带说明文字',
   await evalJs("document.querySelector('#lightbox-caption').textContent.length > 8"));
@@ -699,21 +726,110 @@ await evalJs("document.querySelector('#lightbox-close').click()");
 await sleep(300);
 
 /* ============================================================
+   3.10 视频工具：这里只查「页面与依赖就位」
+   完整流程（诊断 → 转换 → 复检）在 tools/test-video.mjs 里单独跑。
+   原因：视频解码会占用媒体管线，在跑过上百次页面跳转的同一个浏览器实例里
+   再测视频会稳定读不到元数据（文件其实是好的），把十几条断言一起染红、
+   反而掩盖真实故障。拆成两个文件后两边都稳定。
+   ============================================================ */
+await open('/tools.html');
+
+check('视频工具卡片与依赖就位',
+  await evalJs(`!!document.querySelector('#v-run-btn') &&
+                typeof MP4Box === 'object' &&
+                typeof window.__videoTool === 'object'`),
+  'MP4Box=' + await evalJs("typeof MP4Box") +
+  '，__videoTool=' + await evalJs("typeof window.__videoTool"));
+
+check('画面处理两种方式都在（加黑边 / 裁切）',
+  await evalJs(`document.querySelectorAll('.chip[data-fit]').length === 2 &&
+                !!document.querySelector('.chip[data-fit="pad"]') &&
+                !!document.querySelector('.chip[data-fit="crop"]')`));
+
+check('编码检测不依赖外网 CDN',
+  await evalJs(`[...document.querySelectorAll('script[src]')].every(s => !/^https?:/.test(s.getAttribute('src')))`));
+
+check('视频工具页无横向溢出',
+  await evalJs('document.documentElement.scrollWidth <= window.innerWidth + 1'));
+
+
+/* ============================================================
    4. 移动端
    ============================================================ */
 await open('/index.html', 390, 900, true);
-check('移动端首页无横向溢出',
-  await evalJs('document.documentElement.scrollWidth <= window.innerWidth + 1'),
-  await evalJs("document.documentElement.scrollWidth + ' vs ' + window.innerWidth"));
-check('移动端导航换行成整行（宽度撑满容器）',
+
+check('移动端桌面导航已隐藏',
+  await evalJs("getComputedStyle(document.querySelector('.site-header .nav')).display === 'none'"));
+
+check('移动端有汉堡按钮且可见',
   await evalJs(`(function(){
-    var nav = document.querySelector('.nav');
-    var bar = document.querySelector('.site-header .bar');
-    return Math.abs(nav.getBoundingClientRect().width - bar.getBoundingClientRect().width) < 2;
+    var b = document.querySelector('.mnav-btn');
+    return !!b && b.offsetWidth > 0 && b.offsetHeight > 0;
   })()`),
-  await evalJs("Math.round(document.querySelector('.nav').getBoundingClientRect().width) + ' vs ' + Math.round(document.querySelector('.site-header .bar').getBoundingClientRect().width)"));
+  await evalJs("(function(){ var b = document.querySelector('.mnav-btn'); return b ? Math.round(b.getBoundingClientRect().width) + 'x' + Math.round(b.getBoundingClientRect().height) : 'none'; })()"));
+
+check('侧栏默认是收起的',
+  await evalJs(`(function(){
+    var t = document.querySelector('#mnav-toggle');
+    return t && t.checked === false && getComputedStyle(document.querySelector('.mnav-drawer')).display === 'none';
+  })()`));
+
+check('侧栏里的链接有 7 条',
+  await evalJs("document.querySelectorAll('.mnav-links a').length === 7"),
+  '实际 ' + await evalJs("document.querySelectorAll('.mnav-links a').length"));
+
+// 展开：点汉堡对应的 label
+await evalJs("document.querySelector('.mnav-btn').click()");
+await waitFor("document.querySelector('#mnav-toggle').checked === true");
+
+check('点汉堡可以展开侧栏',
+  await evalJs("document.querySelector('#mnav-toggle').checked === true"));
+
+check('展开后抽屉真的占满右侧一列',
+  await evalJs(`(function(){
+    var d = document.querySelector('.mnav-drawer');
+    var r = d.getBoundingClientRect();
+    return getComputedStyle(d).display === 'flex' && r.width > 200 && r.height > 400;
+  })()`),
+  await evalJs("(function(){ var r = document.querySelector('.mnav-drawer').getBoundingClientRect(); return Math.round(r.width) + 'x' + Math.round(r.height); })()"));
+
+check('展开后遮罩铺满整个屏幕',
+  await evalJs(`(function(){
+    var o = document.querySelector('.mnav-overlay');
+    var r = o.getBoundingClientRect();
+    return getComputedStyle(o).display === 'block' && r.width >= window.innerWidth - 1 && r.height >= window.innerHeight - 1;
+  })()`),
+  await evalJs("(function(){ var r = document.querySelector('.mnav-overlay').getBoundingClientRect(); return Math.round(r.width) + 'x' + Math.round(r.height) + ' / 视口 ' + window.innerWidth + 'x' + window.innerHeight; })()"));
+
+check('展开后侧栏里的链接可见可点',
+  await evalJs(`(function(){
+    var a = document.querySelector('.mnav-links a');
+    var r = a.getBoundingClientRect();
+    return r.width > 0 && r.height > 0 && getComputedStyle(a).visibility !== 'hidden';
+  })()`));
+
+check('展开后当前页在侧栏里高亮',
+  await evalJs("document.querySelector('.mnav-links a.is-active') !== null"),
+  await evalJs("document.querySelector('.mnav-links a.is-active')?.textContent.trim()"));
+
+// 点遮罩收起
+await evalJs("document.querySelector('.mnav-overlay').click()");
+await waitFor("document.querySelector('#mnav-toggle').checked === false");
+check('点遮罩能收起侧栏',
+  await evalJs("document.querySelector('#mnav-toggle').checked === false"));
+
+// 再展开，点关闭按钮收起
+await evalJs("document.querySelector('.mnav-btn').click()");
+await waitFor("document.querySelector('#mnav-toggle').checked === true");
+await evalJs("document.querySelector('.mnav-close').click()");
+await waitFor("document.querySelector('#mnav-toggle').checked === false");
+check('点关闭按钮能收起侧栏',
+  await evalJs("document.querySelector('#mnav-toggle').checked === false"));
 
 await open('/join.html', 390, 900, true);
+check('移动端加入页也有侧栏',
+  await evalJs("!!document.querySelector('.mnav-btn') && !!document.querySelector('.mnav-links')"));
+
 check('移动端加入页无横向溢出',
   await evalJs('document.documentElement.scrollWidth <= window.innerWidth + 1'));
 
