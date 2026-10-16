@@ -13,6 +13,7 @@ innovaage-site/
 ├── index.html            首页：工作室介绍摘要、制作方向、作品展示、最新公告、加入入口
 ├── about.html            关于我们：团队沿革、平台与账号、制作方向、工作方式、合作
 ├── works.html            作品展示：光影 / 地图 / 皮肤 / 材质 / Addon
+├── work.html             作品详情（代表作单独成页）：work.html?id=xxx
 ├── tools.html            工具箱：图片压到指定分辨率以内（纯前端，图片不上传）
 ├── news.html             公告页：全部公告 + 分类筛选
 ├── join.html             加入 / 联系页：报名问卷 + 代投投稿 + 联系方式 + 审核条例（四个标签页）
@@ -24,7 +25,7 @@ innovaage-site/
 ├── tools/                本地开发脚本（不会发布到网站）
 │   ├── serve.mjs         模拟 GitHub Pages 的本地服务器（含 404 处理）
 │   ├── check.mjs         结构与链接检查（含主题变量、图片与分享图检查）
-│   ├── browser-test.mjs  浏览器行为自检（101 项）
+│   ├── browser-test.mjs  浏览器行为自检（121 项）
 │   ├── process-shader-images.mjs  渲染图裁切压缩（见第六节）
 │   ├── make-logo.mjs     logo 裁切与多尺寸生成
 │   ├── make-og-image.mjs 生成社交分享卡 og-image.jpg
@@ -200,6 +201,55 @@ Resolve-DnsName www.innovaage.cn
 
 ## 六、日常维护
 
+### 给代表作做单独的介绍页
+
+作品详情是**数据驱动**的，全部配置在 `assets/js/site.js` 的 `WORKS` 对象里，
+地址形如 `work.html?id=你的编号`（例如 `work.html?id=log-shader-sa`）。
+
+加一件新代表作，两步：
+
+**第一步**：在 `WORKS` 里加一项（复制现有那项改内容）：
+
+```js
+'你的编号': {                    // 英文小写 + 短横线
+  name: '作品名',
+  author: '作者',
+  type: '光影 / Shader',         // 或「地图 / Map」等
+  tagline: '一句话定位',
+  cover: 'assets/img/xxx.jpg',   // 详情页头图
+  coverAlt: '头图的文字说明',     // 给盲人和搜索引擎看
+  facts: [                       // 左侧「作品信息」，条数随意
+    { k: '作品名', v: '...' },
+    { k: '作者',   v: '...' }
+  ],
+  intro: [                       // 正文，一段一个字符串
+    '第一段…',
+    '第二段…'
+  ],
+  shots: [                       // 截图，想放几张放几张
+    { img: 'assets/img/xxx-1.jpg', caption: '这张展示了什么' }
+  ],
+  notice: '使用须知，可选'
+}
+```
+
+**第二步**：在 `SHOWCASE` 里找到对应的那条，把 `id` 填成同一个编号：
+
+```js
+{
+  id: '你的编号',                 // ← 填了它，作品页那张卡片才会出现「查看详情 →」
+  img: 'assets/img/xxx-1.jpg',
+  ...
+}
+```
+
+没填 `id` 的卡片就只展示缩略图，不链接到详情页——这样先放图、后补详情的节奏也能用。
+
+> ⚠️ **注意**：`work.html` 里写了一份静态兜底内容（就是当前这件作品），
+> 并且有一个 `<div id="work-detail">` 容器作为「门闩」。
+> JS 找不到这个 id 就会**整个跳过渲染**，页面只剩静态兜底、放大功能也会失效。
+> 改这一页的结构时别把 `id="work-detail"` 删掉；自检里有断言盯着这一点。
+
 ### 工具箱（tools.html）
 
 投稿时常要把图压到平台规定的分辨率，所以做了个纯前端工具，默认上限 **宽 1000 × 高 4000**
@@ -304,7 +354,7 @@ node tools/serve.mjs 8099
 
 ```powershell
 node tools/check.mjs          # 文件、链接、id、语法、CSS 括号、主题变量完整性
-node tools/browser-test.mjs   # 真浏览器跑 65 项行为测试（需先起 serve.mjs）
+node tools/browser-test.mjs   # 真浏览器跑 121 项行为测试（需先起 serve.mjs）
 ```
 
 `browser-test.mjs` 会真开一个无头 Edge，检查：公告渲染与筛选、标签页切换、

@@ -731,6 +731,183 @@ html[data-theme="dark"] .tag--diamond { color: var(--gold); }
   color: var(--text-mute);
 }
 
+/* ---------- 作品详情页 ---------- */
+.work-hero {
+  position: relative;
+  border: 1px solid var(--line-2);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--bg-2);
+}
+
+.work-hero img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 7;
+  object-fit: cover;
+  display: block;
+}
+
+/* 头图左下角黄角标 */
+.work-hero::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 64px;
+  height: 4px;
+  background: var(--gold);
+}
+
+.crumb {
+  margin: 20px 0 0;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .05em;
+  color: var(--text-mute);
+}
+
+.crumb a { color: var(--text-mute); border-bottom-color: transparent; }
+.crumb a:hover { color: var(--text); border-bottom-color: var(--gold); }
+
+.work-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+  gap: 34px;
+  align-items: start;
+}
+
+.work-intro p {
+  color: var(--text-dim);
+  font-size: 15px;
+  line-height: 1.9;
+  margin: 0 0 1.1em;
+}
+
+/* 首段稍微放大一点，做出层次 */
+.work-intro p:first-child {
+  font-size: 16.5px;
+  color: var(--text);
+}
+
+.work-intro p:last-child { margin-bottom: 0; }
+
+/* 截图栅格 */
+.shot-grid {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
+}
+
+.shot { margin: 0; }
+
+.shot-btn {
+  display: block;
+  width: 100%;
+  padding: 0;
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  cursor: zoom-in;
+  transition: border-color .16s ease, box-shadow .16s ease;
+}
+
+.shot-btn:hover {
+  border-color: var(--line-strong);
+  box-shadow: var(--shadow);
+}
+
+.shot-btn img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  display: block;
+  transition: transform .35s ease;
+}
+
+.shot-btn:hover img { transform: scale(1.02); }
+
+.shot figcaption {
+  margin-top: 10px;
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--text-dim);
+}
+
+/* 作品卡片上的「查看详情」 */
+.work-more {
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .04em;
+  color: var(--text);
+  border-bottom: 1px solid var(--gold);
+  white-space: nowrap;
+}
+
+.work-more:hover { border-bottom-color: var(--line-strong); }
+
+/* 截图放大层 */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: grid;
+  place-items: center;
+  padding: 40px 24px;
+  background: rgba(10, 12, 15, .88);
+  backdrop-filter: blur(3px);
+}
+
+.lightbox[hidden] { display: none; }
+
+.lightbox-inner {
+  margin: 0;
+  max-width: min(1400px, 100%);
+  display: grid;
+  gap: 14px;
+  justify-items: center;
+}
+
+.lightbox-inner img {
+  max-width: 100%;
+  max-height: calc(100vh - 140px);
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border: 1px solid rgba(255, 255, 255, .18);
+  border-radius: var(--radius);
+}
+
+.lightbox-inner figcaption {
+  font-size: 13.5px;
+  line-height: 1.7;
+  color: #dfe3e8;
+  text-align: center;
+  max-width: 70ch;
+}
+
+.lightbox-close {
+  position: absolute;
+  top: 18px;
+  right: 22px;
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  font-size: 24px;
+  line-height: 1;
+  color: #eef1f5;
+  background: rgba(255, 255, 255, .1);
+  border: 1px solid rgba(255, 255, 255, .28);
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+.lightbox-close:hover { background: rgba(255, 255, 255, .2); }
+
 /* ---------- 工具箱 ---------- */
 .tool {
   display: grid;
@@ -1308,6 +1485,15 @@ td code { white-space: nowrap; }
 
   /* Hero 收起为单列，图放到文字下面 */
   .hero-inner { grid-template-columns: 1fr; gap: 28px; }
+
+  .work-layout { grid-template-columns: 1fr; gap: 26px; }
+
+  .work-hero img { aspect-ratio: 4 / 3; }
+
+  .shot-btn img { aspect-ratio: 4 / 3; }
+
+  .lightbox { padding: 20px 14px; }
+  .lightbox-close { top: 10px; right: 12px; }
 
   .section { padding: 48px 0; }
   .section--tight { padding: 32px 0; }

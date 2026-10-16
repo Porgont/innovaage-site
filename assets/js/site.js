@@ -53,6 +53,7 @@
 
   var SHOWCASE = [
     {
+      id: 'log-shader-sa',
       img: 'assets/img/shader-3.jpg',
       title: 'Log光影 · 橡木 SA',
       meta: '作者：Log坤',
@@ -74,6 +75,58 @@
       desc: '樱花林地的透光树冠与飘落花瓣，草地与花簇的色彩层次。'
     }
   ];
+
+  /* ==========================================================
+     ④ 作品详情 —— 代表作单独成页：work.html?id=xxx
+     字段：
+       name      作品名（与 SHOWCASE 里的 title 对应）
+       author    作者
+       type      类型文字，如「光影 / Shader」
+       tagline   一句话定位，显示在标题下面
+       cover     详情页头图
+       facts     左侧信息栏，[{k,v}] 形式
+       intro     正文段落数组
+       shots     截图清单 [{img, caption}]
+       notice    使用须知（可选）
+     ★ 加新代表作：在这里加一项，id 用英文小写短横线，
+       然后在 SHOWCASE 对应那条上填同名的 id，作品页就会出现「查看详情」入口。
+     ========================================================== */
+  var WORKS = {
+    'log-shader-sa': {
+      name: 'Log光影 · 橡木 SA',
+      author: 'Log坤',
+      type: '光影 / Shader',
+      tagline: '基岩版光影，主打水面反射与自然光过渡',
+      cover: 'assets/img/shader-2.jpg',
+      coverAlt: '樱花林地里的透光树冠与飘落花瓣',
+      facts: [
+        { k: '作品名', v: 'Log光影 · 橡木 SA' },
+        { k: '作者', v: 'Log坤' },
+        { k: '类型', v: '光影 / Shader' },
+        { k: '平台', v: 'Minecraft 基岩版' },
+        { k: '发布', v: '通过创想时代开发组发布' }
+      ],
+      intro: [
+        '「橡木 SA」是 Log坤 制作的基岩版光影，整体走自然、通透的路线：天光与阳光的过渡偏柔和，' +
+        '草地、花簇这类细节的颜色层次给得比较足，不会一片死绿。',
+
+        '水面是这套光影最值得看的部分。静止水面会形成近乎镜面的反射，' +
+        '能把天空、云和两侧地形一起映进去，倒影的清晰度与形变控制得比较克制，' +
+        '不会糊成一片。',
+
+        '光照方面，强光环境下会保留一定程度的过曝（雪地、正对太阳的坡面），' +
+        '这是有意的取舍 —— 牺牲一点细节换取更接近真实的明暗对比。'
+      ],
+      shots: [
+        { img: 'assets/img/shader-3.jpg', caption: '峡谷水道的镜面反射：天空、云与两侧地形完整倒映在水面上' },
+        { img: 'assets/img/shader-2.jpg', caption: '樱花林地：透光树冠、飘落花瓣与草地花簇的色彩层次' },
+        { img: 'assets/img/shader-1.jpg', caption: '雪山与松林：强光下的天空过曝与积雪明暗过渡' }
+      ],
+      notice:
+        '截图均为游戏内直接截取，未做后期调色（只裁掉了界面元素）。' +
+        '实际效果会随游戏版本、画质设置与设备性能而变化。'
+    }
+  };
 
   /* ==========================================================
      ② 公告数据 —— 公告页在这里增删改
@@ -527,6 +580,9 @@
 
     host.innerHTML = list.map(function (it) {
       var cat = CATEGORIES[it.category] || '';
+      var detail = it.id
+        ? '<a class="work-more" href="work.html?id=' + esc(it.id) + '">查看详情 →</a>'
+        : '';
       return '' +
         '<article class="work">' +
           '<div class="work-media"><img src="' + esc(it.img) + '" alt="' + esc(it.title + (it.meta ? ' ' + it.meta : '')) + '" decoding="async"></div>' +
@@ -536,10 +592,194 @@
             '<div class="work-meta">' +
               (cat ? '<span class="tag tag--gold">' + esc(cat) + '</span>' : '') +
               (it.meta ? '<span>' + esc(it.meta) + '</span>' : '') +
+              detail +
             '</div>' +
           '</div>' +
         '</article>';
     }).join('');
+  }
+
+  /* ---------- 作品详情页 ----------
+     地址形如 work.html?id=log-shader-sa
+     HTML 里已经写了一份默认内容（Log光影 · 橡木 SA），
+     所以即使 JS 没跑起来或者 id 不对，页面也不会空白。 */
+  function initWorkDetail() {
+    var host = $('#work-detail');
+    if (!host) return;
+
+    var id = '';
+    try {
+      id = new URLSearchParams(location.search).get('id') || '';
+    } catch (e) {
+      // 老浏览器：手动解析
+      var m = /[?&]id=([^&]+)/.exec(location.search);
+      id = m ? decodeURIComponent(m[1]) : '';
+    }
+
+    var work = WORKS[id];
+    if (!work) {
+      // 没带 id 或 id 不存在：保留 HTML 里的默认代表作，并提示一句
+      if (id) {
+        var note = $('#work-notice');
+        if (note) {
+          note.hidden = false;
+          note.className = 'callout';
+          note.innerHTML = '<span class="icon" aria-hidden="true">🛈</span><div>' +
+            '没找到编号为 <code>' + esc(id) + '</code> 的作品，下面展示的是代表作 ' +
+            '<b>Log光影 · 橡木 SA</b>。<a href="works.html">回作品列表</a></div>';
+        }
+      }
+      // 走兜底分支时，放大功能也得能用 —— 从页面上已有的静态内容里取截图
+      initLightbox(null);
+      return;
+    }
+
+    document.title = work.name + ' | 创想时代开发组';
+
+    // 标记 JS 真的跑通了。
+    // 页面里有一份写死的兜底内容，长得和渲染结果几乎一样，
+    // 光比对文字无法区分「JS 渲染成功」和「JS 没跑、只是静态兜底」，
+    // 所以留这个标记给自检用。
+    host.setAttribute('data-work-id', id);
+
+    var setText = function (sel, text) {
+      var el = $(sel);
+      if (el) el.textContent = text;
+    };
+
+    setText('#work-type', work.type || '');
+    setText('#work-name', work.name || '');
+    setText('#work-tagline', work.tagline || '');
+    setText('#work-author', work.author ? '作者：' + work.author : '');
+
+    var desc = $('meta[name="description"]');
+    if (desc) {
+      desc.setAttribute('content',
+        work.name + (work.author ? '（作者 ' + work.author + '）' : '') + '：' +
+        (work.tagline || '') + ' —— 创想时代开发组作品展示。');
+    }
+
+    // 头图
+    var cover = $('#work-cover');
+    if (cover && work.cover) {
+      cover.src = work.cover;
+      cover.alt = work.coverAlt || work.name;
+    }
+
+    // 左侧信息栏
+    var facts = $('#work-facts');
+    if (facts && work.facts && work.facts.length) {
+      facts.innerHTML = work.facts.map(function (f) {
+        return '<div><dt>' + esc(f.k) + '</dt><dd>' + esc(f.v) + '</dd></div>';
+      }).join('');
+    }
+
+    // 正文
+    var intro = $('#work-intro');
+    if (intro && work.intro && work.intro.length) {
+      intro.innerHTML = work.intro.map(function (p) {
+        return '<p>' + esc(p) + '</p>';
+      }).join('');
+    }
+
+    // 截图
+    var shots = $('#work-shots');
+    if (shots && work.shots && work.shots.length) {
+      shots.innerHTML = work.shots.map(function (s, i) {
+        return '' +
+          '<figure class="shot">' +
+            '<button class="shot-btn" type="button" data-index="' + i + '"' +
+              ' aria-label="放大查看第 ' + (i + 1) + ' 张截图">' +
+              '<img src="' + esc(s.img) + '" alt="' + esc(s.caption || work.name) + '" decoding="async">' +
+            '</button>' +
+            (s.caption ? '<figcaption>' + esc(s.caption) + '</figcaption>' : '') +
+          '</figure>';
+      }).join('');
+    }
+
+    // 使用须知
+    var notice = $('#work-notice');
+    if (notice && work.notice) {
+      notice.hidden = false;
+      notice.className = 'callout';
+      notice.innerHTML = '<span class="icon" aria-hidden="true">🛈</span><div>' +
+        esc(work.notice) + '</div>';
+    }
+
+    // 上一件 / 下一件
+    var ids = Object.keys(WORKS);
+    if (ids.length > 1) {
+      var idx = ids.indexOf(id);
+      var prev = WORKS[ids[(idx - 1 + ids.length) % ids.length]];
+      var next = WORKS[ids[(idx + 1) % ids.length]];
+      var nav = $('#work-nav');
+      if (nav) {
+        nav.hidden = false;
+        nav.innerHTML =
+          '<a class="btn btn--ghost btn--sm" href="work.html?id=' + esc(ids[(idx - 1 + ids.length) % ids.length]) + '">← ' + esc(prev.name) + '</a>' +
+          '<a class="btn btn--ghost btn--sm" href="work.html?id=' + esc(ids[(idx + 1) % ids.length]) + '">' + esc(next.name) + ' →</a>';
+      }
+    }
+
+    initLightbox(work.shots || []);
+  }
+
+  /* ---------- 截图放大 ----------
+     传入 shots 就用它；传 null / 空数组时，直接从页面上已有的截图读，
+     这样静态兜底分支也能有放大功能。 */
+  function initLightbox(shots) {
+    var box = $('#lightbox');
+    if (!box) return;
+
+    if (!shots || !shots.length) {
+      shots = $$('#work-shots .shot').map(function (fig) {
+        var img = fig.querySelector('img');
+        var cap = fig.querySelector('figcaption');
+        return {
+          img: img ? img.getAttribute('src') : '',
+          caption: cap ? cap.textContent.trim() : ''
+        };
+      }).filter(function (s) { return s.img; });
+    }
+    if (!shots.length) return;
+
+    var img = $('#lightbox-img');
+    var cap = $('#lightbox-caption');
+    var lastFocus = null;
+
+    function open(i) {
+      var s = shots[i];
+      if (!s) return;
+      lastFocus = document.activeElement;
+      img.src = s.img;
+      img.alt = s.caption || '';
+      cap.textContent = s.caption || '';
+      box.hidden = false;
+      document.body.style.overflow = 'hidden';
+      $('#lightbox-close').focus();
+    }
+
+    function close() {
+      box.hidden = true;
+      img.removeAttribute('src');
+      document.body.style.overflow = '';
+      if (lastFocus && lastFocus.focus) lastFocus.focus();
+    }
+
+    $$('.shot-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        open(Number(btn.getAttribute('data-index')));
+      });
+    });
+
+    $('#lightbox-close').addEventListener('click', close);
+    box.addEventListener('click', function (e) {
+      // 点背景关闭，点图片本身不关
+      if (e.target === box) close();
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && !box.hidden) close();
+    });
   }
 
   /* ---------- 启动 ---------- */
@@ -555,6 +795,7 @@
     initTheme();
     initHeroImage();
     initShowcase();
+    initWorkDetail();
   }
 
   if (document.readyState === 'loading') {

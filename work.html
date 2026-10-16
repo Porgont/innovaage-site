@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Log光影 · 橡木 SA | 创想时代开发组</title>
+<meta name="description" content="Log光影 · 橡木 SA（作者 Log坤）：基岩版光影，主打水面镜面反射与自然光过渡。创想时代开发组代表作品介绍与截图。">
+<meta name="keywords" content="Log光影,橡木SA,Log坤,基岩版光影,MCBE光影,Minecraft光影,水面反射,创想时代开发组">
+<link rel="canonical" href="https://innovaage.cn/work.html">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0e1013" media="(prefers-color-scheme: dark)">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="创想时代开发组">
+<meta property="og:title" content="Log光影 · 橡木 SA | 创想时代开发组">
+<meta property="og:description" content="基岩版光影，主打水面镜面反射与自然光过渡。作者：Log坤。">
+<meta property="og:url" content="https://innovaage.cn/work.html">
+<meta property="og:image" content="https://innovaage.cn/assets/img/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://innovaage.cn/assets/img/og-image.jpg">
+
+<link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
+<link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+<!-- 主题：在页面渲染前决定用哪套，避免刷新时闪一下 -->
+<script>
+(function () {
+  try {
+    var t = localStorage.getItem('ia-theme');
+    if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+  } catch (e) {}
+})();
+</script>
+<link rel="stylesheet" href="assets/css/theme.css">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body data-page="works">
+<a class="skip-link" href="#main">跳到主要内容</a>
+
+<header class="site-header">
+  <div class="wrap bar">
+    <a class="brand" href="index.html">
+      <img class="brand-mark" src="assets/img/logo-mark.png" alt="" width="112" height="128" aria-hidden="true">
+      <span class="brand-text">
+        <strong>创想时代开发组</strong>
+        <span>Innova Age Development Team</span>
+      </span>
+    </a>
+
+    <nav class="nav" aria-label="主导航">
+      <a href="index.html" data-nav="home">首页</a>
+      <a href="about.html" data-nav="about">关于我们</a>
+      <a href="works.html" data-nav="works">作品</a>
+      <a href="news.html"  data-nav="news">公告</a>
+      <a href="tools.html" data-nav="tools">工具箱</a>
+      <a href="join.html"  data-nav="join">加入我们</a>
+      <a href="join.html#panel-contact" data-nav="contact">联系我们</a>
+    </nav>
+
+    <button class="theme-toggle" id="theme-toggle" type="button"
+            aria-label="切换深浅主题" title="切换深浅主题">
+      <span class="ico" data-theme-icon aria-hidden="true">◐</span>
+      <span data-theme-label>主题</span>
+    </button>
+
+    <a class="btn btn--sm header-cta" href="join.html#panel-form">加入我们</a>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- 这个容器是给 assets/js/site.js 的 initWorkDetail() 用的门闩：
+       没有它（或 id 写错）整个详情渲染都会被跳过，页面只剩下面写死的静态兜底内容。
+       改动本页结构时不要删掉它。 -->
+  <div id="work-detail">
+
+  <!-- ============ 作品头部 ============ -->
+  <section class="hero" style="padding:44px 0 40px">
+    <div class="wrap">
+      <p class="hero-badge"><span class="dot" aria-hidden="true"></span>
+        <span id="work-type">光影 / Shader</span>
+      </p>
+
+      <h1 style="font-size:clamp(25px,4vw,38px);margin-bottom:10px" id="work-name">Log光影 · 橡木 SA</h1>
+      <p class="lead" id="work-tagline" style="margin-bottom:14px">基岩版光影，主打水面反射与自然光过渡</p>
+      <p style="font-family:var(--mono);font-size:12.5px;letter-spacing:.06em;color:var(--text-mute);margin:0 0 26px"
+         id="work-author">作者：Log坤</p>
+
+      <figure class="work-hero" style="margin:0">
+        <img id="work-cover" src="assets/img/shader-2.jpg"
+             alt="樱花林地里的透光树冠与飘落花瓣" decoding="async">
+      </figure>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <p class="crumb">
+      <a href="index.html">首页</a> /
+      <a href="works.html">作品展示</a> /
+      <span id="work-crumb">Log光影 · 橡木 SA</span>
+    </p>
+  </div>
+
+  <!-- ============ 介绍 + 信息栏 ============ -->
+  <section class="section section--tight">
+    <div class="wrap">
+      <div class="work-layout">
+
+        <div>
+          <div class="section-head">
+            <span class="kicker">About</span>
+            <h2>作品介绍</h2>
+          </div>
+          <div id="work-intro" class="work-intro">
+            <p>
+              「橡木 SA」是 Log坤 制作的基岩版光影，整体走自然、通透的路线：天光与阳光的过渡偏柔和，
+              草地、花簇这类细节的颜色层次给得比较足，不会一片死绿。
+            </p>
+            <p>
+              水面是这套光影最值得看的部分。静止水面会形成近乎镜面的反射，
+              能把天空、云和两侧地形一起映进去，倒影的清晰度与形变控制得比较克制，不会糊成一片。
+            </p>
+            <p>
+              光照方面，强光环境下会保留一定程度的过曝（雪地、正对太阳的坡面），
+              这是有意的取舍 —— 牺牲一点细节换取更接近真实的明暗对比。
+            </p>
+          </div>
+
+          <div class="callout" id="work-notice">
+            <span class="icon" aria-hidden="true">🛈</span>
+            <div>
+              截图均为游戏内直接截取，未做后期调色（只裁掉了界面元素）。
+              实际效果会随游戏版本、画质设置与设备性能而变化。
+            </div>
+          </div>
+        </div>
+
+        <aside>
+          <div class="panel">
+            <h3 style="margin-top:0">作品信息</h3>
+            <dl class="stat-list" id="work-facts">
+              <div><dt>作品名</dt><dd>Log光影 · 橡木 SA</dd></div>
+              <div><dt>作者</dt><dd>Log坤</dd></div>
+              <div><dt>类型</dt><dd>光影 / Shader</dd></div>
+              <div><dt>平台</dt><dd>Minecraft 基岩版</dd></div>
+              <div><dt>发布</dt><dd>通过创想时代开发组发布</dd></div>
+            </dl>
+          </div>
+
+          <div class="panel" style="margin-top:18px">
+            <h3 style="margin-top:0">想用这个光影？</h3>
+            <p style="color:var(--text-dim);font-size:14px">
+              作品默认允许在服务器与整合包中使用，需注明原作者与出处；
+              二次修改与商用请先取得同意。
+            </p>
+            <div class="btn-row">
+              <a class="btn btn--sm" href="join.html#panel-contact">联系方式</a>
+              <a class="btn btn--ghost btn--sm" href="join.html#panel-invest">投稿 / 代投</a>
+            </div>
+          </div>
+        </aside>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 截图 ============ -->
+  <section class="section section--tight">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker">Screenshots</span>
+        <h2>截图</h2>
+        <p>点击任意一张可放大查看。</p>
+      </div>
+
+      <div class="shot-grid" id="work-shots">
+        <figure class="shot">
+          <button class="shot-btn" type="button" data-index="0" aria-label="放大查看第 1 张截图">
+            <img src="assets/img/shader-3.jpg" alt="峡谷水道的镜面反射" decoding="async">
+          </button>
+          <figcaption>峡谷水道的镜面反射：天空、云与两侧地形完整倒映在水面上</figcaption>
+        </figure>
+        <figure class="shot">
+          <button class="shot-btn" type="button" data-index="1" aria-label="放大查看第 2 张截图">
+            <img src="assets/img/shader-2.jpg" alt="樱花林地" decoding="async">
+          </button>
+          <figcaption>樱花林地：透光树冠、飘落花瓣与草地花簇的色彩层次</figcaption>
+        </figure>
+        <figure class="shot">
+          <button class="shot-btn" type="button" data-index="2" aria-label="放大查看第 3 张截图">
+            <img src="assets/img/shader-1.jpg" alt="雪山与松林" decoding="async">
+          </button>
+          <figcaption>雪山与松林：强光下的天空过曝与积雪明暗过渡</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 页脚导航 ============ -->
+  <section class="section section--tight">
+    <div class="wrap">
+      <div class="btn-row" id="work-nav" hidden></div>
+      <div class="btn-row" style="margin-top:14px">
+        <a class="btn btn--ghost btn--sm" href="works.html">← 回作品列表</a>
+        <a class="btn btn--ghost btn--sm" href="join.html#panel-invest">我要投稿 →</a>
+      </div>
+    </div>
+  </section>
+
+  </div><!-- /#work-detail -->
+
+</main>
+
+<!-- 截图放大层 -->
+<div class="lightbox" id="lightbox" hidden role="dialog" aria-modal="true" aria-label="截图放大查看">
+  <button class="lightbox-close" id="lightbox-close" type="button" aria-label="关闭">×</button>
+  <figure class="lightbox-inner">
+    <img id="lightbox-img" alt="">
+    <figcaption id="lightbox-caption"></figcaption>
+  </figure>
+</div>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <h4>创想时代开发组</h4>
+        <p style="margin:0">
+          Innova Age Development Team<br>
+          专注 Minecraft 基岩版（MCBE）资源创作。<br>
+          成立于 2016 年 3 月 10 日。
+        </p>
+      </div>
+
+      <div>
+        <h4>站内导航</h4>
+        <ul>
+          <li><a href="index.html">首页</a></li>
+          <li><a href="about.html">关于我们</a></li>
+          <li><a href="works.html">作品展示</a></li>
+          <li><a href="news.html">公告</a></li>
+          <li><a href="tools.html">工具箱</a></li>
+          <li><a href="join.html#panel-form">加入我们</a></li>
+          <li><a href="join.html#panel-contact">联系我们</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4>联系方式</h4>
+        <ul>
+          <li>对外交流群：<span data-fill="qqPublic">—</span></li>
+          <li>对外审核群：<span data-fill="qqAudit">—</span></li>
+          <li>开发理事会：<span data-fill="qqCouncil">—</span></li>
+          <li>GitHub：<a href="#" data-fill-href="siteRepo">本网站源码</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>© <span data-year>2026</span> 创想时代开发组 · Innova Age Development Team</span>
+      <span>本站由 GitHub Pages 托管 · <a href="https://innovaage.cn">innovaage.cn</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/site.js"></script>
+</body>
+</html>

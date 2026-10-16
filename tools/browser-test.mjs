@@ -517,6 +517,86 @@ check('作品页无横向溢出',
   await evalJs('document.documentElement.scrollWidth <= window.innerWidth + 1'));
 
 /* ============================================================
+   3.9 作品详情页
+   ============================================================ */
+await open('/works.html');
+check('作品卡片有「查看详情」入口且指向详情页',
+  await evalJs(`(function(){
+    var a = document.querySelector('#showcase-grid .work-more');
+    return !!a && a.getAttribute('href').indexOf('work.html?id=') === 0;
+  })()`),
+  await evalJs("document.querySelector('#showcase-grid .work-more')?.getAttribute('href')"));
+
+await open('/work.html?id=log-shader-sa');
+
+// 关键：证明是 JS 渲染出来的，而不是页面里写死的静态兜底内容
+check('详情页确实由 JS 渲染（不是静态兜底）',
+  await evalJs("document.querySelector('#work-detail').getAttribute('data-work-id') === 'log-shader-sa'"),
+  'data-work-id=' + await evalJs("document.querySelector('#work-detail').getAttribute('data-work-id')"));
+
+check('详情页标题是作品名', (await evalJs('document.title')).includes('Log光影'));
+check('详情页显示作品名与作者',
+  await evalJs("document.querySelector('#work-name').textContent.includes('橡木 SA') && document.querySelector('#work-author').textContent.includes('Log坤')"));
+check('详情页头图加载完成',
+  await evalJs("(function(){ var i = document.querySelector('#work-cover'); return i.complete && i.naturalWidth > 0; })()"),
+  'naturalWidth=' + await evalJs("document.querySelector('#work-cover').naturalWidth"));
+check('详情页有作品介绍正文',
+  await evalJs("document.querySelectorAll('#work-intro p').length >= 3"),
+  '实际 ' + await evalJs("document.querySelectorAll('#work-intro p').length") + ' 段');
+check('详情页信息栏有五条',
+  await evalJs("document.querySelectorAll('#work-facts > div').length === 5"),
+  '实际 ' + await evalJs("document.querySelectorAll('#work-facts > div').length"));
+check('详情页列出三张截图',
+  await evalJs("document.querySelectorAll('#work-shots .shot').length === 3"));
+check('每张截图都有说明文字',
+  await evalJs("[...document.querySelectorAll('#work-shots figcaption')].every(f => f.textContent.trim().length > 8)"));
+check('三张截图都真正加载完成',
+  await waitFor("[...document.querySelectorAll('#work-shots img')].every(i => i.complete && i.naturalWidth > 0)"),
+  '各图宽度: ' + await evalJs("JSON.stringify([...document.querySelectorAll('#work-shots img')].map(i => i.naturalWidth))"));
+check('详情页无横向溢出',
+  await evalJs('document.documentElement.scrollWidth <= window.innerWidth + 1'));
+
+// 放大查看
+check('放大层默认是关的',
+  await evalJs("document.querySelector('#lightbox').hidden === true"));
+await evalJs("document.querySelector('.shot-btn').click()");
+await sleep(500);
+check('点截图能打开放大层',
+  await evalJs("document.querySelector('#lightbox').hidden === false"));
+check('放大层里显示的是对应那张图',
+  await evalJs("document.querySelector('#lightbox-img').getAttribute('src').includes('shader-3')"),
+  await evalJs("document.querySelector('#lightbox-img').getAttribute('src')"));
+check('放大层带说明文字',
+  await evalJs("document.querySelector('#lightbox-caption').textContent.length > 8"));
+await evalJs("document.querySelector('#lightbox-close').click()");
+await sleep(400);
+check('能关掉放大层',
+  await evalJs("document.querySelector('#lightbox').hidden === true"));
+
+// id 不存在时的兜底
+await open('/work.html?id=mei-you-zhe-ge');
+check('id 不存在时给出提示且不空白',
+  await evalJs("!!document.querySelector('#work-name').textContent.trim() && document.body.innerText.includes('没找到编号')"));
+
+// 不带 id 直接访问：应该保留静态兜底，且不报「没找到」
+await open('/work.html');
+check('不带 id 访问时展示默认代表作（静态兜底）',
+  await evalJs("document.querySelector('#work-shots').querySelectorAll('.shot').length === 3 && !document.body.innerText.includes('没找到编号')"));
+
+check('不带 id 时没有 JS 渲染标记（确认走的是兜底分支）',
+  await evalJs("document.querySelector('#work-detail').getAttribute('data-work-id') === null"),
+  'data-work-id=' + await evalJs("document.querySelector('#work-detail').getAttribute('data-work-id')"));
+
+// 放大功能在不带 id 的情况下也必须可用（这一条曾经是坏的）
+await evalJs("document.querySelector('.shot-btn').click()");
+const lbOnFallback = await waitFor("document.querySelector('#lightbox').hidden === false");
+check('静态兜底页面上点截图也能放大',
+  lbOnFallback,
+  'hidden=' + await evalJs("document.querySelector('#lightbox').hidden"));
+await evalJs("document.querySelector('#lightbox-close').click()");
+await sleep(300);
+
+/* ============================================================
    4. 移动端
    ============================================================ */
 await open('/index.html', 390, 900, true);
@@ -675,9 +755,10 @@ await open('/index.html');
 await open('/about.html');
 await open('/works.html');
 await open('/tools.html');
+await open('/work.html?id=log-shader-sa');
 await open('/news.html');
 await open('/join.html');
-check('六个页面在浅色下控制台无 JS 报错',
+check('七个页面在浅色下控制台无 JS 报错',
   consoleErrors.length === 0, consoleErrors.join(' | '));
 
 ws.close();
