@@ -368,6 +368,82 @@
     window.addEventListener('hashchange', openFromHash);
   }
 
+  /* ---------- 深浅主题切换 ----------
+     默认浅色（终末地风格）。没手动选过就跟随系统；选过就记住，刷新与换页都不变。
+     页面 <head> 里另有一段同样逻辑的内联脚本，负责在渲染前先定主题、避免闪一下。 */
+  var THEME_KEY = 'ia-theme';
+
+  function systemTheme() {
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) return 'dark';
+    return 'light';
+  }
+
+  function savedTheme() {
+    try {
+      var t = localStorage.getItem(THEME_KEY);
+      return (t === 'light' || t === 'dark') ? t : '';
+    } catch (e) { return ''; }
+  }
+
+  function currentTheme() {
+    return document.documentElement.getAttribute('data-theme') || savedTheme() || systemTheme();
+  }
+
+  function applyTheme(theme, animate) {
+    var root = document.documentElement;
+
+    if (animate) {
+      // 蒙版闪一下：颜色本身是瞬时切换的，蒙版只负责视觉过渡。
+      // 定个时限摘掉类，避免在动画不推进的环境里一直挂着。
+      root.classList.add('theme-switching');
+      clearTimeout(root._themeTimer);
+      root._themeTimer = setTimeout(function () {
+        root.classList.remove('theme-switching');
+      }, 400);
+    } else {
+      clearTimeout(root._themeTimer);
+      root.classList.remove('theme-switching');
+    }
+
+    root.setAttribute('data-theme', theme);
+
+    var icon = $('[data-theme-icon]');
+    var label = $('[data-theme-label]');
+    var btn = $('#theme-toggle');
+
+    // 显示“将要切到的模式”，而不是当前模式
+    var next = theme === 'dark' ? '浅色' : '深色';
+    if (icon) icon.textContent = theme === 'dark' ? '☀' : '☾';
+    if (label) label.textContent = next;
+    if (btn) btn.setAttribute('aria-label', '切换到' + next + '主题');
+  }
+
+  function initTheme() {
+    // 没手动选过时不写 data-theme，交给 CSS 跟随系统
+    var saved = savedTheme();
+    applyTheme(saved || currentTheme(), false);
+
+    var btn = $('#theme-toggle');
+    if (!btn) return;
+
+    btn.addEventListener('click', function () {
+      var next = currentTheme() === 'dark' ? 'light' : 'dark';
+      try { localStorage.setItem(THEME_KEY, next); } catch (e) {}
+      applyTheme(next, true);
+    });
+
+    // 没手动选过时，跟随系统变化实时更新
+    if (window.matchMedia) {
+      var mq = window.matchMedia('(prefers-color-scheme: dark)');
+      var onChange = function () {
+        if (savedTheme()) return;   // 已经手动选过就不再跟随系统
+        applyTheme(systemTheme(), true);
+      };
+      if (mq.addEventListener) mq.addEventListener('change', onChange);
+      else if (mq.addListener) mq.addListener(onChange);
+    }
+  }
+
   /* ---------- 启动 ---------- */
   function boot() {
     markActiveNav();
@@ -378,6 +454,7 @@
     initTabs();
     initCopy();
     initSurvey();
+    initTheme();
   }
 
   if (document.readyState === 'loading') {

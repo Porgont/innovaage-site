@@ -16,7 +16,7 @@ const pages = ['index.html', 'about.html', 'news.html', 'join.html', '404.html']
 const required = [
   'index.html', 'about.html', 'news.html', 'join.html', '404.html',
   'CNAME', '.nojekyll', 'robots.txt', 'sitemap.xml', 'README.md', '.gitignore',
-  'assets/css/style.css', 'assets/js/site.js'
+  'assets/css/theme.css', 'assets/css/style.css', 'assets/js/site.js'
 ];
 for (const f of required) {
   if (!existsSync(join(root, f))) errors.push(`缺少文件: ${f}`);
@@ -39,11 +39,60 @@ try {
 }
 
 /* ---------- 4. 样式括号平衡 ---------- */
-const css = readFileSync(join(root, 'assets/css/style.css'), 'utf8');
-const open = (css.match(/\{/g) || []).length;
-const close = (css.match(/\}/g) || []).length;
-if (open !== close) errors.push(`style.css 花括号不平衡: { ${open} 个, } ${close} 个`);
-else ok.push(`style.css 花括号平衡 (${open} 对)`);
+for (const cssFile of ['assets/css/style.css', 'assets/css/theme.css']) {
+  const css = readFileSync(join(root, cssFile), 'utf8');
+  const open = (css.match(/\{/g) || []).length;
+  const close = (css.match(/\}/g) || []).length;
+  if (open !== close) errors.push(`${cssFile} 花括号不平衡: { ${open} 个, } ${close} 个`);
+  else ok.push(`${cssFile} 花括号平衡 (${open} 对)`);
+}
+
+/* ---------- 4.5 主题：三套取值是否齐全 ---------- */
+{
+  const theme = readFileSync(join(root, 'assets/css/theme.css'), 'utf8');
+
+  // 变量名清单（取默认那套的变量名作为基准）
+  // 注意两点：用 [ \t]* 而不是 \s*（否则吃掉换行）；用行首锚定的 search 而不是 indexOf
+  // （否则会命中文件头注释里写的 "@media ..." 字样，切出一段空注释）
+  const varRe = /^[ \t]*(--[a-z0-9-]+)[ \t]*:/gim;
+  const mediaAt = theme.search(/^@media \(prefers-color-scheme: dark\)/m);
+  const lightAt = theme.search(/^html\[data-theme="light"\]/m);
+  const darkExplicitAt = theme.search(/^html\[data-theme="dark"\]/m);
+
+  const baseVars = new Set([...theme.slice(0, mediaAt).matchAll(varRe)].map(m => m[1]));
+
+  if (baseVars.size < 10 || mediaAt < 0 || lightAt < 0 || darkExplicitAt < 0) {
+    errors.push(`theme.css：变量解析异常（基准 ${baseVars.size} 个，段落位置 ${mediaAt}/${lightAt}/${darkExplicitAt}）`);
+  }
+
+  const darkVars = new Set([...theme.slice(mediaAt, lightAt).matchAll(varRe)].map(m => m[1]));
+  const explicitDarkVars = new Set([...theme.slice(darkExplicitAt).matchAll(varRe)].map(m => m[1]));
+
+  // 这几个是尺寸 / 字体，与深浅无关，不需要在深色分支里重复定义
+  const themeNeutral = new Set(['--radius', '--pad', '--maxw', '--font', '--mono']);
+
+  const missingInMedia = [...baseVars].filter(v => !themeNeutral.has(v) && !darkVars.has(v));
+  const missingInExplicit = [...baseVars].filter(v => !themeNeutral.has(v) && !explicitDarkVars.has(v));
+
+  if (missingInMedia.length) {
+    errors.push(`theme.css：系统深色分支缺少变量 -> ${missingInMedia.join(', ')}`);
+  }
+  if (missingInExplicit.length) {
+    errors.push(`theme.css：data-theme="dark" 缺少变量 -> ${missingInExplicit.join(', ')}`);
+  }
+
+  if (!missingInMedia.length && !missingInExplicit.length) {
+    ok.push(`theme.css 三套主题变量齐全（各 ${baseVars.size} 个）`);
+  }
+
+  // 页面里不许再出现写死的深浅主题色
+  const hardcoded = ['#0f1319', '#1a212b', '#212936', '#2c3644', '#0e1a09'];
+  for (const page of pages) {
+    const html = readFileSync(join(root, page), 'utf8');
+    const hit = hardcoded.filter(h => html.toLowerCase().includes(h));
+    if (hit.length) warns.push(`${page}: 出现旧深色主题的写死色值 ${hit.join(', ')}`);
+  }
+}
 
 /* ---------- 5. 逐页检查 ---------- */
 const allIds = new Map();  // page -> Set(ids)
@@ -91,6 +140,13 @@ for (const page of pages) {
   // 5.5 中文编码检查
   if (!/charset="?UTF-8/i.test(html)) errors.push(`${page}: 缺少 UTF-8 声明`);
   if (!/lang="zh-CN"/.test(html)) warns.push(`${page}: 未声明 lang="zh-CN"`);
+
+  // 5.5b 主题三件套：样式表 + 防闪烁脚本 + （有导航的页面）切换按钮
+  if (!/assets\/css\/theme\.css/.test(html)) errors.push(`${page}: 没引入 theme.css`);
+  if (!/ia-theme/.test(html)) errors.push(`${page}: 缺少防闪烁的主题内联脚本`);
+  for (const p of ['index.html', 'about.html', 'news.html', 'join.html']) {
+    if (page === p && !/id="theme-toggle"/.test(html)) errors.push(`${page}: 缺少主题切换按钮`);
+  }
 
   // 5.6 SEO 基础
   if (!/<meta name="description"/.test(html)) warns.push(`${page}: 缺少 meta description`);
@@ -160,7 +216,7 @@ await new Promise(r => server.listen(0, '127.0.0.1', r));
 const port = server.address().port;
 
 const fetched = [];
-for (const path of ['/', '/about.html', '/news.html', '/join.html', '/assets/css/style.css', '/assets/js/site.js', '/sitemap.xml', '/robots.txt']) {
+for (const path of ['/', '/about.html', '/news.html', '/join.html', '/assets/css/theme.css', '/assets/css/style.css', '/assets/js/site.js', '/sitemap.xml', '/robots.txt']) {
   const res = await fetch(`http://127.0.0.1:${port}${path}`);
   const body = await res.text();
   fetched.push(`${path} -> ${res.status} (${body.length} 字节)`);

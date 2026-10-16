@@ -1,0 +1,305 @@
+/* ============================================================
+   创想时代开发组 · 官网主题变量
+   ------------------------------------------------------------
+   三套取值，优先级从低到高：
+     1. :root                                    ← 默认（浅色 · 终末地风格）
+     2. @media (prefers-color-scheme: dark)      ← 系统偏好深色时
+     3. html[data-theme="light" | "dark"]        ← 访客手动切换，最高优先级
+
+   访客点过切换按钮后会在 <html> 上写 data-theme，
+   从此不再跟随系统；没点过则跟随系统。
+   ============================================================ */
+
+/* ============================================================
+   1. 默认：浅色（终末地风格）
+   ============================================================ */
+:root {
+  color-scheme: light;
+
+  /* 底色层次：页面 → 卡片 → 次级面 */
+  --bg:        #ffffff;
+  --bg-2:      #f4f5f7;
+  --panel:     #ffffff;
+  --panel-2:   #fafbfc;
+
+  /* 线：细、灰、脆 */
+  --line:      #e4e6ea;
+  --line-2:    #d2d6dd;
+  --line-strong: #1a1c20;
+
+  /* 文字：黑 → 灰 → 淡 */
+  --text:      #14161a;
+  --text-dim:  #5b616b;
+  --text-mute: #8b919b;
+
+  /* 强调色：终末地是黑 + 黄 */
+  --ink:       #1a1c20;   /* 实心黑：主按钮、标签底 */
+  --ink-fg:    #ffffff;   /* 黑底上的字 */
+  --gold:      #f5c518;   /* 亮黄：标记线、编号、当前态 */
+  --gold-dk:   #c99a00;
+  --gold-soft: #fff8e0;   /* 黄底浅色块 */
+
+  /* 功能色 */
+  --green:     #1f7a45;
+  --green-dk:  #155c33;
+  --redstone:  #c0392b;
+  --diamond:   #1a6b8a;
+  --lapis:     #2f4b8f;
+
+  /* 语义色（成功 / 失败提示） */
+  --ok-bg:     #f0faf2;
+  --ok-line:   #a8d8b9;
+  --ok-fg:     #175c33;
+  --err-bg:    #fdf2f0;
+  --err-line:  #e8b4ab;
+  --err-fg:    #a33223;
+  --warn-bg:   #fffaea;
+  --warn-line: #ecd28a;
+
+  /* 结构 */
+  --radius:    2px;       /* 终末地是近乎直角 */
+  --pad:       24px;
+  --maxw:      1180px;
+  --shadow:    0 1px 2px rgba(20, 22, 26, .05), 0 8px 24px rgba(20, 22, 26, .06);
+  --shadow-sm: 0 1px 2px rgba(20, 22, 26, .06);
+  --grid-line: rgba(20, 22, 26, .045);
+
+  /* 字体 */
+  --font: "Microsoft YaHei", "微软雅黑", "PingFang SC", "Hiragino Sans GB",
+          "Noto Sans SC", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "Cascadia Mono", "Consolas", "SFMono-Regular", "Menlo",
+          "Courier New", monospace;
+
+  /* 按钮：主按钮黑底白字，次按钮白底黑字 */
+  --btn-bg:      #1a1c20;
+  --btn-fg:      #ffffff;
+  --btn-border:  #1a1c20;
+  --btn-shadow:  none;
+  --btn-ghost-bg:     #ffffff;
+  --btn-ghost-fg:     #1a1c20;
+  --btn-ghost-border: #1a1c20;
+  --btn-gold-bg:     #f5c518;
+  --btn-gold-fg:     #1a1c20;
+  --btn-gold-border: #c99a00;
+
+  /* 输入框 */
+  --input-bg:     #ffffff;
+  --input-border: #c9ced6;
+  --focus-ring:   rgba(245, 197, 24, .45);
+
+  /* 顶部导航 */
+  --header-bg:     rgba(255, 255, 255, .92);
+  --header-border: #e4e6ea;
+
+  /* 品牌方块（MC 草方块）：浅色下用白 + 黑描边 + 黄角标 */
+  --mark-bg:     #ffffff;
+  --mark-border: #1a1c20;
+
+  --hero-grid:  rgba(20, 22, 26, .05);
+  --hero-wash:  rgba(245, 197, 24, .07);
+}
+
+/* ============================================================
+   2. 系统偏好深色
+   ============================================================ */
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+
+    --bg:        #0e1013;
+    --bg-2:      #16191e;
+    --panel:     #15181d;
+    --panel-2:   #1b1f25;
+
+    --line:      #2a2f37;
+    --line-2:    #3a414b;
+    --line-strong: #f0f2f5;
+
+    --text:      #eef1f5;
+    --text-dim:  #a8b0bb;
+    --text-mute: #767e89;
+
+    --ink:       #f0f2f5;
+    --ink-fg:    #0e1013;
+    --gold:      #f5c518;
+    --gold-dk:   #d8a900;
+    --gold-soft: #2a2412;
+
+    --green:     #4cb87a;
+    --green-dk:  #2f8a55;
+    --redstone:  #e2685a;
+    --diamond:   #58b6d8;
+    --lapis:     #7996e0;
+
+    --ok-bg:     #12241a;
+    --ok-line:   #2c6b45;
+    --ok-fg:     #8fd8ab;
+    --err-bg:    #2a1614;
+    --err-line:  #7d3a30;
+    --err-fg:    #f0a396;
+    --warn-bg:   #241d0f;
+    --warn-line: #6b5a22;
+
+    --shadow:    0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px rgba(0, 0, 0, .35);
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, .4);
+    --grid-line: rgba(255, 255, 255, .05);
+
+    --btn-bg:      #f0f2f5;
+    --btn-fg:      #0e1013;
+    --btn-border:  #f0f2f5;
+  --btn-shadow:  none;
+    --btn-ghost-bg:     transparent;
+    --btn-ghost-fg:     #eef1f5;
+    --btn-ghost-border: #3a414b;
+    --btn-gold-bg:     #f5c518;
+    --btn-gold-fg:     #1a1c20;
+    --btn-gold-border: #d8a900;
+
+    --input-bg:     #16191e;
+    --input-border: #3a414b;
+    --focus-ring:   rgba(245, 197, 24, .35);
+
+    --header-bg:     rgba(14, 16, 19, .9);
+    --header-border: #2a2f37;
+
+    --mark-bg:     #15181d;
+    --mark-border: #f0f2f5;
+
+    --hero-grid:  rgba(255, 255, 255, .05);
+    --hero-wash:  rgba(245, 197, 24, .06);
+  }
+}
+
+/* ============================================================
+   3. 访客手动选择（覆盖系统偏好）
+   ============================================================ */
+html[data-theme="light"] {
+  color-scheme: light;
+
+  --bg:        #ffffff;
+  --bg-2:      #f4f5f7;
+  --panel:     #ffffff;
+  --panel-2:   #fafbfc;
+  --line:      #e4e6ea;
+  --line-2:    #d2d6dd;
+  --line-strong: #1a1c20;
+  --text:      #14161a;
+  --text-dim:  #5b616b;
+  --text-mute: #8b919b;
+  --ink:       #1a1c20;
+  --ink-fg:    #ffffff;
+  --gold:      #f5c518;
+  --gold-dk:   #c99a00;
+  --gold-soft: #fff8e0;
+  --green:     #1f7a45;
+  --green-dk:  #155c33;
+  --redstone:  #c0392b;
+  --diamond:   #1a6b8a;
+  --lapis:     #2f4b8f;
+  --ok-bg:     #f0faf2;
+  --ok-line:   #a8d8b9;
+  --ok-fg:     #175c33;
+  --err-bg:    #fdf2f0;
+  --err-line:  #e8b4ab;
+  --err-fg:    #a33223;
+  --warn-bg:   #fffaea;
+  --warn-line: #ecd28a;
+  --shadow:    0 1px 2px rgba(20, 22, 26, .05), 0 8px 24px rgba(20, 22, 26, .06);
+  --shadow-sm: 0 1px 2px rgba(20, 22, 26, .06);
+  --grid-line: rgba(20, 22, 26, .045);
+  --btn-bg:      #1a1c20;
+  --btn-fg:      #ffffff;
+  --btn-border:  #1a1c20;
+  --btn-ghost-bg:     #ffffff;
+  --btn-ghost-fg:     #1a1c20;
+  --btn-ghost-border: #1a1c20;
+  --btn-gold-bg:     #f5c518;
+  --btn-gold-fg:     #1a1c20;
+  --btn-gold-border: #c99a00;
+  --input-bg:     #ffffff;
+  --input-border: #c9ced6;
+  --focus-ring:   rgba(245, 197, 24, .45);
+  --header-bg:     rgba(255, 255, 255, .92);
+  --header-border: #e4e6ea;
+  --mark-bg:     #ffffff;
+  --mark-border: #1a1c20;
+  --hero-grid:  rgba(20, 22, 26, .05);
+  --hero-wash:  rgba(245, 197, 24, .07);
+}
+
+html[data-theme="dark"] {
+  color-scheme: dark;
+
+  --bg:        #0e1013;
+  --bg-2:      #16191e;
+  --panel:     #15181d;
+  --panel-2:   #1b1f25;
+  --line:      #2a2f37;
+  --line-2:    #3a414b;
+  --line-strong: #f0f2f5;
+  --text:      #eef1f5;
+  --text-dim:  #a8b0bb;
+  --text-mute: #767e89;
+  --ink:       #f0f2f5;
+  --ink-fg:    #0e1013;
+  --gold:      #f5c518;
+  --gold-dk:   #d8a900;
+  --gold-soft: #2a2412;
+  --green:     #4cb87a;
+  --green-dk:  #2f8a55;
+  --redstone:  #e2685a;
+  --diamond:   #58b6d8;
+  --lapis:     #7996e0;
+  --ok-bg:     #12241a;
+  --ok-line:   #2c6b45;
+  --ok-fg:     #8fd8ab;
+  --err-bg:    #2a1614;
+  --err-line:  #7d3a30;
+  --err-fg:    #f0a396;
+  --warn-bg:   #241d0f;
+  --warn-line: #6b5a22;
+  --shadow:    0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px rgba(0, 0, 0, .35);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, .4);
+  --grid-line: rgba(255, 255, 255, .05);
+  --btn-bg:      #f0f2f5;
+  --btn-fg:      #0e1013;
+  --btn-border:  #f0f2f5;
+  --btn-shadow:  none;
+  --btn-ghost-bg:     transparent;
+  --btn-ghost-fg:     #eef1f5;
+  --btn-ghost-border: #3a414b;
+  --btn-gold-bg:     #f5c518;
+  --btn-gold-fg:     #1a1c20;
+  --btn-gold-border: #d8a900;
+  --input-bg:     #16191e;
+  --input-border: #3a414b;
+  --focus-ring:   rgba(245, 197, 24, .35);
+  --header-bg:     rgba(14, 16, 19, .9);
+  --header-border: #2a2f37;
+  --mark-bg:     #15181d;
+  --mark-border: #f0f2f5;
+  --hero-grid:  rgba(255, 255, 255, .05);
+  --hero-wash:  rgba(245, 197, 24, .06);
+}
+
+/* 切换主题时：颜色瞬时切换（不走 transition —— 整页过渡在部分渲染环境下会停在
+   半路，让底色卡住），改用一层淡出的蒙版做视觉过渡。蒙版是 overlay，
+   即使动画不推进也只影响这一层，不会拖住真实配色。 */
+html.theme-switching::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  pointer-events: none;
+  background: var(--bg);
+  animation: theme-flash 340ms ease-out forwards;
+}
+
+@keyframes theme-flash {
+  0%   { opacity: .5; }
+  100% { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.theme-switching::before { animation: none; opacity: 0; }
+}

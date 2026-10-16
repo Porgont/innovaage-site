@@ -80,6 +80,15 @@ async function open(path, width = 1440, height = 1000, mobile = false) {
   await sleep(1800);
 }
 
+/* 轮询等待条件成立：主题切换带 180ms 过渡，固定 sleep 会读到旧值 */
+async function waitFor(expr, tries = 30, gap = 50) {
+  for (let i = 0; i < tries; i++) {
+    try { if (await evalJs(expr)) return true; } catch { /* 元素还没出现 */ }
+    await sleep(gap);
+  }
+  return false;
+}
+
 /* ============================================================
    1. 首页
    ============================================================ */
@@ -251,8 +260,13 @@ await open('/index.html', 390, 900, true);
 check('移动端首页无横向溢出',
   await evalJs('document.documentElement.scrollWidth <= window.innerWidth + 1'),
   await evalJs("document.documentElement.scrollWidth + ' vs ' + window.innerWidth"));
-check('移动端导航横向可滚动且不换行错位',
-  await evalJs("getComputedStyle(document.querySelector('.nav')).order === '3'"));
+check('移动端导航换行成整行（宽度撑满容器）',
+  await evalJs(`(function(){
+    var nav = document.querySelector('.nav');
+    var bar = document.querySelector('.site-header .bar');
+    return Math.abs(nav.getBoundingClientRect().width - bar.getBoundingClientRect().width) < 2;
+  })()`),
+  await evalJs("Math.round(document.querySelector('.nav').getBoundingClientRect().width) + ' vs ' + Math.round(document.querySelector('.site-header .bar').getBoundingClientRect().width)"));
 
 await open('/join.html', 390, 900, true);
 check('移动端加入页无横向溢出',
@@ -275,13 +289,130 @@ check('404 页面样式已加载（站点字体生效）',
   await evalJs("getComputedStyle(document.body).backgroundColor"));
 
 /* ============================================================
-   6. 控制台错误
+   6. 深浅主题
    ============================================================ */
+await send('Emulation.setEmulatedMedia', {
+  features: [{ name: 'prefers-color-scheme', value: 'light' }]
+});
+await open('/index.html');
+
+// 清掉记忆，验证“默认进去是白色”
+await evalJs("localStorage.removeItem('ia-theme')");
+await send('Emulation.setEmulatedMedia', {
+  features: [{ name: 'prefers-color-scheme', value: 'light' }]
+});
+await send('Page.navigate', { url: BASE + '/index.html' });
+await sleep(1600);
+
+check('默认（首次访问）是浅色',
+  await evalJs("getComputedStyle(document.body).backgroundColor === 'rgb(255, 255, 255)'"),
+  '实际 body 底色 ' + await evalJs("getComputedStyle(document.body).backgroundColor"));
+
+check('默认是黑色实心主按钮（终末地范式）',
+  await evalJs("getComputedStyle(document.querySelector('.btn')).backgroundColor === 'rgb(26, 28, 32)'"),
+  '实际 ' + await evalJs("getComputedStyle(document.querySelector('.btn')).backgroundColor"));
+
+check('默认正文是深色文字',
+  await evalJs("getComputedStyle(document.body).color === 'rgb(20, 22, 26)'"),
+  '实际 ' + await evalJs("getComputedStyle(document.body).color"));
+
+check('标题下有黄色高亮标记',
+  await evalJs("getComputedStyle(document.querySelector('.section-head')).borderLeftColor === 'rgb(245, 197, 24)'"),
+  '实际 ' + await evalJs("getComputedStyle(document.querySelector('.section-head')).borderLeftColor"));
+
+// 切换到深色
+await evalJs("document.querySelector('#theme-toggle').click()");
+await waitFor("!document.documentElement.classList.contains('theme-switching')");
+const darkState = await evalJs(`JSON.stringify({
+  attr: document.documentElement.getAttribute('data-theme'),
+  stored: localStorage.getItem('ia-theme'),
+  bgVar: getComputedStyle(document.documentElement).getPropertyValue('--bg').trim(),
+  bodyBg: getComputedStyle(document.body).backgroundColor,
+  rootClass: document.documentElement.className,
+  colorScheme: getComputedStyle(document.documentElement).colorScheme
+})`);
+const ds = JSON.parse(darkState);
+check('点一下就切到深色',
+  ds.attr === 'dark' && ds.bodyBg === 'rgb(14, 16, 19)',
+  JSON.stringify(ds));
+
+check('切换后写入了 localStorage 记忆',
+  ds.stored === 'dark', '实际 ' + ds.stored);
+
+check('浅色 / 深色底色确实不同',
+  ds.bodyBg !== 'rgb(255, 255, 255)', '深色底 ' + ds.bodyBg);
+
+check('切换动画结束后 theme-switching 类被摘掉（不会一直挂着）',
+  ds.rootClass === '', '实际 class="' + ds.rootClass + '"');
+
+check('按钮文案预告的是“将要切到的模式”',
+  await evalJs("document.querySelector('[data-theme-label]').textContent === '浅色'"),
+  '实际 ' + await evalJs("document.querySelector('[data-theme-label]').textContent"));
+
+// 刷新后要记住
+await send('Page.navigate', { url: BASE + '/index.html' });
+await sleep(1500);
+check('刷新后仍是深色（记忆生效）',
+  await evalJs("document.documentElement.getAttribute('data-theme') === 'dark' && getComputedStyle(document.body).backgroundColor === 'rgb(14, 16, 19)'"),
+  '实际 ' + await evalJs("getComputedStyle(document.body).backgroundColor"));
+
+// 换页后要记住
+await open('/about.html');
+check('换到别的页面仍是深色',
+  await evalJs("document.documentElement.getAttribute('data-theme') === 'dark'"));
+
+// 手动选过之后，不再跟随系统
+await send('Emulation.setEmulatedMedia', {
+  features: [{ name: 'prefers-color-scheme', value: 'light' }]
+});
+await send('Page.navigate', { url: BASE + '/index.html' });
+await sleep(1400);
+check('手动选过深色后，系统是浅色也不被覆盖',
+  await evalJs("document.documentElement.getAttribute('data-theme') === 'dark' && getComputedStyle(document.body).backgroundColor === 'rgb(14, 16, 19)'"));
+
+// 切回浅色并清掉记忆，方便后续用例
+const beforeToggle = await evalJs(`JSON.stringify({
+  attr: document.documentElement.getAttribute('data-theme'),
+  stored: localStorage.getItem('ia-theme'),
+  hasBtn: !!document.querySelector('#theme-toggle'),
+  bg: getComputedStyle(document.body).backgroundColor
+})`);
+await evalJs("document.querySelector('#theme-toggle').click()");
+const becameLight = await waitFor(
+  "document.documentElement.getAttribute('data-theme') === 'light' && getComputedStyle(document.body).backgroundColor === 'rgb(255, 255, 255)'"
+);
+const afterToggle = await evalJs(`JSON.stringify({
+  attr: document.documentElement.getAttribute('data-theme'),
+  stored: localStorage.getItem('ia-theme'),
+  cls: document.documentElement.className,
+  bgVar: getComputedStyle(document.documentElement).getPropertyValue('--bg').trim(),
+  bodyBg: getComputedStyle(document.body).backgroundColor
+})`);
+check('能切回浅色', becameLight,
+  '点之前 ' + beforeToggle + ' → 点之后 ' + afterToggle);
+
+// 没手动选过时，跟随系统深色
+await evalJs("localStorage.removeItem('ia-theme')");
+await send('Emulation.setEmulatedMedia', {
+  features: [{ name: 'prefers-color-scheme', value: 'dark' }]
+});
+await send('Page.navigate', { url: BASE + '/index.html' });
+await sleep(1500);
+check('没手动选过时跟随系统深色',
+  await evalJs("document.documentElement.getAttribute('data-theme') !== 'light' && getComputedStyle(document.body).backgroundColor === 'rgb(14, 16, 19)'"),
+  '实际 ' + await evalJs("getComputedStyle(document.body).backgroundColor"));
+
+// 恢复默认环境
+await evalJs("localStorage.removeItem('ia-theme')");
+await send('Emulation.setEmulatedMedia', {
+  features: [{ name: 'prefers-color-scheme', value: 'light' }]
+});
+
 await open('/index.html');
 await open('/about.html');
 await open('/news.html');
 await open('/join.html');
-check('四个页面控制台无 JS 报错',
+check('四个页面在浅色下控制台无 JS 报错',
   consoleErrors.length === 0, consoleErrors.join(' | '));
 
 ws.close();

@@ -7,7 +7,8 @@
 <meta name="description" content="创想时代开发组长期招募地图、皮肤、材质、光影、Addon、美术、视频等方向的伙伴。填写报名问卷，或加入对外审核群 1045216325。">
 <meta name="keywords" content="创想时代开发组招募,我的世界团队招募,MCBE,对外审核群,开发理事会,资源代投">
 <link rel="canonical" href="https://innovaage.cn/join.html">
-<meta name="theme-color" content="#0f1319">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0e1013" media="(prefers-color-scheme: dark)">
 
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="创想时代开发组">
@@ -15,7 +16,17 @@
 <meta property="og:description" content="长期招募：地图 / 皮肤 / 材质 / 光影 / Addon / 美术 / 视频。">
 <meta property="og:url" content="https://innovaage.cn/join.html">
 
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230f1319'/%3E%3Crect x='4' y='4' width='24' height='24' fill='%235fbf4a'/%3E%3Crect x='4' y='4' width='24' height='6' fill='%2379d45f'/%3E%3Crect x='4' y='26' width='24' height='2' fill='%233f8c30'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23ffffff'/%3E%3Crect x='5' y='5' width='22' height='22' fill='none' stroke='%231a1c20' stroke-width='3'/%3E%3Crect x='8' y='21' width='16' height='3' fill='%23f5c518'/%3E%3C/svg%3E">
+<!-- 主题：在页面渲染前决定用哪套，避免刷新时闪一下 -->
+<script>
+(function () {
+  try {
+    var t = localStorage.getItem('ia-theme');
+    if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+  } catch (e) {}
+})();
+</script>
+<link rel="stylesheet" href="assets/css/theme.css">
 <link rel="stylesheet" href="assets/css/style.css">
 </head>
 
@@ -39,6 +50,12 @@
       <a href="join.html"  data-nav="join">加入我们</a>
       <a href="join.html#panel-contact" data-nav="contact">联系我们</a>
     </nav>
+
+    <button class="theme-toggle" id="theme-toggle" type="button"
+            aria-label="切换深浅主题" title="切换深浅主题">
+      <span class="ico" data-theme-icon aria-hidden="true">◐</span>
+      <span data-theme-label>主题</span>
+    </button>
 
     <a class="btn btn--sm header-cta" href="#panel-form">加入我们</a>
   </div>
