@@ -118,14 +118,26 @@ await open('/news.html');
 check('公告页渲染全部 3 条',
   await evalJs("document.querySelectorAll('#notice-list .notice').length === 3"));
 
-check('置顶公告排在第一',
-  await evalJs("document.querySelector('#notice-list .notice h3').textContent.includes('官网正式上线')"));
+check('置顶公告排在第一，且内容是代投 + 审核条例',
+  await evalJs(`(function(){
+    var first = document.querySelector('#notice-list .notice');
+    var t = first.textContent;
+    return first.querySelector('.tag--redstone') !== null
+      && t.includes('代投') && t.includes('审核条例');
+  })()`),
+  await evalJs("document.querySelector('#notice-list .notice h3').textContent.trim()"));
 
-// 点「招募」筛选
+check('置顶公告里有审核条例的腾讯文档链接',
+  await evalJs(`!!document.querySelector('#notice-list .notice a[href*="docs.qq.com"]')`));
+
+check('置顶公告里有代投群号',
+  await evalJs(`document.querySelector('#notice-list .notice').textContent.includes('1018260006')`));
+
+// 点「招募」筛选：数量由数据决定，这里比对「页面上带招募标签的公告数」是否一致
 await evalJs("[...document.querySelectorAll('#notice-filter button')].find(b => b.textContent.trim() === '招募').click()");
 await sleep(300);
-check('筛选「招募」后只剩 1 条',
-  await evalJs("document.querySelectorAll('#notice-list .notice').length === 1"),
+check('筛选「招募」后只剩带该标签的公告',
+  await evalJs("document.querySelectorAll('#notice-list .notice').length === 2"),
   '实际 ' + await evalJs("document.querySelectorAll('#notice-list .notice').length"));
 
 check('筛选后筛选按钮高亮正确',
@@ -235,7 +247,7 @@ check('B 站复制按钮点击后给出反馈（不是没反应）',
   '按钮文字=' + copyClick);
 await sleep(200);
 
-/* --- 问卷入口（问卷星） --- */
+/* --- 问卷入口（问卷星）--- */
 const surveyState = await evalJs(`JSON.stringify({
   href: document.querySelector('#survey-link').getAttribute('href'),
   target: document.querySelector('#survey-link').getAttribute('target'),
@@ -243,9 +255,20 @@ const surveyState = await evalJs(`JSON.stringify({
   fallbackShown: !document.querySelector('#survey-fallback').hidden
 })`);
 const ss = JSON.parse(surveyState);
-check('未填问卷星链接时按钮降级且显示备用提示',
-  ss.disabled === 'true' && ss.fallbackShown === true && ss.href === '#panel-contact',
+check('报名按钮指向已配置的问卷星链接，并在新窗口打开',
+  ss.href === 'https://www.wjx.cn/vm/OtrfYCj.aspx' && ss.target === '_blank' && ss.disabled === null,
   JSON.stringify(ss));
+check('问卷已配置，备用提示不再显示',
+  ss.fallbackShown === false);
+
+// 审核条例面板里「一审」那一步的行内链接要指向同一个问卷
+await evalJs("document.querySelector('[aria-controls=\"panel-rules\"]').click()");
+await waitFor("document.querySelector('#panel-rules').hidden === false");
+check('审核条例「一审」处的行内链接指向同一个问卷',
+  await evalJs("document.querySelector('#survey-link-rules')?.getAttribute('href') === 'https://www.wjx.cn/vm/OtrfYCj.aspx'"),
+  '实际 ' + await evalJs("document.querySelector('#survey-link-rules')?.getAttribute('href')"));
+await evalJs("document.querySelector('[aria-controls=\"panel-form\"]').click()");
+await waitFor("document.querySelector('#panel-form').hidden === false");
 
 /* --- 品牌资源 --- */
 check('导航栏用的是真 logo 图（不再是 CSS 画的方块）',
@@ -527,9 +550,17 @@ check('首页大图体积在 500KB 以内',
     return b.size <= 500 * 1024;
   })()`));
 
-check('首页作品展示渲染 3 张',
-  await evalJs("document.querySelectorAll('#showcase-grid .work').length === 3"),
-  '实际 ' + await evalJs("document.querySelectorAll('#showcase-grid .work').length"));
+// 一个作品只能占一条。同一作品的多张截图属于详情页，不能在这里重复列出。
+check('首页作品展示：一个作品只占一条',
+  await evalJs("document.querySelectorAll('#showcase-grid .work').length === 1"),
+  '实际 ' + await evalJs("document.querySelectorAll('#showcase-grid .work').length") + ' 条（应为 1）');
+
+check('首页作品条目没有重复作品名',
+  await evalJs(`(function(){
+    var names = [...document.querySelectorAll('#showcase-grid .work h3')].map(function (h) { return h.textContent.trim(); });
+    return new Set(names).size === names.length;
+  })()`),
+  await evalJs("JSON.stringify([...document.querySelectorAll('#showcase-grid .work h3')].map(h => h.textContent.trim()))"));
 
 check('作品卡片带上了作者署名',
   await evalJs("[...document.querySelectorAll('#showcase-grid .work-meta')].every(m => m.textContent.includes('Log坤'))"));
@@ -538,22 +569,51 @@ check('作品卡片带上了作者署名',
 const showcaseLoaded = await waitFor(
   "[...document.querySelectorAll('#showcase-grid img')].every(i => i.complete && i.naturalWidth > 0)"
 );
-check('作品展示三张图都真正加载完成（不是空白块）', showcaseLoaded,
+check('首页作品封面真正加载完成（不是空白块）', showcaseLoaded,
   '各图 naturalWidth: ' + await evalJs("JSON.stringify([...document.querySelectorAll('#showcase-grid img')].map(i => i.naturalWidth))"));
+
+/* --- 首页要把「作品」放最亮、「代投」给入口 --- */
+check('首页 Hero 第一个按钮指向作品页',
+  await evalJs("(document.querySelector('.hero .btn-row a') || {}).getAttribute && document.querySelector('.hero .btn-row a').getAttribute('href') === 'works.html'"),
+  '第一个按钮 href=' + await evalJs("document.querySelector('.hero .btn-row a')?.getAttribute('href')"));
+
+check('首页 Hero 有代投入口',
+  await evalJs("[...document.querySelectorAll('.hero .btn-row a')].some(a => a.getAttribute('href') === 'join.html#panel-invest')"));
+
+check('首页作品区在公告区之前（位置更突出）',
+  await evalJs(`(function(){
+    var s = document.querySelector('#showcase');
+    var n = document.querySelector('#latest-news');
+    if (!s || !n) return false;
+    return !!(s.compareDocumentPosition(n) & Node.DOCUMENT_POSITION_FOLLOWING);
+  })()`));
+
+check('首页有独立的代投区块',
+  await evalJs("!!document.querySelector('#invest') && document.querySelector('#invest').innerText.includes('代投')"));
+
+check('首页代投区块写了授权要求',
+  await evalJs("document.querySelector('#invest').innerText.includes('原作者授权')"));
 
 await open('/works.html');
 check('作品页导航高亮「作品」',
   await evalJs("document.querySelector('.nav a.is-active')?.textContent.trim() === '作品'"));
 
-check('作品页渲染全部 3 件',
-  await evalJs("document.querySelectorAll('#showcase-grid .work').length === 3"));
+check('作品页：一个作品一条',
+  await evalJs("document.querySelectorAll('#showcase-grid .work').length === 1"),
+  '实际 ' + await evalJs("document.querySelectorAll('#showcase-grid .work').length") + ' 条（应为 1）');
 
-check('作品页显示总数',
-  await evalJs("document.querySelector('#work-count')?.textContent === '3'"),
-  '实际 ' + await evalJs("document.querySelector('#work-count')?.textContent"));
+check('作品页显示总数与条目数一致',
+  await evalJs(`(function(){
+    var n = document.querySelectorAll('#showcase-grid .work').length;
+    return Number(document.querySelector('#work-count')?.textContent) === n;
+  })()`),
+  '总数=' + await evalJs("document.querySelector('#work-count')?.textContent") + ' 条目=' + await evalJs("document.querySelectorAll('#showcase-grid .work').length"));
 
-check('作品页三张图都能加载',
+check('作品页封面能加载',
   await evalJs(`[...document.querySelectorAll('#showcase-grid img')].every(i => i.complete && i.naturalWidth > 0)`));
+
+check('作品页不再出现我编的「默认允许使用」口径',
+  await evalJs("!document.body.innerText.includes('作品默认允许')"));
 
 check('作品页无横向溢出',
   await evalJs('document.documentElement.scrollWidth <= window.innerWidth + 1'));

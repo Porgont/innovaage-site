@@ -10,10 +10,9 @@
      ① 站点配置  —— 只需要改这里的联系方式
      ========================================================== */
   var SITE_CONFIG = {
-    // ★★★ 报名问卷：把你们的问卷星链接填到这里 ★★★
-    // 填好后，「加入我们」页会自动出现「填写报名问卷」按钮。
-    // 留空时页面会提示「问卷准备中，请先加审核群」。
-    surveyUrl: '',
+    // ★★★ 报名问卷（问卷星）★★★
+    // 「加入我们」页的报名按钮指向它；审核条例页的「一审问卷」也指向它。
+    surveyUrl: 'https://www.wjx.cn/vm/OtrfYCj.aspx',
 
     // ★★★ 三个 QQ 群 ★★★
     qqAudit: '1045216325',      // 对外审核群（加入我们）
@@ -55,28 +54,28 @@
     addon: 'Addon'
   };
 
+  /* ==========================================================
+     ④ 作品列表 —— 一个作品只占一项，点进去才是它的详情页
+     字段：id / img(封面) / title / meta / category / desc
+     ★ 一个作品只能有一条！同一作品的多张截图请写进下面 WORKS 里那一项的 shots，
+       不要在这里重复列出（否则列表页会把同一个作品显示成好几个）。
+     ========================================================== */
+  var CATEGORIES = {
+    shader: '光影',
+    map: '地图',
+    skin: '皮肤',
+    tex: '材质',
+    addon: 'Addon'
+  };
+
   var SHOWCASE = [
     {
       id: 'log-shader-sa',
-      img: 'assets/img/shader-3.jpg',
-      title: 'Log光影 · 橡木 SA',
-      meta: '作者：Log坤',
-      category: 'shader',
-      desc: '峡谷水道的镜面反射，水面对天空与地形的完整倒影。'
-    },
-    {
-      img: 'assets/img/shader-1.jpg',
-      title: 'Log光影 · 橡木 SA',
-      meta: '作者：Log坤',
-      category: 'shader',
-      desc: '雪山与松林的强光表现，天空过曝与积雪的明暗过渡。'
-    },
-    {
       img: 'assets/img/shader-2.jpg',
       title: 'Log光影 · 橡木 SA',
       meta: '作者：Log坤',
       category: 'shader',
-      desc: '樱花林地的透光树冠与飘落花瓣，草地与花簇的色彩层次。'
+      desc: '基岩版光影，主打水面镜面反射与自然光过渡。'
     }
   ];
 
@@ -140,18 +139,32 @@
   var ANNOUNCEMENTS = [
     {
       date: '2026-02-14',
-      title: '创想时代开发组官网正式上线',
+      title: '开放代投业务，同步公布入室审核条例',
       color: 'green',
       pin: true,
-      tags: ['站点', '里程碑'],
+      tags: ['招募', '代投', '里程碑'],
       body:
-        '<p>我们的官网正式启用了，地址是 <a href="https://innovaage.cn">innovaage.cn</a>。' +
-        '以后工作室的公开信息都会在这里发布。</p>' +
+        '<p>两件事一起说：</p>' +
+        '<p><b>一、开放代投业务。</b>依托我们庞大的粉丝群体与流量优势，你的作品上架资源中心，' +
+        '能够拿到更高曝光，获得更多玩家浏览下载。接收地图、皮肤、材质、光影、功能玩法优质组件，' +
+        '免费 / 付费作品均可投递。</p>' +
         '<ul>' +
-        '<li><b>关于我们</b>：团队沿革、规模、宗旨与平台账号</li>' +
-        '<li><b>公告</b>：资源发布、招募通知、合作与联动</li>' +
-        '<li><b>加入我们</b>：招募方向说明 + 报名问卷入口</li>' +
-        '</ul>'
+        '<li>✅ <b>优势：</b>粉丝基数大，自带流量加持，助力你的作品被更多玩家看见。</li>' +
+        '<li>⚠️ <b>转载非原创作品需原作者授权</b>，否则无法代投（例如从网站上随意下载的皮肤）。</li>' +
+        '<li>所投组件必须遵守《创想时代开发组投稿条例》。</li>' +
+        '<li>结算规则见群内公告的《创想时代开发组收益结算细则》。</li>' +
+        '<li>以上文件均可在《创想时代开发组投稿问卷》中查阅，加入开发理事会即可详细了解并投递稿件。</li>' +
+        '</ul>' +
+        '<p>代投请加<b>创想时代开发理事会群：1018260006</b>。详见 <a href="join.html#panel-invest">代投与投稿</a>。</p>' +
+
+        '<p><b>二、入室审核条例已公布。</b>如需审核加入我室，请按照 ' +
+        '<a href="https://docs.qq.com/doc/DUEhwRVVmaE1ESUts" target="_blank" rel="noopener">' +
+        '《创想时代开发组入室审核条例》</a> 中所述流程进行审核，条例中同时也有各部门的介绍。</p>' +
+        '<p style="color:var(--text-dim)">' +
+        '注意：阅读理解能力也算做基本素质的一部分，因此需要您<b>自行阅读条例</b>；' +
+        '若有疑问请询问群内管理员。</p>' +
+        '<p>流程概要：<b>初审 → 一审 → 二审</b>。一审问卷见 ' +
+        '<a href="join.html#panel-rules">审核条例</a> 页，对外审核群：<b>1045216325</b>。</p>'
     },
     {
       date: '2026-02-10',
@@ -296,18 +309,30 @@
     });
   }
 
-  /* ---------- 报名问卷入口（问卷星链接） ---------- */
+  /* ---------- 报名问卷入口（问卷星） ----------
+     两处共用同一个链接：
+       #survey-link        报名加入面板的按钮
+       #survey-link-rules  审核条例面板「一审」那一步的行内链接
+     链接填了 → 两处都可点；没填 → 按钮变灰给备用方案，行内链接降级成普通文字。 */
   function initSurvey() {
     var link = $('#survey-link');
     if (!link) return;
 
     var url = SITE_CONFIG.surveyUrl;
+    var inline = $('#survey-link-rules');
+
     if (url) {
       link.setAttribute('href', url);
       link.setAttribute('target', '_blank');
       link.setAttribute('rel', 'noopener');
       var note = $('#survey-note');
       if (note) note.textContent = '问卷在新窗口打开（问卷星）。';
+
+      if (inline) {
+        inline.setAttribute('href', url);
+        inline.setAttribute('target', '_blank');
+        inline.setAttribute('rel', 'noopener');
+      }
       return;
     }
 
@@ -317,6 +342,13 @@
     link.setAttribute('aria-disabled', 'true');
     var warn = $('#survey-fallback');
     if (warn) warn.hidden = false;
+
+    // 行内链接降级成普通文字，避免死链
+    if (inline) {
+      var span = document.createElement('b');
+      span.textContent = '审核问卷';
+      inline.parentNode.replaceChild(span, inline);
+    }
   }
 
   /* ---------- 公告渲染 ---------- */

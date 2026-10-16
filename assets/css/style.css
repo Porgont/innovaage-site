@@ -731,6 +731,34 @@ html[data-theme="dark"] .tag--diamond { color: var(--gold); }
   color: var(--text-mute);
 }
 
+/* 首页作品展示：加大标题与留白，放在最亮的位置 */
+.showcase--lead {
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 380px), 1fr));
+  gap: 24px;
+}
+
+.showcase--lead .work-body h3 { font-size: 18px; }
+
+/* 代投横幅：浅黄底 + 左侧黄条，一眼能认出来 */
+.invest-band {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  gap: 32px;
+  align-items: start;
+  padding: 30px;
+  background: var(--gold-soft);
+  border: 1px solid var(--gold-dk);
+  border-left: 4px solid var(--gold);
+  border-radius: var(--radius);
+}
+
+.invest-facts {
+  background: var(--panel);
+  border-color: var(--line-2);
+}
+
+.invest-facts dd { font-size: 12.5px; }
+
 /* ---------- 作品详情页 ---------- */
 .work-hero {
   position: relative;
@@ -1490,6 +1518,8 @@ td code { white-space: nowrap; }
   .hero-inner { grid-template-columns: 1fr; gap: 28px; }
 
   .work-layout { grid-template-columns: 1fr; gap: 26px; }
+
+  .invest-band { grid-template-columns: 1fr; gap: 22px; padding: 22px; }
 
   .work-hero img { aspect-ratio: 4 / 3; }
 
