@@ -1302,6 +1302,9 @@ input[type="range"]::-webkit-slider-thumb {
   color: var(--text);
 }
 
+/* 长网址（如 GitHub 仓库地址）在窄栏里降一档字号，断行好看些 */
+.contact-item .info b.is-long { font-size: 13px; line-height: 1.5; }
+
 .copy-btn {
   flex-shrink: 0;
   padding: 7px 13px;

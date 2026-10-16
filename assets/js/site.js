@@ -25,9 +25,13 @@
     email: '',
 
     // 其他平台（没有就留空，页面对应行会自动隐藏）
-    bilibili: '',                   // B 站主页链接
-    douyin: '',                     // 抖音主页链接
-    discord: '',                    // Discord 邀请链接
+    // 带 url 的会渲染成可点链接，没 url 的只显示账号名
+    neteaseMc: '创想时代开发组',       // 网易我的世界 团队开发者主账号
+    neteaseHd: '创想时代工作室',       // 网易大神（认证账号）
+    douyin: '创想时代开发组',          // 抖音账号名
+    bilibiliName: '创想时代开发组',    // B 站账号名
+    bilibili: 'https://space.bilibili.com/488348167',  // B 站主页链接
+    discord: '',                       // Discord 邀请链接
     github: 'https://github.com/porgont',
     site: 'https://innovaage.cn',
     siteRepo: 'https://github.com/porgont/innovaage-site',
@@ -233,8 +237,11 @@
     qqPublic: 'qqPublic',
     qqCouncil: 'qqCouncil',
     email: 'email',
-    bilibili: 'bilibili',
+    neteaseMc: 'neteaseMc',
+    neteaseHd: 'neteaseHd',
     douyin: 'douyin',
+    bilibili: 'bilibili',          // 主页网址，给 data-fill-href 用
+    bilibiliName: 'bilibiliName',  // 账号名，给 data-fill 用
     discord: 'discord',
     github: 'github',
     site: 'site',
@@ -246,29 +253,46 @@
       return SITE_CONFIG[FILL_KEYS[fillName] || fillName];
     }
 
-    // 1) 填文字
-    $$('[data-fill]').forEach(function (el) {
-      var v = valueOf(el.getAttribute('data-fill'));
-      el.textContent = v || '待填写';
-    });
-
-    // 2) 填链接
+    // 先算出所有带链接的元素该指向哪，供下面的文字填充复用。
+    // 顺序很重要：同一个元素可能同时有 data-fill（要显示的文字）
+    // 和 data-fill-href（要跳转的链接），必须先决定链接再决定文字，
+    // 否则文字会被另一套取值覆盖成「待填写」。
+    var hrefValues = {};
     $$('[data-fill-href]').forEach(function (el) {
       var name = el.getAttribute('data-fill-href');
       var val = valueOf(name);
+      hrefValues[name] = val || '';
+
       if (val) {
         el.setAttribute('href', name === 'email' ? 'mailto:' + val : val);
-        el.hidden = false;
       } else {
         var row = el.closest('li') || el.closest('.contact-item') || el.parentElement;
         if (row) row.hidden = true;
       }
     });
 
-    // 3) 值为空的联系方式：整行隐藏（含里面的复制按钮）
+    // 1) 填文字。
+    //    文字一律以 data-fill 为准（它就是要显示的那句话）；
+    //    data-fill-href 只管跳转地址。两者可以指向不同键，
+    //    例如 B 站：显示 bilibiliName（账号名），链接用 bilibili（主页网址）。
     $$('[data-fill]').forEach(function (el) {
+      el.textContent = valueOf(el.getAttribute('data-fill')) || '待填写';
+    });
+
+    // 2) 值为空的联系方式：整行隐藏（含里面的复制按钮）。
+    //    判断「空不空」时，显示文字和链接地址任一有值就算不空。
+    $$('[data-fill]').forEach(function (el) {
+      var hrefName = el.getAttribute('data-fill-href');
+      var hasText = !!valueOf(el.getAttribute('data-fill'));
+      var hasLink = hrefName ? !!hrefValues[hrefName] : false;
       var row = el.closest('.contact-item') || el.closest('[data-row]');
-      if (row && !valueOf(el.getAttribute('data-fill'))) row.hidden = true;
+      if (row && !hasText && !hasLink) row.hidden = true;
+    });
+
+    // 3) 长网址降一档字号，避免在窄栏里断成好几行
+    $$('.contact-item .info b').forEach(function (b) {
+      var t = b.textContent.trim();
+      if (t.length > 26 && /^[\w.:/-]+$/.test(t)) b.classList.add('is-long');
     });
   }
 
@@ -373,13 +397,21 @@
   /* ---------- 复制按钮 ---------- */
   function initCopy() {
     $$('.copy-btn').forEach(function (btn) {
-      // 把配置里的真实值写进按钮（data-copy-target 指向 SITE_CONFIG 的键）
+      // 复制内容有两种来源：
+      //   1) data-copy-target：取 SITE_CONFIG 里的值（群号、邮箱、仓库地址）
+      //   2) 没写 target 的：直接复制同一行里显示出来的那串文字
       var key = btn.getAttribute('data-copy-target');
-      if (key) btn.setAttribute('data-copy', SITE_CONFIG[key] || '');
+
+      function value() {
+        if (key) return SITE_CONFIG[key] || '';
+        var row = btn.closest('.contact-item');
+        var shown = row && row.querySelector('.info b');
+        return shown ? shown.textContent.trim() : '';
+      }
 
       btn.addEventListener('click', function () {
-        var val = btn.getAttribute('data-copy') || '';
-        if (!val) { toast('这项联系方式还没填写'); return; }
+        var val = value();
+        if (!val || val === '待填写') { toast('这项联系方式还没填写'); return; }
 
         var done = function () {
           var old = btn.textContent;

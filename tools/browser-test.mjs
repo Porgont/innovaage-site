@@ -151,47 +151,89 @@ await open('/join.html');
 check('默认显示报名问卷面板',
   await evalJs("document.querySelector('#panel-form').hidden === false && document.querySelector('#panel-contact').hidden === true"));
 
-const contacts = await evalJs(`JSON.stringify([...document.querySelectorAll('.contact-item')].map(el => ({
-  key: el.querySelector('[data-fill]').getAttribute('data-fill'),
-  value: el.querySelector('[data-fill]').textContent.trim(),
-  hidden: el.hidden
-})))`);
+const contacts = await evalJs(`JSON.stringify([...document.querySelectorAll('.contact-item')].map(el => {
+  var fill = el.querySelector('[data-fill]');
+  var link = el.querySelector('a[data-fill-href]');
+  return {
+    key: fill ? fill.getAttribute('data-fill') : null,
+    value: fill ? fill.textContent.trim() : '',
+    href: link ? link.getAttribute('href') : null,
+    hidden: el.hidden
+  };
+}))`);
 const contactList = JSON.parse(contacts);
 const visible = contactList.filter(c => !c.hidden).map(c => c.key);
+const byKey = k => contactList.find(c => c.key === k);
 
 check('对外审核群显示出来（qqAudit）',
   visible.includes('qqAudit'), '当前显示: ' + visible.join(', '));
 check('GitHub 仓库链接显示',
   visible.includes('siteRepo'));
 check('未填写的邮箱自动隐藏',
-  contactList.find(c => c.key === 'email')?.hidden === true);
-check('未填写的 B 站自动隐藏',
-  contactList.find(c => c.key === 'bilibili')?.hidden === true);
+  byKey('email')?.hidden === true, 'email 行 hidden=' + byKey('email')?.hidden);
+
+/* --- 官方账号（网易我的世界 / 网易大神 / 抖音 / B站） --- */
+check('四个官方账号都显示出来了',
+  ['neteaseMc', 'neteaseHd', 'douyin', 'bilibiliName'].every(k => visible.includes(k)),
+  '当前显示: ' + visible.join(', '));
+
+check('网易我的世界显示团队开发者主账号名',
+  byKey('neteaseMc')?.value === '创想时代开发组', '实际 ' + byKey('neteaseMc')?.value);
+check('网易大神显示认证账号名',
+  byKey('neteaseHd')?.value === '创想时代工作室', '实际 ' + byKey('neteaseHd')?.value);
+check('抖音显示账号名',
+  byKey('douyin')?.value === '创想时代开发组', '实际 ' + byKey('douyin')?.value);
+
+check('B 站显示的是账号名而不是长网址',
+  byKey('bilibiliName')?.value === '创想时代开发组', '实际 ' + byKey('bilibiliName')?.value);
+check('B 站那一行链接指向正确的主页',
+  byKey('bilibiliName')?.href === 'https://space.bilibili.com/488348167',
+  '实际 ' + byKey('bilibiliName')?.href);
 
 check('报名面板里的审核群号渲染正确',
-  contactList.find(c => c.key === 'qqAudit')?.value === '1045216325',
-  '实际 ' + contactList.find(c => c.key === 'qqAudit')?.value);
+  byKey('qqAudit')?.value === '1045216325',
+  '实际 ' + byKey('qqAudit')?.value);
 
-const copyVals = await evalJs(`JSON.stringify([...document.querySelectorAll('.copy-btn')].map(b => {
+/* --- 复制按钮：点一下看它到底复制了什么 --- */
+const copyRows = JSON.parse(await evalJs(`JSON.stringify([...document.querySelectorAll('.copy-btn')].map((b, i) => {
   var row = b.closest('.contact-item');
+  var shown = row ? row.querySelector('.info b') : null;
   return {
-    target: b.getAttribute('data-copy-target'),
-    value: b.getAttribute('data-copy'),
+    index: i,
+    target: b.getAttribute('data-copy-target') || '(行内文字)',
+    shownText: shown ? shown.textContent.trim() : '',
     rowHidden: row ? row.hidden : false,
     btnVisible: !!(b.offsetWidth || b.offsetHeight)
   };
-}))`);
-const copies = JSON.parse(copyVals);
-const auditCopy = copies.find(c => c.target === 'qqAudit');
-check('审核群复制按钮带上了真实群号', auditCopy?.value === '1045216325', '实际 ' + JSON.stringify(auditCopy?.value));
+}))`));
 
-check('所有可点的复制按钮都有真值（不会复制到「待填写」）',
-  copies.filter(c => c.btnVisible).every(c => c.value && !c.value.includes('待填写')),
-  copies.filter(c => c.btnVisible).map(c => c.target + '=' + JSON.stringify(c.value)).join(' | '));
+check('审核群那一行显示的是真实群号',
+  copyRows.some(r => r.target === 'qqAudit' && r.shownText === '1045216325'),
+  copyRows.map(r => r.target + '=' + r.shownText).join(' | '));
 
-check('未填写的联系方式整行隐藏，复制按钮也没有值',
-  copies.filter(c => c.target === 'email' || c.target === 'bilibili')
-    .every(c => c.rowHidden === true && c.value === ''));
+check('所有可点的复制按钮，行内都有真实文字（不会是「待填写」）',
+  copyRows.filter(r => r.btnVisible).every(r => r.shownText && !r.shownText.includes('待填写')),
+  copyRows.filter(r => r.btnVisible).map(r => r.target + '=' + JSON.stringify(r.shownText)).join(' | '));
+
+check('未填写的邮箱整行隐藏',
+  copyRows.filter(r => r.target === 'email').every(r => r.rowHidden === true));
+
+// 真点一下 B 站的复制按钮，确认按钮反馈正常（走的是行内文字那条分支）
+const copyClick = await evalJs(`(function(){
+  var rows = [...document.querySelectorAll('.contact-item')];
+  var row = rows.find(function (r) {
+    var f = r.querySelector('[data-fill]');
+    return f && f.getAttribute('data-fill') === 'bilibiliName';
+  });
+  if (!row) return 'no-row';
+  var btn = row.querySelector('.copy-btn');
+  btn.click();
+  return btn.textContent.trim();
+})()`);
+check('B 站复制按钮点击后给出反馈（不是没反应）',
+  copyClick === '已复制' || copyClick === '复制',
+  '按钮文字=' + copyClick);
+await sleep(200);
 
 /* --- 问卷入口（问卷星） --- */
 const surveyState = await evalJs(`JSON.stringify({
