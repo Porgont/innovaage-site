@@ -3,7 +3,7 @@
  * 这是「上一轮被正则改坏」之后加的守卫 —— 只读，不改任何文件。
  * 用法：node tools/verify-structure.mjs
  */
-import { readFileSync } from 'node:fs';
+import { readFileSync, statSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -48,9 +48,13 @@ for (const p of PAGES) {
 
 console.log('\n=== 各页新增区块 ===');
 const about = readFileSync(join(root, 'about.html'), 'utf8');
-// 精确匹配 class 值，别用前缀（"officer" 会同时命中 officer-role / officer-note）
-const officerCount = (about.match(/class="officer(?: officer--lead)?"/g) || []).length;
-const leadBlock = about.split('中央管理局')[0];
+
+/* 统计负责人卡片：class 以 "officer" 开头且后面紧跟空格或引号。
+   不能简单用前缀匹配（会同时命中 officer-role / officer-note / officer-avatar），
+   也不能写死修饰类，否则加一个 officer--avatar 就数不到了。 */
+const OFFICER_RE = /class="officer(?=[\s"])/g;
+const officerCount = (about.match(OFFICER_RE) || []).length;
+
 // 核心管理局与「其他负责人」两个分区分别校验
 const coreStart = about.indexOf('核心管理局</h2>');
 const otherStart = about.indexOf('其他负责人</h2>');
@@ -59,8 +63,8 @@ const corePart = coreStart >= 0 && otherStart > coreStart
   : '';
 const otherPart = otherStart >= 0 ? about.slice(otherStart, otherStart + 1600) : '';
 
-const coreCards = (corePart.match(/class="officer(?: officer--lead)?"/g) || []).length;
-const otherCards = (otherPart.match(/class="officer(?: officer--lead)?"/g) || []).length;
+const coreCards = (corePart.match(OFFICER_RE) || []).length;
+const otherCards = (otherPart.match(OFFICER_RE) || []).length;
 
 if (coreCards === 5) good('核心管理局：5 人在册（主席 + 4 位副主席/名誉主席）');
 else bad('核心管理局：' + coreCards + ' 人（应为 5）');
@@ -76,6 +80,30 @@ if (otherCards === 2 && otherPart.includes('Log_坤') && otherPart.includes('老
 } else {
   bad('其他负责人分区不对（' + otherCards + ' 人）');
 }
+
+/* 五位负责人的头像：文件要在，html 也要引用 */
+const AVATARS = [
+  ['威廉', 'avatar-william.jpg'],
+  ['柑柠', 'avatar-ganning.jpg'],
+  ['苏打', 'avatar-suda.jpg'],
+  ['樱花', 'avatar-yinghua.jpg'],
+  ['阿潇', 'avatar-axiao.jpg']
+];
+let avatarProblems = [];
+for (const [who, file] of AVATARS) {
+  const rel = 'assets/img/' + file;
+  if (!about.includes(rel)) avatarProblems.push(who + ' 未引用图');
+  else if (!statSync(join(root, 'assets', 'img', file), { throwIfNoEntry: false })) {
+    avatarProblems.push(who + ' 图片文件不存在');
+  }
+}
+if (avatarProblems.length === 0) good('核心管理局：5 位负责人的头像都已接上');
+else bad('头像问题：' + avatarProblems.join('，'));
+
+// 有头像的卡片必须带 officer--avatar，否则布局会错位
+const avatarCards = (corePart.match(/class="officer(?=[\s"])[^"]*officer--avatar[^"]*"/g) || []).length;
+if (avatarCards === 5) good('核心管理局：5 张卡片都用了头像布局');
+else bad('核心管理局：只有 ' + avatarCards + ' 张卡片用了头像布局（应为 5）');
 
 const joinHtml = readFileSync(join(root, 'join.html'), 'utf8');
 // 两个地方都有部门表：报名加入（新增）与审核条例（原有），各 5 个

@@ -842,6 +842,32 @@ html[data-theme="dark"] .tag--diamond { color: var(--gold); }
   margin-top: 3px;
 }
 
+/* 有头像的负责人：左侧头像，右侧姓名与职务 */
+.officer--avatar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.officer-avatar {
+  flex-shrink: 0;
+  width: 56px;
+  height: 56px;
+  object-fit: cover;
+  border-radius: var(--radius);
+  border: 1px solid var(--line-2);
+  background: var(--bg-2);
+  display: block;
+}
+
+/* 头像右侧的文字：占满剩余宽度，长职务才会正常换行而不是挤成一窄条 */
+.officer-body {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
 /* ---------- 作品详情页 ---------- */
 .work-hero {
   position: relative;

@@ -383,6 +383,30 @@ check('关于我们页写有团队宗旨', aboutText.includes('探索') && about
 check('关于我们页写有创始人威廉', aboutText.includes('威廉'));
 check('关于我们页导航高亮正确',
   await evalJs("document.querySelector('.nav a.is-active')?.textContent.trim() === '关于我们'"));
+
+/* 核心管理局五位负责人的头像：文件要真的解码出来，不能是空白框 */
+const officerAvatars = JSON.parse(await evalJs(`JSON.stringify(
+  [...document.querySelectorAll('.officer--avatar .officer-avatar')].map(function (img) {
+    return { src: img.getAttribute('src'), w: img.naturalWidth, h: img.naturalHeight };
+  })
+)`));
+check('核心管理局有 5 个头像',
+  officerAvatars.length === 5,
+  '实际 ' + officerAvatars.length + ' 个');
+check('5 个头像都真的加载出来了（不是空白）',
+  officerAvatars.length === 5 && officerAvatars.every((a) => a.w > 0 && a.h > 0),
+  officerAvatars.map((a) => (a.src || '').split('/').pop() + ':' + a.w + 'x' + a.h).join(' '));
+
+check('头像不会挤坏姓名与职务的排版',
+  await evalJs(`(function(){
+    var body = document.querySelector('.officer--avatar .officer-body');
+    if (!body) return false;
+    var r = body.getBoundingClientRect();
+    // 文字列至少要有一百多像素宽，否则「副主席 · 首席开发官」会被挤成竖排
+    return r.width > 120;
+  })()`),
+  await evalJs("(function(){ var b = document.querySelector('.officer--avatar .officer-body'); return b ? Math.round(b.getBoundingClientRect().width) + 'px' : '无'; })()"));
+
 check('关于我们页无横向溢出',
   await evalJs('document.documentElement.scrollWidth <= window.innerWidth + 1'));
 
