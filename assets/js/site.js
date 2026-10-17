@@ -112,7 +112,7 @@
     }
   ];
 
-  /* 作品主页 —— 只在官网上发布的作品，字段与 SHOWCASE 相同。
+  /* 作品主页 —— 在官网上发布的作品，字段与 SHOWCASE 相同。
      作品页默认打开的就是这一栏。 */
   var SHOWCASE_HOME = [
     {
@@ -1374,15 +1374,15 @@
       renderWorks(mainHost, list, '作品还在整理中。');
     }
 
-    // 作品主页（作品页默认栏）：只在官网发布的作品
-    renderWorks($('#showcase-home'), SHOWCASE_HOME, '目前还没有只在官网发布的作品。有作品在这里首发时，会先出现在这一栏。');
+    // 作品主页（作品页默认栏）：在官网发布的作品
+    renderWorks($('#showcase-home'), SHOWCASE_HOME, '目前还没有在官网发布的作品。有作品在这里首发时，会先出现在这一栏。');
 
     // 首页「作品主页」：同一份数据，首页按 data-limit 只显示前几件
     var homeOnline = $('#showcase-online');
     if (homeOnline) {
       var onlineLimit = parseInt(homeOnline.getAttribute('data-limit'), 10);
       var onlineList = onlineLimit > 0 ? SHOWCASE_HOME.slice(0, onlineLimit) : SHOWCASE_HOME.slice();
-      renderWorks(homeOnline, onlineList, '目前还没有只在官网发布的作品。有作品在这里首发时，会先出现在这一栏。');
+      renderWorks(homeOnline, onlineList, '目前还没有在官网发布的作品。有作品在这里首发时，会先出现在这一栏。');
     }
 
     // 测试组件那一栏（作品页）
