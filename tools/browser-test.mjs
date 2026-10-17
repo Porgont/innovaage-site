@@ -891,6 +891,81 @@ await open('/about.html', 390, 900, true);
 check('移动端关于我们页无横向溢出',
   await evalJs('document.documentElement.scrollWidth <= window.innerWidth + 1'));
 
+/* ---------- 工具箱页面：窄屏排版 ----------
+   曾经这两页在手机上两栏不收成一栏，每栏只剩一百多像素，
+   数值列被挤到二十几像素，一串数字就会「一个数字一行」。
+   下面几条专门盯这个问题。 */
+for (const [name, url] of [
+  ['视频处理页', '/tools-video.html'],
+  ['图片处理页', '/tools-image.html']
+]) {
+  await open(url, 390, 900, true);
+
+  check(name + '：正文区收成单栏（不再并排两栏）',
+    await evalJs(`(function(){
+      var tool = document.querySelector('.tool');
+      var cols = [...document.querySelectorAll('.tool-col')];
+      if (!tool || cols.length < 2) return false;
+      var tw = tool.getBoundingClientRect().width;
+      return cols.every(function (c) { return c.getBoundingClientRect().width > tw * 0.9; });
+    })()`),
+    '栏目宽度 ' + await evalJs("JSON.stringify([...document.querySelectorAll('.tool-col')].map(function(c){return Math.round(c.getBoundingClientRect().width);}))"));
+
+  // 通用判据：整页不该出现「又窄又高」的文字块 —— 那就是一字一行的特征
+  check(name + '：没有「一字一行」的文字块',
+    await evalJs(`(function(){
+      var bad = [];
+      [...document.querySelectorAll('.wrap *')].forEach(function (el) {
+        // 只看到直接装着文字的叶子元素
+        var hasText = [...el.childNodes].some(function (n) {
+          return n.nodeType === 3 && n.textContent.trim().length > 1;
+        });
+        if (!hasText) return;
+        // 单个图标/emoji 不算文字断行问题，要求至少 4 个字符
+        if (el.textContent.trim().length < 4) return;
+        var r = el.getBoundingClientRect();
+        if (r.width === 0 || r.height === 0) return;
+        var lh = parseFloat(getComputedStyle(el).lineHeight) || 20;
+        // 宽度不到 40px、却排了三行以上 → 一字一行
+        if (r.width < 40 && r.height > lh * 3) {
+          bad.push(el.tagName + '.' + (el.className || '') + ' ' + Math.round(r.width) + 'x' + Math.round(r.height));
+        }
+      });
+      window.__narrowBlocks = bad;
+      return bad.length === 0;
+    })()`),
+    await evalJs("JSON.stringify(window.__narrowBlocks || [])"));
+
+  check(name + '：手机端无横向溢出',
+    await evalJs('document.documentElement.scrollWidth <= window.innerWidth + 1'),
+    await evalJs("document.documentElement.scrollWidth + ' vs ' + window.innerWidth"));
+}
+
+// 视频页的说明表格是常驻的，可以精确断言
+await open('/tools-video.html', 390, 900, true);
+check('视频处理页：说明表格的数值列有足够宽度',
+  await evalJs(`(function(){
+    var dd = document.querySelector('.stat-list dd');
+    if (!dd) return false;
+    var r = dd.getBoundingClientRect();
+    var lh = parseFloat(getComputedStyle(dd).lineHeight) || 20;
+    return r.width > 100 && r.height < lh * 3;
+  })()`),
+  await evalJs("(function(){ var d = document.querySelector('.stat-list dd'); if(!d) return '无'; var r = d.getBoundingClientRect(); return '宽 ' + Math.round(r.width) + '，高 ' + Math.round(r.height); })()"));
+
+check('视频处理页：数值不再用 break-all 硬断词',
+  await evalJs(`(function(){
+    var dd = document.querySelector('.stat-list dd');
+    return dd ? getComputedStyle(dd).wordBreak !== 'break-all' : false;
+  })()`),
+  await evalJs("document.querySelector('.stat-list dd') ? getComputedStyle(document.querySelector('.stat-list dd')).wordBreak : '无'"));
+
+// 超窄屏（320px）也不许溢出
+await open('/tools-video.html', 320, 800, true);
+check('320px 超窄屏下视频页不横向溢出',
+  await evalJs('document.documentElement.scrollWidth <= window.innerWidth + 1'),
+  await evalJs("document.documentElement.scrollWidth + ' vs ' + window.innerWidth"));
+
 /* ============================================================
    5. 404 页
    ============================================================ */

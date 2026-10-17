@@ -1237,7 +1237,10 @@ input[type="range"]::-webkit-slider-thumb {
 
 .stat-list > div {
   display: grid;
-  grid-template-columns: 76px 1fr;
+  /* 标签列固定 76px 是为了让各行的数值左对齐；
+     但必须用 minmax(0, 76px)，否则窄屏时它拒绝收缩，
+     会把数值列挤到只剩二十几像素 —— 数字就会一个一行。 */
+  grid-template-columns: minmax(0, 76px) minmax(0, 1fr);
   gap: 12px;
   padding: 9px 13px;
   background: var(--panel);
@@ -1259,7 +1262,11 @@ input[type="range"]::-webkit-slider-thumb {
   font-family: var(--mono);
   font-size: 13px;
   color: var(--text);
-  word-break: break-all;
+  /* 只在真的放不下时才断词。
+     用 word-break: break-all 会把「1234567890」这种数字
+     在任何字符处硬断，窄屏上就变成一行一个数字。 */
+  word-break: normal;
+  overflow-wrap: anywhere;
 }
 
 /* 进度条（视频转换用） */
@@ -1892,7 +1899,7 @@ input[type="range"]::-webkit-slider-thumb {
   margin: 20px 0;
 }
 
-.callout .icon { flex-shrink: 0; font-size: 17px; color: var(--gold-dk); }
+.callout .icon { flex-shrink: 0; align-self: start; font-size: 17px; color: var(--gold-dk); }
 .callout b { color: var(--text); }
 
 /* ---------- 表格 ---------- */
@@ -1992,6 +1999,15 @@ td code { white-space: nowrap; }
   .hero-inner { grid-template-columns: 1fr; gap: 28px; }
 
   .work-layout { grid-template-columns: 1fr; gap: 26px; }
+
+  /* 工具箱：两栏收成一栏。
+     不收的话每栏只剩一百多像素，数值、群号这类较长文字
+     会被挤成一字一行。 */
+  .tool { grid-template-columns: minmax(0, 1fr); gap: 18px; }
+
+  /* 数值列在窄屏至少留出能放下一串数字的宽度 */
+  .stat-list > div { grid-template-columns: minmax(0, 68px) minmax(0, 1fr); gap: 10px; }
+  .stat-list dd { font-size: 12.5px; }
 
   .invest-band { grid-template-columns: 1fr; gap: 22px; padding: 22px; }
 
