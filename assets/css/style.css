@@ -3524,6 +3524,60 @@ main.overlap-hero .hero--banner > .hero-veil::after {
   .work-heading { font-size: 17px; margin-top: 28px; }
 }
 
+/* ---------- ㉓ 公告卡片左侧图位 ----------
+   正文里放了图的公告，左边多一块图；没图的就是原来那一栏。
+   多张图轮流显示，切换时淡入淡出。 */
+.notice.has-media {
+  grid-template-columns: 96px 208px 1fr;
+}
+
+.notice-media {
+  position: relative;
+  width: 208px;
+  aspect-ratio: 16 / 10;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+}
+
+.notice-media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 1;
+  transition: opacity .24s ease;
+}
+
+@media (max-width: 900px) {
+  .notice.has-media {
+    grid-template-columns: 96px 1fr;
+  }
+
+  .notice-media {
+    grid-column: 2;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    margin-bottom: 4px;
+  }
+
+  .notice.has-media .notice-body {
+    grid-column: 2;
+  }
+}
+
+@media (max-width: 640px) {
+  .notice.has-media {
+    grid-template-columns: 1fr;
+  }
+
+  .notice-media,
+  .notice.has-media .notice-body {
+    grid-column: 1;
+  }
+}
+
 /* ---------- 响应式 ---------- */
 @media (max-width: 800px) {
   body { font-size: 14.5px; }

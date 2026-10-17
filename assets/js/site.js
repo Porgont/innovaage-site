@@ -667,6 +667,20 @@
   /* ---------- 公告渲染 ---------- */
   var _notices = [];   // 已排序的全部公告
 
+  /* 从公告正文里挑出图片地址（Markdown 写法 `![说明](路径)`）。
+     只取本地图片，外站图片不往首页塞。 */
+  function imagesOf(n) {
+    var srcs = [];
+    var re = /!\[[^\]]*\]\(\s*([^)\s]+)/g;
+    var m;
+    while ((m = re.exec(String(n.body || ''))) !== null) {
+      var url = m[1];
+      if (/^https?:/i.test(url)) continue;
+      if (srcs.indexOf(url) < 0) srcs.push(url);
+    }
+    return srcs;
+  }
+
   function paintNotices(host, list) {
     if (!list.length) {
       host.innerHTML = '<p style="color:#9aa8bb">暂时没有符合条件的公告。</p>';
@@ -687,10 +701,19 @@
       var href = n.id ? 'article.html?id=' + encodeURIComponent(n.id) : '';
       var excerpt = excerptOf(n, 96);
 
+      // 正文里有图的，左边多一块图位，会轮播正文中的图片
+      var imgs = imagesOf(n);
+      var media = imgs.length
+        ? '<div class="notice-media" data-imgs="' + esc(JSON.stringify(imgs)) + '" data-index="0">' +
+            '<img src="' + esc(imgs[0]) + '" alt="" loading="lazy" decoding="async">' +
+          '</div>'
+        : '';
+
       // 列表只给标题 + 一小段正文，全文在 article.html 里
       return '' +
-        '<article class="notice notice--' + esc(n.color || 'green') + '">' +
+        '<article class="notice notice--' + esc(n.color || 'green') + (media ? ' has-media' : '') + '">' +
           '<div class="notice-date">' + dateBlock + '</div>' +
+          media +
           '<div class="notice-body">' +
             '<h3>' +
               (href
@@ -705,6 +728,53 @@
           '</div>' +
         '</article>';
     }).join('');
+
+    startNoticeMedia();
+  }
+
+  /* 公告卡片上的图会轮播正文里的多张图。
+     每张卡片错开起跑，别让一屏的图同时跳；
+     标签页在后台时不动，系统开了「减少动态效果」也不动。 */
+  var noticeMediaTimers = [];
+
+  function startNoticeMedia() {
+    noticeMediaTimers.forEach(function (t) { clearTimeout(t); clearInterval(t); });
+    noticeMediaTimers = [];
+
+    var boxes = $$('.notice-media[data-imgs]');
+    if (!boxes.length) return;
+
+    var reduce = window.matchMedia &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    boxes.forEach(function (box, i) {
+      var list;
+      try { list = JSON.parse(box.getAttribute('data-imgs') || '[]'); } catch (e) { list = []; }
+      if (!Array.isArray(list) || list.length < 2 || reduce) return;
+
+      var img = box.querySelector('img');
+      if (!img) return;
+
+      var idx = 0;
+      var tick = function () {
+        if (document.hidden) return;
+        idx = (idx + 1) % list.length;
+        img.style.opacity = '0';
+        setTimeout(function () {
+          img.src = list[idx];
+          img.style.opacity = '1';
+        }, 240);
+      };
+
+      // 错开起跑，第 1 张先多看一会儿
+      var delay = 2600 + i * 850;
+      var t = setTimeout(function () {
+        tick();
+        var iv = setInterval(tick, 3400);
+        noticeMediaTimers.push(iv);
+      }, delay);
+      noticeMediaTimers.push(t);
+    });
   }
 
   /* 去掉标签、压平空白，拿来做摘要。
