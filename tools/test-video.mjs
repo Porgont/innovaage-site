@@ -174,6 +174,12 @@ if (r.error) {
 }
 
 console.log('\n=== 裁切模式 ===');
+/* 先等上一次转换彻底收尾：run() 期间会禁用「开始转换」按钮，
+   按钮恢复可用才代表工具空闲。不等就点，会拿到空结果（测试自己造成的假红）。 */
+for (let i = 0; i < 60; i++) {
+  if (await evalJs("!document.querySelector('#v-run-btn').disabled")) break;
+  await sleep(250);
+}
 const crop = await evalJs(`(async () => {
   try {
     var resp = await fetch('tools/fixtures/test-4x3.mp4');
@@ -181,12 +187,13 @@ const crop = await evalJs(`(async () => {
     var file = new File([blob], 'crop-test.mp4', { type: 'video/mp4' });
     document.querySelector('.chip[data-fit="crop"]').click();
     await window.__videoTool.loadFile(file);
-    await new Promise(function (r) { setTimeout(r, 600); });
+    await new Promise(function (r) { setTimeout(r, 800); });
     var plan = document.querySelector('#v-plan').innerText;
     await window.__videoTool.run();
-    await new Promise(function (r) { setTimeout(r, 500); });
+    await new Promise(function (r) { setTimeout(r, 800); });
     var res = window.__videoTool.state.result;
     return JSON.stringify({
+      fit: window.__videoTool.state.fit,
       plan: plan,
       w: res ? res.verify.width : 0,
       h: res ? res.verify.height : 0,
@@ -198,10 +205,51 @@ const cr = JSON.parse(crop);
 if (cr.error) {
   check('裁切模式', false, cr.error);
 } else {
-  check('切换到裁切后，说明里写的是「裁切填满」', cr.plan.includes('裁切'), cr.plan.slice(0, 120));
+  check('切换到裁切后，说明里写的是「裁切填满」',
+    cr.fit === 'crop' && cr.plan.includes('裁切'), cr.plan.slice(0, 140));
   check('裁切模式结果仍是 1280×720', cr.w === 1280 && cr.h === 720, cr.w + '×' + cr.h);
   check('裁切模式结果可播放', cr.playable === true);
 }
+
+console.log('\n=== 回归：连续转换多次都要成功 ===');
+/* 这一条防的是真实故障：曾经每次转换都漏掉一条媒体管线
+   （canvas 流与音轨没停、video 元素没释放），
+   转到第二次 MediaRecorder 就录不出任何数据，必须刷新页面才恢复。
+   用户只要连续转两个视频就会撞上，所以必须有断言盯着。 */
+const repeat = await evalJs(`(async () => {
+  var out = [];
+  for (var i = 0; i < 3; i++) {
+    try {
+      var resp = await fetch('tools/fixtures/test-4x3.mp4');
+      var blob = new Blob([await resp.arrayBuffer()], { type: 'video/mp4' });
+      var file = new File([blob], 'repeat-' + i + '.mp4', { type: 'video/mp4' });
+      document.querySelector('.chip[data-fit="' + (i % 2 ? 'crop' : 'pad') + '"]').click();
+      await window.__videoTool.loadFile(file);
+      await new Promise(function (r) { setTimeout(r, 600); });
+      await window.__videoTool.run();
+      await new Promise(function (r) { setTimeout(r, 600); });
+      var res = window.__videoTool.state.result;
+      out.push({
+        i: i,
+        w: res ? res.verify.width : 0,
+        h: res ? res.verify.height : 0,
+        playable: res ? res.verify.playable : false,
+        kb: res ? Math.round(res.blob.size / 1024) : 0
+      });
+    } catch (e) {
+      out.push({ i: i, error: e.message });
+    }
+  }
+  return JSON.stringify(out);
+})()`);
+const rep = JSON.parse(repeat);
+const allOk = rep.length === 3 && rep.every((x) =>
+  !x.error && x.w === 1280 && x.h === 720 && x.playable && x.kb > 1);
+check('连续转换 3 次，每次都产出可播放的 1280×720', allOk,
+  rep.map((x) => x.error
+    ? ('第' + (x.i + 1) + '次失败：' + x.error)
+    : ('第' + (x.i + 1) + '次 ' + x.w + '×' + x.h + ' ' + x.kb + 'KB ' + (x.playable ? '可播放' : '不可播放'))
+  ).join('；'));
 
 ws.close(); edge.kill();
 

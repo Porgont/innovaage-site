@@ -342,21 +342,45 @@
       var stopped = false;
       var limit = Math.min(state.maxDur, d.duration > 0 ? d.duration : state.maxDur);
 
+      // 这两个流必须提到外层，cleanup 才拿得到。
+      // 之前它们声明在 onloadeddata 里面，外层清理函数看不见，
+      // 结果每转换一次就漏掉一条媒体管线：转第二个视频时
+      // MediaRecorder 录不出任何数据（必须刷新页面才恢复）。
+      var canvasStream = null;
+      var audioTracks = [];
+
       function cleanup() {
         if (raf) cancelAnimationFrame(raf);
         try { v.pause(); } catch (e) {}
+
+        // 关键：把所有轨道都停掉，释放媒体管线
+        try {
+          if (canvasStream) canvasStream.getTracks().forEach(function (t) { t.stop(); });
+        } catch (e) {}
+        try {
+          audioTracks.forEach(function (t) { t.stop(); });
+        } catch (e) {}
+        audioTracks = [];
+        canvasStream = null;
+
+        // 视频元素也清理干净，别让它继续占着解码器
+        try {
+          v.removeAttribute('src');
+          v.load();
+        } catch (e) {}
+
         url && URL.revokeObjectURL(url);
       }
 
       v.onloadeddata = function () {
         // 音频：把原视频的音轨接进来。接不上就录无声，并如实告知。
-        var audioTracks = [];
+        audioTracks = [];
         try {
           var src = v.captureStream ? v.captureStream() : (v.mozCaptureStream ? v.mozCaptureStream() : null);
           if (src) audioTracks = src.getAudioTracks();
         } catch (e) { audioTracks = []; }
 
-        var canvasStream = canvas.captureStream(30);
+        canvasStream = canvas.captureStream(30);
         var stream = new MediaStream();
         canvasStream.getVideoTracks().forEach(function (t) { stream.addTrack(t); });
         audioTracks.forEach(function (t) { stream.addTrack(t); });
