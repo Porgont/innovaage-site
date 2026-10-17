@@ -934,6 +934,44 @@ check('首页有独立的代投区块',
 check('首页代投区块写了授权要求',
   await evalJs("document.querySelector('#invest').innerText.includes('原作者授权')"));
 
+/* ---------- 首页「更多内容」：其它页面的入口 ---------- */
+check('首页「更多内容」有 5 张卡片，分别指向另外 5 个页面',
+  await evalJs(`(function(){
+    var want = ['works.html', 'news.html', 'tools.html', 'join.html', 'about.html'];
+    var got = [...document.querySelectorAll('#more .more-card')].map(function (a) {
+      return a.getAttribute('href');
+    });
+    return got.length === 5 && want.every(function (h) { return got.indexOf(h) >= 0; });
+  })()`),
+  await evalJs("[...document.querySelectorAll('#more .more-card')].map(a => a.getAttribute('href')).join(' | ')"));
+
+check('首页「更多内容」每张卡片都有中文名与英文小标',
+  await evalJs(`(function(){
+    var cards = [...document.querySelectorAll('#more .more-card')];
+    return cards.length === 5 && cards.every(function (a) {
+      var t = a.querySelector('.more-card__t');
+      var en = a.querySelector('.more-card__en');
+      return t && t.textContent.trim().length > 0 && en && /^[A-Za-z]+$/.test(en.textContent.trim());
+    });
+  })()`));
+
+// 卡片图是 loading="lazy"，要先滚过去再等它加载完
+check('首页「更多内容」的封面图都真的加载出来了',
+  await (async () => {
+    await evalJs("document.querySelector('#more').scrollIntoView({ block: 'center' })");
+    await evalJs("[...document.querySelectorAll('#more .more-card img')].forEach(i => { i.loading = 'eager'; })");
+    return waitFor("[...document.querySelectorAll('#more .more-card img')].length === 5 && [...document.querySelectorAll('#more .more-card img')].every(i => i.complete && i.naturalWidth > 0)", 60, 100);
+  })(),
+  await evalJs("[...document.querySelectorAll('#more .more-card img')].map(i => i.naturalWidth).join(',')"));
+
+check('首页「更多内容」桌面上一行 5 张',
+  await evalJs(`(function(){
+    var g = document.querySelector('#more .more-grid');
+    if (!g) return false;
+    return getComputedStyle(g).gridTemplateColumns.split(' ').length === 5;
+  })()`),
+  await evalJs("getComputedStyle(document.querySelector('#more .more-grid')).gridTemplateColumns"));
+
 await open('/works.html');
 check('作品页导航高亮「作品」',
   await evalJs("document.querySelector('.nav a.is-active > span')?.textContent.trim() === '作品'"));
@@ -1155,9 +1193,57 @@ check('放大层不显示文字说明（说明只在 alt 里）',
   })()`),
   'caption="' + await evalJs("document.querySelector('#lightbox-caption').textContent.trim()") +
   '"，alt="' + await evalJs("(document.querySelector('#lightbox-img').getAttribute('alt') || '').slice(0, 20)") + '"');
+
+/* 放大动画：断言动画真的绑到了图片上，且关键帧是「从小放大到 1」。
+   不在动画中途或结束后取样 —— 无头浏览器只在出帧时推进动画，
+   按时间点读值会随机器负载时灵时不灵。 */
+check('截图放大时有由小到大的过渡动画',
+  await evalJs(`(function(){
+    var img = document.querySelector('#lightbox-img');
+    var s = getComputedStyle(img);
+    if (s.animationName !== 'lightbox-zoom') return false;
+    if (!(parseFloat(s.animationDuration) > 0.2)) return false;
+
+    var rule = null;
+    [...document.styleSheets].forEach(function (sheet) {
+      var list;
+      try { list = sheet.cssRules; } catch (e) { return; }
+      [...list].forEach(function (r) {
+        if (r.type === CSSRule.KEYFRAMES_RULE && r.name === 'lightbox-zoom') rule = r;
+      });
+    });
+    if (!rule || rule.cssRules.length < 2) return false;
+
+    var from = rule.cssRules[0].cssText;
+    var to = rule.cssRules[1].cssText;
+    var fromScale = /scale\\(\\s*0?\\.\\d+\\s*\\)/.test(from);
+    var toScale = /scale\\(\\s*1\\s*\\)/.test(to);
+    return fromScale && toScale;
+  })()`),
+  await evalJs("(function(){ var s = getComputedStyle(document.querySelector('#lightbox-img')); return s.animationName + ' / ' + s.animationDuration; })()"));
+
+check('放大层的背景也有淡入',
+  await evalJs(`(function(){
+    var box = document.querySelector('#lightbox');
+    var s = getComputedStyle(box);
+    if (s.animationName !== 'lightbox-fade') return false;
+
+    var rule = null;
+    [...document.styleSheets].forEach(function (sheet) {
+      var list;
+      try { list = sheet.cssRules; } catch (e) { return; }
+      [...list].forEach(function (r) {
+        if (r.type === CSSRule.KEYFRAMES_RULE && r.name === 'lightbox-fade') rule = r;
+      });
+    });
+    if (!rule || rule.cssRules.length < 2) return false;
+    return /opacity\\s*:\\s*0/.test(rule.cssRules[0].cssText) &&
+           /opacity\\s*:\\s*1/.test(rule.cssRules[1].cssText);
+  })()`),
+  await evalJs("getComputedStyle(document.querySelector('#lightbox')).animationName"));
+
 await evalJs("document.querySelector('#lightbox-close').click()");
 await sleep(400);
-
 /* ---------- 另外两件作品：地图与 Addon ---------- */
 await open('/work.html?id=qiushui-sanchi');
 await sleep(900);
