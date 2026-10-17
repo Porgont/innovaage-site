@@ -10,7 +10,7 @@ const errors = [];
 const warns = [];
 const ok = [];
 
-const pages = ['index.html', 'about.html', 'works.html', 'work.html', 'tools.html', 'news.html', 'join.html', '404.html'];
+const pages = ['index.html', 'about.html', 'works.html', 'work.html', 'article.html', 'tools.html', 'tools-image.html', 'tools-video.html', 'tools-matoga.html', 'tools-convert.html', 'news.html', 'join.html', '404.html'];
 
 /* ---------- 1. 关键文件存在 ---------- */
 const required = [
@@ -190,7 +190,7 @@ if (!/id="survey-link"/.test(joinHtml)) errors.push('join.html 缺少问卷入�
 if (/<form\b/i.test(joinHtml)) errors.push('join.html 不应再有 <form>（问卷已改为问卷星外链）');
 
 /* ---------- 7.5 三个 QQ 群号在四个页面都齐 ---------- */
-const allPages = ['index.html', 'about.html', 'works.html', 'work.html', 'tools.html', 'news.html', 'join.html'];
+const allPages = ['index.html', 'about.html', 'works.html', 'work.html', 'article.html', 'tools.html', 'tools-image.html', 'tools-video.html', 'tools-matoga.html', 'tools-convert.html', 'news.html', 'join.html'];
 for (const page of allPages) {
   const html = readFileSync(join(root, page), 'utf8');
   for (const key of ['qqPublic', 'qqAudit', 'qqCouncil']) {

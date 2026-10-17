@@ -10,8 +10,8 @@ import { fileURLToPath } from 'node:url';
 const root = resolve(fileURLToPath(new URL('.', import.meta.url)), '..');
 const PAGES = [
   'index.html', 'about.html', 'works.html', 'work.html',
-  'tools.html', 'tools-image.html', 'tools-video.html', 'tools-matoga.html',
-  'news.html', 'join.html'
+  'tools.html', 'tools-image.html', 'tools-video.html', 'tools-matoga.html', 'tools-convert.html',
+  'article.html', 'news.html', 'join.html'
 ];
 
 const count = (s, sub) => s.split(sub).length - 1;
@@ -193,8 +193,8 @@ for (const [name, html] of [['图片', img], ['视频', vid], ['matoga', mat]]) 
    MIT 要求署名与来源，不在此列。 */
 const ALL_PAGES = [
   'index.html', 'about.html', 'works.html', 'work.html',
-  'tools.html', 'tools-image.html', 'tools-video.html', 'tools-matoga.html',
-  'news.html', 'join.html'
+  'tools.html', 'tools-image.html', 'tools-video.html', 'tools-matoga.html', 'tools-convert.html',
+  'article.html', 'news.html', 'join.html'
 ];
 const SITE_REPO_PATTERNS = [
   /github\.com\/porgont/i,

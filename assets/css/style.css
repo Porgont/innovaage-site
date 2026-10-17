@@ -3152,6 +3152,75 @@ body.is-leaving::after {
   .more-card__t { font-size: 18px; }
 }
 
+/* ---------- ⑯ 工具页表单控件 ----------
+   之前 number 输入框和 textarea 都是浏览器默认样式，跟全站不搭。 */
+.field label {
+  display: block;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--text-mute);
+  margin-bottom: 7px;
+}
+
+.field input[type="number"],
+.field input[type="text"],
+.field textarea {
+  width: 100%;
+  padding: 9px 11px;
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text);
+  background: var(--bg-2);
+  border: 1px solid var(--line-2);
+  border-radius: var(--radius);
+  transition: border-color .15s ease, background-color .15s ease;
+}
+
+.field textarea {
+  resize: vertical;
+  min-height: 130px;
+  font-family: var(--mono);
+  font-size: 12.5px;
+  line-height: 1.7;
+}
+
+.field input:focus,
+.field textarea:focus {
+  outline: none;
+  border-color: var(--gold);
+  background: var(--bg);
+}
+
+.field input[readonly],
+.field textarea[readonly] {
+  color: var(--text-dim);
+  background: var(--panel-2);
+}
+
+/* 警示说明 */
+.note--warn { color: var(--gold-dk); }
+
+/* 工具里的转换结果条 */
+.result-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+  padding: 12px 14px;
+  background: var(--bg-2);
+  border: 1px solid var(--line-2);
+  border-left: 3px solid var(--gold);
+  border-radius: var(--radius);
+  font-size: 13.5px;
+  color: var(--text-dim);
+}
+
+.result-bar b { color: var(--text); }
+
 /* ---------- 响应式 ---------- */
 @media (max-width: 800px) {
   body { font-size: 14.5px; }

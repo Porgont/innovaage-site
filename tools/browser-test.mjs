@@ -1375,16 +1375,17 @@ check('工具箱入口页没有冗长的副标题段落',
   await evalJs("!document.querySelector('.hero .lead')"),
   await evalJs("document.querySelector('.hero .lead') ? '有：' + document.querySelector('.hero .lead').textContent.trim().slice(0, 40) : '无'"));
 
-check('工具箱入口页有三张模块卡片',
-  await evalJs("document.querySelectorAll('.module-card').length === 3"),
+check('工具箱入口页有四张模块卡片',
+  await evalJs("document.querySelectorAll('.module-card').length === 4"),
   '实际 ' + await evalJs("document.querySelectorAll('.module-card').length"));
 
-check('三张卡片分别指向三个模块页',
+check('四张卡片分别指向四个工具页',
   await evalJs(`(function(){
     var hrefs = [...document.querySelectorAll('.module-card')].map(function (a) { return a.getAttribute('href'); });
     return hrefs.indexOf('tools-image.html') >= 0 &&
            hrefs.indexOf('tools-video.html') >= 0 &&
-           hrefs.indexOf('tools-matoga.html') >= 0;
+           hrefs.indexOf('tools-matoga.html') >= 0 &&
+           hrefs.indexOf('tools-convert.html') >= 0;
   })()`),
   await evalJs("JSON.stringify([...document.querySelectorAll('.module-card')].map(a => a.getAttribute('href')))"));
 
