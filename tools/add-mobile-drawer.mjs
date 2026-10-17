@@ -23,12 +23,11 @@ const PAGES = ['index.html', 'about.html', 'works.html', 'work.html', 'tools.htm
 
 const LINKS = [
   ['index.html', 'home', '首页'],
-  ['about.html', 'about', '关于我们'],
   ['works.html', 'works', '作品'],
-  ['tools.html', 'tools', '工具箱'],
   ['news.html', 'news', '公告'],
+  ['tools.html', 'tools', '工具箱'],
   ['join.html', 'join', '加入我们'],
-  ['join.html#panel-contact', 'contact', '联系我们']
+  ['about.html', 'about', '关于我们']
 ];
 
 const MARK = '<!-- mobile-drawer:start -->';

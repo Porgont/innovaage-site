@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>加入我们 / 联系我们 | 创想时代开发组</title>
-<meta name="description" content="创想时代开发组长期招募地图、皮肤、材质、光影、Addon、美术、视频等方向的伙伴。填写报名问卷，或加入对外审核群 1045216325。">
+<meta name="description" content="创想时代开发组长期招募地图、皮肤、材质、光影、Addon、美术、视频等方向的伙伴。先加对外审核群 1045216325 完成初审，初审通过后填写一审问卷。">
 <meta name="keywords" content="创想时代开发组招募,我的世界团队招募,MCBE,对外审核群,开发理事会,资源代投">
 <link rel="canonical" href="https://innovaage.cn/join.html">
 <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
@@ -50,12 +50,11 @@
 
     <nav class="nav" aria-label="主导航">
       <a href="index.html" data-nav="home">首页</a>
-      <a href="about.html" data-nav="about">关于我们</a>
       <a href="works.html" data-nav="works">作品</a>
+      <a href="news.html" data-nav="news">公告</a>
       <a href="tools.html" data-nav="tools">工具箱</a>
-      <a href="news.html"  data-nav="news">公告</a>
-      <a href="join.html"  data-nav="join">加入我们</a>
-      <a href="join.html#panel-contact" data-nav="contact">联系我们</a>
+      <a href="join.html" data-nav="join">加入我们</a>
+      <a href="about.html" data-nav="about">关于我们</a>
     </nav>
 
     <button class="theme-toggle" id="theme-toggle" type="button"
@@ -90,12 +89,11 @@
     </div>
     <nav class="mnav-links" aria-label="手机端导航">
       <a href="index.html" data-nav="home">首页</a>
-      <a href="about.html" data-nav="about">关于我们</a>
       <a href="works.html" data-nav="works">作品</a>
-      <a href="tools.html" data-nav="tools">工具箱</a>
       <a href="news.html" data-nav="news">公告</a>
+      <a href="tools.html" data-nav="tools">工具箱</a>
       <a href="join.html" data-nav="join">加入我们</a>
-      <a href="join.html#panel-contact" data-nav="contact">联系我们</a>
+      <a href="about.html" data-nav="about">关于我们</a>
     </nav>
     <a class="btn btn--sm mnav-cta" href="join.html#panel-form">加入我们</a>
   </div>
@@ -109,8 +107,9 @@
       <p class="hero-badge"><span class="dot" aria-hidden="true"></span> 长期招募中</p>
       <h1 style="font-size:clamp(26px,4vw,38px)">加入我们 / 联系我们</h1>
       <p class="lead">
-        想加入就填报名问卷，然后加对外审核群；有合作、代投、授权、反馈等问题，
-        看「联系我们」里的三个群。
+        加入工作室的流程是<b>初审 → 一审 → 二审</b>：先加对外审核群完成初审，
+        初审通过后再回本站填写一审问卷。合作、代投、授权、反馈等问题，
+        见「联系我们」里的三个群。
       </p>
     </div>
   </section>
@@ -186,33 +185,34 @@
       <div class="tab-panel" id="panel-form" role="tabpanel" aria-labelledby="tab-form">
         <div class="grid grid--2">
 
-          <div class="panel">
-            <h2 style="font-size:20px">第一步：填写报名问卷</h2>
+          <div class="panel" style="border-left:3px solid var(--green)">
+            <h2 style="font-size:20px">第一步：加对外审核群，做初审</h2>
             <p style="color:var(--text-dim)">
-              问卷在问卷星上填写和提交，用于初步分流。建议把作品链接一起贴上，通过率会高不少。
+              初审在 <b>对外审核群</b> 内进行。进群后说明来意，按想报的部门联系对应审核员，
+              展示作品（视频或截图）。审核员审核通过后，再继续下一步。
             </p>
 
-            <div class="btn-row" style="margin:22px 0 6px">
-              <a class="btn" id="survey-link" href="#">填写报名问卷</a>
-            </div>
-            <p id="survey-note" style="color:var(--text-mute);font-size:13px;margin:10px 0 0">
-              问卷在新窗口打开（问卷星）。
-            </p>
-
-            <!-- 没填问卷星链接时显示的备用提示 -->
-            <div class="callout" id="survey-fallback" hidden style="margin-top:18px">
-              <span class="icon" aria-hidden="true">🛈</span>
-              <div>
-                报名问卷正在准备中。在这之前，请先按 <b>审核条例</b> 的流程走，
-                并加入下方的对外审核群，在群里说明来意并附上作品链接。
+            <div class="contact-list" style="margin-top:16px">
+              <div class="contact-item" data-row>
+                <span class="icon" aria-hidden="true">🛡️</span>
+                <div class="info">
+                  <span>对外审核群（加入我们）</span>
+                  <b data-fill="qqAudit">—</b>
+                </div>
+                <button class="copy-btn" type="button" data-copy-target="qqAudit">复制</button>
               </div>
             </div>
+
+            <p style="color:var(--text-mute);font-size:13px;margin:16px 0 0">
+              在 QQ 里搜索群号即可申请加入，也可以直接点「复制」。
+            </p>
 
             <div class="callout" style="margin-top:22px">
               <span class="icon" aria-hidden="true">🛈</span>
               <div>
-                <b>审核流程：</b>入室审核分为 <b>初审 → 一审 → 二审</b> 三个阶段，
-                完整流程与各部门介绍都写在
+                <b>审核流程：</b>入室审核分为 <b>初审 → 一审 → 二审</b> 三个阶段。
+                初审在对外审核群内进行；<b>初审通过后</b>才填写官网的一审问卷。
+                完整流程与各部门介绍写在
                 <a href="https://docs.qq.com/doc/DUEhwRVVmaE1ESUts" target="_blank" rel="noopener">《创想时代开发组入室审核条例》</a>
                 里。阅读理解能力也算基本素质的一部分，因此需要你自行阅读条例；
                 若有疑问请询问群内管理员。也可以直接看本站的
@@ -222,33 +222,35 @@
           </div>
 
           <div>
-            <div class="panel" style="border-left:3px solid var(--green)">
-              <h2 style="font-size:20px">第二步：加对外审核群</h2>
+            <div class="panel" style="border-left:3px solid var(--gold)">
+              <h2 style="font-size:20px">第二步：填写一审问卷</h2>
               <p style="color:var(--text-dim)">
-                加入审核群后，先按条例确认你想审核的部门，再联系对应的审核员。
+                <b>初审通过后</b>再填。问卷在问卷星上填写和提交，
+                用于把报名者分流到对应部门。
               </p>
 
-              <div class="contact-list" style="margin-top:16px">
-                <div class="contact-item" data-row>
-                  <span class="icon" aria-hidden="true">🛡️</span>
-                  <div class="info">
-                    <span>对外审核群（加入我们）</span>
-                    <b data-fill="qqAudit">—</b>
-                  </div>
-                  <button class="copy-btn" type="button" data-copy-target="qqAudit">复制</button>
+              <div class="btn-row" style="margin:22px 0 6px">
+                <a class="btn" id="survey-link" href="#">填写一审问卷</a>
+              </div>
+              <p id="survey-note" style="color:var(--text-mute);font-size:13px;margin:10px 0 0">
+                问卷在新窗口打开（问卷星）。
+              </p>
+
+              <!-- 没填问卷星链接时显示的备用提示 -->
+              <div class="callout" id="survey-fallback" hidden style="margin-top:18px">
+                <span class="icon" aria-hidden="true">🛈</span>
+                <div>
+                  一审问卷正在准备中。在这之前，请先加入对外审核群完成初审，
+                  通过后向群内管理员索取问卷。
                 </div>
               </div>
-
-              <p style="color:var(--text-mute);font-size:13px;margin:16px 0 0">
-                在 QQ 里搜索群号即可申请加入，也可以直接点「复制」。
-              </p>
             </div>
 
             <div class="panel" style="margin-top:18px">
               <h3 style="margin-top:0">先选部门，再报名</h3>
               <p style="color:var(--text-dim);font-size:14.5px">
                 工作室有 <b>五个部门、共十个组别</b>。报名前先看这里的介绍，
-                确定你想进哪个组，审核时直接找对应部门的审核员。
+                确定你想进哪个组，初审时直接找对应部门的审核员。
               </p>
 
               <div class="dept-grid">
@@ -581,14 +583,14 @@
               <h3>审核流程：初审 → 一审 → 二审</h3>
               <ol class="steps" style="border:0;margin-top:12px">
                 <li>
-                  <b>加入审核群</b>：先确认你想审核的部门，再联系对应审核员。
+                  <b>加入对外审核群</b>：先确认你想审核的部门，再联系对应审核员。
                 </li>
                 <li>
-                  <b>初审</b>：向审核员展示作品（视频或截图），
-                  由对应部门的审核员查看创作水平，通过进入一审。
+                  <b>初审</b>：在对外审核群内进行。向审核员展示作品（视频或截图），
+                  由对应部门的审核员查看创作水平，通过后进入一审。
                 </li>
                 <li>
-                  <b>一审</b>：填写
+                  <b>一审</b>：初审通过后，回到本站填写
                   <a id="survey-link-rules" href="#" target="_blank" rel="noopener">一审问卷</a>
                   做简单分流，填完通知群内对应管理员。
                 </li>
@@ -660,7 +662,6 @@
           <li><a href="tools.html">工具箱</a></li>
           <li><a href="news.html">公告</a></li>
           <li><a href="join.html#panel-form">加入我们</a></li>
-          <li><a href="join.html#panel-contact">联系我们</a></li>
         </ul>
       </div>
 

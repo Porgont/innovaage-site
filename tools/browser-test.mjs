@@ -109,6 +109,28 @@ check('首页公告渲染 2 条（data-limit）',
 check('首页导航高亮「首页」',
   await evalJs("document.querySelector('.nav a.is-active')?.textContent.trim() === '首页'"));
 
+/* 导航顺序与项目是硬性要求：首页 / 作品 / 公告 / 工具箱 / 加入我们 / 关于我们
+   「联系我们」不再单独占导航项，改为放进「加入我们」和「关于我们」两页。 */
+const NAV_ORDER = ['首页', '作品', '公告', '工具箱', '加入我们', '关于我们'];
+const navLabels = JSON.parse(await evalJs(
+  "JSON.stringify([...document.querySelectorAll('.nav a')].map(a => a.textContent.trim()))"
+));
+check('导航顺序为：首页 / 作品 / 公告 / 工具箱 / 加入我们 / 关于我们',
+  JSON.stringify(navLabels) === JSON.stringify(NAV_ORDER),
+  '实际 ' + navLabels.join(' / '));
+
+check('导航里已经没有独立的「联系我们」项',
+  !navLabels.includes('联系我们'),
+  navLabels.join(' / '));
+
+check('手机侧栏顺序与桌面导航一致',
+  await evalJs(`JSON.stringify([...document.querySelectorAll('.mnav-links a')].map(a => a.textContent.trim()))`) ===
+    JSON.stringify(NAV_ORDER),
+  await evalJs(`[...document.querySelectorAll('.mnav-links a')].map(a => a.textContent.trim()).join(' / ')`));
+
+check('导航里没有任何链接指向 #panel-contact',
+  await evalJs(`![...document.querySelectorAll('.nav a, .mnav-links a')].some(a => (a.getAttribute('href') || '').indexOf('panel-contact') >= 0)`));
+
 check('首页年份已填充',
   await evalJs("document.querySelector('[data-year]').textContent === String(new Date().getFullYear())"));
 
@@ -211,6 +233,42 @@ check('B 站那一行链接指向正确的主页',
 check('报名面板里的审核群号渲染正确',
   byKey('qqAudit')?.value === '1045216325',
   '实际 ' + byKey('qqAudit')?.value);
+
+/* --- 加入流程叙述：先加群做初审，初审通过后才填一审问卷 --- */
+check('报名面板第一步是加审核群做初审',
+  await evalJs(`(function(){
+    var panels = [...document.querySelectorAll('#panel-form .panel')];
+    var first = panels.filter(function (p) { return /第一步/.test(p.innerText); })[0];
+    if (!first) return false;
+    return /对外审核群/.test(first.innerText) && /初审/.test(first.innerText);
+  })()`));
+
+check('报名面板第二步才是填写一审问卷',
+  await evalJs(`(function(){
+    var panels = [...document.querySelectorAll('#panel-form .panel')];
+    var second = panels.filter(function (p) { return /第二步/.test(p.innerText); })[0];
+    if (!second) return false;
+    return /一审问卷/.test(second.innerText) && /初审通过后/.test(second.innerText);
+  })()`));
+
+check('第二步的按钮写的是「一审问卷」而不是「报名问卷」',
+  await evalJs("document.querySelector('#survey-link').textContent.trim() === '填写一审问卷'"),
+  await evalJs("document.querySelector('#survey-link')?.textContent.trim()"));
+
+check('审核条例里的流程写明初审在对外审核群内进行',
+  await evalJs(`(function(){
+    var rules = document.querySelector('#panel-rules');
+    if (!rules) return false;
+    var t = rules.innerText.replace(/\\s+/g, '');
+    return /初审[\\s\\S]{0,40}对外审核群/.test(t) || t.indexOf('在对外审核群内进行') >= 0;
+  })()`));
+
+check('审核条例里的流程写明初审通过后才填一审问卷',
+  await evalJs(`(function(){
+    var rules = document.querySelector('#panel-rules');
+    if (!rules) return false;
+    return rules.innerText.replace(/\\s+/g, '').indexOf('初审通过后') >= 0;
+  })()`));
 
 /* --- 复制按钮：点一下看它到底复制了什么 --- */
 const copyRows = JSON.parse(await evalJs(`JSON.stringify([...document.querySelectorAll('.copy-btn')].map((b, i) => {
@@ -409,6 +467,27 @@ check('头像不会挤坏姓名与职务的排版',
 
 check('关于我们页无横向溢出',
   await evalJs('document.documentElement.scrollWidth <= window.innerWidth + 1'));
+
+/* 「联系我们」从导航移除后，必须能在关于我们页找到入口 */
+check('关于我们页有「联系我们」区块',
+  await evalJs("!!document.querySelector('#contact')"),
+  await evalJs("document.querySelector('#contact h2')?.textContent.trim()"));
+
+check('关于我们页的联系区显示了三个群号',
+  await evalJs(`(function(){
+    var box = document.querySelector('#contact');
+    if (!box) return false;
+    var t = box.innerText;
+    return t.indexOf('788233856') >= 0 && t.indexOf('1018260006') >= 0 && t.indexOf('1045216325') >= 0;
+  })()`),
+  await evalJs("document.querySelector('#contact')?.innerText.replace(/\\s+/g, ' ').slice(0, 120)"));
+
+check('关于我们页的联系区有复制按钮',
+  await evalJs("document.querySelectorAll('#contact .copy-btn').length === 3"),
+  '实际 ' + await evalJs("document.querySelectorAll('#contact .copy-btn').length") + ' 个');
+
+check('关于我们页能跳到完整的联系方式',
+  await evalJs(`!!document.querySelector('#contact a[href*="panel-contact"]')`));
 
 await open('/index.html');
 const homeText = await evalJs('document.body.innerText');
@@ -864,8 +943,8 @@ check('侧栏默认是收起的',
     return t && t.checked === false && getComputedStyle(document.querySelector('.mnav-drawer')).display === 'none';
   })()`));
 
-check('侧栏里的链接有 7 条',
-  await evalJs("document.querySelectorAll('.mnav-links a').length === 7"),
+check('侧栏里的链接有 6 条',
+  await evalJs("document.querySelectorAll('.mnav-links a').length === 6"),
   '实际 ' + await evalJs("document.querySelectorAll('.mnav-links a').length"));
 
 // 展开：点汉堡对应的 label
