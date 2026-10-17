@@ -871,21 +871,54 @@
       metaEl.innerHTML =
         '<span class="article-date">' + esc(dateText) + '</span>' +
         (n.pin ? '<span class="tag tag--redstone">置顶</span>' : '') +
-        (n.tags || []).map(function (t) { return '<span class="tag">' + esc(t) + '</span>'; }).join('');
+        (n.tags || []).map(function (t) { return '<span class="tag">' + esc(t) + '</span>'; }).join('') +
+        '<button class="share-btn" type="button" data-share="' + esc(n.id) + '">' +
+          '<span aria-hidden="true">↗</span> 分享这篇' +
+        '</button>';
     }
 
-    host.innerHTML = '<div class="article-body">' + renderMarkdown(n.body) + '</div>';
+    // 「上一条 / 下一条」按列表顺序走，看完一条能接着看
+    var order = sortedNotices();
+    var pos = -1;
+    for (var k = 0; k < order.length; k++) {
+      if (order[k].id === n.id) { pos = k; break; }
+    }
+    var newer = pos > 0 ? order[pos - 1] : null;
+    var older = (pos >= 0 && pos < order.length - 1) ? order[pos + 1] : null;
+
+    var navHtml = '';
+    if (newer || older) {
+      navHtml = '<nav class="article-nav" aria-label="更多公告">' +
+        (newer
+          ? '<a class="article-nav__item" href="article.html?id=' + esc(encodeURIComponent(newer.id)) + '">' +
+              '<span class="article-nav__dir">← 上一条</span>' +
+              '<b>' + esc(newer.title) + '</b></a>'
+          : '<span class="article-nav__item is-empty"></span>') +
+        (older
+          ? '<a class="article-nav__item article-nav__item--next" href="article.html?id=' + esc(encodeURIComponent(older.id)) + '">' +
+              '<span class="article-nav__dir">下一条 →</span>' +
+              '<b>' + esc(older.title) + '</b></a>'
+          : '<span class="article-nav__item is-empty"></span>') +
+        '</nav>';
+    }
+
+    host.innerHTML = '<div class="article-body">' + renderMarkdown(n.body) + '</div>' + navHtml;
+  }
+
+  /* 公告的统一排序：置顶优先，其余按日期从新到旧。
+     列表页和详情页的「上一条 / 下一条」都用这一份顺序。 */
+  function sortedNotices() {
+    return ANNOUNCEMENTS.slice().sort(function (a, b) {
+      if (!!b.pin !== !!a.pin) return b.pin ? 1 : -1;
+      return String(b.date).localeCompare(String(a.date));
+    });
   }
 
   function renderAnnouncements() {
     var host = $('#notice-list');
     if (!host) return;
 
-    // 置顶优先，其余按日期倒序
-    _notices = ANNOUNCEMENTS.slice().sort(function (a, b) {
-      if (!!b.pin !== !!a.pin) return b.pin ? 1 : -1;
-      return String(b.date).localeCompare(String(a.date));
-    });
+    _notices = sortedNotices();
 
     var filter = host.getAttribute('data-filter') || '';
     var list = filter
@@ -967,6 +1000,36 @@
     try { document.execCommand('copy'); done(); }
     catch (e) { toast('复制失败，请手动选择文本'); }
     document.body.removeChild(ta);
+  }
+
+  /* ---------- 分享 ----------
+     手机上有系统分享就用系统的；没有就把链接复制到剪贴板。
+     用事件委托，详情页里后加出来的按钮也管用。 */
+  function copyLink(url, done) {
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(url).then(done, function () { fallbackCopy(url, done); });
+    } else {
+      fallbackCopy(url, done);
+    }
+  }
+
+  function shareThis() {
+    var url = location.href;
+    var title = (document.title || '').replace(/\s*\|.*$/, '');
+    if (navigator.share) {
+      navigator.share({ title: title, url: url }).catch(function () {});
+      return;
+    }
+    copyLink(url, function () { toast('链接已复制，可以发给别人了'); });
+  }
+
+  function initShare() {
+    document.addEventListener('click', function (e) {
+      var btn = e.target.closest ? e.target.closest('[data-share]') : null;
+      if (!btn) return;
+      e.preventDefault();
+      shareThis();
+    });
   }
 
   /* ---------- 标签切换 ---------- */
@@ -1264,6 +1327,39 @@
     }).join('');
   }
 
+  /* ---------- 作品页的类型筛选 ----------
+     只列真的有作品的类型，顺便带上件数。 */
+  function initWorkFilter(host) {
+    var box = $('#work-filter');
+    if (!box || !host) return;
+
+    var items = [{ key: '', label: '全部', n: SHOWCASE.length }];
+    Object.keys(CATEGORIES).forEach(function (k) {
+      var count = SHOWCASE.filter(function (it) { return it.category === k; }).length;
+      if (count > 0) items.push({ key: k, label: CATEGORIES[k], n: count });
+    });
+
+    if (items.length < 3) { box.hidden = true; return; }
+
+    box.innerHTML = items.map(function (it, i) {
+      return '<button class="tab' + (i === 0 ? ' is-active' : '') + '" type="button"' +
+        ' data-work-filter="' + esc(it.key) + '">' + esc(it.label) +
+        '<span class="filter-count">' + it.n + '</span></button>';
+    }).join('');
+
+    var btns = $$('button[data-work-filter]', box);
+    btns.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        btns.forEach(function (b) { b.classList.toggle('is-active', b === btn); });
+        var key = btn.getAttribute('data-work-filter') || '';
+        var list = key
+          ? SHOWCASE.filter(function (it) { return it.category === key; })
+          : SHOWCASE.slice();
+        renderWorks(host, list, '这一类暂时还没有作品。');
+      });
+    });
+  }
+
   function initShowcase() {
     var mainHost = $('#showcase-grid');
     if (mainHost) {
@@ -1299,6 +1395,9 @@
       var homeList = homeLimit > 0 ? SHOWCASE_TEST.slice(0, homeLimit) : SHOWCASE_TEST.slice();
       renderWorks(homeTest, homeList, '目前没有正在测试的组件。有作品进入测试后，会先出现在这里。');
     }
+
+    // 作品页「代表作品」的类型筛选
+    initWorkFilter(mainHost);
 
     // 两栏的件数（不受筛选影响）
     var counter = $('#work-count');

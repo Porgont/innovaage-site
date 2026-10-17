@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>创想时代开发组 · 公告</title>
+    <link>https://innovaage.cn/news.html</link>
+    <atom:link href="https://innovaage.cn/feed.xml" rel="self" type="application/rss+xml"/>
+    <description>创想时代开发组的公告：招募、版本发布、合作与站点动态。</description>
+    <language>zh-CN</language>
+    <lastBuildDate>Sat, 17 Oct 2026 23:42:28 +0000</lastBuildDate>
+    <item>
+      <title>开放代投业务，同步公布入室审核条例</title>
+      <link>https://innovaage.cn/article.html?id=invest-and-audit-rules</link>
+      <guid isPermaLink="true">https://innovaage.cn/article.html?id=invest-and-audit-rules</guid>
+      <pubDate>Sat, 17 Oct 2026 00:00:00 +0800</pubDate>
+      <category>招募</category>
+      <category>代投</category>
+      <category>里程碑</category>
+      <description>两件事一起说。 一、开放代投业务 依托我们庞大的粉丝群体与流量优势，你的作品上架资源中心，能够拿到更高曝光，获得更多玩家浏览下载。接收地图、皮肤、材质、光影、功能玩法优质组件，免费 / 付费作品均可投递。 优势：粉丝基数大，自带流量加持，助力你的作品被更多玩家看见。 转载非原创作…</description>
+    </item>
+    <item>
+      <title>innovaage.cn 二级域名对全体成员开放</title>
+      <link>https://innovaage.cn/article.html?id=subdomain-open</link>
+      <guid isPermaLink="true">https://innovaage.cn/article.html?id=subdomain-open</guid>
+      <pubDate>Sat, 17 Oct 2026 00:00:00 +0800</pubDate>
+      <category>站点</category>
+      <description>全新官网 innovaage.cn 正在持续准备中，具体完工可访问时间未确定。 为扩大域名的使用范围，现对创想时代全体成员免费开放二级域名。二级域名由申请人自行决定，只能用字母；不带二级域名的 innovaage.cn 保留给官网使用。 申请方式：到首席开发官处申请，需要说明三件…</description>
+    </item>
+    <item>
+      <title>里程碑：创想时代开发组官网开放！</title>
+      <link>https://innovaage.cn/article.html?id=site-launch</link>
+      <guid isPermaLink="true">https://innovaage.cn/article.html?id=site-launch</guid>
+      <pubDate>Fri, 16 Oct 2026 00:00:00 +0800</pubDate>
+      <category>站点</category>
+      <category>里程碑</category>
+      <description>创想时代官网现已启用！ 各位可以在官网访问： 系列作品的发布页 代表作品的介绍页 测试中组件的参与页 官网内置的「工具箱」 在「工具箱」里可以使用本地运行的图片压缩、图片格式转换、各种格式的文件转换、视频鉴定并转换为符合投稿标准的视频，以及由创想时代成员制作的工具。 官网内容目前…</description>
+    </item>
+    <item>
+      <title>模组总销量突破 5000 万</title>
+      <link>https://innovaage.cn/article.html?id=module-50m-milestone</link>
+      <guid isPermaLink="true">https://innovaage.cn/article.html?id=module-50m-milestone</guid>
+      <pubDate>Mon, 27 Jul 2026 00:00:00 +0800</pubDate>
+      <category>里程碑</category>
+      <description>2026 年 7 月 27 日，创想时代开发组旗下《我的世界》中国版主开发者账号发布的模组总销量（即总下载量）突破 5000 万次，标志着创想一个新的里程碑。</description>
+    </item>
+  </channel>
+</rss>

@@ -3578,6 +3578,103 @@ main.overlap-hero .hero--banner > .hero-veil::after {
   }
 }
 
+/* ---------- ㉔ 分享按钮、公告上下条、作品类型筛选 ---------- */
+
+/* 公告详情页标题下的「分享这篇」 */
+.share-btn {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  font-family: var(--font);
+  font-size: 12.5px;
+  color: var(--text-dim);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: color .18s ease, border-color .18s ease, background-color .18s ease;
+}
+
+.share-btn:hover {
+  color: var(--text);
+  border-color: var(--line-2);
+  background: var(--bg-2);
+}
+
+/* 公告详情页底部的上一条 / 下一条 */
+.article-nav {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  max-width: 74ch;
+  margin-top: 40px;
+  padding-top: 22px;
+  border-top: 1px solid var(--line);
+}
+
+.article-nav__item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--panel);
+  text-decoration: none !important;
+  background-image: none !important;
+  transition: border-color .18s ease, background-color .18s ease;
+}
+
+.article-nav__item:hover {
+  border-color: var(--line-2);
+  background: var(--bg-2);
+}
+
+.article-nav__item--next {
+  grid-column: 2;
+  text-align: right;
+}
+
+.article-nav__item.is-empty {
+  border: 0;
+  background: transparent;
+  pointer-events: none;
+}
+
+.article-nav__dir {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .08em;
+  color: var(--text-mute);
+}
+
+.article-nav__item b {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.5;
+}
+
+/* 作品类型筛选：数量和按钮之间的间隔 */
+#work-filter .tab { display: inline-flex; align-items: center; gap: 7px; }
+
+.filter-count {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .04em;
+  color: var(--text-mute);
+}
+
+#work-filter .tab.is-active .filter-count { color: var(--text-dim); }
+
+@media (max-width: 640px) {
+  .article-nav { grid-template-columns: 1fr; }
+  .article-nav__item--next { grid-column: 1; }
+  .article-nav__item.is-empty { display: none; }
+}
+
 /* ---------- 响应式 ---------- */
 @media (max-width: 800px) {
   body { font-size: 14.5px; }
