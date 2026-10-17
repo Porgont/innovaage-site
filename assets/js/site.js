@@ -61,6 +61,18 @@
     addon: 'Addon'
   };
 
+  /* 首页首屏轮播用的图 —— 只挑宽度 ≥ 1400 的原图。
+     首屏整幅铺满时，图会被拉到 2000px 上下，
+     992 宽那种小截图拉两倍就发虚，所以这里单独列一份。 */
+  var HERO_SLIDES = [
+    { img: 'assets/img/shader-2.jpg', alt: 'LogSA 晴天：樱花树冠与草地花簇' },
+    { img: 'assets/img/shader-1.jpg', alt: 'LogSA 晴天：雪山与松林的光影过渡' },
+    { img: 'assets/img/shader-3.jpg', alt: 'LogSA 水面：峡谷水道的镜面反射' },
+    { img: 'assets/img/fangzhen-shot-1.jpg', alt: '仿真工艺：室内场景，木地板与原木家具' },
+    { img: 'assets/img/fangzhen-shot-3.jpg', alt: '仿真工艺：草方块地形的表面细节' },
+    { img: 'assets/img/hero-works.jpg', alt: '雪原与松林俯瞰' }
+  ];
+
   var SHOWCASE = [
     {
       id: 'log7-birch',
@@ -1217,10 +1229,11 @@
       list.push({ src: src, alt: alt || '' });
     }
 
-    push(SITE_CONFIG.heroImage, SITE_CONFIG.heroImageAlt);
-    for (var k = 0; k < SHOWCASE.length; k++) {
-      push(SHOWCASE[k].img, SHOWCASE[k].title);
+    // 只用高清图轮播；HERO_SLIDES 空了才退回配置里那一张
+    for (var k = 0; k < HERO_SLIDES.length; k++) {
+      push(HERO_SLIDES[k].img, HERO_SLIDES[k].alt);
     }
+    if (!list.length) push(SITE_CONFIG.heroImage, SITE_CONFIG.heroImageAlt);
 
     if (!list.length) { box.hidden = true; return; }
 
