@@ -119,9 +119,9 @@
       <p style="font-family:var(--mono);font-size:12.5px;letter-spacing:.06em;color:var(--text-mute);margin:0 0 26px"
          id="work-author">作者：Log坤</p>
 
-      <figure class="work-hero" style="margin:0">
-        <img id="work-cover" src="assets/img/shader-2.jpg"
-             alt="樱花林地里的透光树冠与飘落花瓣" decoding="async">
+      <!-- 封面图不写死：由 site.js 按 ?id= 填。这里留图会闪出别的作品的封面。 -->
+      <figure class="work-hero" id="work-cover-figure" style="margin:0" hidden>
+        <img id="work-cover" alt="" decoding="async">
       </figure>
     </div>
   </section>

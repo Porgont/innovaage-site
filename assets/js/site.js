@@ -1322,10 +1322,15 @@
     }
 
     // 头图
+    // 封面：没有 cover 就把整块留空，绝不退回别的作品的图
     var cover = $('#work-cover');
-    if (cover && work.cover) {
+    var coverFigure = $('#work-cover-figure');
+    if (cover && coverFigure && work.cover) {
       cover.src = work.cover;
       cover.alt = work.coverAlt || work.name;
+      coverFigure.hidden = false;
+    } else if (coverFigure) {
+      coverFigure.hidden = true;
     }
 
     // 左侧信息栏
