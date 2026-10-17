@@ -1964,8 +1964,10 @@
     initHeaderScroll();
     initHeroOverlap();
     initHeroImage();
-    initHeroParallax();
     initPageHero();
+    // 视差要等上面把子页面的 .hero-figure 建出来之后再挂，
+    // 否则子页面此时还没有这个元素，监听会落空。
+    initHeroParallax();
     initShowcase();
     initWorkDetail();
     initPageTransition();

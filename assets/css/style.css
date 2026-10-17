@@ -3058,6 +3058,12 @@ body.is-leaving::after {
       transparent 100%);
 }
 
+/* 子页面 hero 不要首页那条 14 秒缓慢放大，只保留鼠标跟随的轻微位移。
+   （hero-drift 的规则是按 .hero--banner 写的，两个页面都会命中，这里收掉） */
+.hero--page.hero--banner .hero-figure img.is-active {
+  animation: none;
+}
+
 /* 子页面 hero 常比视口高，照片按 cover 缩放后重心会掉到折叠线以下，
    看到的多半是天空。把裁切位置往上提，让画面主体留在首屏。 */
 .hero--page.hero--banner .hero-figure img {
