@@ -75,13 +75,14 @@ if (!corePart.includes('Log_坤') && !corePart.includes('老赵')) {
   bad('核心管理局里仍包含 Log_坤 或 老赵');
 }
 
-if (otherCards === 2 && otherPart.includes('Log_坤') && otherPart.includes('老赵')) {
-  good('其他负责人：Log_坤 与 老赵 都在');
+const OTHER_NAMES = ['Log_坤', '老赵', '缒沐'];
+if (otherCards === OTHER_NAMES.length && OTHER_NAMES.every((who) => otherPart.includes(who))) {
+  good('其他负责人：' + OTHER_NAMES.join('、') + ' 都在');
 } else {
   bad('其他负责人分区不对（' + otherCards + ' 人）');
 }
 
-/* 七位负责人的头像：文件要在，html 也要引用 */
+/* 负责人头像：文件要在，html 也要引用。加人时只改这张表。 */
 const AVATARS = [
   ['威廉', 'avatar-william.jpg'],
   ['柑柠', 'avatar-ganning.jpg'],
@@ -89,7 +90,8 @@ const AVATARS = [
   ['樱花', 'avatar-yinghua.jpg'],
   ['阿潇', 'avatar-axiao.jpg'],
   ['Log_坤', 'avatar-logkun.jpg'],
-  ['老赵', 'avatar-laozhao.jpg']
+  ['老赵', 'avatar-laozhao.jpg'],
+  ['缒沐', 'avatar-zhuimu.jpg']
 ];
 let avatarProblems = [];
 for (const [who, file] of AVATARS) {
@@ -99,13 +101,13 @@ for (const [who, file] of AVATARS) {
     avatarProblems.push(who + ' 图片文件不存在');
   }
 }
-if (avatarProblems.length === 0) good('负责人头像：7 位全部接上');
+if (avatarProblems.length === 0) good('负责人头像：' + AVATARS.length + ' 位全部接上');
 else bad('头像问题：' + avatarProblems.join('，'));
 
 // 有头像的卡片必须带 officer--avatar，否则布局会错位
 const avatarCards = (about.match(/class="officer(?=[\s"])[^"]*officer--avatar[^"]*"/g) || []).length;
-if (avatarCards === 7) good('负责人卡片：7 张都用了头像布局');
-else bad('负责人卡片：只有 ' + avatarCards + ' 张用了头像布局（应为 7）');
+if (avatarCards === AVATARS.length) good('负责人卡片：' + avatarCards + ' 张都用了头像布局');
+else bad('负责人卡片：只有 ' + avatarCards + ' 张用了头像布局（应为 ' + AVATARS.length + '）');
 
 const joinHtml = readFileSync(join(root, 'join.html'), 'utf8');
 /* 两处部门表：页面顶部（带 --wide 修饰类）与审核条例面板，各 5 个。
