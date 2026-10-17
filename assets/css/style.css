@@ -769,12 +769,47 @@ html[data-theme="dark"] .tag--diamond { color: var(--gold); }
   display: grid;
   grid-template-columns: 92px 1fr;
   gap: 14px;
-  align-items: baseline;
-  padding: 12px 14px;
+  align-items: start;
+  padding: 14px 16px;
   background: var(--bg-2);
   border: 1px solid var(--line);
   border-left: 3px solid var(--gold);
   border-radius: var(--radius);
+}
+
+/* 部门右边的两块：上面是组别胶囊，下面是介绍 */
+.dept-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.dept-groups {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+/* 组别：粗体、金底、白字。
+   底色没有用 --gold 那个亮黄 —— 白字压在 #f5c518 上只有 1.6:1，看不清；
+   这里用深一档的金，白字才读得出来。 */
+.dept-groups i {
+  font-style: normal;
+  font-weight: 700;
+  font-size: 12.5px;
+  line-height: 1;
+  padding: 6px 10px;
+  border-radius: 2px;
+  background: #c98a06;
+  color: #fff;
+  white-space: nowrap;
+}
+
+.dept-desc {
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--text-dim);
 }
 
 .dept b {
