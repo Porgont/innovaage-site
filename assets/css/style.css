@@ -216,17 +216,28 @@ code {
   transition: color .15s ease;
 }
 
-/* 悬停：文字加深 + 一条细灰线预告，不放底色块 */
+/* 悬停：文字前面冒一个小黄点（原来那条细线和「标签变黄」都去掉了） */
+.nav a {
+  /* 给左边的点预留位置，悬停时文字不会跟着跳 */
+  padding-left: 19px;
+}
+
 .nav a::before {
   content: "";
   position: absolute;
-  left: 13px;
-  right: 13px;
-  bottom: 2px;
-  height: 2px;
-  background: var(--line-strong);
+  left: 5px;
+  top: 50%;
+  width: 5px;
+  height: 5px;
+  margin-top: -2.5px;
+  border-radius: 50%;
+  background: var(--gold);
   opacity: 0;
-  transition: opacity .15s ease;
+  transform: translateX(-4px) scale(.2);
+  transition:
+    opacity .16s ease,
+    transform .34s cubic-bezier(.2, 1.5, .4, 1);
+  pointer-events: none;
 }
 
 .nav a:hover {
@@ -235,7 +246,11 @@ code {
   border-bottom: 0;
 }
 
-.nav a:hover::before { opacity: 1; }
+.nav a:hover::before,
+.nav a:focus-visible::before {
+  opacity: 1;
+  transform: translateX(0) scale(1);
+}
 
 /* 当前页：黑字 + 底部黄条 */
 .nav a.is-active {
@@ -244,7 +259,13 @@ code {
   background: transparent;
 }
 
-.nav a.is-active::before { opacity: 0; }
+.nav a.is-active::before {
+  opacity: 0;
+  transform: translateX(-4px) scale(.2);
+}
+
+/* 当前页那一项悬停时也不冒点，避免和黄条打架 */
+.nav a.is-active:hover::before { opacity: 0; }
 
 .nav a.is-active::after {
   content: "";
@@ -1399,7 +1420,9 @@ input[type="range"]::-webkit-slider-thumb {
   border-bottom-color: var(--gold-dk);
 }
 
-.wrap a:not(.btn):not(.brand):not(.work-more):not(.skip-link):not(.module-card):hover,
+/* 悬停变黄底的规则也必须排除导航 —— 上面那条非悬停的排了，这条以前漏了，
+   结果鼠标一划过导航就整块变成黄底。 */
+.wrap a:not(.btn):not(.brand):not(.work-more):not(.skip-link):not(.module-card):not(.nav a):not(.mnav-links a):hover,
 .callout a:hover,
 .notice-body a:hover,
 .stat-list a:hover {
@@ -2551,7 +2574,6 @@ body.is-leaving main {
   transition: color .2s ease;
 }
 
-.nav a:hover small,
 .nav a.is-active small { color: var(--gold-dk); }
 
 /* 细框描述块：参考图里那段带边框的介绍 */
@@ -2833,12 +2855,7 @@ body.is-leaving main {
 
 /* ---------- ⑫ 三处补充玻璃 ---------- */
 
-/* 导航悬停：磨砂胶囊 */
-.nav a:hover {
-  background: color-mix(in srgb, var(--bg) 62%, transparent);
-  -webkit-backdrop-filter: blur(10px) saturate(160%);
-  backdrop-filter: blur(10px) saturate(160%);
-}
+/* 导航悬停的反馈改成了左边的黄点，这里不再铺胶囊底 */
 
 /* 作品卡片悬停：封面盖一层玻璃 */
 .work { position: relative; }
@@ -2877,7 +2894,7 @@ body.is-leaving::after {
 }
 
 @supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
-  .nav a:hover { background: var(--bg-2); }
+  .nav a:hover { background: transparent; }
   .work-media::before { display: none; }
   body.is-leaving::after { display: none; }
 }
