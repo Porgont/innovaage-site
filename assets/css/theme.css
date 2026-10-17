@@ -70,6 +70,13 @@
   --mono: "Cascadia Mono", "Consolas", "SFMono-Regular", "Menlo",
           "Courier New", monospace;
 
+  /* 展示字体：只给超大英文标题用。拉丁优先，避免中文歌特体把字母拉宽 */
+  --display: "Helvetica Neue", Helvetica, "Arial Narrow", Arial,
+             "Segoe UI", system-ui, sans-serif;
+
+  /* 右下角切角的腿长（各组件可自行覆盖） */
+  --cut: 14px;
+
   /* 按钮：主按钮黑底白字，次按钮白底黑字 */
   --btn-bg:      #1a1c20;
   --btn-fg:      #ffffff;

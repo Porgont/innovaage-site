@@ -3,7 +3,7 @@
 这是 **Innova Age Development Team** 的官方网站源码。纯静态站点：HTML + CSS + 原生 JavaScript，
 **没有框架、没有构建步骤**。改完文件直接推送到 GitHub，网站就会自动更新。
 
-- 线上地址：**http://innovaage.cn/** （注意：目前是 `http://`，证书还没签下来，见[第八节](#八已完成的配置备查)）
+- 线上地址：**https://innovaage.cn/**
 - 代码仓库：https://github.com/Porgont/innovaage-site
 - 备用地址：https://porgont.github.io/innovaage-site/
 
@@ -204,7 +204,7 @@ var SITE_CONFIG = {
 - 横构图建议 16:9 或 3:2
 - 详细要求见 `assets/img/README.md`
 
-MC 截图常常有 2–5MB，需要先压缩。压图可以：用站内的[图片处理工具](http://innovaage.cn/tools-image.html)，
+MC 截图常常有 2–5MB，需要先压缩。压图可以：用站内的[图片处理工具](https://innovaage.cn/tools-image.html)，
 或 `node tools/process-shader-images.mjs`。
 
 > 图片工具的预设里有个 **「无限制」**：选了它就不动像素尺寸，只按「输出格式」重新编码
@@ -328,7 +328,7 @@ git commit -m "解决冲突"
 git push
 ```
 
-不改代码、只是看看线上效果：直接开 http://innovaage.cn/ 。
+不改代码、只是看看线上效果：直接开 https://innovaage.cn/ 。
 
 ---
 
@@ -343,7 +343,7 @@ git push
 - Source: `Deploy from a branch`
 - Branch: `main`，目录 `/ (root)`
 - Custom domain: `innovaage.cn`（靠仓库里的 `CNAME` 文件）
-- Enforce HTTPS：**尚未勾选** —— 证书一直没签发，见下面
+- Enforce HTTPS：**已勾选** —— `http://` 会自动 301 跳到 `https://`
 
 ### DNS（阿里云）
 
@@ -359,12 +359,22 @@ git push
 
 > ⚠️ **不要动 MX 和 SPF 记录**，如果这个域名在教育邮箱，动了邮件就废了。
 
-### HTTPS 证书还没签下来
+### HTTPS
 
-目前只能走 `http://`。触发重新签发的办法：
+**已经能用了**。`https://innovaage.cn/` 证书有效，`http://` 会自动 301 跳转过去。
 
-GitHub 仓库 → Settings → Pages → 把 Custom domain 里的 `innovaage.cn` **删掉再填一遍** → Save，
-等证书签发后再回来勾上 Enforce HTTPS。
+GitHub 会自动续签证书，平时不用管。**如果哪天网站又提示「不安全」**，先按这个顺序查：
+
+1. 连 `innovaage.cn:443` 看证书主题是不是 `CN=innovaage.cn`；
+   如果变回 `CN=*.github.io`，说明证书掉了（自动续签失败）
+2. 到 GitHub 仓库 → Settings → Pages 看一眼：`Enforce HTTPS` 是否被自动取消
+3. 修的办法：把 Custom domain 里的 `innovaage.cn` **删掉再填一遍** → Save，
+   等 GitHub 重新签发（通常几分钟到 24 小时），签好后重新勾 Enforce HTTPS
+
+> 排查记录（2026-10）：当初证书一直没签下来，`Enforce HTTPS` 的勾选框是灰的，
+> 提示 `your domain is not properly configured to support HTTPS`。
+> 当时 DNS 的 `✓ DNS check successful` 是正常的，卡住的只是签发这一步，**GitHub 后来自己签完了**，
+> 不需要删域名重加。以后遇到灰框，先等一等再刷新设置页，别急着改配置。
 
 ### 国内访问速度
 
@@ -390,7 +400,7 @@ GitHub Pages 服务器在海外，国内访问时快时慢，这是线路问题�
 
 ## 十、待办
 
-- [ ] 签发 HTTPS 证书（见第八节）
+- [x] 签发 HTTPS 证书并开启 Enforce HTTPS（见第八节）
 - [ ] 报名问卷以外的素材如果需要可继续补
 - [ ] 视频工具的 H.265 输出：取决于浏览器与显卡支持，
       当前环境实测不支持，代码里会自动置灰并给出说明

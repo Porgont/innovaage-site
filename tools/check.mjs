@@ -72,7 +72,11 @@ for (const cssFile of ['assets/css/style.css', 'assets/css/theme.css']) {
   const explicitDarkVars = new Set([...theme.slice(darkExplicitAt).matchAll(varRe)].map(m => m[1]));
 
   // 这几个是尺寸 / 字体，与深浅无关，不需要在深色分支里重复定义
-  const themeNeutral = new Set(['--radius', '--pad', '--maxw', '--font', '--mono']);
+  const themeNeutral = new Set([
+    '--radius', '--pad', '--maxw', '--font', '--mono',
+    // 展示字体与切角尺寸同样与主题无关
+    '--display', '--cut'
+  ]);
 
   const missingInMedia = [...baseVars].filter(v => !themeNeutral.has(v) && !darkVars.has(v));
   const missingInExplicit = [...baseVars].filter(v => !themeNeutral.has(v) && !explicitDarkVars.has(v));
