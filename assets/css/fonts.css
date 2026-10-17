@@ -1,8 +1,11 @@
-/* 站内字体：HarmonyOS Sans SC（华为鸿蒙字体，可变字体，一条 wght 轴 40–900）
+/* 站内字体：Noto Sans SC（可变字体，一条 wght 轴 100–900）
+ *
+ * 许可是 SIL Open Font License 1.1，允许修改（子集化）和随产品分发，
+ * 前提是保留版权声明、附上许可证、不用「保留字体名」。原文字见同目录 OFL.txt。
  *
  * 文件是子集化的：只包含站内页面真正用到的字符。
- * 想重新生成：node tools/subset-font.mjs（需要本机装有 python + fonttools + brotli，
- * 以及系统里安装了 HarmonyOS Sans SC）
+ * 想重新生成：node tools/subset-font.mjs（需要 python + fonttools + brotli，
+ * 以及系统里安装了 Noto Sans SC）。
  *
  * 加载策略：
  *   - font-display: swap —— 字体没下载完时先用系统字体显示，不白屏
@@ -10,8 +13,8 @@
  */
 
 @font-face {
-  font-family: "HarmonyOS Sans SC";
-  src: url("../fonts/harmonyos-sans-sc.woff2") format("woff2");
+  font-family: "Noto Sans SC";
+  src: url("../fonts/noto-sans-sc.woff2") format("woff2");
   font-weight: 100 900;
   font-style: normal;
   font-display: swap;

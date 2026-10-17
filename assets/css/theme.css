@@ -65,8 +65,8 @@
   --grid-line: rgba(20, 22, 26, .045);
 
   /* 字体 */
-  --font: "HarmonyOS Sans SC", "Microsoft YaHei", "微软雅黑", "PingFang SC",
-          "Hiragino Sans GB", "Noto Sans SC", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font: "Noto Sans SC", "Microsoft YaHei", "微软雅黑", "PingFang SC",
+          "Hiragino Sans GB", system-ui, -apple-system, "Segoe UI", sans-serif;
   --mono: "Cascadia Mono", "Consolas", "SFMono-Regular", "Menlo",
           "Courier New", monospace;
 

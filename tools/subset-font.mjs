@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/* 把 HarmonyOS Sans SC 子集化成站内真正用到的字符，输出 assets/fonts/harmonyos-sans-sc.woff2
+/* 把 Noto Sans SC 子集化成站内真正用到的字符，输出 assets/fonts/noto-sans-sc.woff2
  *
  * 源字体是本机安装的那份可变字体（wght 40–900 一条轴），
  * 所以一个 woff2 就能覆盖全站的 400 / 500 / 700 / 800 各档字重。
@@ -22,10 +22,10 @@ import { tmpdir } from 'node:os';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 
-// 本机安装的鸿蒙可变字体
-const SRC = 'C:/Users/Ronsy/AppData/Local/Microsoft/Windows/Fonts/HarmonyOS_Sans_SC.ttf';
+// 本机安装的 Noto Sans SC 可变字体（OFL 1.1，可子集化后可随站分发）
+const SRC = 'C:/Windows/Fonts/NotoSansSC-VF.ttf';
 const OUT_DIR = join(root, 'assets', 'fonts');
-const OUT = join(OUT_DIR, 'harmonyos-sans-sc.woff2');
+const OUT = join(OUT_DIR, 'noto-sans-sc.woff2');
 
 const PY = process.env.PYTHON || 'python';
 
@@ -79,7 +79,7 @@ console.log('收集到 ' + set.size + ' 个字符（其中汉字 ' + cjk + ' 个
 /* ---------- 2. 调 python 切字体 ---------- */
 if (!statSync(SRC, { throwIfNoEntry: false })) {
   console.error('找不到源字体：' + SRC);
-  console.error('请先安装 HarmonyOS Sans SC，或改本脚本顶部的 SRC。');
+  console.error('请先安装 Noto Sans SC，或改本脚本顶部的 SRC。');
   process.exit(1);
 }
 
@@ -91,4 +91,4 @@ execFileSync(PY, [join(root, 'tools', 'subset_font.py'), SRC, charsFile, OUT], {
 });
 
 const kb = Math.round(statSync(OUT).size / 1024);
-console.log('已生成 assets/fonts/harmonyos-sans-sc.woff2  ' + kb + ' KB');
+console.log('已生成 assets/fonts/noto-sans-sc.woff2  ' + kb + ' KB');
