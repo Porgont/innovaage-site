@@ -599,10 +599,33 @@ html[data-theme="dark"] .tag--diamond { color: var(--gold); }
 }
 
 .stat {
+  position: relative;
   padding: 18px 20px;
   background: var(--panel);
   border-right: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
+}
+
+/* 统计格里右下角的小字（比如「2026 年 7 月、8 月」）。
+   字号压到 10.5px，颜色用最浅那一档，只当脚注看。 */
+.stat-when {
+  position: absolute;
+  right: 16px;
+  bottom: 14px;
+  font-family: var(--mono);
+  font-style: normal;
+  font-size: 10.5px;
+  letter-spacing: .04em;
+  color: var(--text-mute);
+  white-space: nowrap;
+}
+
+@media (max-width: 700px) {
+  .stat-when {
+    position: static;
+    display: block;
+    margin-top: 4px;
+  }
 }
 
 .stat b {
