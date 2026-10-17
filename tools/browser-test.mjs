@@ -920,6 +920,43 @@ check('首页 hero 的徽章与统计条是毛玻璃',
   })()`),
   await evalJs("(function(){ var b = document.querySelector('.hero--banner .stat'); if (!b) return '无'; var s = getComputedStyle(b); return s.backdropFilter || 'none'; })()"));
 
+/* ---------- 首页「代表作品」与「测试中作品」 ---------- */
+check('首页这一栏的标题是「代表作品」',
+  (await evalJs("document.querySelector('#showcase h2').textContent.trim()")) === '代表作品',
+  await evalJs("document.querySelector('#showcase h2').textContent.trim()"));
+
+check('首页代表作品下面有「测试中作品」一栏',
+  await evalJs(`(function(){
+    var s = document.querySelector('#showcase');
+    var t = document.querySelector('#testing');
+    if (!s || !t) return false;
+    return (s.compareDocumentPosition(t) & Node.DOCUMENT_POSITION_FOLLOWING) > 0;
+  })()`));
+
+check('「测试中作品」的标题与说明都在',
+  (await evalJs("document.querySelector('#testing h2').textContent.trim()")) === '测试中作品' &&
+  (await evalJs("document.querySelector('#testing').innerText.includes('尚未正式发布')")),
+  await evalJs("document.querySelector('#testing h2').textContent.trim()"));
+
+// 现在还没有测试组件，这里应该是空的
+check('「测试中作品」目前是空的，并给出了说明',
+  await evalJs(`(function(){
+    var box = document.querySelector('#showcase-test-home');
+    if (!box) return false;
+    var empty = box.querySelector('.works-empty');
+    return box.querySelectorAll('.work').length === 0 && !!empty && empty.textContent.trim().length > 0;
+  })()`),
+  await evalJs("(document.querySelector('#showcase-test-home .works-empty') || {}).textContent"));
+
+check('「测试中作品」能跳到作品页对应的那一栏',
+  await evalJs(`(function(){
+    var a = [...document.querySelectorAll('#testing a')].filter(function (x) {
+      return /works\.html#panel-tests$/.test(x.getAttribute('href') || '');
+    });
+    return a.length === 1;
+  })()`),
+  await evalJs("JSON.stringify([...document.querySelectorAll('#testing a')].map(a => a.getAttribute('href')))"));
+
 check('首页作品区在公告区之前（位置更突出）',
   await evalJs(`(function(){
     var s = document.querySelector('#showcase');

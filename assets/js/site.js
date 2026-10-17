@@ -1052,8 +1052,16 @@
       renderWorks(mainHost, list, '作品还在整理中。');
     }
 
-    // 测试组件那一栏
+    // 测试组件那一栏（作品页）
     renderWorks($('#showcase-test'), SHOWCASE_TEST, '暂时还没有测试组件。');
+
+    // 首页「测试中作品」：和作品页那一栏同一份数据，首页只显示前 3 条
+    var homeTest = $('#showcase-test-home');
+    if (homeTest) {
+      var homeLimit = parseInt(homeTest.getAttribute('data-limit'), 10);
+      var homeList = homeLimit > 0 ? SHOWCASE_TEST.slice(0, homeLimit) : SHOWCASE_TEST.slice();
+      renderWorks(homeTest, homeList, '目前没有正在测试的组件。有作品进入测试后，会先出现在这里。');
+    }
 
     // 两栏的件数（不受筛选影响）
     var counter = $('#work-count');
