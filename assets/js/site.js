@@ -112,6 +112,10 @@
     }
   ];
 
+  /* 作品主页 —— 只在官网上发布的作品，字段与 SHOWCASE 相同。
+     作品页默认打开的就是这一栏。 */
+  var SHOWCASE_HOME = [];
+
   /* 尚未正式发布的测试组件 —— 单独一栏，字段与 SHOWCASE 相同。
      ★ 测试组件不放 SHOWCASE，否则会混进首页与作品页的代表作品里。
      有要上测试的组件时往这个数组里加即可。 */
@@ -1052,6 +1056,9 @@
       renderWorks(mainHost, list, '作品还在整理中。');
     }
 
+    // 作品主页（作品页默认栏）：只在官网发布的作品
+    renderWorks($('#showcase-home'), SHOWCASE_HOME, '目前还没有只在官网发布的作品。有作品在这里首发时，会先出现在这一栏。');
+
     // 测试组件那一栏（作品页）
     renderWorks($('#showcase-test'), SHOWCASE_TEST, '暂时还没有测试组件。');
 
@@ -1069,6 +1076,9 @@
 
     var testCounter = $('#test-count');
     if (testCounter) testCounter.textContent = SHOWCASE_TEST.length;
+
+    var homeCounter = $('#home-count');
+    if (homeCounter) homeCounter.textContent = SHOWCASE_HOME.length;
   }
 
   /* ---------- 作品详情页 ----------

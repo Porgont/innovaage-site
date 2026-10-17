@@ -121,14 +121,28 @@
   <section class="section section--tight">
     <div class="wrap">
 
-      <div class="tabs" role="tablist" aria-label="作品分类">
-        <button class="tab is-active" type="button" role="tab" id="tab-works"
-                aria-controls="panel-works" aria-selected="true">代表作品</button>
+      <div class="tabs tabs--boxed" role="tablist" aria-label="作品分类">
+        <button class="tab is-active" type="button" role="tab" id="tab-home"
+                aria-controls="panel-home" aria-selected="true">作品主页</button>
+        <button class="tab" type="button" role="tab" id="tab-works"
+                aria-controls="panel-works" aria-selected="false">代表作品</button>
         <button class="tab" type="button" role="tab" id="tab-tests"
                 aria-controls="panel-tests" aria-selected="false">尚未正式发布的测试组件<span class="tab-badge">！新内容</span></button>
       </div>
 
-      <div class="tab-panel" id="panel-works" role="tabpanel" aria-labelledby="tab-works">
+      <div class="tab-panel" id="panel-home" role="tabpanel" aria-labelledby="tab-home">
+
+        <div class="section-head">
+          <span class="kicker">On Site</span>
+          <h2>作品主页</h2>
+          <p>只在官网发布的作品，共 <span id="home-count">0</span> 件。</p>
+        </div>
+
+        <div class="showcase" id="showcase-home"></div>
+
+      </div>
+
+      <div class="tab-panel" id="panel-works" role="tabpanel" aria-labelledby="tab-works" hidden>
 
         <div class="section-head">
           <span class="kicker">Works</span>

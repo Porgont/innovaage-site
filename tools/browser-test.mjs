@@ -1081,25 +1081,64 @@ check('作品页有细框描述块',
   await evalJs("document.querySelector('.page-note')?.innerText.slice(0, 30)"));
 
 /* ---------- 作品页两栏切换：代表作品 / 尚未正式发布的测试组件 ---------- */
-check('作品页有「代表作品」和「尚未正式发布的测试组件」两个标签',
+check('作品页三个标签，顺序是 作品主页 / 代表作品 / 测试组件',
   await evalJs(`(function(){
-    var t = [...document.querySelectorAll('.tabs .tab')].map(function (b) { return b.textContent.trim(); });
-    return t.length === 2 && t[0] === '代表作品' && t[1].indexOf('尚未正式发布的测试组件') >= 0;
+    var t = [...document.querySelectorAll('.tabs .tab')].map(function (b) {
+      return b.textContent.replace(/！新内容/, '').trim();
+    });
+    return t.length === 3 &&
+           t[0] === '作品主页' &&
+           t[1] === '代表作品' &&
+           t[2].indexOf('尚未正式发布的测试组件') >= 0;
   })()`),
   await evalJs("[...document.querySelectorAll('.tabs .tab')].map(b => b.textContent.trim()).join(' / ')"));
 
-check('默认显示代表作品，测试组件那一栏隐藏',
+check('一进作品页先看到「作品主页」，另外两栏隐藏',
   await evalJs(`(function(){
-    var a = document.querySelector('#panel-works');
-    var b = document.querySelector('#panel-tests');
-    return !!a && !!b && a.hidden === false && b.hidden === true;
-  })()`));
+    var h = document.querySelector('#panel-home');
+    var w = document.querySelector('#panel-works');
+    var t = document.querySelector('#panel-tests');
+    return !!h && !!w && !!t && h.hidden === false && w.hidden === true && t.hidden === true;
+  })()`),
+  await evalJs("[...document.querySelectorAll('.tab-panel')].filter(p => !p.hidden).map(p => p.id).join(',')"));
+
+check('「作品主页」目前是空的，并给出了说明',
+  await evalJs(`(function(){
+    var box = document.querySelector('#showcase-home');
+    if (!box) return false;
+    var empty = box.querySelector('.works-empty');
+    return box.querySelectorAll('.work').length === 0 && !!empty && empty.textContent.trim().length > 0;
+  })()`),
+  await evalJs("(document.querySelector('#showcase-home .works-empty') || {}).textContent"));
+
+check('三个标签都有描边（不是纯文字）',
+  await evalJs(`(function(){
+    var tabs = [...document.querySelectorAll('.tabs--boxed .tab')];
+    if (tabs.length !== 3) return false;
+    return tabs.every(function (t) {
+      var s = getComputedStyle(t);
+      return parseFloat(s.borderTopWidth) >= 1 &&
+             s.borderTopStyle === 'solid' &&
+             s.borderTopColor !== 'rgba(0, 0, 0, 0)';
+    });
+  })()`),
+  await evalJs("(function(){ var t = document.querySelectorAll('.tabs--boxed .tab')[1]; var s = getComputedStyle(t); return s.borderTopWidth + ' ' + s.borderTopStyle + ' ' + s.borderTopColor; })()"));
+
+check('选中的标签是实心黑底，和没选中的区分得开',
+  await evalJs(`(function(){
+    var tabs = [...document.querySelectorAll('.tabs--boxed .tab')];
+    var on = getComputedStyle(tabs[0]);
+    var off = getComputedStyle(tabs[1]);
+    return on.backgroundColor !== off.backgroundColor &&
+           on.color !== off.color;
+  })()`),
+  await evalJs("(function(){ var t = document.querySelectorAll('.tabs--boxed .tab'); return getComputedStyle(t[0]).backgroundColor + ' vs ' + getComputedStyle(t[1]).backgroundColor; })()"));
 
 check('旧的「全部作品」已经改名为「代表作品」',
   await evalJs("!document.body.innerText.includes('全部作品')"),
   await evalJs("document.body.innerText.includes('全部作品') ? '还有全部作品' : '已改名'"));
 
-check('点第二个标签能切到测试组件栏',
+check('点「尚未正式发布的测试组件」能切到那一栏',
   await (async () => {
     await evalJs("document.querySelector('#tab-tests').click()");
     await sleep(500);
