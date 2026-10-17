@@ -1109,7 +1109,7 @@ check('两件零雾构想作品的作者写的是原作者，不是工作室',
     });
     var oak = map['零雾构想V5000 · 橡木7画质提升包'] || '';
     var uni = map['零雾构想通用版'] || '';
-    return oak.indexOf('Log坤') >= 0 && uni.indexOf('零零〇五Fogg05') >= 0 &&
+    return oak.indexOf('Log坤') >= 0 && uni.indexOf('零雾〇5Fogg05') >= 0 &&
            oak.indexOf('创想时代开发组') < 0 && uni.indexOf('创想时代开发组') < 0;
   })()`),
   await evalJs(`(function(){

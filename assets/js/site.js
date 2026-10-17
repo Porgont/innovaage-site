@@ -90,7 +90,7 @@
       id: 'lingling-universal',
       img: 'assets/img/lingling-u-1.jpg',
       title: '零雾构想通用版',
-      meta: '作者：零零〇五Fogg05',
+      meta: '作者：零雾〇5Fogg05、Windows、Log_坤',
       category: 'tex',
       desc: '零雾构想与 Log 白桦木再次联动，内置 V5003 与 Log 白桦木灵动视效包。'
     },
@@ -238,9 +238,9 @@
 
     'lingling-universal': {
       name: '零雾构想通用版',
-      author: '零零〇五Fogg05',
+      author: '零雾〇5Fogg05、Windows、Log_坤',
       type: '材质 / Texture',
-      tagline: '零雾构想与 Log 白桦木再次联动：内置零雾构想V5003 与 Log 白桦木灵动视效图形美化包',
+      tagline: '零雾构想与 Log 白桦木再次联动：零雾构想V5003 中内置了 Log 白桦木灵动视效图形包',
       cover: 'assets/img/lingling-u-1.jpg',
       coverAlt: '通用版效果：深色石墙在窗口日光下的 PBR 反射',
       // 介绍同样是成品海报
@@ -248,7 +248,7 @@
       posterAlt: '零雾构想通用版 V2.3 组件介绍海报',
       facts: [
         { k: '作品名', v: '零雾构想通用版' },
-        { k: '作者', v: '零零〇五Fogg05' },
+        { k: '作者', v: '零雾〇5Fogg05、Windows、Log_坤' },
         { k: '版本', v: 'V2.3（2026-10-14）' },
         { k: '类型', v: '材质 / Texture' },
         { k: '平台', v: 'Minecraft 基岩版' },
