@@ -1705,6 +1705,9 @@
        2. 从往返缓存回来（浏览器后退）时把离场态清掉，别让页面停在全透明
      以下情况一律不拦：新窗口、下载、外站、页内锚点、按住修饰键点击。 */
   function initPageTransition() {
+    // 浏览器自带跨页过渡时交给 CSS（@view-transition），别再叠一层蒙版
+    if ('onpageswap' in window) return;
+
     var body = document.body;
     var REDUCED = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)');
 
