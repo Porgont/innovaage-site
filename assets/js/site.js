@@ -124,10 +124,11 @@
         '⚠️ 使用前请注意：请务必搭配 SRC 光影前置（组件码 0559302），否则部分效果无法正常显示。'
       ],
       shots: [
-        { img: 'assets/img/shader-rain.jpg', caption: '雨天：石板路面的积水倒影、雨幕与暖色窗光' },
-        { img: 'assets/img/shader-1.jpg', caption: '晴天：雪山与松林的强光表现，天空过曝与积雪明暗过渡' },
-        { img: 'assets/img/shader-3.jpg', caption: '水面：峡谷水道的镜面反射，天空与地形完整倒映' },
-        { img: 'assets/img/shader-2.jpg', caption: '林地：樱花树冠的透光与飘落花瓣，草地花簇的色彩层次' }
+        // 截图只保留 alt（给屏幕阅读器与搜索引擎），不在页面上显示文字说明
+        { img: 'assets/img/shader-rain.jpg', alt: '雨天场景：石板路面积水倒影、雨幕与暖色窗光' },
+        { img: 'assets/img/shader-1.jpg', alt: '晴天场景：雪山与松林，天空过曝与积雪明暗过渡' },
+        { img: 'assets/img/shader-3.jpg', alt: '水面场景：峡谷水道的镜面反射' },
+        { img: 'assets/img/shader-2.jpg', alt: '林地场景：樱花树冠与草地花簇' }
       ],
       notice:
         '开发作者：创想时代 Log坤。' +
@@ -773,6 +774,7 @@
     }
 
     // 截图
+    // 页面上只显示图片，不显示文字说明；说明只写进 alt 供屏幕阅读器与搜索引擎使用。
     var shots = $('#work-shots');
     if (shots && work.shots && work.shots.length) {
       shots.innerHTML = work.shots.map(function (s, i) {
@@ -780,9 +782,8 @@
           '<figure class="shot">' +
             '<button class="shot-btn" type="button" data-index="' + i + '"' +
               ' aria-label="放大查看第 ' + (i + 1) + ' 张截图">' +
-              '<img src="' + esc(s.img) + '" alt="' + esc(s.caption || work.name) + '" decoding="async">' +
+              '<img src="' + esc(s.img) + '" alt="' + esc(s.alt || work.name) + '" decoding="async">' +
             '</button>' +
-            (s.caption ? '<figcaption>' + esc(s.caption) + '</figcaption>' : '') +
           '</figure>';
       }).join('');
     }
@@ -824,10 +825,9 @@
     if (!shots || !shots.length) {
       shots = $$('#work-shots .shot').map(function (fig) {
         var img = fig.querySelector('img');
-        var cap = fig.querySelector('figcaption');
         return {
           img: img ? img.getAttribute('src') : '',
-          caption: cap ? cap.textContent.trim() : ''
+          alt: img ? (img.getAttribute('alt') || '') : ''
         };
       }).filter(function (s) { return s.img; });
     }
@@ -842,8 +842,9 @@
       if (!s) return;
       lastFocus = document.activeElement;
       img.src = s.img;
-      img.alt = s.caption || '';
-      cap.textContent = s.caption || '';
+      // 放大层不显示文字说明，只把说明留给 alt
+      img.alt = s.alt || '';
+      if (cap) { cap.textContent = ''; cap.hidden = true; }
       box.hidden = false;
       document.body.style.overflow = 'hidden';
       $('#lightbox-close').focus();

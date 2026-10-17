@@ -635,6 +635,66 @@ await sleep(300);
 check('对调按钮能把宽高换过来',
   await evalJs("document.querySelector('#max-w').value === '1000' && document.querySelector('#max-h').value === '4000'"));
 
+/* ---------- 无限制：只转换格式，不动像素尺寸 ---------- */
+await evalJs(`document.querySelector('.chip[data-preset="unlimited"]').click()`);
+await sleep(300);
+
+check('点「无限制」后宽高输入被禁用',
+  await evalJs("document.querySelector('#max-w').disabled === true && document.querySelector('#max-h').disabled === true"));
+
+check('「无限制」提示写明只转换格式',
+  await evalJs("document.querySelector('#fit-note').innerText.includes('只转换格式')"),
+  await evalJs("document.querySelector('#fit-note').innerText.trim()"));
+
+const unlimitedRun = await evalJs(`(async () => {
+  // 造一张 1600×4800 的 PNG，尺寸远超默认上限
+  var c = document.createElement('canvas');
+  c.width = 1600; c.height = 4800;
+  var ctx = c.getContext('2d');
+  ctx.fillStyle = '#2a6f97';
+  ctx.fillRect(0, 0, 1600, 4800);
+  var blob = await new Promise(function (r) { c.toBlob(r, 'image/png'); });
+  var file = new File([blob], 'unlimited-test.png', { type: 'image/png' });
+
+  // 输出选 JPG：尺寸不变，但格式要真的转过去
+  document.querySelector('.chip[data-format="image/jpeg"]').click();
+  await new Promise(function (r) { setTimeout(r, 150); });
+
+  window.__toolbox.state.files = [];
+  window.__toolbox.state.results = [];
+  await window.__toolbox.addFiles([file]);
+  await window.__toolbox.run();
+  await new Promise(function (r) { setTimeout(r, 300); });
+
+  var r = window.__toolbox.state.results[0];
+  if (!r) return JSON.stringify({ error: '没有产出结果' });
+
+  // 读回产物看真实类型，确认不是「原样复制却改名」
+  var buf = await r.blob.slice(0, 4).arrayBuffer();
+  var head = new Uint8Array(buf);
+  return JSON.stringify({
+    outW: r.outW,
+    outH: r.outH,
+    name: r.name,
+    mime: r.blob.type,
+    // PNG 魔数 89 50 4E 47；JPEG 魔数 FF D8 FF
+    isPng: head[0] === 0x89 && head[1] === 0x50,
+    isJpeg: head[0] === 0xFF && head[1] === 0xD8
+  });
+})()`);
+
+const ur = JSON.parse(unlimitedRun);
+check('无限制时像素尺寸完全不变（1600×4800 原样输出）',
+  ur.outW === 1600 && ur.outH === 4800, ur.outW + '×' + ur.outH);
+check('无限制 + 选 JPG 时，产物真的是 JPEG（不是把 PNG 改个扩展名）',
+  ur.isJpeg === true && ur.isPng === false && ur.mime === 'image/jpeg',
+  'mime=' + ur.mime + '，JPEG 魔数=' + ur.isJpeg + '，PNG 魔数=' + ur.isPng);
+check('无限制时文件名仍是原尺寸', /-1600x4800\.jpg$/.test(ur.name || ''), ur.name);
+
+// 还原成默认预设，避免影响后续断言
+await evalJs(`document.querySelector('.chip[data-preset="1000x4000"]').click()`);
+await sleep(200);
+
 check('工具箱页无横向溢出',
   await evalJs('document.documentElement.scrollWidth <= window.innerWidth + 1'));
 
@@ -780,8 +840,17 @@ check('详情页有鸣谢与反馈渠道',
     var t = document.querySelector('#work-thanks');
     return t && !t.hidden && t.innerText.includes('Log坤') && t.innerText.includes('1017068586');
   })()`));
-check('每张截图都有说明文字',
-  await evalJs("[...document.querySelectorAll('#work-shots figcaption')].every(f => f.textContent.trim().length > 8)"));
+/* 截图不在页面上显示文字说明（用户要求去掉），但 alt 必须有，
+   否则屏幕阅读器和搜索引擎拿不到信息。 */
+check('截图不显示文字说明，但都带 alt',
+  await evalJs(`(function(){
+    var caps = document.querySelectorAll('#work-shots figcaption');
+    var imgs = [...document.querySelectorAll('#work-shots img')];
+    return caps.length === 0 && imgs.length > 0 &&
+           imgs.every(function (i) { return (i.getAttribute('alt') || '').trim().length > 0; });
+  })()`),
+  'figcaption ' + await evalJs("document.querySelectorAll('#work-shots figcaption').length") +
+  ' 个，alt ' + await evalJs("JSON.stringify([...document.querySelectorAll('#work-shots img')].map(i => (i.getAttribute('alt')||'').slice(0,12)))"));
 check('三张截图都真正加载完成',
   await waitFor("[...document.querySelectorAll('#work-shots img')].every(i => i.complete && i.naturalWidth > 0)"),
   '各图宽度: ' + await evalJs("JSON.stringify([...document.querySelectorAll('#work-shots img')].map(i => i.naturalWidth))"));
@@ -798,8 +867,15 @@ check('点截图能打开放大层',
 check('放大层里显示的是对应那张图',
   await evalJs("document.querySelector('#lightbox-img').getAttribute('src').includes('shader-rain')"),
   await evalJs("document.querySelector('#lightbox-img').getAttribute('src')"));
-check('放大层带说明文字',
-  await evalJs("document.querySelector('#lightbox-caption').textContent.length > 8"));
+check('放大层不显示文字说明（说明只在 alt 里）',
+  await evalJs(`(function(){
+    var cap = document.querySelector('#lightbox-caption');
+    var img = document.querySelector('#lightbox-img');
+    return !!cap && cap.hidden === true && cap.textContent.trim() === '' &&
+           (img.getAttribute('alt') || '').length > 0;
+  })()`),
+  'caption="' + await evalJs("document.querySelector('#lightbox-caption').textContent.trim()") +
+  '"，alt="' + await evalJs("(document.querySelector('#lightbox-img').getAttribute('alt') || '').slice(0, 20)") + '"');
 await evalJs("document.querySelector('#lightbox-close').click()");
 await sleep(400);
 check('能关掉放大层',

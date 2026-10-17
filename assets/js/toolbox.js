@@ -120,6 +120,7 @@
     files: [],
     maxW: 1000,
     maxH: 4000,
+    unlimited: false,   // true = 不限分辨率，只转换格式
     format: 'image/jpeg',
     quality: 0.92,
     results: []
@@ -210,21 +211,33 @@
         decoded = await decode(file);
         const srcW = decoded.width;
         const srcH = decoded.height;
-        const fit = fitSize(srcW, srcH, state.maxW, state.maxH);
+
+        // 无限制：完全不动像素尺寸，只做格式转换
+        const fit = state.unlimited
+          ? { width: srcW, height: srcH, scale: 1 }
+          : fitSize(srcW, srcH, state.maxW, state.maxH);
+
+        const needResize = fit.scale < 1;
+        // 目标格式和源格式不同时也必须重新编码。
+        // 以前只在「需要缩放」时才重新编码，导致选了 JPG 但图片本来就在范围内时，
+        // 直接复制了原始 PNG 字节却命名成 .jpg —— 扩展名与内容不符。
+        const needReencode = (file.type || '') !== state.format;
 
         const name = file.name.replace(/\.[^.]+$/, '');
         let blob, outW, outH, skipped = false;
 
-        if (fit.scale >= 1) {
-          // 本来就在范围内：不放大，直接沿用原图另存一份
+        if (!needResize && !needReencode) {
+          // 尺寸和格式都不用变：直接沿用原图，最省时间也不掉画质
           skipped = true;
           outW = srcW;
           outH = srcH;
           blob = file;
         } else {
-          const canvas = drawScaled(decoded.source, srcW, srcH, fit.width, fit.height);
-          outW = fit.width;
-          outH = fit.height;
+          const tw = needResize ? fit.width : srcW;
+          const th = needResize ? fit.height : srcH;
+          const canvas = drawScaled(decoded.source, srcW, srcH, tw, th);
+          outW = tw;
+          outH = th;
           blob = await canvasToBlob(canvas, state.format, state.quality);
         }
 
@@ -248,7 +261,7 @@
         lines.push(
           '<li><b>' + escapeHtml(file.name) + '</b>：' + srcW + '×' + srcH + '（' + fmtBytes(file.size) + '） → ' +
           '<b>' + outW + '×' + outH + '</b>（' + fmtBytes(blob.size) + '）' +
-          (skipped ? ' <span class="t-dim">已在范围内，未放大</span>' : '') + '</li>'
+          (skipped ? ' <span class="t-dim">尺寸与格式都没变，原样另存</span>' : '') + '</li>'
         );
       } catch (err) {
         lines.push('<li><b>' + escapeHtml(file.name) + '</b>：处理失败 —— ' + escapeHtml(err.message) + '</li>');
@@ -281,7 +294,7 @@
     $('#stat-list').innerHTML =
       row('原图', r.srcW + ' × ' + r.srcH + '　' + fmtBytes(r.srcBytes)) +
       row('结果', r.outW + ' × ' + r.outH + '　' + fmtBytes(r.outBytes)) +
-      row('体积', r.skipped ? '未改动（原图已在范围内）'
+      row('体积', r.skipped ? '未改动（尺寸与格式都没变）'
         : (saved > 0 ? '减少 ' + fmtBytes(saved) + '（−' + pct + '%）' : '未减少，可把画质调低一点')) +
       row('文件名', r.name);
 
@@ -331,26 +344,53 @@
       state.maxW = w;
       state.maxH = h;
       highlightPreset();
-      const note = $('#fit-note');
-      if (note) {
-        note.innerHTML = w >= h
-          ? '当前是<b>横幅</b>范围（宽 ' + w + ' × 高 ' + h + '）。图片等比缩放到不超过它。'
-          : '当前是<b>竖幅</b>范围（宽 ' + w + ' × 高 ' + h + '）。投稿长图请保持 1000 × 4000。';
-      }
+      renderFitNote();
     }
     maxW.addEventListener('input', syncMax);
     maxH.addEventListener('input', syncMax);
 
+    /** 「分辨率上限」下面那句说明 */
+    function renderFitNote() {
+      const note = $('#fit-note');
+      if (!note) return;
+      if (state.unlimited) {
+        note.innerHTML = '不限分辨率，<b>只转换格式</b>，像素尺寸保持不变。';
+        return;
+      }
+      const w = state.maxW;
+      const h = state.maxH;
+      note.innerHTML = w >= h
+        ? '当前是<b>横幅</b>范围（宽 ' + w + ' × 高 ' + h + '）。图片等比缩放到不超过它。'
+        : '当前是<b>竖幅</b>范围（宽 ' + w + ' × 高 ' + h + '）。投稿长图请保持 1000 × 4000。';
+    }
+
+    /** 无限制时，宽高输入与对调按钮没有意义，禁用掉避免误解 */
+    function syncUnlimitedUi() {
+      const off = state.unlimited;
+      [maxW, maxH, $('#swap-wh')].forEach((el) => { if (el) el.disabled = off; });
+    }
+
     $$('.chip[data-preset]').forEach((chip) => {
       chip.addEventListener('click', () => {
-        const [w, h] = chip.getAttribute('data-preset').split('x');
+        const raw = chip.getAttribute('data-preset');
+        if (raw === 'unlimited') {
+          state.unlimited = true;
+          syncUnlimitedUi();
+          highlightPreset();
+          renderFitNote();
+          return;
+        }
+        const [w, h] = raw.split('x');
+        state.unlimited = false;
         maxW.value = w;
         maxH.value = h;
+        syncUnlimitedUi();
         syncMax();
       });
     });
 
     $('#swap-wh').addEventListener('click', () => {
+      if (state.unlimited) return;
       const w = maxW.value;
       maxW.value = maxH.value;
       maxH.value = w;
@@ -359,8 +399,14 @@
 
     function highlightPreset() {
       $$('.chip[data-preset]').forEach((chip) => {
-        const [w, h] = chip.getAttribute('data-preset').split('x');
-        chip.classList.toggle('is-active', Number(w) === state.maxW && Number(h) === state.maxH);
+        const raw = chip.getAttribute('data-preset');
+        let on;
+        if (raw === 'unlimited') on = state.unlimited;
+        else {
+          const [w, h] = raw.split('x');
+          on = !state.unlimited && Number(w) === state.maxW && Number(h) === state.maxH;
+        }
+        chip.classList.toggle('is-active', on);
       });
     }
 

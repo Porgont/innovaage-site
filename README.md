@@ -21,7 +21,7 @@
 | 作品 | `works.html` | 作品列表，一个作品一条 |
 | 作品详情 | `work.html?id=xxx` | 单个作品的介绍、截图、信息栏（数据驱动，见 4.2） |
 | 工具箱 | `tools.html` | 工具入口页，三张卡片 |
-| ├ 图片处理 | `tools-image.html` | 把图片压到指定分辨率以内 |
+| ├ 图片处理 | `tools-image.html` | 把图片压到指定分辨率以内；也可选「无限制」只转换格式 |
 | ├ 视频处理 | `tools-video.html` | 视频诊断 + 转投稿规格 / 自定义规格 |
 | └ matoga | `tools-matoga.html` | 组员作品：材质贴图对比工具（桌面应用） |
 | 公告 | `news.html` | 全部公告 + 分类筛选 |
@@ -206,6 +206,9 @@ var SITE_CONFIG = {
 
 MC 截图常常有 2–5MB，需要先压缩。压图可以：用站内的[图片处理工具](http://innovaage.cn/tools-image.html)，
 或 `node tools/process-shader-images.mjs`。
+
+> 图片工具的预设里有个 **「无限制」**：选了它就不动像素尺寸，只按「输出格式」重新编码
+> （比如 PNG → JPG 压体积）。要单纯转格式、不改分辨率时用这一档。
 
 ### 4.5 换首页大图
 
