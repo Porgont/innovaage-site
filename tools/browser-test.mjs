@@ -106,6 +106,50 @@ check('首页公告渲染 2 条（data-limit）',
   await evalJs("document.querySelectorAll('#notice-list .notice').length === 2"),
   '实际 ' + await evalJs("document.querySelectorAll('#notice-list .notice').length"));
 
+/* ---------- 公告详情页 ---------- */
+await open('/article.html?id=invest-and-audit-rules');
+await sleep(900);
+
+check('公告详情页渲染出对应那一篇',
+  await evalJs(`(function(){
+    var host = document.querySelector('#article-detail');
+    return !!host && host.getAttribute('data-article-id') === 'invest-and-audit-rules';
+  })()`),
+  await evalJs("document.querySelector('#article-detail')?.getAttribute('data-article-id')"));
+
+check('公告详情页标题是公告标题',
+  (await evalJs("document.querySelector('#article-name').textContent.trim()")) === '开放代投业务，同步公布入室审核条例',
+  await evalJs("document.querySelector('#article-name').textContent.trim()"));
+
+check('公告详情页显示日期与标签',
+  await evalJs(`(function(){
+    var m = document.querySelector('#article-meta');
+    if (!m) return false;
+    var t = m.innerText;
+    return t.indexOf('2026') >= 0 && t.indexOf('代投') >= 0;
+  })()`),
+  await evalJs("(document.querySelector('#article-meta')?.innerText || '').replace(/\\s+/g, ' ').trim()"));
+
+check('公告详情页有完整正文（审核条例的腾讯文档链接与代投群号都在）',
+  await evalJs(`(function(){
+    var b = document.querySelector('#article-detail');
+    if (!b) return false;
+    var t = b.innerHTML;
+    return t.indexOf('docs.qq.com') >= 0 && t.indexOf('1018260006') >= 0;
+  })()`));
+
+check('公告详情页不存在的 id 会给出提示',
+  await (async () => {
+    await open('/article.html?id=not-exist-xxx');
+    await sleep(800);
+    return evalJs("document.querySelector('#article-detail')?.getAttribute('data-article-id') === 'missing'");
+  })(),
+  await evalJs("document.querySelector('#article-detail')?.getAttribute('data-article-id')"));
+
+// 前面几条把页面切到了 article.html，回到首页再继续后面的首页断言
+await open('/index.html');
+await sleep(800);
+
 check('首页导航高亮「首页」',
   await evalJs("document.querySelector('.nav a.is-active > span')?.textContent.trim() === '首页'"));
 
@@ -150,8 +194,9 @@ check('首页无横向溢出',
    ============================================================ */
 await open('/news.html');
 
-check('公告页渲染全部 2 条',
-  await evalJs("document.querySelectorAll('#notice-list .notice').length === 2"));
+check('公告页渲染全部 3 条',
+  await evalJs("document.querySelectorAll('#notice-list .notice').length === 3"),
+  '实际 ' + await evalJs("document.querySelectorAll('#notice-list .notice').length"));
 
 check('置顶公告排在第一，且内容是代投 + 审核条例',
   await evalJs(`(function(){
@@ -162,22 +207,34 @@ check('置顶公告排在第一，且内容是代投 + 审核条例',
   })()`),
   await evalJs("document.querySelector('#notice-list .notice h3').textContent.trim()"));
 
-check('公告日期统一是 2026 年 10 月 17 日',
-  await evalJs(`(function(){
-    var ds = [...document.querySelectorAll('#notice-list .notice-date')];
-    if (!ds.length) return false;
-    return ds.every(function (d) {
-      var t = d.textContent.replace(/\\s+/g, '');
-      return t.indexOf('10/17') >= 0 && t.indexOf('2026') >= 0;
-    });
-  })()`),
+check('每条公告的日期都正确渲染成「月 / 日 + 年份」',
+  // 注意：这里不能用模板字符串，反斜杠会被吞掉
+  await evalJs("(function(){var ds=[...document.querySelectorAll('#notice-list .notice-date')];" +
+    "if(!ds.length)return false;" +
+    "return ds.every(function(d){var t=d.textContent.replace(/\\s+/g,'');" +
+    "return /^\\d{2}\\/\\d{2}20\\d{2}$/.test(t);});})()"),
   await evalJs("[...document.querySelectorAll('#notice-list .notice-date')].map(d => d.textContent.replace(/\\s+/g,' ').trim()).join(' | ')"));
 
-check('置顶公告里有审核条例的腾讯文档链接',
-  await evalJs(`!!document.querySelector('#notice-list .notice a[href*="docs.qq.com"]')`));
+/* 列表现在只放标题 + 摘要，正文在 article.html，所以这两条改成验证「能点进去」 */
+check('置顶公告的标题链接指向详情页',
+  await evalJs(`(function(){
+    var a = document.querySelector('#notice-list .notice h3 a');
+    return !!a && /^article\\.html\\?id=/.test(a.getAttribute('href') || '');
+  })()`),
+  await evalJs("document.querySelector('#notice-list .notice h3 a')?.getAttribute('href')"));
 
-check('置顶公告里有代投群号',
-  await evalJs(`document.querySelector('#notice-list .notice').textContent.includes('1018260006')`));
+check('列表卡片上有「阅读全文」入口',
+  await evalJs(`!!document.querySelector('#notice-list .notice .notice-more')`));
+
+check('列表卡片显示的是摘要，不是全文',
+  await evalJs(`(function(){
+    var ex = document.querySelector('#notice-list .notice .notice-excerpt');
+    if (!ex) return false;
+    var t = ex.textContent;
+    // 摘要应该以省略号收尾，且明显短于全文
+    return t.length > 10 && t.length < 140 && t.indexOf('…') >= 0;
+  })()`),
+  await evalJs("document.querySelector('#notice-list .notice .notice-excerpt')?.textContent.slice(0, 60)"));
 
 // 点「招募」筛选：数量由数据决定，这里比对「页面上带招募标签的公告数」是否一致
 await evalJs("[...document.querySelectorAll('#notice-filter button')].find(b => b.textContent.trim() === '招募').click()");
@@ -192,8 +249,8 @@ check('筛选后筛选按钮高亮正确',
 // 点回「全部」
 await evalJs("[...document.querySelectorAll('#notice-filter button')].find(b => b.textContent.trim() === '全部').click()");
 await sleep(300);
-check('切回「全部」恢复 2 条',
-  await evalJs("document.querySelectorAll('#notice-list .notice').length === 2"));
+check('切回「全部」恢复 3 条',
+  await evalJs("document.querySelectorAll('#notice-list .notice').length === 3"));
 
 // 空结果分支
 await evalJs("[...document.querySelectorAll('#notice-filter button')].find(b => b.textContent.trim() === '合作').click()");

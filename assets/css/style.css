@@ -1791,6 +1791,79 @@ input[type="range"]::-webkit-slider-thumb {
   border-top: 1px solid var(--line);
 }
 
+/* 列表只给标题和摘要，全文在 article.html 里 */
+.notice-body h3 a {
+  color: inherit;
+  text-decoration: none !important;
+  background-image: none !important;
+  transition: color .2s ease;
+}
+
+.notice-body h3 a:hover { color: var(--gold-dk); }
+
+.notice-excerpt {
+  color: var(--text-dim);
+  font-size: 14.5px;
+  line-height: 1.8;
+  margin: 0;
+}
+
+.notice-more {
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .1em;
+  color: var(--text-dim);
+  text-decoration: none !important;
+  background-image: none !important;
+  border-bottom: 1px solid transparent;
+  transition: color .2s ease, border-color .2s ease;
+}
+
+.notice-more:hover {
+  color: var(--text);
+  border-bottom-color: var(--gold);
+}
+
+/* ---------- 公告详情页 ---------- */
+.article-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin: 2px 0 4px;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .08em;
+  color: var(--text-mute);
+}
+
+.article-body {
+  font-size: 15.5px;
+  line-height: 1.95;
+  color: var(--text-dim);
+}
+
+.article-body p { margin: 0 0 1.1em; }
+.article-body p:last-child { margin-bottom: 0; }
+.article-body b,
+.article-body strong { color: var(--text); }
+.article-body ul,
+.article-body ol { margin: 0 0 1.1em; padding-left: 1.4em; }
+.article-body li { margin-bottom: .5em; }
+.article-body a { color: var(--text); }
+
+/* 公告正文里的配图 */
+.article-body img {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 0 0 1.3em;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--bg-2);
+}
+
 /* ---------- 标签页 ---------- */
 .tabs {
   display: flex;
@@ -2727,6 +2800,69 @@ body.is-leaving main {
   .mnav-toggle:checked ~ .mnav-drawer { background: var(--panel); }
   .mnav-toggle:checked ~ .mnav-overlay { background: rgba(10, 12, 15, .55); }
   .lightbox { background: rgba(10, 12, 15, .88); }
+}
+
+/* ---------- ⑪ 页脚：灰斜纹底 ----------
+   原来是页面级方格网，页脚改成一条条从右上往左下的细斜纹。
+   颜色由 var(--text) 混出来，深浅主题都跟着变。 */
+.site-footer {
+  background-color: var(--panel-2);
+  background-image: repeating-linear-gradient(
+    135deg,
+    transparent 0 7px,
+    color-mix(in srgb, var(--text) 6%, transparent) 7px 8px
+  );
+}
+
+/* ---------- ⑫ 三处补充玻璃 ---------- */
+
+/* 导航悬停：磨砂胶囊 */
+.nav a:hover {
+  background: color-mix(in srgb, var(--bg) 62%, transparent);
+  -webkit-backdrop-filter: blur(10px) saturate(160%);
+  backdrop-filter: blur(10px) saturate(160%);
+}
+
+/* 作品卡片悬停：封面盖一层玻璃 */
+.work { position: relative; }
+
+.work-media::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: color-mix(in srgb, var(--bg) 12%, transparent);
+  -webkit-backdrop-filter: blur(3px) saturate(130%);
+  backdrop-filter: blur(3px) saturate(130%);
+  opacity: 0;
+  transition: opacity .35s cubic-bezier(.16, 1, .3, 1);
+}
+
+.work:hover .work-media::before { opacity: 1; }
+
+/* 页面切走：一层玻璃渐变遮罩，盖住整屏再跳转 */
+body.is-leaving::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 150;
+  pointer-events: none;
+  background: color-mix(in srgb, var(--bg) 34%, transparent);
+  -webkit-backdrop-filter: blur(10px) saturate(120%);
+  backdrop-filter: blur(10px) saturate(120%);
+  animation: veil-in .2s ease forwards;
+}
+
+@keyframes veil-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+  .nav a:hover { background: var(--bg-2); }
+  .work-media::before { display: none; }
+  body.is-leaving::after { display: none; }
 }
 
 /* 负责人卡片轻轻抬起 */

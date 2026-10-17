@@ -85,6 +85,14 @@
       meta: '作者：创想时代开发组',
       category: 'addon',
       desc: '把零零构想V5000 内置光影换成 Log 橡木7。'
+    },
+    {
+      id: 'lingling-universal',
+      img: 'assets/img/lingling-u-1.jpg',
+      title: '零零构想通用版',
+      meta: '作者：创想时代开发组',
+      category: 'tex',
+      desc: '零零构想与 Log 光影再次联动，内置 V5003 与 Log 白桦木灵动视效包。'
     }
   ];
 
@@ -197,16 +205,47 @@
         { img: 'assets/img/lingling-2.jpg', alt: '效果图：方块方块堆叠场景的光照层次' },
         { img: 'assets/img/lingling-3.jpg', alt: '效果图：室内场景下的光照与材质表现' }
       ]
+    },
+
+    'lingling-universal': {
+      name: '零零构想通用版',
+      author: '创想时代开发组',
+      type: '材质 / Texture',
+      tagline: '零零构想与 Log 光影再次联动：内置零零构想V5003 与 Log 白桦木灵动视效图形美化包',
+      cover: 'assets/img/lingling-u-1.jpg',
+      coverAlt: '通用版效果：深色石墙在窗口日光下的 PBR 反射',
+      // 介绍同样是成品海报
+      poster: 'assets/img/lingling-universal-poster.webp',
+      posterAlt: '零零构想通用版 V2.3 组件介绍海报',
+      facts: [
+        { k: '作品名', v: '零零构想通用版' },
+        { k: '版本', v: 'V2.3（2026-10-14）' },
+        { k: '类型', v: '材质 / Texture' },
+        { k: '平台', v: 'Minecraft 基岩版' },
+        { k: '原材质作者', v: '零零〇五Fogg05' },
+        { k: '移植与维护', v: '创想时代开发组 Log坤团队' },
+        { k: '内置', v: '零零构想V5003 + Log 白桦木灵动视效' },
+        { k: '获取', v: '中国版【创想时代开发组】账号免费发布' }
+      ],
+      intro: [],
+      shots: [
+        { img: 'assets/img/lingling-u-1.jpg', alt: '效果图：深色石墙与窗口日光，PBR 材质反射' },
+        { img: 'assets/img/lingling-u-2.jpg', alt: '效果图：木质建筑与积雪场景的材质表现' },
+        { img: 'assets/img/lingling-u-3.jpg', alt: '效果图：樱花林地，树冠与草地材质层次' }
+      ]
     }
   };
 
   /* ==========================================================
      ② 公告数据 —— 公告页在这里增删改
-     字段：date(YYYY-MM-DD) / title / color / tags[] / body(html) / pin(可选，置顶)
-     ★ 下面三条是示例，改成你们自己的内容，或者直接删掉
+     字段：id(英文短横线，详情页 article.html?id=) / date(YYYY-MM-DD) /
+           title / color / tags[] / body(html) / pin(可选，置顶)
+     列表只显示标题和一小段摘要，点进 article.html?id=xxx 才看全文。
+     ★ 新增公告记得给 id，且要唯一。
      ========================================================== */
   var ANNOUNCEMENTS = [
     {
+      id: 'invest-and-audit-rules',
       date: '2026-10-17',
       title: '开放代投业务，同步公布入室审核条例',
       color: 'green',
@@ -237,6 +276,7 @@
         '初审通过后再到官网填写 <a href="join.html#panel-rules">一审问卷</a>。</p>'
     },
     {
+      id: 'long-term-recruiting',
       date: '2026-10-17',
       title: '长期招募：地图 / 皮肤 / 材质 / 光影 / Addon / 美术 / 视频',
       color: 'gold',
@@ -245,6 +285,17 @@
         '<p>创想时代开发组长期开放招募，欢迎有作品、有耐心、愿意沟通的伙伴加入。</p>' +
         '<p>报名与审核方式见 <a href="join.html">加入我们</a> 页面。' +
         '我们不要求你什么都会，只要求你对自己负责的那一块认真。</p>'
+    },
+    {
+      id: 'module-50m-milestone',
+      date: '2026-07-27',
+      title: '模组总销量突破 5000 万',
+      color: 'redstone',
+      tags: ['里程碑'],
+      body:
+        '<img src="assets/img/milestone-50m.jpg" alt="数据海报：创想时代开发组旗下《我的世界》中国版模组总销量突破 5000 万">' +
+        '<p>2026 年 7 月 27 日，创想时代开发组旗下《我的世界》中国版主开发者账号发布的模组总销量' +
+        '（即总下载量）突破 <b>5000 万次</b>，标志着创想一个新的里程碑。</p>'
     }
   ];
 
@@ -436,18 +487,94 @@
         ? '<b>' + esc(d[1]) + ' / ' + esc(d[2]) + '</b>' + esc(d[0])
         : '<b>' + esc(n.date || '') + '</b>';
 
+      var href = n.id ? 'article.html?id=' + encodeURIComponent(n.id) : '';
+      var excerpt = excerptOf(n, 96);
+
+      // 列表只给标题 + 一小段正文，全文在 article.html 里
       return '' +
         '<article class="notice notice--' + esc(n.color || 'green') + '">' +
           '<div class="notice-date">' + dateBlock + '</div>' +
           '<div class="notice-body">' +
-            '<h3>' + esc(n.title || '') +
+            '<h3>' +
+              (href
+                ? '<a href="' + esc(href) + '">' + esc(n.title || '') + '</a>'
+                : esc(n.title || '')) +
               (n.pin ? ' <span class="tag tag--redstone">置顶</span>' : '') +
             '</h3>' +
-            (n.body || '') +
-            (tags ? '<div class="notice-meta">' + tags + '</div>' : '') +
+            (excerpt ? '<p class="notice-excerpt">' + esc(excerpt) + '</p>' : '') +
+            '<div class="notice-meta">' + tags +
+              (href ? '<a class="notice-more" href="' + esc(href) + '">阅读全文 →</a>' : '') +
+            '</div>' +
           '</div>' +
         '</article>';
     }).join('');
+  }
+
+  /* 去掉标签、压平空白，拿来做摘要 */
+  function plainText(html) {
+    return String(html || '')
+      .replace(/<[^>]+>/g, ' ')
+      .replace(/&nbsp;/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+
+  function excerptOf(n, max) {
+    var t = n.summary ? String(n.summary) : plainText(n.body);
+    return t.length > max ? t.slice(0, max) + '…' : t;
+  }
+
+  /* ---------- 公告详情页 ----------
+     地址形如 article.html?id=invest-and-audit-rules
+     正文、日期、标签都在 ANNOUNCEMENTS 里，这里只负责挑出对应那一条。 */
+  function initArticle() {
+    var host = $('#article-detail');
+    if (!host) return;
+
+    var id = '';
+    try {
+      id = new URLSearchParams(location.search).get('id') || '';
+    } catch (e) {
+      var m = /[?&]id=([^&]+)/.exec(location.search);
+      id = m ? decodeURIComponent(m[1]) : '';
+    }
+
+    var n = null;
+    for (var i = 0; i < ANNOUNCEMENTS.length; i++) {
+      if (ANNOUNCEMENTS[i].id === id) { n = ANNOUNCEMENTS[i]; break; }
+    }
+
+    var nameEl = $('#article-name');
+    var metaEl = $('#article-meta');
+
+    if (!n) {
+      host.setAttribute('data-article-id', 'missing');
+      if (nameEl) nameEl.textContent = '没找到这篇公告';
+      if (metaEl) metaEl.innerHTML = '';
+      host.innerHTML = '<div class="panel"><p style="margin:0;color:var(--text-dim)">' +
+        '编号 <code>' + esc(id || '(空)') + '</code> 对应的公告不存在，可能已经被替换或删除了。' +
+        '</p></div>';
+      return;
+    }
+
+    host.setAttribute('data-article-id', n.id);
+    document.title = n.title + ' | 创想时代开发组';
+
+    if (nameEl) nameEl.textContent = n.title;
+
+    var d = String(n.date || '').split('-');
+    var dateText = (d.length === 3 && d[0] && d[1] && d[2])
+      ? (Number(d[0]) + ' 年 ' + Number(d[1]) + ' 月 ' + Number(d[2]) + ' 日')
+      : (n.date || '');
+
+    if (metaEl) {
+      metaEl.innerHTML =
+        '<span class="article-date">' + esc(dateText) + '</span>' +
+        (n.pin ? '<span class="tag tag--redstone">置顶</span>' : '') +
+        (n.tags || []).map(function (t) { return '<span class="tag">' + esc(t) + '</span>'; }).join('');
+    }
+
+    host.innerHTML = '<div class="article-body">' + (n.body || '') + '</div>';
   }
 
   function renderAnnouncements() {
@@ -1155,6 +1282,7 @@
     initWorkDetail();
     initPageTransition();
     initPageIndex();
+    initArticle();
   }
 
   if (document.readyState === 'loading') {
