@@ -812,6 +812,27 @@ html[data-theme="dark"] .tag--diamond { color: var(--gold); }
   color: var(--text-dim);
 }
 
+/* 部门负责人：虚线分隔，职务小字在前、名字在后 */
+.dept-leads {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 5px 14px;
+  margin-top: 3px;
+  padding-top: 9px;
+  border-top: 1px dashed var(--line);
+  font-size: 12.5px;
+  color: var(--text);
+}
+
+.dept-leads em {
+  font-style: normal;
+  font-size: 11.5px;
+  letter-spacing: .02em;
+  color: var(--text-mute);
+  margin-right: 5px;
+}
+
 .dept b {
   font-family: var(--mono);
   font-size: 13.5px;
