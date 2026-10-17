@@ -1539,6 +1539,17 @@
      结构写在 HTML 上的 data-hero="图片地址"，这里补背景层与遮罩，
      视觉与首页完全一致（复用 .hero--banner 的样式）。
      没写 data-hero 的页面就保持原来的纯色头图。 */
+  /* 首屏如果是整幅大图，让 main 顶上去，图就能铺到页眉底下 */
+  function initHeroOverlap() {
+    var main = $('#main');
+    if (!main) return;
+    var first = main.firstElementChild;
+    while (first && first.nodeType !== 1) first = first.nextElementSibling;
+    if (first && first.classList && first.classList.contains('hero--banner')) {
+      main.classList.add('overlap-hero');
+    }
+  }
+
   function initPageHero() {
     $$('.hero--page[data-hero]').forEach(function (hero) {
       if (hero.querySelector('.hero-figure')) return;   // 防重复执行
@@ -1610,6 +1621,7 @@
     initSurvey();
     initTheme();
     initHeaderScroll();
+    initHeroOverlap();
     initHeroImage();
     initHeroParallax();
     initPageHero();

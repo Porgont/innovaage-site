@@ -3416,6 +3416,43 @@ body.is-leaving::after {
 
 .shot-group:first-child { margin-top: 0; }
 
+/* ---------- ㉑ 首屏大图顶到页眉下面 ----------
+   页眉是 sticky，占着 66px 的位置，大图只能从它下面开始。
+   凡是首屏就是整幅大图的页面，把 main 往上提一个页眉的高度，
+   图就铺到页眉底下去了（页眉此时是透明的，滚动后才变毛玻璃）。 */
+main.overlap-hero {
+  margin-top: -66px;
+}
+
+@media (max-width: 800px) {
+  main.overlap-hero { margin-top: -60px; }
+}
+
+/* 图铺到页眉下面之后，内容要往下让开，别被页眉压住 */
+.hero--page.hero--banner .wrap {
+  padding-top: 104px;
+}
+
+/* 图铺到页眉下面后，页眉那一条加一层很淡的渐变，
+   保证导航文字压在花哨画面上也读得清（只在有整幅大图的页面） */
+main.overlap-hero .hero--banner > .hero-veil::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 132px;
+  background: linear-gradient(to bottom,
+    color-mix(in srgb, var(--bg) 74%, transparent) 0%,
+    color-mix(in srgb, var(--bg) 40%, transparent) 55%,
+    transparent 100%);
+  pointer-events: none;
+}
+
+/* 在页面顶部时页眉直接压在图上，导航文字加深一档，保证读得清 */
+.site-header:not(.is-scrolled) .nav a { color: var(--text); }
+.site-header:not(.is-scrolled) .nav a small { color: var(--text-dim); }
+
 /* ---------- 响应式 ---------- */
 @media (max-width: 800px) {
   body { font-size: 14.5px; }
