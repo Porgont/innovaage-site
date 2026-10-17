@@ -102,7 +102,7 @@
 
 <main id="main">
 
-  <section class="hero hero--page">
+  <section class="hero hero--page hero--banner" data-hero="assets/img/hero-works.jpg">
     <div class="wrap">
       <p class="hero-badge"><span class="dot" aria-hidden="true"></span> 作品展示</p>
       <p class="page-head__code">INDEX <span>/</span> 02 <span>/</span> <b>WORKS</b></p>
@@ -121,33 +121,56 @@
   <section class="section section--tight">
     <div class="wrap">
 
-      <div class="section-head">
-        <span class="kicker">All Works</span>
-        <h2>全部作品</h2>
-        <p>当前共 <span id="work-count">0</span> 件。持续更新中。</p>
+      <div class="tabs" role="tablist" aria-label="作品分类">
+        <button class="tab is-active" type="button" role="tab" id="tab-works"
+                aria-controls="panel-works" aria-selected="true">代表作品</button>
+        <button class="tab" type="button" role="tab" id="tab-tests"
+                aria-controls="panel-tests" aria-selected="false">尚未正式发布的测试组件</button>
       </div>
 
-      <div class="showcase" id="showcase-grid"></div>
+      <div class="tab-panel" id="panel-works" role="tabpanel" aria-labelledby="tab-works">
 
-      <div class="callout" style="margin-top:32px">
-        <span class="icon" aria-hidden="true">🛈</span>
-        <div>
-          <b>关于转载：</b>转载非原创作品需原作者授权，否则无法代投
-          （例如从网站上随意下载的皮肤不能用于代投）。
-          投稿与代投的具体要求见 <a href="join.html#panel-invest">代投与投稿</a>。
+        <div class="section-head">
+          <span class="kicker">Works</span>
+          <h2>代表作品</h2>
+          <p>当前共 <span id="work-count">0</span> 件，持续更新中。</p>
         </div>
+
+        <div class="showcase" id="showcase-grid"></div>
+
+        <div class="callout" style="margin-top:32px">
+          <span class="icon" aria-hidden="true">🛈</span>
+          <div>
+            <b>关于转载：</b>转载非原创作品需原作者授权，否则无法代投
+            （例如从网站上随意下载的皮肤不能用于代投）。
+            投稿与代投的具体要求见 <a href="join.html#panel-invest">代投与投稿</a>。
+          </div>
+        </div>
+
+        <div class="panel" style="margin-top:22px">
+          <h3>提交你的作品</h3>
+          <p style="color:var(--text-dim);margin-bottom:16px">
+            工作室成员或合作作者想把作品挂到这里，
+            把资源名、作者、类型和一两张成品图发到对外交流群就行。
+          </p>
+          <div class="btn-row">
+            <a class="btn btn--sm" href="join.html#panel-contact">联系方式</a>
+            <a class="btn btn--ghost btn--sm" href="about.html">了解工作室</a>
+          </div>
+        </div>
+
       </div>
 
-      <div class="panel" style="margin-top:22px">
-        <h3>提交你的作品</h3>
-        <p style="color:var(--text-dim);margin-bottom:16px">
-          工作室成员或合作作者想把作品挂到这里，
-          把资源名、作者、类型和一两张成品图发到对外交流群就行。
-        </p>
-        <div class="btn-row">
-          <a class="btn btn--sm" href="join.html#panel-contact">联系方式</a>
-          <a class="btn btn--ghost btn--sm" href="about.html">了解工作室</a>
+      <div class="tab-panel" id="panel-tests" role="tabpanel" aria-labelledby="tab-tests" hidden>
+
+        <div class="section-head">
+          <span class="kicker">Testing</span>
+          <h2>尚未正式发布的测试组件</h2>
+          <p>还在测试、尚未正式发布，共 <span id="test-count">0</span> 件。正式发布后会移到代表作品。</p>
         </div>
+
+        <div class="showcase" id="showcase-test"></div>
+
       </div>
 
     </div>

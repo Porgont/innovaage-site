@@ -96,6 +96,11 @@
     }
   ];
 
+  /* 尚未正式发布的测试组件 —— 单独一栏，字段与 SHOWCASE 相同。
+     ★ 测试组件不放 SHOWCASE，否则会混进首页与作品页的代表作品里。
+     有要上测试的组件时往这个数组里加即可。 */
+  var SHOWCASE_TEST = [];
+
   /* ==========================================================
      ④ 作品详情 —— 代表作单独成页：work.html?id=xxx
      字段：
@@ -246,6 +251,28 @@
      ========================================================== */
   var ANNOUNCEMENTS = [
     {
+      id: 'subdomain-open',
+      date: '2026-10-17',
+      title: 'innovaage.cn 二级域名对全体成员开放',
+      color: 'diamond',
+      tags: ['站点'],
+      body:
+        '<p>全新官网 innovaage.cn 正在持续准备中，具体完工可访问时间未确定。</p>' +
+        '<p>为扩大域名的使用范围，现对创想时代全体成员<b>免费开放二级域名</b>。' +
+        '二级域名由申请人自行决定，<b>只能用字母</b>；' +
+        '不带二级域名的 innovaage.cn 保留给官网使用。</p>' +
+        '<p><b>申请方式：</b>到首席开发官处申请，需要说明三件事——</p>' +
+        '<ul>' +
+        '<li>想要的二级域名，即 <code>xxx.innovaage.cn</code> 里的 xxx</li>' +
+        '<li>具体用途</li>' +
+        '<li>需要解析到的地方（即这个域名要用在哪里）</li>' +
+        '</ul>' +
+        '<p><b>例子：</b>小明要开一个《我的世界》服务器，但这台服务器只有一个公网 IP：' +
+        '<code>xx.xxx.xx.xxx</code>。他申请二级域名 <code>xiaoming</code> 后，' +
+        '把 <code>xiaoming.innovaage.cn</code> 解析到该 IP，这个域名就能直接当服务器地址用。</p>' +
+        '<p>二级域名的使用<b>不限量，也不收费</b>。</p>'
+    },
+    {
       id: 'invest-and-audit-rules',
       date: '2026-10-17',
       title: '开放代投业务，同步公布入室审核条例',
@@ -275,17 +302,6 @@
         '<p>流程概要：<b>初审 → 一审 → 二审</b>。' +
         '其中<b>初审在对外审核群（1045216325）内进行</b>，' +
         '初审通过后再到官网填写 <a href="join.html#panel-rules">一审问卷</a>。</p>'
-    },
-    {
-      id: 'long-term-recruiting',
-      date: '2026-10-17',
-      title: '长期招募：地图 / 皮肤 / 材质 / 光影 / Addon / 美术 / 视频',
-      color: 'gold',
-      tags: ['招募'],
-      body:
-        '<p>创想时代开发组长期开放招募，欢迎有作品、有耐心、愿意沟通的伙伴加入。</p>' +
-        '<p>报名与审核方式见 <a href="join.html">加入我们</a> 页面。' +
-        '我们不要求你什么都会，只要求你对自己负责的那一块认真。</p>'
     },
     {
       id: 'module-50m-milestone',
@@ -930,24 +946,17 @@
   }
 
   /* ---------- 作品展示 ---------- */
-  function initShowcase() {
-    var host = $('#showcase-grid');
+  /* ---------- 作品展示 ----------
+     两个列表共用一套渲染：
+       #showcase-grid  代表作品（正式发布的）
+       #showcase-test  尚未正式发布的测试组件
+     测试组件单独放 SHOWCASE_TEST，不动 SHOWCASE，
+     这样首页与作品页的代表作品不受影响。 */
+  function renderWorks(host, list, emptyText) {
     if (!host) return;
 
-    var filter = host.getAttribute('data-category') || '';
-    var limit = parseInt(host.getAttribute('data-limit'), 10);
-
-    var list = filter
-      ? SHOWCASE.filter(function (it) { return it.category === filter; })
-      : SHOWCASE.slice();
-    if (limit > 0) list = list.slice(0, limit);
-
-    // 作品页的「当前共 N 件」用总数，不受筛选影响
-    var counter = $('#work-count');
-    if (counter) counter.textContent = SHOWCASE.length;
-
     if (!list.length) {
-      host.innerHTML = '<p style="color:var(--text-dim)">作品还在整理中。</p>';
+      host.innerHTML = '<p class="works-empty">' + esc(emptyText) + '</p>';
       return;
     }
 
@@ -970,6 +979,31 @@
           '</div>' +
         '</article>';
     }).join('');
+  }
+
+  function initShowcase() {
+    var mainHost = $('#showcase-grid');
+    if (mainHost) {
+      var filter = mainHost.getAttribute('data-category') || '';
+      var limit = parseInt(mainHost.getAttribute('data-limit'), 10);
+
+      var list = filter
+        ? SHOWCASE.filter(function (it) { return it.category === filter; })
+        : SHOWCASE.slice();
+      if (limit > 0) list = list.slice(0, limit);
+
+      renderWorks(mainHost, list, '作品还在整理中。');
+    }
+
+    // 测试组件那一栏
+    renderWorks($('#showcase-test'), SHOWCASE_TEST, '暂时还没有测试组件。');
+
+    // 两栏的件数（不受筛选影响）
+    var counter = $('#work-count');
+    if (counter) counter.textContent = SHOWCASE.length;
+
+    var testCounter = $('#test-count');
+    if (testCounter) testCounter.textContent = SHOWCASE_TEST.length;
   }
 
   /* ---------- 作品详情页 ----------
@@ -1252,7 +1286,12 @@
       var t = head.querySelector('h2');
       var en = head.querySelector('.kicker');
 
-      return '<a class="page-index__row" href="#' + esc(sec.id) + '">' +
+      // 有些区块藏在标签页后面（例如作品页的「测试组件」），
+      // 记下所属面板，点索引时先切过去再滚过去。
+      var panel = head.closest ? head.closest('.tab-panel') : null;
+
+      return '<a class="page-index__row" href="#' + esc(sec.id) + '"' +
+          (panel ? ' data-tab="' + esc(panel.id) + '"' : '') + '>' +
         '<span class="page-index__n">' + ('0' + (i + 1)).slice(-2) + '</span>' +
         '<span class="page-index__t">' + esc(t ? t.textContent.trim() : '') + '</span>' +
         '<span class="page-index__en">' + esc(en ? en.textContent.trim() : '') + '</span>' +
@@ -1264,6 +1303,65 @@
     host.innerHTML =
       '<div class="page-index__head"><span>Index :// 本页内容</span>' +
       '<span>共 ' + heads.length + ' 项</span></div>' + rows;
+
+    // 目标在隐藏的标签页里时：先点对应的 tab 让它显示，再滚过去
+    document.addEventListener('click', function (e) {
+      var a = e.target && e.target.closest ? e.target.closest('.page-index__row') : null;
+      if (!a) return;
+
+      var panelId = a.getAttribute('data-tab');
+      if (!panelId) return;
+
+      var panel = document.getElementById(panelId);
+      if (!panel) return;
+
+      e.preventDefault();
+
+      if (panel.hidden) {
+        var tab = document.querySelector('.tabs .tab[aria-controls="' + panelId + '"]');
+        if (tab) tab.click();
+      }
+
+      var target = document.querySelector(a.getAttribute('href'));
+      if (!target) return;
+      var y = target.getBoundingClientRect().top + window.pageYOffset - 90;
+      window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
+    });
+  }
+
+  /* ---------- 子页面整幅头图 ----------
+     结构写在 HTML 上的 data-hero="图片地址"，这里补背景层与遮罩，
+     视觉与首页完全一致（复用 .hero--banner 的样式）。
+     没写 data-hero 的页面就保持原来的纯色头图。 */
+  function initPageHero() {
+    $$('.hero--page[data-hero]').forEach(function (hero) {
+      if (hero.querySelector('.hero-figure')) return;   // 防重复执行
+
+      var src = hero.getAttribute('data-hero');
+      if (!src) return;
+
+      var fig = document.createElement('div');
+      fig.className = 'hero-figure';
+      fig.setAttribute('aria-hidden', 'true');
+
+      var img = new Image();
+      img.src = src;
+      img.alt = '';
+      img.loading = 'eager';
+      img.decoding = 'async';
+      // 轮播那套 CSS 把 .hero-figure img 默认设成 opacity:0，
+      // 靠 is-active 才显出来。子页面只有一张图，直接标成激活。
+      img.className = 'is-active';
+      img.onerror = function () { fig.hidden = true; };
+      fig.appendChild(img);
+
+      var veil = document.createElement('div');
+      veil.className = 'hero-veil';
+      veil.setAttribute('aria-hidden', 'true');
+
+      hero.insertBefore(fig, hero.firstChild);
+      hero.insertBefore(veil, fig.nextSibling);
+    });
   }
 
   /* ---------- 启动 ---------- */
@@ -1279,6 +1377,7 @@
     initTheme();
     initHeroImage();
     initHeroParallax();
+    initPageHero();
     initShowcase();
     initWorkDetail();
     initPageTransition();

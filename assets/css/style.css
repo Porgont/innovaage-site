@@ -2865,6 +2865,18 @@ body.is-leaving::after {
   body.is-leaving::after { display: none; }
 }
 
+/* 作品列表为空时的提示 */
+.works-empty {
+  grid-column: 1 / -1;
+  padding: 28px 22px;
+  color: var(--text-dim);
+  font-size: 14.5px;
+  background: var(--panel);
+  border: 1px dashed var(--line-2);
+  border-radius: var(--radius);
+  text-align: center;
+}
+
 /* 负责人卡片轻轻抬起 */
 .officer {
   transition:
@@ -2942,6 +2954,70 @@ body.is-leaving::after {
   }
 
   .hero-copy { max-width: none; }
+}
+
+/* ---------- ⑬ 子页面整幅头图 ----------
+   和首页同一套：背景图 + 渐隐遮罩 + 内容压在图上。
+   这里只覆盖高度与内边距，图与遮罩的样式复用 .hero--banner。 */
+.hero--page.hero--banner {
+  padding: 0;
+  min-height: min(74vh, 700px);
+  border-bottom: 1px solid var(--line);
+}
+
+.hero--page.hero--banner .wrap {
+  padding-top: 70px;
+  padding-bottom: 46px;
+}
+
+/* 子页面内容比首页多（编号行 + 大字 + 标题 + 描述块 + 索引），
+   遮罩只压左侧三分之一保文字可读，右侧露出照片。 */
+.hero--page.hero--banner .hero-veil {
+  background:
+    linear-gradient(to bottom, transparent 64%, var(--bg) 100%),
+    linear-gradient(to right,
+      var(--bg) 0%,
+      color-mix(in srgb, var(--bg) 94%, transparent) 30%,
+      color-mix(in srgb, var(--bg) 58%, transparent) 50%,
+      color-mix(in srgb, var(--bg) 14%, transparent) 76%,
+      transparent 100%);
+}
+
+/* 子页面 hero 常比视口高，照片按 cover 缩放后重心会掉到折叠线以下，
+   看到的多半是天空。把裁切位置往上提，让画面主体留在首屏。 */
+.hero--page.hero--banner .hero-figure img {
+  object-position: 50% 28%;
+}
+
+/* 索引块压在照片上，右侧标签会糊，垫一层玻璃 */
+.hero--page.hero--banner .page-index {
+  margin-top: 22px;
+  padding: 4px 12px;
+  background: color-mix(in srgb, var(--bg) 74%, transparent);
+  border: 1px solid color-mix(in srgb, var(--line) 80%, transparent);
+  border-radius: var(--radius);
+  -webkit-backdrop-filter: blur(8px) saturate(140%);
+  backdrop-filter: blur(8px) saturate(140%);
+}
+
+@media (max-width: 800px) {
+  .hero--page.hero--banner {
+    min-height: 0;
+  }
+
+  .hero--page.hero--banner .wrap {
+    padding-top: calc(42vh + 18px);
+    padding-bottom: 30px;
+  }
+
+  .hero--page.hero--banner .hero-figure,
+  .hero--page.hero--banner .hero-veil {
+    height: 42vh;
+  }
+
+  .hero--page.hero--banner .hero-veil {
+    background: linear-gradient(to bottom, transparent 34%, var(--bg) 100%);
+  }
 }
 
 /* ---------- 响应式 ---------- */

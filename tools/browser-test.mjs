@@ -239,9 +239,17 @@ check('列表卡片显示的是摘要，不是全文',
 // 点「招募」筛选：数量由数据决定，这里比对「页面上带招募标签的公告数」是否一致
 await evalJs("[...document.querySelectorAll('#notice-filter button')].find(b => b.textContent.trim() === '招募').click()");
 await sleep(300);
+// 条数会随公告增删变化，所以只断言「筛出来的每条都带招募标签」
 check('筛选「招募」后只剩带该标签的公告',
-  await evalJs("document.querySelectorAll('#notice-list .notice').length === 2"),
-  '实际 ' + await evalJs("document.querySelectorAll('#notice-list .notice').length"));
+  await evalJs(`(function(){
+    var cards = [...document.querySelectorAll('#notice-list .notice')];
+    if (!cards.length) return false;
+    return cards.every(function (c) {
+      var tags = [...c.querySelectorAll('.notice-meta .tag')].map(function (t) { return t.textContent.trim(); });
+      return tags.indexOf('招募') >= 0;
+    });
+  })()`),
+  '筛出 ' + await evalJs("document.querySelectorAll('#notice-list .notice').length") + ' 条');
 
 check('筛选后筛选按钮高亮正确',
   await evalJs("document.querySelector('#notice-filter button.is-active').textContent.trim() === '招募'"));
@@ -997,6 +1005,48 @@ check('作品页有细框描述块',
   await evalJs("!!document.querySelector('.hero--page .page-note')"),
   await evalJs("document.querySelector('.page-note')?.innerText.slice(0, 30)"));
 
+/* ---------- 作品页两栏切换：代表作品 / 尚未正式发布的测试组件 ---------- */
+check('作品页有「代表作品」和「尚未正式发布的测试组件」两个标签',
+  await evalJs(`(function(){
+    var t = [...document.querySelectorAll('.tabs .tab')].map(function (b) { return b.textContent.trim(); });
+    return t.length === 2 && t[0] === '代表作品' && t[1].indexOf('尚未正式发布的测试组件') >= 0;
+  })()`),
+  await evalJs("[...document.querySelectorAll('.tabs .tab')].map(b => b.textContent.trim()).join(' / ')"));
+
+check('默认显示代表作品，测试组件那一栏隐藏',
+  await evalJs(`(function(){
+    var a = document.querySelector('#panel-works');
+    var b = document.querySelector('#panel-tests');
+    return !!a && !!b && a.hidden === false && b.hidden === true;
+  })()`));
+
+check('旧的「全部作品」已经改名为「代表作品」',
+  await evalJs("!document.body.innerText.includes('全部作品')"),
+  await evalJs("document.body.innerText.includes('全部作品') ? '还有全部作品' : '已改名'"));
+
+check('点第二个标签能切到测试组件栏',
+  await (async () => {
+    await evalJs("document.querySelector('#tab-tests').click()");
+    await sleep(500);
+    const ok = await evalJs(`(function(){
+      var a = document.querySelector('#panel-works');
+      var b = document.querySelector('#panel-tests');
+      return a.hidden === true && b.hidden === false;
+    })()`);
+    // 切回代表作品，后面的断言还指望它
+    await evalJs("document.querySelector('#tab-works').click()");
+    await sleep(400);
+    return ok;
+  })());
+
+check('测试组件栏为空时有提示，不是一片空白',
+  await evalJs(`(function(){
+    var box = document.querySelector('#showcase-test');
+    if (!box) return false;
+    return box.querySelector('.works-empty') !== null || box.querySelectorAll('.work').length > 0;
+  })()`),
+  await evalJs("(document.querySelector('#showcase-test .works-empty')?.textContent || '').trim()"));
+
 check('作品页的 INDEX 索引行数与区块数一致',
   await evalJs(`(function(){
     var rows = document.querySelectorAll('#page-index .page-index__row').length;
@@ -1592,6 +1642,45 @@ await open('/news.html');
 await open('/join.html');
 check('七个页面在浅色下控制台无 JS 报错',
   consoleErrors.length === 0, consoleErrors.join(' | '));
+
+/* ---------- 子页面整幅头图（和首页同一套视觉） ---------- */
+const HERO_PAGES = [
+  ['works.html', 'assets/img/hero-works.jpg'],
+  ['news.html', 'assets/img/hero-news.jpg'],
+  ['tools.html', 'assets/img/hero-tools.jpg'],
+  ['join.html', 'assets/img/hero-join.jpg'],
+  ['about.html', 'assets/img/hero-about.jpg']
+];
+
+for (const [page, expected] of HERO_PAGES) {
+  await open('/' + page);
+  await sleep(1200);
+  const info = JSON.parse(await evalJs(`(function(){
+    var hero = document.querySelector('.hero--page');
+    if (!hero) return '{}';
+    var img = hero.querySelector('.hero-figure img');
+    var veil = hero.querySelector('.hero-veil');
+    var s = img ? getComputedStyle(img) : null;
+    return JSON.stringify({
+      banner: hero.classList.contains('hero--banner'),
+      src: img ? img.getAttribute('src') : '',
+      loaded: !!(img && img.complete && img.naturalWidth > 0),
+      opacity: s ? s.opacity : '',
+      veil: !!veil
+    });
+  })()`));
+
+  check(page + ' 有整幅头图（图加载出来且不透明）',
+    info.banner === true &&
+    info.src === expected &&
+    info.loaded === true &&
+    info.opacity === '1' &&
+    info.veil === true,
+    JSON.stringify(info));
+}
+
+await open('/index.html');
+await sleep(600);
 
 ws.close();
 edge.kill();
