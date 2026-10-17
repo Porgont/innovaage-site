@@ -813,6 +813,16 @@ html[data-theme="dark"] .tag--diamond { color: var(--gold); }
 }
 
 /* 部门负责人：虚线分隔，职务小字在前、名字在后 */
+/* 不是组别、只是部门职责（如主席办的行政 / 公关 / 外交）：
+   不给胶囊底色，当普通加粗文字排在介绍上方，免得跟真正的组别混淆。 */
+.dept-duties {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: .01em;
+  color: var(--text);
+}
+
 .dept-leads {
   display: flex;
   flex-wrap: wrap;
