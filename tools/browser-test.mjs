@@ -398,6 +398,41 @@ check('审核条例面板列出五个部门',
   await evalJs(`['皮肤部','地图部','技术部','文宣部','主席办']
     .every(d => document.querySelector('#panel-rules').innerText.includes(d))`));
 
+/* ---------- 部门介绍放在页面最上面 ----------
+   原来是「我们在找谁」的八张技能卡片，现已换成官方的五个部门十个组别，
+   并且要在标签页之前，一进页面就能看到。 */
+check('旧的「我们在找谁」技能卡片已删除',
+  await evalJs("!document.body.innerText.includes('我们在找谁')"),
+  await evalJs("document.body.innerText.includes('我们在找谁') ? '还在' : '已删除'"));
+
+check('页面顶部就是五个部门十个组别',
+  await evalJs(`(function(){
+    var depts = [...document.querySelectorAll('.dept')];
+    if (depts.length !== 10) return false;
+    return ['皮肤部','地图部','技术部','文宣部','主席办']
+      .every(function (d) {
+        return depts.some(function (el) { return el.innerText.indexOf(d) >= 0; });
+      });
+  })()`),
+  '部门条目 ' + await evalJs("document.querySelectorAll('.dept').length") + ' 个');
+
+check('部门介绍排在标签页之前（一进页面先看到）',
+  await evalJs(`(function(){
+    var dept = document.querySelector('.dept-grid');
+    var tabs = document.querySelector('.tabs');
+    if (!dept || !tabs) return false;
+    // compareDocumentPosition: 4 = dept 在 tabs 之后
+    return (dept.compareDocumentPosition(tabs) & 4) !== 0;
+  })()`));
+
+check('部门介绍上方有跳转到审核流程的入口',
+  await evalJs(`(function(){
+    var grid = document.querySelector('.dept-grid');
+    if (!grid) return false;
+    var box = grid.parentElement;
+    return !!box.querySelector('a[href="#panel-rules"]');
+  })()`));
+
 check('审核条例面板写出三阶段流程',
   await evalJs(`['初审','一审','二审'].every(s => document.querySelector('#panel-rules').innerText.includes(s))`));
 

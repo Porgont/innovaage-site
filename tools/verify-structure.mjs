@@ -108,11 +108,15 @@ if (avatarCards === 7) good('负责人卡片：7 张都用了头像布局');
 else bad('负责人卡片：只有 ' + avatarCards + ' 张用了头像布局（应为 7）');
 
 const joinHtml = readFileSync(join(root, 'join.html'), 'utf8');
-// 两个地方都有部门表：报名加入（新增）与审核条例（原有），各 5 个
-const deptCount = (joinHtml.match(/class="dept"/g) || []).length;
-const gridCount = (joinHtml.match(/class="dept-grid"/g) || []).length;
+/* 两处部门表：页面顶部（带 --wide 修饰类）与审核条例面板，各 5 个。
+   用「class 值以 dept / dept-grid 开头且后面是空格或引号」来数，
+   否则加个修饰类（dept-grid--wide）就数不到了。 */
+const DEPT_RE = /class="dept(?=[\s"])/g;
+const DEPT_GRID_RE = /class="dept-grid(?=[\s"])/g;
+const deptCount = (joinHtml.match(DEPT_RE) || []).length;
+const gridCount = (joinHtml.match(DEPT_GRID_RE) || []).length;
 if (deptCount === 10 && gridCount === 2) {
-  good('加入我们：部门表 2 处各 5 个（报名加入 + 审核条例）');
+  good('加入我们：部门表 2 处各 5 个（页面顶部 + 审核条例）');
 } else {
   bad('加入我们：部门表 ' + gridCount + ' 处、部门 ' + deptCount + ' 个（应为 2 处 / 10 个）');
 }

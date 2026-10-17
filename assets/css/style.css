@@ -715,6 +715,13 @@ html[data-theme="dark"] .tag--diamond { color: var(--gold); }
   margin-top: 16px;
 }
 
+/* 放在页面顶部（不在窄面板里）时用两列，别把每行拉成一整条。
+   阈值取 420px：常见宽度下稳定两列，技术部那种长文本也不会被挤成三行。 */
+.dept-grid--wide {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));
+  align-content: start;
+}
+
 .dept {
   display: grid;
   grid-template-columns: 92px 1fr;
