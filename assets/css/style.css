@@ -3767,6 +3767,32 @@ main.overlap-hero .hero--banner > .hero-veil::after {
   }
 }
 
+/* 作品正文里的条目列表（特性、配置这类） */
+.work-list {
+  margin: 0 0 18px;
+  padding-left: 0;
+  list-style: none;
+}
+
+.work-list li {
+  position: relative;
+  padding-left: 20px;
+  margin-bottom: 8px;
+  color: var(--text-dim);
+  font-size: 15px;
+  line-height: 1.85;
+}
+
+.work-list li::before {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: .78em;
+  width: 6px;
+  height: 6px;
+  background: var(--gold);
+}
+
 /* ---------- 响应式 ---------- */
 @media (max-width: 800px) {
   body { font-size: 14.5px; }

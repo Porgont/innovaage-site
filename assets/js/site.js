@@ -63,6 +63,14 @@
 
   var SHOWCASE = [
     {
+      id: 'log7-birch',
+      img: 'assets/img/log7-1.jpg',
+      title: 'Log7桦木 · 完整版',
+      meta: '作者：创想时代 Log_坤',
+      category: 'shader',
+      desc: '付费光影：可触碰的体积云、体积光与丁达尔效应、水面实时反射。'
+    },
+    {
       id: 'log-shader-sa',
       img: 'assets/img/shader-2.jpg',
       title: 'Log橡木SA',
@@ -146,6 +154,47 @@
        然后在 SHOWCASE 对应那条上填同名的 id，作品页就会出现「查看详情」入口。
      ========================================================== */
   var WORKS = {
+    'log7-birch': {
+      name: 'Log7桦木 · 完整版',
+      author: '创想时代 Log_坤',
+      type: '光影 / Shader',
+      tagline: '付费光影：可触碰的体积云、体积光与丁达尔效应、水面实时反射周围景物',
+      cover: 'assets/img/log7-1.jpg',
+      coverAlt: '紫色花海与村庄：木栅栏、远处建筑与花丛的体积光',
+      facts: [
+        { k: '作品名', v: 'Log7桦木 · 完整版' },
+        { k: '光影作者', v: '创想时代 Log_坤' },
+        { k: '美术顾问', v: '犹疑月落' },
+        { k: '类型', v: '光影 / Shader' },
+        { k: '平台', v: 'Minecraft 基岩版' },
+        { k: '价格', v: '300 钻石（付费作品）' },
+        { k: '推荐配置', v: '骁龙 8 Gen1 / 天玑 9000 / A16，运行内存 6GB 以上' },
+        { k: '性能', v: '12 区块、1080p 分辨率下可 60 帧' },
+        { k: '反馈群', v: '1017068586' }
+      ],
+      intro: [
+        { heading: '特性' },
+        {
+          list: [
+            '可以触碰的体积云',
+            '体积光与丁达尔效应',
+            '水面实时反射周围景物',
+            '屏幕空间阴影',
+            '全分辨率'
+          ]
+        },
+        { heading: '推荐配置' },
+        '高通：骁龙 8 Gen1',
+        '联发科：天玑 9000',
+        '苹果：A16',
+        '运行内存 6GB 以上（12 区块、1080p 分辨率可以 60 帧）'
+      ],
+      shots: [
+        { img: 'assets/img/log7-1.jpg', alt: '紫色花海与村庄：木栅栏、远处建筑与花丛的体积光' },
+        { img: 'assets/img/log7-2.jpg', alt: '浮岛树林：体积云与穿林光束、水面倒影' },
+        { img: 'assets/img/log7-3.jpg', alt: '水面与树林：丁达尔光束穿过云层投下' }
+      ]
+    },
     'log-shader-sa': {
       name: 'Log橡木SA',
       author: '创想时代 Log坤',
@@ -1548,6 +1597,12 @@
                 '<img src="' + esc(src) + '" alt="' + esc(alt) + '" loading="lazy" decoding="async">' +
               '</figure>';
             }).join('') + '</div>';
+          }
+          // { list } = 一组条目
+          if (p.list && p.list.length) {
+            return '<ul class="work-list">' + p.list.map(function (it) {
+              return '<li>' + esc(it) + '</li>';
+            }).join('') + '</ul>';
           }
           // { links } = 一组按钮
           if (p.links && p.links.length) return renderWorkLinks(p.links);
