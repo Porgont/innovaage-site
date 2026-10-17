@@ -430,20 +430,16 @@
       color: 'diamond',
       tags: ['站点'],
       body:
-        '<p>全新官网 innovaage.cn 正在持续准备中，具体完工可访问时间未确定。</p>' +
-        '<p>为扩大域名的使用范围，现对创想时代全体成员<b>免费开放二级域名</b>。' +
-        '二级域名由申请人自行决定，<b>只能用字母</b>；' +
-        '不带二级域名的 innovaage.cn 保留给官网使用。</p>' +
-        '<p><b>申请方式：</b>到首席开发官处申请，需要说明三件事——</p>' +
-        '<ul>' +
-        '<li>想要的二级域名，即 <code>xxx.innovaage.cn</code> 里的 xxx</li>' +
-        '<li>具体用途</li>' +
-        '<li>需要解析到的地方（即这个域名要用在哪里）</li>' +
-        '</ul>' +
-        '<p><b>例子：</b>小明要开一个《我的世界》服务器，但这台服务器只有一个公网 IP：' +
-        '<code>xx.xxx.xx.xxx</code>。他申请二级域名 <code>xiaoming</code> 后，' +
-        '把 <code>xiaoming.innovaage.cn</code> 解析到该 IP，这个域名就能直接当服务器地址用。</p>' +
-        '<p>二级域名的使用<b>不限量，也不收费</b>。</p>'
+        '全新官网 innovaage.cn 正在持续准备中，具体完工可访问时间未确定。\n\n' +
+        '为扩大域名的使用范围，现对创想时代全体成员**免费开放二级域名**。' +
+        '二级域名由申请人自行决定，**只能用字母**；不带二级域名的 innovaage.cn 保留给官网使用。\n\n' +
+        '**申请方式：**到首席开发官处申请，需要说明三件事——\n\n' +
+        '- 想要的二级域名，即 \`xxx.innovaage.cn\` 里的 xxx\n' +
+        '- 具体用途\n' +
+        '- 需要解析到的地方（即这个域名要用在哪里）\n\n' +
+        '**例子：**小明要开一个《我的世界》服务器，但这台服务器只有一个公网 IP：\`xx.xxx.xx.xxx\`。' +
+        '他申请二级域名 \`xiaoming\` 后，把 \`xiaoming.innovaage.cn\` 解析到该 IP，这个域名就能直接当服务器地址用。\n\n' +
+        '二级域名的使用**不限量，也不收费**。'
     },
     {
       id: 'invest-and-audit-rules',
@@ -453,28 +449,22 @@
       pin: true,
       tags: ['招募', '代投', '里程碑'],
       body:
-        '<p>两件事一起说：</p>' +
-        '<p><b>一、开放代投业务。</b>依托我们庞大的粉丝群体与流量优势，你的作品上架资源中心，' +
-        '能够拿到更高曝光，获得更多玩家浏览下载。接收地图、皮肤、材质、光影、功能玩法优质组件，' +
-        '免费 / 付费作品均可投递。</p>' +
-        '<ul>' +
-        '<li>✅ <b>优势：</b>粉丝基数大，自带流量加持，助力你的作品被更多玩家看见。</li>' +
-        '<li>⚠️ <b>转载非原创作品需原作者授权</b>，否则无法代投（例如从网站上随意下载的皮肤）。</li>' +
-        '<li>所投组件必须遵守《创想时代开发组投稿条例》。</li>' +
-        '<li>结算规则见群内公告的《创想时代开发组收益结算细则》。</li>' +
-        '<li>以上文件均可在《创想时代开发组投稿问卷》中查阅，加入开发理事会即可详细了解并投递稿件。</li>' +
-        '</ul>' +
-        '<p>代投请加<b>创想时代开发理事会群：1018260006</b>。详见 <a href="join.html#panel-invest">代投与投稿</a>。</p>' +
-
-        '<p><b>二、入室审核条例已公布。</b>如需审核加入我室，请按照 ' +
-        '<a href="https://docs.qq.com/doc/DUEhwRVVmaE1ESUts" target="_blank" rel="noopener">' +
-        '《创想时代开发组入室审核条例》</a> 中所述流程进行审核，条例中同时也有各部门的介绍。</p>' +
-        '<p style="color:var(--text-dim)">' +
-        '注意：阅读理解能力也算做基本素质的一部分，因此需要您<b>自行阅读条例</b>；' +
-        '若有疑问请询问群内管理员。</p>' +
-        '<p>流程概要：<b>初审 → 一审 → 二审</b>。' +
-        '其中<b>初审在对外审核群（1045216325）内进行</b>，' +
-        '初审通过后再到官网填写 <a href="join.html#panel-rules">一审问卷</a>。</p>'
+        '两件事一起说。\n\n' +
+        '## 一、开放代投业务\n\n' +
+        '依托我们庞大的粉丝群体与流量优势，你的作品上架资源中心，能够拿到更高曝光，获得更多玩家浏览下载。' +
+        '接收地图、皮肤、材质、光影、功能玩法优质组件，免费 / 付费作品均可投递。\n\n' +
+        '- **优势：**粉丝基数大，自带流量加持，助力你的作品被更多玩家看见。\n' +
+        '- **转载非原创作品需原作者授权**，否则无法代投（例如从网站上随意下载的皮肤）。\n' +
+        '- 所投组件必须遵守《创想时代开发组投稿条例》。\n' +
+        '- 结算规则见群内公告的《创想时代开发组收益结算细则》。\n' +
+        '- 以上文件均可在《创想时代开发组投稿问卷》中查阅，加入开发理事会即可详细了解并投递稿件。\n\n' +
+        '代投请加**创想时代开发理事会群：1018260006**。详见 [代投与投稿](join.html#panel-invest)。\n\n' +
+        '## 二、入室审核条例已公布\n\n' +
+        '如需审核加入我室，请按照 [《创想时代开发组入室审核条例》](https://docs.qq.com/doc/DUEhwRVVmaE1ESUts) ' +
+        '中所述流程进行审核，条例中同时也有各部门的介绍。\n\n' +
+        '> 注意：阅读理解能力也算做基本素质的一部分，因此需要您**自行阅读条例**；若有疑问请询问群内管理员。\n\n' +
+        '流程概要：**初审 → 一审 → 二审**。其中**初审在对外审核群（1045216325）内进行**，' +
+        '初审通过后再到官网填写 [一审问卷](join.html#panel-rules)。'
     },
     {
       id: 'site-launch',
@@ -483,17 +473,15 @@
       color: 'gold',
       tags: ['站点', '里程碑'],
       body:
-        '<p>创想时代官网现已启用！</p>' +
-        '<p>各位可以在官网访问：</p>' +
-        '<ul>' +
-        '<li>系列作品的发布页</li>' +
-        '<li>代表作品的介绍页</li>' +
-        '<li>测试中组件的参与页</li>' +
-        '<li>官网内置的「工具箱」</li>' +
-        '</ul>' +
-        '<p>在「工具箱」里可以使用本地运行的图片压缩、图片格式转换、各种格式的文件转换、' +
-        '视频鉴定并转换为符合投稿标准的视频，以及由创想时代成员制作的工具。</p>' +
-        '<p>官网内容目前还不完善，正在持续优化中……</p>'
+        '创想时代官网现已启用！\n\n' +
+        '各位可以在官网访问：\n\n' +
+        '- 系列作品的发布页\n' +
+        '- 代表作品的介绍页\n' +
+        '- 测试中组件的参与页\n' +
+        '- 官网内置的「工具箱」\n\n' +
+        '在「工具箱」里可以使用本地运行的图片压缩、图片格式转换、各种格式的文件转换、' +
+        '视频鉴定并转换为符合投稿标准的视频，以及由创想时代成员制作的工具。\n\n' +
+        '官网内容目前还不完善，正在持续优化中……'
     },
     {
       id: 'module-50m-milestone',
@@ -502,9 +490,9 @@
       color: 'redstone',
       tags: ['里程碑'],
       body:
-        '<img src="assets/img/milestone-50m.jpg" alt="数据海报：创想时代开发组旗下《我的世界》中国版模组总销量突破 5000 万">' +
-        '<p>2026 年 7 月 27 日，创想时代开发组旗下《我的世界》中国版主开发者账号发布的模组总销量' +
-        '（即总下载量）突破 <b>5000 万次</b>，标志着创想一个新的里程碑。</p>'
+        '![数据海报：创想时代开发组旗下《我的世界》中国版模组总销量突破 5000 万](assets/img/milestone-50m.jpg)\n\n' +
+        '2026 年 7 月 27 日，创想时代开发组旗下《我的世界》中国版主开发者账号发布的模组总销量' +
+        '（即总下载量）突破 **5000 万次**，标志着创想一个新的里程碑。'
     }
   ];
 
@@ -731,8 +719,38 @@
       .trim();
   }
 
+  /* ---------- 公告正文：Markdown → 干净的 HTML ----------
+     正文用 Markdown 写（README 4.1 有教程）。
+     转出来的 HTML 一律过一遍 DOMPurify，避免有人往正文里塞脚本。
+     站外链接自动补 target/rel，保持新窗口打开。
+     库没加载出来时退回「按空行分段 + 转义」，至少不会白屏。 */
+  function renderMarkdown(src) {
+    var text = String(src == null ? '' : src);
+    if (!text.trim()) return '';
+
+    var html;
+    if (window.marked && typeof window.marked.parse === 'function') {
+      html = window.marked.parse(text);
+    } else {
+      html = text.split(/\n{2,}/).map(function (p) {
+        return '<p>' + esc(p) + '</p>';
+      }).join('');
+    }
+
+    // 站外链接补上新窗口打开
+    html = html.replace(
+      /<a href="(https?:\/\/[^"]+)"/g,
+      '<a href="$1" target="_blank" rel="noopener"'
+    );
+
+    if (window.DOMPurify && typeof window.DOMPurify.sanitize === 'function') {
+      html = window.DOMPurify.sanitize(html, { ADD_ATTR: ['target', 'rel'] });
+    }
+    return html;
+  }
+
   function excerptOf(n, max) {
-    var t = n.summary ? String(n.summary) : plainText(n.body);
+    var t = n.summary ? String(n.summary) : plainText(renderMarkdown(n.body));
     return t.length > max ? t.slice(0, max) + '…' : t;
   }
 
@@ -786,7 +804,7 @@
         (n.tags || []).map(function (t) { return '<span class="tag">' + esc(t) + '</span>'; }).join('');
     }
 
-    host.innerHTML = '<div class="article-body">' + (n.body || '') + '</div>';
+    host.innerHTML = '<div class="article-body">' + renderMarkdown(n.body) + '</div>';
   }
 
   function renderAnnouncements() {
