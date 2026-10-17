@@ -1271,7 +1271,7 @@ check('详情页确实由 JS 渲染（不是静态兜底）',
   await evalJs("document.querySelector('#work-detail').getAttribute('data-work-id') === 'log-shader-sa'"),
   'data-work-id=' + await evalJs("document.querySelector('#work-detail').getAttribute('data-work-id')"));
 
-check('详情页标题是作品名', (await evalJs('document.title')).includes('Log光影'));
+check('详情页标题是作品名', (await evalJs('document.title')).includes('Log橡木SA'));
 check('详情页显示作品名与作者',
   await evalJs("document.querySelector('#work-name').textContent.includes('橡木 SA') && document.querySelector('#work-author').textContent.includes('Log坤')"));
 check('详情页头图加载完成',

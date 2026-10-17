@@ -38,7 +38,7 @@
     // ★★★ 首页大图 ★★★
     // 留空则首页只显示文字（不报错）。图片放在 assets/img/ 下面。
     heroImage: 'assets/img/shader-2.jpg',
-    heroImageAlt: 'Log光影橡木SA 渲染效果：樱花林地里飘落的花瓣与透光树冠'
+    heroImageAlt: 'Log橡木SA 渲染效果：樱花林地里飘落的花瓣与透光树冠'
   };
 
   /* ==========================================================
@@ -65,7 +65,7 @@
     {
       id: 'log-shader-sa',
       img: 'assets/img/shader-2.jpg',
-      title: 'Log光影 · 橡木 SA',
+      title: 'Log橡木SA',
       meta: '作者：Log坤',
       category: 'shader',
       desc: '基岩版光影，主打水面镜面反射与自然光过渡。'
@@ -147,7 +147,7 @@
      ========================================================== */
   var WORKS = {
     'log-shader-sa': {
-      name: 'Log光影 · 橡木 SA',
+      name: 'Log橡木SA',
       author: '创想时代 Log坤',
       type: '光影 / Shader',
       tagline: 'Log 光影两周年特别版：方块卷云、氛围雨天、流动星辰、特调 ACES 色调映射',
@@ -163,16 +163,10 @@
         { k: 'Log 光影外群', v: '822955272' },
         { k: 'Log 光影内群', v: '980037287' }
       ],
-      intro: [
-        'LogSA，即 Log Second Anniversary，Log 光影两周年特别版。' +
-        '拥有独特的方块卷云、氛围雨天、流动星辰、特调 ACES 色调映射。',
-
-        'LogSA 集合了 Log3、4、6、7 等系列的优点，萃取橡木、桦木、樱花木、原木等各家的精华，' +
-        '综合反馈群十余人的想法与提议，历经 Log坤 数个月的打磨与调制，' +
-        '最终呈现出 Log 光影迄今为止色彩最通透、技术最完善、风格最独特的 LogSA：两周年版本。',
-
-        '⚠️ 使用前请注意：请务必搭配 SRC 光影前置（组件码 0559302），否则部分效果无法正常显示。'
-      ],
+      // 介绍就是一张成品海报，不再写文字段落
+      poster: 'assets/img/logsa-poster.jpg',
+      posterAlt: 'LogSA 组件介绍海报：总介绍、雨天 / 晴天 / 水面实机效果、开发作者与鸣谢',
+      intro: [],
       shots: [
         // 截图只保留 alt（给屏幕阅读器与搜索引擎），不在页面上显示文字说明
         { img: 'assets/img/shader-rain.jpg', alt: '雨天场景：石板路面积水倒影、雨幕与暖色窗光' },
@@ -1412,7 +1406,7 @@
 
   /* ---------- 作品详情页 ----------
      地址形如 work.html?id=log-shader-sa
-     HTML 里已经写了一份默认内容（Log光影 · 橡木 SA），
+     HTML 里已经写了一份默认内容（Log橡木SA），
      所以即使 JS 没跑起来或者 id 不对，页面也不会空白。 */
   /* 作品详情页的外链按钮组
      links: [{ title, items: [{ label, href }] }]
@@ -1454,7 +1448,7 @@
           note.className = 'callout';
           note.innerHTML = '<span class="icon" aria-hidden="true">🛈</span><div>' +
             '没找到编号为 <code>' + esc(id) + '</code> 的作品，下面展示的是代表作 ' +
-            '<b>Log光影 · 橡木 SA</b>。<a href="works.html">回作品列表</a></div>';
+            '<b>Log橡木SA</b>。<a href="works.html">回作品列表</a></div>';
         }
       }
       // 走兜底分支时，放大功能也得能用 —— 从页面上已有的静态内容里取截图
