@@ -327,55 +327,91 @@
         { k: 'RVHD 网易版', v: '已下架' },
         { k: '联系 QQ', v: '112522280' }
       ],
+      // 正文按作者给的说明排：图插在对应版本的位置，链接跟着图走
       intro: [
         '仿真工艺：一款风格化写实、偏生存实用向的材质包，历时近四年的制作，不断的优化、改进，目前有多种版本可供选择。',
-        '繁茂草地拓展包需要 1.21.11 以上版本才能生效；Java 版最佳游玩版本为 1.21.11。',
-        '目前方块贴图完成度为 80%。'
-      ],
-      links: [
+        '繁茂草地拓展包需要 1.21.11 以上版本才能生效；Java 版最佳游玩版本为 1.21.11。目前方块贴图完成度为 80%。',
+
+        { heading: '基岩版（网易中国版）' },
         {
-          title: '网易版（中国版）',
-          items: [
-            { label: '四合一', href: 'https://resource-minecraft.h5.163.com/#/detail?uid=3073187643&id=4689118647881567507&channel=netease' },
-            { label: '普通版 128x', href: 'https://resource-minecraft.h5.163.com/#/detail?uid=3073187643&id=4673766977794770501&channel=netease' },
-            { label: '普通版 256x', href: 'https://resource-minecraft.h5.163.com/#/detail?uid=3073187643&id=4673607031461400018&channel=netease' },
-            { label: '永久更新版', href: 'https://resource-minecraft.h5.163.com/#/detail?uid=3073187643&id=4659344896070953195&channel=netease' }
+          imgs: [
+            { img: 'assets/img/fangzhen-shot-4.jpg', alt: '基岩版效果图：浅色方块面板近景' },
+            { img: 'assets/img/fangzhen-shot-5.jpg', alt: '基岩版效果图：多种石材方块对照' },
+            { img: 'assets/img/fangzhen-shot-6.jpg', alt: '基岩版效果图：蓝色石材方块近景' },
+            { img: 'assets/img/fangzhen-shot-7.jpg', alt: '基岩版效果图：石材与矿石方块' }
           ]
         },
         {
-          title: '网易远古怀旧版（已停止维护）',
-          items: [
-            { label: '补丁包', href: 'https://resource-minecraft.h5.163.com/#/detail?uid=3073187643&id=4661394903323224801&channel=netease' },
-            { label: '256x 畅玩版', href: 'https://resource-minecraft.h5.163.com/#/detail?uid=3073187643&id=4659341914317305302&channel=netease' },
-            { label: '512x 测试版', href: 'https://resource-minecraft.h5.163.com/#/detail?uid=3073187643&id=4658767718024537686&channel=netease' }
+          links: [
+            {
+              items: [
+                { label: '四合一', href: 'https://resource-minecraft.h5.163.com/#/detail?uid=3073187643&id=4689118647881567507&channel=netease' },
+                { label: '普通版 128x', href: 'https://resource-minecraft.h5.163.com/#/detail?uid=3073187643&id=4673766977794770501&channel=netease' },
+                { label: '普通版 256x', href: 'https://resource-minecraft.h5.163.com/#/detail?uid=3073187643&id=4673607031461400018&channel=netease' },
+                { label: '永久更新版', href: 'https://resource-minecraft.h5.163.com/#/detail?uid=3073187643&id=4659344896070953195&channel=netease' }
+              ]
+            },
+            {
+              title: '网易远古怀旧版（已停止维护）',
+              items: [
+                { label: '补丁包', href: 'https://resource-minecraft.h5.163.com/#/detail?uid=3073187643&id=4661394903323224801&channel=netease' },
+                { label: '256x 畅玩版', href: 'https://resource-minecraft.h5.163.com/#/detail?uid=3073187643&id=4659341914317305302&channel=netease' },
+                { label: '512x 测试版', href: 'https://resource-minecraft.h5.163.com/#/detail?uid=3073187643&id=4658767718024537686&channel=netease' }
+              ]
+            }
+          ]
+        },
+
+        { heading: 'Java 版' },
+        {
+          imgs: [
+            { img: 'assets/img/fangzhen-shot-1.jpg', alt: 'Java 版效果图：室内场景，木地板与原木家具' },
+            { img: 'assets/img/fangzhen-shot-2.jpg', alt: 'Java 版效果图：草方块与各类矿石块' },
+            { img: 'assets/img/fangzhen-shot-3.jpg', alt: 'Java 版效果图：草方块地形的表面细节' }
           ]
         },
         {
-          title: 'Java 版',
-          items: [
-            { label: '仿真工艺 JAVA 版（爱发电）', href: 'https://afdian.com/a/Mang2022823' },
-            { label: 'RVHD JAVA 版（MineGraph）', href: 'https://www.minegraph.cn/resourcepacks/47' }
+          links: [
+            {
+              items: [
+                { label: '仿真工艺 JAVA 版（爱发电）', href: 'https://afdian.com/a/Mang2022823' }
+              ]
+            }
           ]
         },
+
+        { heading: '仿真工艺衍生作品' },
         {
-          title: '作者主页',
-          items: [
-            { label: 'B 站空间', href: 'https://b23.tv/Qedjm9p' }
+          imgs: [
+            { img: 'assets/img/fangzhen-rvhd-1.jpg', alt: 'RVHD 效果图：石材与发光方块的接缝细节' },
+            { img: 'assets/img/fangzhen-rvhd-2.jpg', alt: 'RVHD 效果图：原木与树叶在日光下的表面质感' },
+            { img: 'assets/img/fangzhen-rvhd-3.jpg', alt: 'RVHD 效果图：深色石材与木材的拼接纹理' }
+          ]
+        },
+        '仿真工艺衍生材质 RVHD —— 网易版已下架。',
+        {
+          links: [
+            {
+              items: [
+                { label: 'RVHD JAVA 版（MineGraph）', href: 'https://www.minegraph.cn/resourcepacks/47' }
+              ]
+            }
+          ]
+        },
+
+        {
+          links: [
+            {
+              title: '作者主页',
+              items: [
+                { label: 'B 站空间', href: 'https://b23.tv/Qedjm9p' }
+              ]
+            }
           ]
         }
       ],
-      shots: [
-        { group: 'RVHD', img: 'assets/img/fangzhen-rvhd-1.jpg', alt: 'RVHD 效果图：石材与发光方块的接缝细节' },
-        { img: 'assets/img/fangzhen-rvhd-2.jpg', alt: 'RVHD 效果图：原木与树叶在日光下的表面质感' },
-        { img: 'assets/img/fangzhen-rvhd-3.jpg', alt: 'RVHD 效果图：深色石材与木材的拼接纹理' },
-        { group: 'Java 版', img: 'assets/img/fangzhen-shot-1.jpg', alt: 'Java 版效果图：室内场景，木地板与原木家具' },
-        { img: 'assets/img/fangzhen-shot-2.jpg', alt: 'Java 版效果图：草方块与各类矿石块' },
-        { img: 'assets/img/fangzhen-shot-3.jpg', alt: 'Java 版效果图：草方块地形的表面细节' },
-        { group: '基岩版', img: 'assets/img/fangzhen-shot-4.jpg', alt: '基岩版效果图：浅色方块面板近景' },
-        { img: 'assets/img/fangzhen-shot-5.jpg', alt: '基岩版效果图：多种石材方块对照' },
-        { img: 'assets/img/fangzhen-shot-6.jpg', alt: '基岩版效果图：蓝色石材方块近景' },
-        { img: 'assets/img/fangzhen-shot-7.jpg', alt: '基岩版效果图：石材与矿石方块' }
-      ]
+      // 图都插在正文对应位置了，不再单独列截图
+      shots: []
     }
   };
 
@@ -1297,7 +1333,29 @@
       }
       if (work.intro && work.intro.length) {
         parts.push(work.intro.map(function (p) {
-          return '<p>' + esc(p) + '</p>';
+          // 纯字符串 = 一段正文
+          if (typeof p === 'string') return '<p>' + esc(p) + '</p>';
+          // { heading } = 小标题
+          if (p.heading) return '<h3 class="work-heading">' + esc(p.heading) + '</h3>';
+          // { img } = 单张大图
+          if (p.img) {
+            return '<figure class="work-figure">' +
+              '<img src="' + esc(p.img) + '" alt="' + esc(p.alt || work.name) + '" loading="lazy" decoding="async">' +
+            '</figure>';
+          }
+          // { imgs } = 一组并排的图
+          if (p.imgs && p.imgs.length) {
+            return '<div class="work-figure-grid">' + p.imgs.map(function (it) {
+              var src = typeof it === 'string' ? it : it.img;
+              var alt = typeof it === 'string' ? work.name : (it.alt || work.name);
+              return '<figure class="work-figure">' +
+                '<img src="' + esc(src) + '" alt="' + esc(alt) + '" loading="lazy" decoding="async">' +
+              '</figure>';
+            }).join('') + '</div>';
+          }
+          // { links } = 一组按钮
+          if (p.links && p.links.length) return renderWorkLinks(p.links);
+          return '';
         }).join(''));
       }
 
@@ -1311,6 +1369,10 @@
 
     // 鸣谢 / 反馈渠道
     var thanks = $('#work-thanks');
+    var thanksPanel = thanks && thanks.parentElement ? thanks.parentElement : null;
+    if (thanksPanel && (!work.thanks || !work.thanks.length)) {
+      thanksPanel.hidden = true;
+    }
     if (thanks && work.thanks && work.thanks.length) {
       thanks.hidden = false;
       thanks.innerHTML = work.thanks.map(function (t) {
@@ -1321,6 +1383,11 @@
     // 截图
     // 页面上只显示图片，不显示文字说明；说明只写进 alt 供屏幕阅读器与搜索引擎使用。
     var shots = $('#work-shots');
+    // 没有截图的页面（图都插在正文里了）把整个「截图」区块收起来
+    var shotsSection = shots ? shots.closest('section') : null;
+    if (shotsSection && (!work.shots || !work.shots.length)) {
+      shotsSection.hidden = true;
+    }
     if (shots && work.shots && work.shots.length) {
       // 截图可以带 group 标记，分组变了就插一条小标题（例如按 Java / 基岩版分）
       var lastGroup = null;
