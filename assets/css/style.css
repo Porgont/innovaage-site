@@ -671,7 +671,6 @@ html[data-theme="dark"] .tag--diamond { color: var(--gold); }
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  transition: border-color .16s ease, box-shadow .16s ease;
 }
 
 .work:hover {
@@ -1761,7 +1760,17 @@ input[type="range"]::-webkit-slider-thumb {
   transition: border-color .16s ease, box-shadow .16s ease;
 }
 
-.notice:hover { box-shadow: var(--shadow-sm); }
+.notice:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lift);
+}
+
+.notice {
+  transition:
+    transform .3s cubic-bezier(.16, 1, .3, 1),
+    border-color .2s ease,
+    box-shadow .3s cubic-bezier(.16, 1, .3, 1);
+}
 
 .notice--green    { border-left-color: var(--green); }
 .notice--gold     { border-left-color: var(--gold); }
@@ -2480,12 +2489,21 @@ body.is-leaving main {
   outline-offset: 2px;
 }
 
-/* 作品卡片：悬停微抬，封面缓慢推近 */
+/* 作品卡片：悬停微抬，封面缓慢推近。
+   位移、边框、投影必须写在同一条 transition 里 ——
+   分开写会让后一条把前一条整个覆盖掉，边框和阴影就会瞬变。 */
 .work {
-  transition: transform .34s cubic-bezier(.16, 1, .3, 1);
+  transition:
+    transform .34s cubic-bezier(.16, 1, .3, 1),
+    border-color .2s ease,
+    box-shadow .3s cubic-bezier(.16, 1, .3, 1);
 }
 
-.work:hover { transform: translateY(-4px); }
+.work:hover {
+  transform: translateY(-4px);
+  border-color: var(--line-strong);
+  box-shadow: var(--shadow-lift);
+}
 
 .work-media { overflow: hidden; }
 
@@ -3726,14 +3744,17 @@ main.overlap-hero .hero--banner > .hero-veil::after {
   }
 }
 
+/* 关键：这里只用 translate 属性，不碰 transform。
+   否则 animation-fill-mode: both 会把最终帧的 transform 一直盖在元素上，
+   悬停时写的 transform: translateY(-4px) 就永远不生效 —— 卡片会「只变阴影不抬起来」。 */
 @keyframes rise-in {
   from {
     opacity: 0;
-    transform: translateY(22px);
+    translate: 0 22px;
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    translate: 0 0;
   }
 }
 
