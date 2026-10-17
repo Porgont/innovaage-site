@@ -1521,7 +1521,9 @@
       if (work.poster) {
         parts.push(
           '<figure class="work-poster">' +
-            '<img src="' + esc(work.poster) + '" alt="' + esc(work.posterAlt || work.name) + '" decoding="async">' +
+            // 海报动辄几百 KB，滚到附近再下载，别让它跟首屏抢带宽
+            '<img src="' + esc(work.poster) + '" alt="' + esc(work.posterAlt || work.name) +
+              '" loading="lazy" decoding="async">' +
           '</figure>'
         );
       }
