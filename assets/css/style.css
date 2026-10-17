@@ -3221,6 +3221,58 @@ body.is-leaving::after {
 
 .result-bar b { color: var(--text); }
 
+/* ---------- ⑰ 标签页更醒目 + 索引块字号 ----------
+   两个标签原来灰得太淡，右边那栏几乎没人注意。 */
+.tabs .tab {
+  font-size: 16px;
+  color: var(--text-dim);
+  padding: 13px 26px;
+}
+
+.tabs .tab:hover { color: var(--text); }
+
+.tabs .tab.is-active { color: var(--text); }
+
+/* 「！新内容」标记：黄底白字，压在标签文字后面 */
+.tab-badge {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 2px 7px;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.5;
+  letter-spacing: .02em;
+  color: #fff;
+  background: #c98a06;
+  border-radius: 3px;
+  vertical-align: 1px;
+  white-space: nowrap;
+}
+
+/* 首屏索引块：字大一点，行间加分割线 */
+.hero--page .page-index__t {
+  font-size: 17px;
+}
+
+.hero--page .page-index__n {
+  font-size: 12.5px;
+}
+
+.hero--page .page-index__en {
+  font-size: 11px;
+}
+
+.hero--page .page-index__row + .page-index__row {
+  border-top: 1px solid var(--line-2);
+}
+
+/* 索引行之间的线要看得见，压在照片上 var(--line) 太淡 */
+.hero--page .page-index__row {
+  border-bottom-color: var(--line-2);
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
 /* ---------- 响应式 ---------- */
 @media (max-width: 800px) {
   body { font-size: 14.5px; }
