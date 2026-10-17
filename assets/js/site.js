@@ -16,6 +16,7 @@
     surveyUrl: 'https://www.wjx.cn/vm/OtrfYCj.aspx',
 
     // ★★★ 三个 QQ 群 ★★★
+    qqFeedback: '1017068586',   // 创想时代 · 反馈建议（资源问题反馈）
     qqAudit: '1045216325',      // 对外审核群（加入我们）
     qqPublic: '788233856',      // 对外交流群（交流探讨）
     qqCouncil: '1018260006',    // 开发理事会（对外代投）
@@ -32,9 +33,7 @@
     bilibiliName: '创想时代开发组',    // B 站账号名
     bilibili: 'https://space.bilibili.com/488348167',  // B 站主页链接
     discord: '',                       // Discord 邀请链接
-    github: 'https://github.com/porgont',
     site: 'https://innovaage.cn',
-    siteRepo: 'https://github.com/porgont/innovaage-site',
 
     // ★★★ 首页大图 ★★★
     // 留空则首页只显示文字（不报错）。图片放在 assets/img/ 下面。
@@ -47,13 +46,6 @@
      字段：img / title / meta / category / desc(可选)
      category 用下面 CATEGORIES 里的键，用于筛选
      ========================================================== */
-  var CATEGORIES = {
-    shader: '光影',
-    map: '地图',
-    skin: '皮肤',
-    tex: '材质',
-    addon: 'Addon'
-  };
 
   /* ==========================================================
      ④ 作品列表 —— 一个作品只占一项，点进去才是它的详情页
@@ -77,6 +69,22 @@
       meta: '作者：Log坤',
       category: 'shader',
       desc: '基岩版光影，主打水面镜面反射与自然光过渡。'
+    },
+    {
+      id: 'qiushui-sanchi',
+      img: 'assets/img/qiushui-1.jpg',
+      title: '秋水三尺',
+      meta: '作者：余末YuuMo',
+      category: 'map',
+      desc: '祈水，祈的是秋水三尺！'
+    },
+    {
+      id: 'lingling-v5000-oak7',
+      img: 'assets/img/lingling-1.jpg',
+      title: '零零构想V5000 · 橡木7画质提升包',
+      meta: '作者：创想时代开发组',
+      category: 'addon',
+      desc: '把零零构想V5000 内置光影换成 Log 橡木7。'
     }
   ];
 
@@ -139,6 +147,56 @@
         { k: '鸣谢', v: '冷夜、被遗忘的青色剑士、关于本人、只问为何、老楚、范帛、柑柠、linlin' },
         { k: '反馈途径', v: '创想时代反馈群 1017068586' }
       ]
+    },
+
+    'qiushui-sanchi': {
+      name: '秋水三尺',
+      author: '创想时代 余末YuuMo',
+      type: '地图 / Map',
+      tagline: '祈水，祈的是秋水三尺！',
+      cover: 'assets/img/qiushui-1.jpg',
+      coverAlt: '秋水三尺：夜色下的悬空宫殿正面全景',
+      facts: [
+        { k: '作品名', v: '秋水三尺' },
+        { k: '作者', v: '创想时代 余末YuuMo' },
+        { k: '类型', v: '地图 / Map' },
+        { k: '平台', v: 'Minecraft 基岩版' }
+      ],
+      intro: [
+        '祈水，祈的是秋水三尺！'
+      ],
+      shots: [
+        { img: 'assets/img/qiushui-1.jpg', alt: '夜色下的悬空宫殿正面全景，金饰与发光题字' },
+        { img: 'assets/img/qiushui-2.jpg', alt: '白天的悬空宫殿正面全景，蓝天与海面' },
+        { img: 'assets/img/qiushui-3.jpg', alt: '侧面视角的悬空宫殿与金色环形结构，右上方竖排题字' }
+      ]
+    },
+
+    'lingling-v5000-oak7': {
+      name: '零零构想V5000 · 橡木7画质提升包',
+      author: '创想时代开发组',
+      type: 'Addon / 画质提升包',
+      tagline: '把零零构想V5000 内置光影由「Log6 桦木」更换为 Log 橡木7',
+      cover: 'assets/img/lingling-1.jpg',
+      coverAlt: '画质提升包效果：光泽方块地面的日光反射',
+      // 介绍就是这张成品海报，不再另写文字
+      poster: 'assets/img/lingling-poster.webp',
+      posterAlt: '零零构想V5000-橡木7画质提升包 组件介绍海报',
+      facts: [
+        { k: '作品名', v: '零零构想V5000-橡木7画质提升包' },
+        { k: '版本', v: 'V1.0（2026-10-13）' },
+        { k: '类型', v: 'Addon / 画质提升包' },
+        { k: '平台', v: 'Minecraft 基岩版' },
+        { k: '需先购买', v: '零零构想V5000 材质（组件码 8144171，付费四合一版本）' },
+        { k: '同时加载', v: 'SRC 实时阴影（组件码 0559302）' },
+        { k: '海报', v: '柑柠' }
+      ],
+      intro: [],
+      shots: [
+        { img: 'assets/img/lingling-1.jpg', alt: '效果图：光泽方块地面在日光下的反射与阴影' },
+        { img: 'assets/img/lingling-2.jpg', alt: '效果图：方块方块堆叠场景的光照层次' },
+        { img: 'assets/img/lingling-3.jpg', alt: '效果图：室内场景下的光照与材质表现' }
+      ]
     }
   };
 
@@ -187,16 +245,6 @@
         '<p>创想时代开发组长期开放招募，欢迎有作品、有耐心、愿意沟通的伙伴加入。</p>' +
         '<p>报名与审核方式见 <a href="join.html">加入我们</a> 页面。' +
         '我们不要求你什么都会，只要求你对自己负责的那一块认真。</p>'
-    },
-    {
-      date: '2026-02-01',
-      title: '示例公告：这里演示一条带列表和标签的公告写法',
-      color: 'diamond',
-      tags: ['示例'],
-      body:
-        '<p>这条是给管理员看的示例，可以直接删掉。公告支持列表、链接、加粗，' +
-        '以及底部的彩色标签。</p>' +
-        '<ul><li>短公告写 1 段就够</li><li>重要公告加 pin: true 置顶</li></ul>'
     }
   ];
 
@@ -259,6 +307,7 @@
      页面上用 data-fill="xxx" 标记要填的位置，这里把配置里的真实值填进去。
      值为空的项：联系方式整行自动隐藏，不会在页面上留下空行或「待填写」。 */
   var FILL_KEYS = {
+    qqFeedback: 'qqFeedback',
     qqAudit: 'qqAudit',
     qqPublic: 'qqPublic',
     qqCouncil: 'qqCouncil',
@@ -269,9 +318,7 @@
     bilibili: 'bilibili',          // 主页网址，给 data-fill-href 用
     bilibiliName: 'bilibiliName',  // 账号名，给 data-fill 用
     discord: 'discord',
-    github: 'github',
-    site: 'site',
-    siteRepo: 'siteRepo'
+    site: 'site'
   };
 
   function applyConfigToDom() {
@@ -724,6 +771,14 @@
     // 所以留这个标记给自检用。
     host.setAttribute('data-work-id', id);
 
+    /* 先把「只在部分作品上出现」的区块清空。
+       work.html 里写死了一份 LogSA 的兜底内容，如果这件作品没有对应字段，
+       不清空就会残留上一件作品的须知 / 鸣谢。 */
+    ['#work-notice', '#work-thanks', '#work-nav'].forEach(function (sel) {
+      var el = $(sel);
+      if (el) { el.hidden = true; el.innerHTML = ''; }
+    });
+
     var setText = function (sel, text) {
       var el = $(sel);
       if (el) el.textContent = text;
@@ -757,11 +812,24 @@
     }
 
     // 正文
+    // 有些作品的介绍就是一张成品海报（poster），此时海报排在文字段落前面。
+    // 两个都没有就把静态兜底的内容清掉，免得残留上一件作品。
     var intro = $('#work-intro');
-    if (intro && work.intro && work.intro.length) {
-      intro.innerHTML = work.intro.map(function (p) {
-        return '<p>' + esc(p) + '</p>';
-      }).join('');
+    if (intro) {
+      var parts = [];
+      if (work.poster) {
+        parts.push(
+          '<figure class="work-poster">' +
+            '<img src="' + esc(work.poster) + '" alt="' + esc(work.posterAlt || work.name) + '" decoding="async">' +
+          '</figure>'
+        );
+      }
+      if (work.intro && work.intro.length) {
+        parts.push(work.intro.map(function (p) {
+          return '<p>' + esc(p) + '</p>';
+        }).join(''));
+      }
+      intro.innerHTML = parts.join('');
     }
 
     // 鸣谢 / 反馈渠道

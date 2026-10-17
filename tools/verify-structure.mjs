@@ -81,13 +81,15 @@ if (otherCards === 2 && otherPart.includes('Log_坤') && otherPart.includes('老
   bad('其他负责人分区不对（' + otherCards + ' 人）');
 }
 
-/* 五位负责人的头像：文件要在，html 也要引用 */
+/* 七位负责人的头像：文件要在，html 也要引用 */
 const AVATARS = [
   ['威廉', 'avatar-william.jpg'],
   ['柑柠', 'avatar-ganning.jpg'],
   ['苏打', 'avatar-suda.jpg'],
   ['樱花', 'avatar-yinghua.jpg'],
-  ['阿潇', 'avatar-axiao.jpg']
+  ['阿潇', 'avatar-axiao.jpg'],
+  ['Log_坤', 'avatar-logkun.jpg'],
+  ['老赵', 'avatar-laozhao.jpg']
 ];
 let avatarProblems = [];
 for (const [who, file] of AVATARS) {
@@ -97,13 +99,13 @@ for (const [who, file] of AVATARS) {
     avatarProblems.push(who + ' 图片文件不存在');
   }
 }
-if (avatarProblems.length === 0) good('核心管理局：5 位负责人的头像都已接上');
+if (avatarProblems.length === 0) good('负责人头像：7 位全部接上');
 else bad('头像问题：' + avatarProblems.join('，'));
 
 // 有头像的卡片必须带 officer--avatar，否则布局会错位
-const avatarCards = (corePart.match(/class="officer(?=[\s"])[^"]*officer--avatar[^"]*"/g) || []).length;
-if (avatarCards === 5) good('核心管理局：5 张卡片都用了头像布局');
-else bad('核心管理局：只有 ' + avatarCards + ' 张卡片用了头像布局（应为 5）');
+const avatarCards = (about.match(/class="officer(?=[\s"])[^"]*officer--avatar[^"]*"/g) || []).length;
+if (avatarCards === 7) good('负责人卡片：7 张都用了头像布局');
+else bad('负责人卡片：只有 ' + avatarCards + ' 张用了头像布局（应为 7）');
 
 const joinHtml = readFileSync(join(root, 'join.html'), 'utf8');
 // 两个地方都有部门表：报名加入（新增）与审核条例（原有），各 5 个
@@ -180,6 +182,38 @@ for (const [name, html] of [['图片', img], ['视频', vid], ['matoga', mat]]) 
   if (html.includes('href="tools.html"')) good(name + '模块：有回工具箱的入口');
   else bad(name + '模块：没有回工具箱的入口');
 }
+
+/* ---------- 站内不许出现本站源码地址 ----------
+   不希望有人顺着链接去扒官网源码。
+   matoga 页里指向芝世那个第三方项目的 GitHub 链接是别人的开源库，
+   MIT 要求署名与来源，不在此列。 */
+const ALL_PAGES = [
+  'index.html', 'about.html', 'works.html', 'work.html',
+  'tools.html', 'tools-image.html', 'tools-video.html', 'tools-matoga.html',
+  'news.html', 'join.html'
+];
+const SITE_REPO_PATTERNS = [
+  /github\.com\/porgont/i,
+  /github\.com\/Porgont/i,
+  /porgont\.github\.io/i,
+  /siteRepo/,
+  /本网站源码/,
+  /本站由 GitHub Pages 托管/
+];
+const leaked = [];
+for (const page of ALL_PAGES) {
+  const html = readFileSync(join(root, page), 'utf8');
+  for (const re of SITE_REPO_PATTERNS) {
+    if (re.test(html)) leaked.push(page + ' 命中 ' + re);
+  }
+}
+if (leaked.length === 0) good('全站都找不到本站源码地址');
+else bad('以下位置仍暴露本站源码：' + leaked.join('；'));
+
+// site.js 里也不该再留着 siteRepo / github 配置项
+const siteJs = readFileSync(join(root, 'assets', 'js', 'site.js'), 'utf8');
+if (/siteRepo|github\.com\/porgont/i.test(siteJs)) bad('site.js 里仍有本站仓库地址');
+else good('site.js 里没有本站仓库地址');
 
 console.log(fail === 0 ? '\n结构自检全部通过' : `\n结构自检失败 ${fail} 项`);
 process.exit(fail === 0 ? 0 : 1);

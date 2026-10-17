@@ -929,6 +929,23 @@ html[data-theme="dark"] .tag--diamond { color: var(--gold); }
 
 .work-intro p:last-child { margin-bottom: 0; }
 
+/* 作品介绍里的长海报：竖长图，按容器宽度等比铺开，不裁剪 */
+.work-poster {
+  margin: 0 0 24px;
+}
+
+.work-poster img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--bg-2);
+}
+
+/* 海报后面还有正文时，补一点间距 */
+.work-intro .work-poster + p { margin-top: 4px; }
+
 /* 截图栅格 */
 .shot-grid {
   display: grid;

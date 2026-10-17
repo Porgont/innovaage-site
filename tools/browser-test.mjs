@@ -143,8 +143,8 @@ check('首页无横向溢出',
    ============================================================ */
 await open('/news.html');
 
-check('公告页渲染全部 3 条',
-  await evalJs("document.querySelectorAll('#notice-list .notice').length === 3"));
+check('公告页渲染全部 2 条',
+  await evalJs("document.querySelectorAll('#notice-list .notice').length === 2"));
 
 check('置顶公告排在第一，且内容是代投 + 审核条例',
   await evalJs(`(function(){
@@ -174,8 +174,8 @@ check('筛选后筛选按钮高亮正确',
 // 点回「全部」
 await evalJs("[...document.querySelectorAll('#notice-filter button')].find(b => b.textContent.trim() === '全部').click()");
 await sleep(300);
-check('切回「全部」恢复 3 条',
-  await evalJs("document.querySelectorAll('#notice-list .notice').length === 3"));
+check('切回「全部」恢复 2 条',
+  await evalJs("document.querySelectorAll('#notice-list .notice').length === 2"));
 
 // 空结果分支
 await evalJs("[...document.querySelectorAll('#notice-filter button')].find(b => b.textContent.trim() === '合作').click()");
@@ -207,8 +207,12 @@ const byKey = k => contactList.find(c => c.key === k);
 
 check('对外审核群显示出来（qqAudit）',
   visible.includes('qqAudit'), '当前显示: ' + visible.join(', '));
-check('GitHub 仓库链接显示',
-  visible.includes('siteRepo'));
+check('反馈建议群显示出来（qqFeedback）',
+  visible.includes('qqFeedback'), '当前显示: ' + visible.join(', '));
+check('站内不再出现本站源码的 GitHub 链接',
+  !contactList.some(c => c.key === 'siteRepo') &&
+  !visible.includes('siteRepo'),
+  '当前显示: ' + visible.join(', '));
 check('未填写的邮箱自动隐藏',
   byKey('email')?.hidden === true, 'email 行 hidden=' + byKey('email')?.hidden);
 
@@ -448,11 +452,11 @@ const officerAvatars = JSON.parse(await evalJs(`JSON.stringify(
     return { src: img.getAttribute('src'), w: img.naturalWidth, h: img.naturalHeight };
   })
 )`));
-check('核心管理局有 5 个头像',
-  officerAvatars.length === 5,
+check('负责人一共 7 个头像（5 位核心 + 2 位其他负责人）',
+  officerAvatars.length === 7,
   '实际 ' + officerAvatars.length + ' 个');
-check('5 个头像都真的加载出来了（不是空白）',
-  officerAvatars.length === 5 && officerAvatars.every((a) => a.w > 0 && a.h > 0),
+check('7 个头像都真的加载出来了（不是空白）',
+  officerAvatars.length === 7 && officerAvatars.every((a) => a.w > 0 && a.h > 0),
   officerAvatars.map((a) => (a.src || '').split('/').pop() + ':' + a.w + 'x' + a.h).join(' '));
 
 check('头像不会挤坏姓名与职务的排版',
@@ -483,7 +487,7 @@ check('关于我们页的联系区显示了三个群号',
   await evalJs("document.querySelector('#contact')?.innerText.replace(/\\s+/g, ' ').slice(0, 120)"));
 
 check('关于我们页的联系区有复制按钮',
-  await evalJs("document.querySelectorAll('#contact .copy-btn').length === 3"),
+  await evalJs("document.querySelectorAll('#contact .copy-btn').length === 4"),
   '实际 ' + await evalJs("document.querySelectorAll('#contact .copy-btn').length") + ' 个');
 
 check('关于我们页能跳到完整的联系方式',
@@ -720,9 +724,12 @@ check('首页大图体积在 500KB 以内',
   })()`));
 
 // 一个作品只能占一条。同一作品的多张截图属于详情页，不能在这里重复列出。
-check('首页作品展示：一个作品只占一条',
-  await evalJs("document.querySelectorAll('#showcase-grid .work').length === 1"),
-  '实际 ' + await evalJs("document.querySelectorAll('#showcase-grid .work').length") + ' 条（应为 1）');
+check('首页作品展示：每个作品只占一条（作品名不重复）',
+  await evalJs(`(function(){
+    var t = [...document.querySelectorAll('#showcase-grid .work h3')].map(function (h) { return h.textContent.trim(); });
+    return t.length > 0 && new Set(t).size === t.length;
+  })()`),
+  await evalJs("[...document.querySelectorAll('#showcase-grid .work h3')].map(h => h.textContent.trim()).join(' / ')"));
 
 check('首页作品条目没有重复作品名',
   await evalJs(`(function(){
@@ -732,7 +739,8 @@ check('首页作品条目没有重复作品名',
   await evalJs("JSON.stringify([...document.querySelectorAll('#showcase-grid .work h3')].map(h => h.textContent.trim()))"));
 
 check('作品卡片带上了作者署名',
-  await evalJs("[...document.querySelectorAll('#showcase-grid .work-meta')].every(m => m.textContent.includes('Log坤'))"));
+  await evalJs("[...document.querySelectorAll('#showcase-grid .work-meta')].every(m => m.textContent.includes('作者：'))"),
+  await evalJs("[...document.querySelectorAll('#showcase-grid .work-meta')].map(m => m.textContent.trim()).join(' | ')"));
 
 // 必须真的加载出来（曾经因为 loading="lazy" 导致首屏外的图是空白块）
 const showcaseLoaded = await waitFor(
@@ -767,9 +775,12 @@ await open('/works.html');
 check('作品页导航高亮「作品」',
   await evalJs("document.querySelector('.nav a.is-active')?.textContent.trim() === '作品'"));
 
-check('作品页：一个作品一条',
-  await evalJs("document.querySelectorAll('#showcase-grid .work').length === 1"),
-  '实际 ' + await evalJs("document.querySelectorAll('#showcase-grid .work').length") + ' 条（应为 1）');
+check('作品页：每个作品只占一条（作品名不重复）',
+  await evalJs(`(function(){
+    var t = [...document.querySelectorAll('#showcase-grid .work h3')].map(function (h) { return h.textContent.trim(); });
+    return t.length > 0 && new Set(t).size === t.length;
+  })()`),
+  await evalJs("[...document.querySelectorAll('#showcase-grid .work h3')].map(h => h.textContent.trim()).join(' / ')"));
 
 check('作品页显示总数与条目数一致',
   await evalJs(`(function(){
@@ -878,6 +889,68 @@ check('放大层不显示文字说明（说明只在 alt 里）',
   '"，alt="' + await evalJs("(document.querySelector('#lightbox-img').getAttribute('alt') || '').slice(0, 20)") + '"');
 await evalJs("document.querySelector('#lightbox-close').click()");
 await sleep(400);
+
+/* ---------- 另外两件作品：地图与 Addon ---------- */
+await open('/work.html?id=qiushui-sanchi');
+await sleep(900);
+
+check('秋水三尺：标题与作者正确',
+  (await evalJs("document.querySelector('#work-name').textContent.trim()")) === '秋水三尺' &&
+  (await evalJs("document.querySelector('#work-author').textContent")).includes('余末YuuMo'),
+  await evalJs("document.querySelector('#work-name').textContent.trim() + ' / ' + document.querySelector('#work-author').textContent.trim()"));
+
+check('秋水三尺：3 张截图都加载出来',
+  await waitFor(`(function(){
+    var imgs = [...document.querySelectorAll('#work-shots img')];
+    return imgs.length === 3 && imgs.every(function (i) { return i.complete && i.naturalWidth > 0; });
+  })()`),
+  await evalJs("document.querySelectorAll('#work-shots img').length + ' 张'"));
+
+// 这件作品没有「使用须知」与「鸣谢」，不应该把 LogSA 的那份残留下来
+check('秋水三尺：没有残留上一件作品的鸣谢 / 须知',
+  await evalJs(`(function(){
+    var thanks = document.querySelector('#work-thanks');
+    var notice = document.querySelector('#work-notice');
+    var tOk = !thanks || thanks.hidden === true || thanks.innerText.trim() === '';
+    var nOk = !notice || notice.hidden === true || notice.innerText.trim() === '';
+    return tOk && nOk;
+  })()`),
+  '鸣谢=' + await evalJs("(document.querySelector('#work-thanks')?.innerText || '').slice(0, 30)") +
+  ' 须知=' + await evalJs("(document.querySelector('#work-notice')?.innerText || '').slice(0, 30)"));
+
+await open('/work.html?id=lingling-v5000-oak7');
+await sleep(1200);
+
+check('零零构想：标题正确',
+  (await evalJs("document.querySelector('#work-name').textContent.trim()")).includes('橡木7'),
+  await evalJs("document.querySelector('#work-name').textContent.trim()"));
+
+check('零零构想：介绍用的就是海报，而且真的加载出来了',
+  await waitFor(`(function(){
+    var img = document.querySelector('#work-intro .work-poster img');
+    return !!img && img.complete && img.naturalWidth > 0;
+  })()`),
+  await evalJs("(function(){ var i = document.querySelector('#work-intro .work-poster img'); return i ? i.getAttribute('src') + ' ' + i.naturalWidth + 'x' + i.naturalHeight : '没有海报'; })()"));
+
+check('零零构想：海报是竖长图（高度远大于宽度）',
+  await evalJs(`(function(){
+    var i = document.querySelector('#work-intro .work-poster img');
+    return !!i && i.naturalHeight > i.naturalWidth * 2;
+  })()`),
+  await evalJs("(function(){ var i = document.querySelector('#work-intro .work-poster img'); return i ? i.naturalWidth + 'x' + i.naturalHeight : '无'; })()"));
+
+check('零零构想：信息栏写明要先买零零构想V5000 与 SRC 前置',
+  await evalJs(`(function(){
+    var t = document.querySelector('#work-facts')?.innerText || '';
+    return t.indexOf('8144171') >= 0 && t.indexOf('0559302') >= 0;
+  })()`),
+  await evalJs("(document.querySelector('#work-facts')?.innerText || '').replace(/\\s+/g, ' ').slice(0, 80)"));
+
+check('零零构想：海报不会撑出横向滚动',
+  await evalJs('document.documentElement.scrollWidth <= window.innerWidth + 1'));
+
+await open('/work.html?id=log-shader-sa');
+await sleep(900);
 check('能关掉放大层',
   await evalJs("document.querySelector('#lightbox').hidden === true"));
 
