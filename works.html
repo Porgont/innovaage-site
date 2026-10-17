@@ -49,12 +49,12 @@
     </a>
 
     <nav class="nav" aria-label="主导航">
-      <a href="index.html" data-nav="home">首页</a>
-      <a href="works.html" data-nav="works">作品</a>
-      <a href="news.html" data-nav="news">公告</a>
-      <a href="tools.html" data-nav="tools">工具箱</a>
-      <a href="join.html" data-nav="join">加入我们</a>
-      <a href="about.html" data-nav="about">关于我们</a>
+      <a href="index.html" data-nav="home"><span>首页</span><small>INDEX</small></a>
+      <a href="works.html" data-nav="works"><span>作品</span><small>WORKS</small></a>
+      <a href="news.html" data-nav="news"><span>公告</span><small>NEWS</small></a>
+      <a href="tools.html" data-nav="tools"><span>工具箱</span><small>TOOLS</small></a>
+      <a href="join.html" data-nav="join"><span>加入我们</span><small>JOIN</small></a>
+      <a href="about.html" data-nav="about"><span>关于我们</span><small>ABOUT</small></a>
     </nav>
 
     <button class="theme-toggle" id="theme-toggle" type="button"
@@ -102,13 +102,19 @@
 
 <main id="main">
 
-  <section class="hero" style="padding:52px 0 34px">
+  <section class="hero hero--page">
     <div class="wrap">
       <p class="hero-badge"><span class="dot" aria-hidden="true"></span> 作品展示</p>
+      <p class="page-head__code">INDEX <span>/</span> 02 <span>/</span> <b>WORKS</b></p>
+      <p class="page-head__num" aria-hidden="true">02</p>
       <h1 style="font-size:clamp(26px,4vw,38px)">作品</h1>
-      <p class="lead">
-        工作室的光影、地图、皮肤、材质与 Addon 作品。每件标注资源名与作者。
-      </p>
+      <div class="page-note">
+        <p>
+          工作室的光影、地图、皮肤、材质与 Addon 作品。每件标注资源名与作者。
+        </p>
+      </div>
+
+      <div class="page-index" id="page-index" hidden></div>
     </div>
   </section>
 

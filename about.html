@@ -50,12 +50,12 @@
     </a>
 
     <nav class="nav" aria-label="主导航">
-      <a href="index.html" data-nav="home">首页</a>
-      <a href="works.html" data-nav="works">作品</a>
-      <a href="news.html" data-nav="news">公告</a>
-      <a href="tools.html" data-nav="tools">工具箱</a>
-      <a href="join.html" data-nav="join">加入我们</a>
-      <a href="about.html" data-nav="about">关于我们</a>
+      <a href="index.html" data-nav="home"><span>首页</span><small>INDEX</small></a>
+      <a href="works.html" data-nav="works"><span>作品</span><small>WORKS</small></a>
+      <a href="news.html" data-nav="news"><span>公告</span><small>NEWS</small></a>
+      <a href="tools.html" data-nav="tools"><span>工具箱</span><small>TOOLS</small></a>
+      <a href="join.html" data-nav="join"><span>加入我们</span><small>JOIN</small></a>
+      <a href="about.html" data-nav="about"><span>关于我们</span><small>ABOUT</small></a>
     </nav>
 
     <button class="theme-toggle" id="theme-toggle" type="button"
@@ -104,14 +104,18 @@
 <main id="main">
 
   <!-- ============ Hero ============ -->
-  <section class="hero" style="padding:54px 0 44px">
+  <section class="hero hero--page">
     <div class="wrap">
       <p class="hero-badge"><span class="dot" aria-hidden="true"></span> 关于我们</p>
+      <p class="page-head__code">INDEX <span>/</span> 06 <span>/</span> <b>ABOUT</b></p>
+      <p class="page-head__num" aria-hidden="true">06</p>
       <h1 style="font-size:clamp(26px,4vw,40px)">一家致力于 MCBE 的<br>资源创作团队</h1>
-      <p class="lead">
-        Minecraft 创想时代开发组，英译为 Innova Age Development Team。
-        初次构想于 2015 年末，正式成立于 2016 年 3 月 10 日，至今已近十载。
-      </p>
+      <div class="page-note">
+        <p>
+          Minecraft 创想时代开发组，英译为 Innova Age Development Team。
+          初次构想于 2015 年末，正式成立于 2016 年 3 月 10 日，至今已近十载。
+        </p>
+      </div>
 
       <div class="hero-stats">
         <div class="stat"><b>2016</b><span>3 月 10 日正式成立</span></div>
@@ -119,6 +123,8 @@
         <div class="stat"><b>5000 万+</b><span>中国版总下载量</span></div>
         <div class="stat"><b>BE</b><span>基岩版资源方向</span></div>
       </div>
+
+      <div class="page-index" id="page-index" hidden></div>
     </div>
   </section>
 

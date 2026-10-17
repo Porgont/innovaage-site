@@ -49,12 +49,12 @@
     </a>
 
     <nav class="nav" aria-label="主导航">
-      <a href="index.html" data-nav="home">首页</a>
-      <a href="works.html" data-nav="works">作品</a>
-      <a href="news.html" data-nav="news">公告</a>
-      <a href="tools.html" data-nav="tools">工具箱</a>
-      <a href="join.html" data-nav="join">加入我们</a>
-      <a href="about.html" data-nav="about">关于我们</a>
+      <a href="index.html" data-nav="home"><span>首页</span><small>INDEX</small></a>
+      <a href="works.html" data-nav="works"><span>作品</span><small>WORKS</small></a>
+      <a href="news.html" data-nav="news"><span>公告</span><small>NEWS</small></a>
+      <a href="tools.html" data-nav="tools"><span>工具箱</span><small>TOOLS</small></a>
+      <a href="join.html" data-nav="join"><span>加入我们</span><small>JOIN</small></a>
+      <a href="about.html" data-nav="about"><span>关于我们</span><small>ABOUT</small></a>
     </nav>
 
     <button class="theme-toggle" id="theme-toggle" type="button"
@@ -102,15 +102,21 @@
 
 <main id="main">
 
-  <section class="hero" style="padding:52px 0 34px">
+  <section class="hero hero--page">
     <div class="wrap">
       <p class="hero-badge"><span class="dot" aria-hidden="true"></span> 长期招募中</p>
+      <p class="page-head__code">INDEX <span>/</span> 05 <span>/</span> <b>JOIN</b></p>
+      <p class="page-head__num" aria-hidden="true">05</p>
       <h1 style="font-size:clamp(26px,4vw,38px)">加入我们 / 联系我们</h1>
-      <p class="lead">
-        加入工作室的流程是<b>初审 → 一审 → 二审</b>：先加对外审核群完成初审，
-        初审通过后再回本站填写一审问卷。合作、代投、授权、反馈等问题，
-        见「联系我们」里的三个群。
-      </p>
+      <div class="page-note">
+        <p>
+          加入工作室的流程是<b>初审 → 一审 → 二审</b>：先加对外审核群完成初审，
+          初审通过后再回本站填写一审问卷。合作、代投、授权、反馈等问题，
+          见「联系我们」里的三个群。
+        </p>
+      </div>
+
+      <div class="page-index" id="page-index" hidden></div>
     </div>
   </section>
 
@@ -574,6 +580,60 @@
 
       </div>
 
+    </div>
+  </section>
+
+  <!-- ============ 条例与文件 ============ -->
+  <section class="section section--tight" id="docs">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker">Documents</span>
+        <h2>条例与文件</h2>
+        <p>八份正式文件，都在腾讯文档上。对外以文档内文为准。</p>
+      </div>
+
+      <div class="doc-list">
+        <a class="doc-row" href="https://docs.qq.com/doc/DUEhwRVVmaE1ESUts" target="_blank" rel="noopener">
+          <span class="doc-row__n">01</span>
+          <span class="doc-row__t">创想时代开发组入室审核条例</span>
+          <span class="doc-row__go" aria-hidden="true">↗</span>
+        </a>
+        <a class="doc-row" href="https://docs.qq.com/doc/DUElhRlJIb3VFb1R2" target="_blank" rel="noopener">
+          <span class="doc-row__n">02</span>
+          <span class="doc-row__t">创想时代开发组代投条例</span>
+          <span class="doc-row__go" aria-hidden="true">↗</span>
+        </a>
+        <a class="doc-row" href="https://docs.qq.com/doc/DUHVrYnZwRnBHSUx1" target="_blank" rel="noopener">
+          <span class="doc-row__n">03</span>
+          <span class="doc-row__t">创想时代开发组收益结算细则</span>
+          <span class="doc-row__go" aria-hidden="true">↗</span>
+        </a>
+        <a class="doc-row" href="https://docs.qq.com/doc/DUGhIT25pSE1OcVBG" target="_blank" rel="noopener">
+          <span class="doc-row__n">04</span>
+          <span class="doc-row__t">创想时代开发组监督管理条例</span>
+          <span class="doc-row__go" aria-hidden="true">↗</span>
+        </a>
+        <a class="doc-row" href="https://docs.qq.com/doc/DUGZSdWtCamlsRUhm" target="_blank" rel="noopener">
+          <span class="doc-row__n">05</span>
+          <span class="doc-row__t">创想时代开发组外交与旗下条例</span>
+          <span class="doc-row__go" aria-hidden="true">↗</span>
+        </a>
+        <a class="doc-row" href="https://docs.qq.com/doc/DUGRtVmNJVmd5SGpS" target="_blank" rel="noopener">
+          <span class="doc-row__n">06</span>
+          <span class="doc-row__t">创想时代开发组交流管理条例</span>
+          <span class="doc-row__go" aria-hidden="true">↗</span>
+        </a>
+        <a class="doc-row" href="https://docs.qq.com/doc/DUEZCR1l5Y2hmUHVn" target="_blank" rel="noopener">
+          <span class="doc-row__n">07</span>
+          <span class="doc-row__t">创想时代开发组部门介绍</span>
+          <span class="doc-row__go" aria-hidden="true">↗</span>
+        </a>
+        <a class="doc-row" href="https://docs.qq.com/doc/DUGtmVXdZc0tORFNw" target="_blank" rel="noopener">
+          <span class="doc-row__n">08</span>
+          <span class="doc-row__t">创想时代开发组成员协定</span>
+          <span class="doc-row__go" aria-hidden="true">↗</span>
+        </a>
+      </div>
     </div>
   </section>
 

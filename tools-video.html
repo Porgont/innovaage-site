@@ -50,12 +50,12 @@
     </a>
 
     <nav class="nav" aria-label="主导航">
-      <a href="index.html" data-nav="home">首页</a>
-      <a href="works.html" data-nav="works">作品</a>
-      <a href="news.html" data-nav="news">公告</a>
-      <a href="tools.html" data-nav="tools">工具箱</a>
-      <a href="join.html" data-nav="join">加入我们</a>
-      <a href="about.html" data-nav="about">关于我们</a>
+      <a href="index.html" data-nav="home"><span>首页</span><small>INDEX</small></a>
+      <a href="works.html" data-nav="works"><span>作品</span><small>WORKS</small></a>
+      <a href="news.html" data-nav="news"><span>公告</span><small>NEWS</small></a>
+      <a href="tools.html" data-nav="tools"><span>工具箱</span><small>TOOLS</small></a>
+      <a href="join.html" data-nav="join"><span>加入我们</span><small>JOIN</small></a>
+      <a href="about.html" data-nav="about"><span>关于我们</span><small>ABOUT</small></a>
     </nav>
 
     <button class="theme-toggle" id="theme-toggle" type="button"
@@ -103,14 +103,20 @@
 
 <main id="main">
 
-  <section class="hero" style="padding:52px 0 30px">
+  <section class="hero hero--page">
     <div class="wrap">
       <p class="crumb"><a href="tools.html">工具箱</a> / 视频处理</p>
+      <p class="page-head__code">INDEX <span>/</span> 04 <span>/</span> <b>TOOLS · VIDEO</b></p>
+      <p class="page-head__num" aria-hidden="true">04</p>
       <h1 style="font-size:clamp(24px,3.6vw,34px)">视频诊断与转换</h1>
-      <p class="lead">
-        投稿要求：<b>时长 1 分 30 秒以内、编码 H.264、MP4 格式、画面 16:9</b>。
-        选「符合投稿规范」按要求转换，也可自定义比例、分辨率与编码。
-      </p>
+      <div class="page-note">
+        <p>
+          投稿要求：<b>时长 1 分 30 秒以内、编码 H.264、MP4 格式、画面 16:9</b>。
+          选「符合投稿规范」按要求转换，也可自定义比例、分辨率与编码。
+        </p>
+      </div>
+
+      <div class="page-index" id="page-index" hidden></div>
     </div>
   </section>
 

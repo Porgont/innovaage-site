@@ -207,7 +207,7 @@
      ========================================================== */
   var ANNOUNCEMENTS = [
     {
-      date: '2026-02-14',
+      date: '2026-10-17',
       title: '开放代投业务，同步公布入室审核条例',
       color: 'green',
       pin: true,
@@ -237,7 +237,7 @@
         '初审通过后再到官网填写 <a href="join.html#panel-rules">一审问卷</a>。</p>'
     },
     {
-      date: '2026-02-10',
+      date: '2026-10-17',
       title: '长期招募：地图 / 皮肤 / 材质 / 光影 / Addon / 美术 / 视频',
       color: 'gold',
       tags: ['招募'],
@@ -1103,6 +1103,41 @@
     });
   }
 
+  /* ---------- 子页面 INDEX 行式索引 ----------
+     不用手写：直接把本页各个 .section-head 收上来，编号、标题、英文标签都从已有的 DOM 里取，
+     再给所在 section 补一个可跳转的 id。以后加删区块，索引自动跟着变。 */
+  function initPageIndex() {
+    var host = $('#page-index');
+    if (!host) return;
+
+    var main = $('#main');
+    if (!main) return;
+
+    var heads = Array.prototype.slice.call(main.querySelectorAll('.section-head'));
+    if (!heads.length) { host.hidden = true; return; }
+
+    var rows = heads.map(function (head, i) {
+      var sec = head.closest ? head.closest('section') : null;
+      if (!sec) return '';
+      if (!sec.id) sec.id = 'sec-' + (i + 1);
+
+      var t = head.querySelector('h2');
+      var en = head.querySelector('.kicker');
+
+      return '<a class="page-index__row" href="#' + esc(sec.id) + '">' +
+        '<span class="page-index__n">' + ('0' + (i + 1)).slice(-2) + '</span>' +
+        '<span class="page-index__t">' + esc(t ? t.textContent.trim() : '') + '</span>' +
+        '<span class="page-index__en">' + esc(en ? en.textContent.trim() : '') + '</span>' +
+        '<span class="page-index__go" aria-hidden="true">↓</span>' +
+      '</a>';
+    }).join('');
+
+    host.hidden = false;
+    host.innerHTML =
+      '<div class="page-index__head"><span>Index :// 本页内容</span>' +
+      '<span>共 ' + heads.length + ' 项</span></div>' + rows;
+  }
+
   /* ---------- 启动 ---------- */
   function boot() {
     markActiveNav();
@@ -1119,6 +1154,7 @@
     initShowcase();
     initWorkDetail();
     initPageTransition();
+    initPageIndex();
   }
 
   if (document.readyState === 'loading') {

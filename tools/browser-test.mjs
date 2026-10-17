@@ -107,13 +107,13 @@ check('首页公告渲染 2 条（data-limit）',
   '实际 ' + await evalJs("document.querySelectorAll('#notice-list .notice').length"));
 
 check('首页导航高亮「首页」',
-  await evalJs("document.querySelector('.nav a.is-active')?.textContent.trim() === '首页'"));
+  await evalJs("document.querySelector('.nav a.is-active > span')?.textContent.trim() === '首页'"));
 
 /* 导航顺序与项目是硬性要求：首页 / 作品 / 公告 / 工具箱 / 加入我们 / 关于我们
    「联系我们」不再单独占导航项，改为放进「加入我们」和「关于我们」两页。 */
 const NAV_ORDER = ['首页', '作品', '公告', '工具箱', '加入我们', '关于我们'];
 const navLabels = JSON.parse(await evalJs(
-  "JSON.stringify([...document.querySelectorAll('.nav a')].map(a => a.textContent.trim()))"
+  "JSON.stringify([...document.querySelectorAll('.nav a > span')].map(a => a.textContent.trim()))"
 ));
 check('导航顺序为：首页 / 作品 / 公告 / 工具箱 / 加入我们 / 关于我们',
   JSON.stringify(navLabels) === JSON.stringify(NAV_ORDER),
@@ -122,6 +122,13 @@ check('导航顺序为：首页 / 作品 / 公告 / 工具箱 / 加入我们 / �
 check('导航里已经没有独立的「联系我们」项',
   !navLabels.includes('联系我们'),
   navLabels.join(' / '));
+
+check('导航每项都带一行小英文',
+  await evalJs(`(function(){
+    var ens = [...document.querySelectorAll('.nav a > small')].map(function (s) { return s.textContent.trim(); });
+    return ens.length === 6 && ens.every(function (t) { return /^[A-Z]+$/.test(t); });
+  })()`),
+  await evalJs("[...document.querySelectorAll('.nav a > small')].map(s => s.textContent.trim()).join(',')"));
 
 check('手机侧栏顺序与桌面导航一致',
   await evalJs(`JSON.stringify([...document.querySelectorAll('.mnav-links a')].map(a => a.textContent.trim()))`) ===
@@ -154,6 +161,17 @@ check('置顶公告排在第一，且内容是代投 + 审核条例',
       && t.includes('代投') && t.includes('审核条例');
   })()`),
   await evalJs("document.querySelector('#notice-list .notice h3').textContent.trim()"));
+
+check('公告日期统一是 2026 年 10 月 17 日',
+  await evalJs(`(function(){
+    var ds = [...document.querySelectorAll('#notice-list .notice-date')];
+    if (!ds.length) return false;
+    return ds.every(function (d) {
+      var t = d.textContent.replace(/\\s+/g, '');
+      return t.indexOf('10/17') >= 0 && t.indexOf('2026') >= 0;
+    });
+  })()`),
+  await evalJs("[...document.querySelectorAll('#notice-list .notice-date')].map(d => d.textContent.replace(/\\s+/g,' ').trim()).join(' | ')"));
 
 check('置顶公告里有审核条例的腾讯文档链接',
   await evalJs(`!!document.querySelector('#notice-list .notice a[href*="docs.qq.com"]')`));
@@ -439,6 +457,31 @@ check('审核条例面板写出三阶段流程',
 check('审核条例面板说明需自行阅读条例',
   await evalJs("document.querySelector('#panel-rules').innerText.includes('自行阅读条例')"));
 
+/* ---------- 条例与文件清单 ---------- */
+check('加入页有「条例与文件」区块，共 8 份',
+  await evalJs("document.querySelectorAll('#docs .doc-row').length === 8"),
+  '实际 ' + await evalJs("document.querySelectorAll('#docs .doc-row').length") + ' 份');
+
+check('8 份条例都指向腾讯文档且新窗口打开',
+  await evalJs(`(function(){
+    var rows = [...document.querySelectorAll('#docs .doc-row')];
+    return rows.length === 8 && rows.every(function (a) {
+      var href = a.getAttribute('href') || '';
+      return href.indexOf('https://docs.qq.com/doc/') === 0 && a.getAttribute('target') === '_blank';
+    });
+  })()`),
+  await evalJs("[...document.querySelectorAll('#docs .doc-row')].map(a => (a.getAttribute('href')||'').replace('https://docs.qq.com/doc/','')).join(', ')"));
+
+check('8 份条例的标题都写全了',
+  await evalJs(`(function(){
+    var ts = [...document.querySelectorAll('#docs .doc-row__t')].map(function (e) { return e.textContent.trim(); });
+    return ts.length === 8 && ts.every(function (t) { return t.indexOf('创想时代开发组') === 0 && t.length > 8; });
+  })()`),
+  await evalJs("[...document.querySelectorAll('#docs .doc-row__t')].map(e => e.textContent.trim()).join(' / ')"));
+
+check('INDEX 索引里收录了「条例与文件」',
+  await evalJs("[...document.querySelectorAll('.page-index__t')].some(e => e.textContent.includes('条例'))"));
+
 // 切回报名面板
 await evalJs("document.querySelector('#tab-form').click()");
 await sleep(400);
@@ -479,7 +522,7 @@ check('关于我们页写有五千万下载量', aboutText.includes('五千万')
 check('关于我们页写有团队宗旨', aboutText.includes('探索') && aboutText.includes('有想则创'));
 check('关于我们页写有创始人威廉', aboutText.includes('威廉'));
 check('关于我们页导航高亮正确',
-  await evalJs("document.querySelector('.nav a.is-active')?.textContent.trim() === '关于我们'"));
+  await evalJs("document.querySelector('.nav a.is-active > span')?.textContent.trim() === '关于我们'"));
 
 /* 核心管理局五位负责人的头像：文件要真的解码出来，不能是空白框 */
 const officerAvatars = JSON.parse(await evalJs(`JSON.stringify(
@@ -542,7 +585,7 @@ check('首页页脚显示三个真实群号',
 await open('/tools-image.html');
 
 check('工具箱页导航高亮「工具箱」',
-  await evalJs("document.querySelector('.nav a.is-active')?.textContent.trim() === '工具箱'"));
+  await evalJs("document.querySelector('.nav a.is-active > span')?.textContent.trim() === '工具箱'"));
 
 check('默认上限是宽 1000 × 高 4000（不是 4000×1000）',
   await evalJs("document.querySelector('#max-w').value === '1000' && document.querySelector('#max-h').value === '4000'"),
@@ -808,7 +851,7 @@ check('首页代投区块写了授权要求',
 
 await open('/works.html');
 check('作品页导航高亮「作品」',
-  await evalJs("document.querySelector('.nav a.is-active')?.textContent.trim() === '作品'"));
+  await evalJs("document.querySelector('.nav a.is-active > span')?.textContent.trim() === '作品'"));
 
 check('作品页：每个作品只占一条（作品名不重复）',
   await evalJs(`(function(){
@@ -832,6 +875,49 @@ check('作品页不再出现我编的「默认允许使用」口径',
 
 check('作品页无横向溢出',
   await evalJs('document.documentElement.scrollWidth <= window.innerWidth + 1'));
+
+/* ---------- 子页面「档案」页头 ----------
+   参考截图的结构：INDEX / 编号 / 英文 → 超大描边数字 → 实心标题 → 细框描述 → INDEX 行式索引 */
+check('作品页有 INDEX 编号行（INDEX / 02 / WORKS）',
+  await evalJs(`(function(){
+    var el = document.querySelector('.page-head__code');
+    if (!el) return false;
+    var t = el.textContent.replace(/\\s+/g, '');
+    return t.indexOf('INDEX') >= 0 && t.indexOf('02') >= 0 && t.indexOf('WORKS') >= 0;
+  })()`),
+  await evalJs("document.querySelector('.page-head__code')?.textContent.replace(/\\s+/g,' ').trim()"));
+
+check('作品页有超大描边编号 02',
+  await evalJs(`(function(){
+    var el = document.querySelector('.page-head__num');
+    if (!el) return false;
+    var s = getComputedStyle(el);
+    return el.textContent.trim() === '02' && parseFloat(s.fontSize) > 80;
+  })()`),
+  await evalJs("(function(){ var e = document.querySelector('.page-head__num'); return e ? e.textContent.trim() + ' / ' + getComputedStyle(e).fontSize : '无'; })()"));
+
+check('作品页有细框描述块',
+  await evalJs("!!document.querySelector('.hero--page .page-note')"),
+  await evalJs("document.querySelector('.page-note')?.innerText.slice(0, 30)"));
+
+check('作品页的 INDEX 索引行数与区块数一致',
+  await evalJs(`(function(){
+    var rows = document.querySelectorAll('#page-index .page-index__row').length;
+    var heads = document.querySelectorAll('#main .section-head').length;
+    return rows > 0 && rows === heads;
+  })()`),
+  '索引 ' + await evalJs("document.querySelectorAll('#page-index .page-index__row').length") +
+  ' 行 / 区块 ' + await evalJs("document.querySelectorAll('#main .section-head').length") + ' 个');
+
+check('INDEX 索引行能跳到对应区块',
+  await evalJs(`(function(){
+    var a = document.querySelector('#page-index .page-index__row');
+    if (!a) return false;
+    var href = a.getAttribute('href') || '';
+    if (href.charAt(0) !== '#') return false;
+    return !!document.getElementById(href.slice(1));
+  })()`),
+  await evalJs("document.querySelector('#page-index .page-index__row')?.getAttribute('href')"));
 
 /* ============================================================
    3.9 作品详情页
@@ -1070,7 +1156,7 @@ check('三张卡片分别指向三个模块页',
   await evalJs("JSON.stringify([...document.querySelectorAll('.module-card')].map(a => a.getAttribute('href')))"));
 
 check('工具箱入口页导航高亮「工具箱」',
-  await evalJs("document.querySelector('.nav a.is-active')?.textContent.trim() === '工具箱'"));
+  await evalJs("document.querySelector('.nav a.is-active > span')?.textContent.trim() === '工具箱'"));
 
 check('工具箱入口页无横向溢出',
   await evalJs('document.documentElement.scrollWidth <= window.innerWidth + 1'));
