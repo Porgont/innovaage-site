@@ -1383,15 +1383,22 @@
     // 截图
     // 页面上只显示图片，不显示文字说明；说明只写进 alt 供屏幕阅读器与搜索引擎使用。
     var shots = $('#work-shots');
-    // 没有截图的页面（图都插在正文里了）把整个「截图」区块收起来
     var shotsSection = shots ? shots.closest('section') : null;
-    if (shotsSection && (!work.shots || !work.shots.length)) {
+
+    // 作品主页（SHOWCASE_HOME）里的作品一律不列截图 —— 图片都直接插在正文对应位置。
+    // 这条是硬规则，写在代码里，不靠数据里记得清空 shots。
+    var isSiteWork = SHOWCASE_HOME.some(function (it) { return it.id === work.id; });
+    var shotList = isSiteWork ? [] : (work.shots || []);
+
+    if (shotsSection && !shotList.length) {
       shotsSection.hidden = true;
+      // 顺手把 HTML 里那份静态兜底的截图清掉，免得 DOM 里留着别的作品的图
+      if (shots) shots.innerHTML = '';
     }
-    if (shots && work.shots && work.shots.length) {
+    if (shots && shotList.length) {
       // 截图可以带 group 标记，分组变了就插一条小标题（例如按 Java / 基岩版分）
       var lastGroup = null;
-      shots.innerHTML = work.shots.map(function (s, i) {
+      shots.innerHTML = shotList.map(function (s, i) {
         var head = '';
         if (s.group && s.group !== lastGroup) {
           lastGroup = s.group;
@@ -1431,7 +1438,7 @@
       }
     }
 
-    initLightbox(work.shots || []);
+    initLightbox(shotList);
   }
 
   /* ---------- 截图放大 ----------
