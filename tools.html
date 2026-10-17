@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>工具箱 | 创想时代开发组</title>
-<meta name="description" content="创想时代开发组工具箱：把图片压到 1000×4000 分辨率以内。纯浏览器本地处理，图片不上传服务器。">
-<meta name="keywords" content="图片压缩,1000x4000,分辨率,投稿图片处理,MC资源投稿,在线工具">
+<meta name="description" content="创想时代开发组工具箱：图片压缩、视频转投稿规格，以及组员开发的材质贴图对比工具 matoga。">
+<meta name="keywords" content="工具箱,图片压缩,视频转换,H.264,投稿规范,matoga,材质贴图对比">
 <link rel="canonical" href="https://innovaage.cn/tools.html">
 <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0e1013" media="(prefers-color-scheme: dark)">
@@ -13,7 +13,7 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="创想时代开发组">
 <meta property="og:title" content="工具箱 | 创想时代开发组">
-<meta property="og:description" content="把图片压到 1000×4000 分辨率以内，纯本地处理。">
+<meta property="og:description" content="创想时代开发组工具箱：图片压缩、视频转投稿规格，以及组员开发的材质贴图对比工具 matoga。">
 <meta property="og:url" content="https://innovaage.cn/tools.html">
 <meta property="og:image" content="https://innovaage.cn/assets/img/og-image.jpg">
 <meta property="og:image:width" content="1200">
@@ -108,254 +108,48 @@
   <section class="hero" style="padding:52px 0 34px">
     <div class="wrap">
       <p class="hero-badge"><span class="dot" aria-hidden="true"></span> 工具箱</p>
-      <h1 style="font-size:clamp(26px,4vw,38px)">投稿用的小工具</h1>
+      <h1 style="font-size:clamp(26px,4vw,38px)">投稿用的工具箱</h1>
       <p class="lead">
-        投稿时常要把图片压到平台规定的分辨率。这些工具全部在你的浏览器里跑，
-        <b>图片不会上传到任何服务器</b>，关掉页面就什么都不剩。
+        三个模块，各管一件事。图片和视频都在你的浏览器里处理，
+        <b>文件不上传任何服务器</b>，关掉页面就什么都不剩。
       </p>
     </div>
   </section>
 
   <section class="section section--tight">
     <div class="wrap">
+      <div class="module-grid">
 
-      <div class="section-head">
-        <span class="kicker">Tool 01</span>
-        <h2>图片压到指定分辨率以内</h2>
-        <p>默认上限 <b>宽 1000 × 高 4000</b>（竖长画布，不是 4000×1000）。等比缩放，不会变形。</p>
-      </div>
+        <a class="module-card module-card--img" href="tools-image.html">
+          <span class="module-tag">Tool 01</span>
+          <b class="module-name">图片处理</b>
+          <span class="module-desc">把图片压到指定分辨率以内，等比缩放不变形。投稿长图默认压到 1000×4000 以内。</span>
+          <span class="module-go">打开工具 →</span>
+        </a>
 
-      <div class="tool">
+        <a class="module-card module-card--video" href="tools-video.html">
+          <span class="module-tag">Tool 02</span>
+          <b class="module-name">视频处理</b>
+          <span class="module-desc">诊断时长／分辨率／编码，按投稿规范一键转换，也能自定义比例、分辨率与编码（H.264）。</span>
+          <span class="module-go">打开工具 →</span>
+        </a>
 
-        <!-- ---------- 左：选图与设置 ---------- -->
-        <div class="tool-col">
-          <div class="panel">
-            <h3 style="margin-top:0">1. 选择图片</h3>
-
-            <label class="dropzone" id="dropzone" for="file-input" tabindex="0">
-              <span class="dropzone-icon" aria-hidden="true">🖼️</span>
-              <b>点这里选图片，或把图片拖进来</b>
-              <span>支持 JPG / PNG / WebP，可以多选</span>
-              <input type="file" id="file-input" accept="image/*" multiple hidden>
-            </label>
-
-            <div class="file-list" id="file-list" hidden></div>
-          </div>
-
-          <div class="panel" style="margin-top:18px">
-            <h3 style="margin-top:0">2. 分辨率上限</h3>
-
-            <div class="preset-row">
-              <button class="chip is-active" type="button" data-preset="1000x4000">1000 × 4000</button>
-              <button class="chip" type="button" data-preset="4000x1000">4000 × 1000</button>
-              <button class="chip" type="button" data-preset="2048x2048">2048 × 2048</button>
-              <button class="chip" type="button" data-preset="1920x1080">1920 × 1080</button>
-              <button class="chip" type="button" data-preset="1000x1000">1000 × 1000</button>
-            </div>
-
-            <div class="size-row">
-              <div class="field">
-                <label for="max-w">最大宽度</label>
-                <input type="number" id="max-w" value="1000" min="16" max="20000" step="1">
-              </div>
-              <button class="swap-btn" type="button" id="swap-wh"
-                      title="对调宽高" aria-label="对调宽高">⇄</button>
-              <div class="field">
-                <label for="max-h">最大高度</label>
-                <input type="number" id="max-h" value="4000" min="16" max="20000" step="1">
-              </div>
-            </div>
-
-            <p class="note" id="fit-note">
-              图片会等比缩放到不超过这个范围，长边优先受限，不会拉伸变形。
-            </p>
-          </div>
-
-          <div class="panel" style="margin-top:18px">
-            <h3 style="margin-top:0">3. 输出格式</h3>
-
-            <div class="preset-row">
-              <button class="chip is-active" type="button" data-format="image/jpeg">JPG（体积小）</button>
-              <button class="chip" type="button" data-format="image/png">PNG（无损）</button>
-              <button class="chip" type="button" data-format="image/webp">WebP（最小）</button>
-            </div>
-
-            <div class="field" id="quality-field" style="margin-top:16px">
-              <label for="quality">JPG / WebP 画质：<b id="quality-value">92</b>
-                <span class="hint">数字越小体积越小</span>
-              </label>
-              <input type="range" id="quality" min="40" max="100" value="92" step="1">
-            </div>
-
-            <div class="btn-row" style="margin-top:20px">
-              <button class="btn" type="button" id="run-btn" disabled>开始处理</button>
-              <button class="btn btn--ghost" type="button" id="clear-btn" disabled>清空</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- ---------- 右：预览与下载 ---------- -->
-        <div class="tool-col">
-          <div class="panel" style="display:flex;flex-direction:column;min-height:320px">
-            <h3 style="margin-top:0">4. 结果</h3>
-
-            <div class="preview-empty" id="preview-empty">
-              <span aria-hidden="true">📐</span>
-              <p>选好图片点「开始处理」，这里会显示处理前后的对比。</p>
-            </div>
-
-            <div class="preview-wrap" id="preview-wrap" hidden>
-              <div class="preview-box">
-                <img id="preview-img" alt="处理后的预览">
-              </div>
-              <dl class="stat-list" id="stat-list"></dl>
-              <div class="btn-row">
-                <a class="btn" id="download-link" download>下载结果</a>
-                <button class="btn btn--ghost" type="button" id="download-all" hidden>打包下载全部</button>
-              </div>
-            </div>
-
-            <div class="form-status" id="tool-status" hidden role="status" aria-live="polite"></div>
-          </div>
-
-          <div class="callout" style="margin-top:18px">
-            <span class="icon" aria-hidden="true">🔒</span>
-            <div>
-              <b>隐私：</b>整个过程在你的浏览器里完成，图片不会上传，也不会有任何记录。
-              处理长图时页面可能短暂卡顿，属正常现象。
-            </div>
-          </div>
-
-          <div class="panel" style="margin-top:18px">
-            <h3 style="margin-top:0">使用提示</h3>
-            <ul style="color:var(--text-dim);font-size:14px;margin-bottom:0">
-              <li>只用等比缩小，<b>不会把小图放大</b>（放大只会更糊）。</li>
-              <li>如果图片本来就在范围内，会提示无需处理。</li>
-              <li>竖长图（如资源详情页长图）请保持默认的 1000 × 4000。</li>
-              <li>横图用 4000 × 1000，正方形图用 2048 × 2048，点上面的预设即可。</li>
-              <li>投稿要求看 <a href="join.html#panel-invest">代投与投稿</a> 页面的说明。</li>
-            </ul>
-          </div>
-        </div>
+        <a class="module-card module-card--ext" href="tools-matoga.html">
+          <span class="module-tag">Tool 03 · 组员作品</span>
+          <b class="module-name">matoga 材质贴图对比</b>
+          <span class="module-desc">芝世 开发的桌面应用：两个文件夹的材质贴图差异对比 + 3D PBR 实时预览。Windows / macOS / Linux。</span>
+          <span class="module-go">了解与下载 →</span>
+        </a>
 
       </div>
 
-      <!-- ============================================================
-           Tool 02：视频转投稿规格
-           ============================================================ -->
-      <div class="section-head" style="margin-top:64px">
-        <span class="kicker">Tool 02</span>
-        <h2>视频转成投稿规格</h2>
-        <p>
-          投稿要求：<b>时长 1 分 30 秒以内、编码 H.264、MP4 格式、画面 16:9</b>。
-          这个工具先诊断你的文件哪里不符合，再一键转成合格版本。
-        </p>
-      </div>
-
-      <div class="tool">
-
-        <!-- ---------- 左：选文件与设置 ---------- -->
-        <div class="tool-col">
-          <div class="panel">
-            <h3 style="margin-top:0">1. 选择视频</h3>
-
-            <label class="dropzone" id="v-dropzone" for="v-file-input" tabindex="0">
-              <span class="dropzone-icon" aria-hidden="true">🎬</span>
-              <b>点这里选视频，或把视频拖进来</b>
-              <span>建议先自己压到 200MB 以内，太大的文件浏览器处理会很慢</span>
-              <input type="file" id="v-file-input" accept="video/*" hidden>
-            </label>
-
-            <div class="file-list" id="v-file-list" hidden></div>
-          </div>
-
-          <div class="panel" style="margin-top:18px">
-            <h3 style="margin-top:0">2. 诊断结果</h3>
-            <dl class="stat-list" id="v-diag">
-              <div><dt>状态</dt><dd>等待选择文件…</dd></div>
-            </dl>
-          </div>
-
-          <div class="panel" style="margin-top:18px">
-            <h3 style="margin-top:0">3. 转换设置</h3>
-
-            <div class="field">
-              <label>画面处理方式 <span class="hint">画面不是 16:9 时怎么处理</span></label>
-              <div class="preset-row">
-                <button class="chip is-active" type="button" data-fit="pad">加黑边（画面完整）</button>
-                <button class="chip" type="button" data-fit="crop">裁切填满（无黑边）</button>
-              </div>
-            </div>
-
-            <div class="size-row" style="margin-top:18px">
-              <div class="field">
-                <label for="v-max-dur">最长时长（秒）</label>
-                <input type="number" id="v-max-dur" value="90" min="1" max="600" step="1">
-              </div>
-              <span style="text-align:center;color:var(--text-mute);font-size:13px">≤</span>
-              <div class="field">
-                <label for="v-max-mb">最大体积（MB）<span class="hint">0 = 不限</span></label>
-                <input type="number" id="v-max-mb" value="0" min="0" max="2000" step="1">
-              </div>
-            </div>
-
-            <p class="note" id="v-plan">选好文件后会告诉你具体要改什么。</p>
-
-            <div class="btn-row" style="margin-top:20px">
-              <button class="btn" type="button" id="v-run-btn" disabled>开始转换</button>
-              <button class="btn btn--ghost" type="button" id="v-clear-btn" disabled>清空</button>
-            </div>
-
-            <div class="progress" id="v-progress" hidden>
-              <div class="progress-bar"><i id="v-progress-fill" style="width:0%"></i></div>
-              <span id="v-progress-text">准备中…</span>
-            </div>
-          </div>
+      <div class="callout" style="margin-top:32px">
+        <span class="icon" aria-hidden="true">🛈</span>
+        <div>
+          前两个是网页工具，打开就能用；第三个是开发组成员做的桌面软件，需要下载安装。
+          有想加的工具可以到 <a href="join.html#panel-contact">联系我们</a> 提。
         </div>
-
-        <!-- ---------- 右：结果 ---------- -->
-        <div class="tool-col">
-          <div class="panel" style="display:flex;flex-direction:column;min-height:320px">
-            <h3 style="margin-top:0">4. 结果</h3>
-
-            <div class="preview-empty" id="v-preview-empty">
-              <span aria-hidden="true">🎞️</span>
-              <p>转换完成后这里会显示结果视频，并自动复检一遍是否符合投稿规格。</p>
-            </div>
-
-            <div class="preview-wrap" id="v-preview-wrap" hidden>
-              <div class="preview-box">
-                <video id="v-preview" controls playsinline style="max-width:100%;max-height:340px"></video>
-              </div>
-              <dl class="stat-list" id="v-result-stats"></dl>
-              <div class="btn-row">
-                <a class="btn" id="v-download" download>下载结果</a>
-              </div>
-            </div>
-
-            <div class="form-status" id="v-status" hidden role="status" aria-live="polite"></div>
-          </div>
-
-          <div class="callout" style="margin-top:18px">
-            <span class="icon" aria-hidden="true">⏱️</span>
-            <div>
-              <b>关于耗时：</b>转换是边播放边录制，耗时大致等于视频时长
-              （90 秒的视频约需 90 秒）。转换期间请保持页面在前台，不要切走。
-            </div>
-          </div>
-
-          <div class="callout" style="margin-top:14px">
-            <span class="icon" aria-hidden="true">ℹ️</span>
-            <div>
-              <b>已知限制：</b>编码检测基于 MP4 容器，只对 MP4 / MOV 类文件有效；
-              WebM、MKV 等会提示「不是 MP4 容器」。画面裁切与重编码会有画质损失，
-              能重录一遍最好还是重录。
-            </div>
-          </div>
-        </div>
-
       </div>
-
     </div>
   </section>
 
@@ -407,10 +201,6 @@
     </div>
   </div>
 </footer>
-
-<script src="assets/vendor/mp4box.all.min.js"></script>
 <script src="assets/js/site.js"></script>
-<script src="assets/js/toolbox.js"></script>
-<script src="assets/js/video-tool.js"></script>
 </body>
 </html>

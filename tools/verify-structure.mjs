@@ -8,7 +8,11 @@ import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = resolve(fileURLToPath(new URL('.', import.meta.url)), '..');
-const PAGES = ['index.html', 'about.html', 'works.html', 'work.html', 'tools.html', 'news.html', 'join.html'];
+const PAGES = [
+  'index.html', 'about.html', 'works.html', 'work.html',
+  'tools.html', 'tools-image.html', 'tools-video.html', 'tools-matoga.html',
+  'news.html', 'join.html'
+];
 
 const count = (s, sub) => s.split(sub).length - 1;
 
@@ -46,8 +50,32 @@ console.log('\n=== 各页新增区块 ===');
 const about = readFileSync(join(root, 'about.html'), 'utf8');
 // 精确匹配 class 值，别用前缀（"officer" 会同时命中 officer-role / officer-note）
 const officerCount = (about.match(/class="officer(?: officer--lead)?"/g) || []).length;
-if (officerCount === 7) good('关于我们：7 位高管都在');
-else bad('关于我们：高管数 ' + officerCount + '（应为 7）');
+const leadBlock = about.split('中央管理局')[0];
+// 核心管理局与「其他负责人」两个分区分别校验
+const coreStart = about.indexOf('核心管理局</h2>');
+const otherStart = about.indexOf('其他负责人</h2>');
+const corePart = coreStart >= 0 && otherStart > coreStart
+  ? about.slice(coreStart, otherStart)
+  : '';
+const otherPart = otherStart >= 0 ? about.slice(otherStart, otherStart + 1600) : '';
+
+const coreCards = (corePart.match(/class="officer(?: officer--lead)?"/g) || []).length;
+const otherCards = (otherPart.match(/class="officer(?: officer--lead)?"/g) || []).length;
+
+if (coreCards === 5) good('核心管理局：5 人在册（主席 + 4 位副主席/名誉主席）');
+else bad('核心管理局：' + coreCards + ' 人（应为 5）');
+
+if (!corePart.includes('Log_坤') && !corePart.includes('老赵')) {
+  good('核心管理局里没有 Log_坤 / 老赵');
+} else {
+  bad('核心管理局里仍包含 Log_坤 或 老赵');
+}
+
+if (otherCards === 2 && otherPart.includes('Log_坤') && otherPart.includes('老赵')) {
+  good('其他负责人：Log_坤 与 老赵 都在');
+} else {
+  bad('其他负责人分区不对（' + otherCards + ' 人）');
+}
 
 const joinHtml = readFileSync(join(root, 'join.html'), 'utf8');
 // 两个地方都有部门表：报名加入（新增）与审核条例（原有），各 5 个
@@ -63,16 +91,66 @@ const work = readFileSync(join(root, 'work.html'), 'utf8');
 if (work.includes('id="work-thanks"')) good('作品详情：鸣谢面板在');
 else bad('作品详情：缺 work-thanks');
 
-const tools = readFileSync(join(root, 'tools.html'), 'utf8');
-const toolChecks = [
-  ['视频工具卡片', 'id="v-run-btn"'],
+const hub = readFileSync(join(root, 'tools.html'), 'utf8');
+const img = readFileSync(join(root, 'tools-image.html'), 'utf8');
+const vid = readFileSync(join(root, 'tools-video.html'), 'utf8');
+const mat = readFileSync(join(root, 'tools-matoga.html'), 'utf8');
+
+// 入口页：三张模块卡片各自指向独立页面
+for (const [name, target] of [
+  ['图片处理', 'tools-image.html'],
+  ['视频处理', 'tools-video.html'],
+  ['matoga', 'tools-matoga.html']
+]) {
+  if (hub.includes('href="' + target + '"')) good('工具箱入口：' + name + ' 卡片指向 ' + target);
+  else bad('工具箱入口：缺 ' + name + ' 卡片');
+}
+
+// 图片模块：功能原样保留
+for (const [name, needle] of [
+  ['选图区', 'id="dropzone"'],
+  ['处理按钮', 'id="run-btn"'],
+  ['toolbox.js', 'toolbox.js']
+]) {
+  if (img.includes(needle)) good('图片模块：' + name + ' 在');
+  else bad('图片模块：缺 ' + name);
+}
+
+// 视频模块：新规格面板
+for (const [name, needle] of [
+  ['选视频区', 'id="v-dropzone"'],
+  ['处理按钮', 'id="v-run-btn"'],
   ['mp4box 引用', 'mp4box.all.min.js'],
   ['video-tool 脚本', 'video-tool.js'],
-  ['画面处理开关', 'data-fit="pad"']
-];
-for (const [name, needle] of toolChecks) {
-  if (tools.includes(needle)) good('工具箱：' + name + ' 在');
-  else bad('工具箱：缺 ' + name);
+  ['编码选择', 'id="v-codec"'],
+  ['输出宽', 'id="v-out-w"'],
+  ['输出高', 'id="v-out-h"'],
+  ['画面处理', 'data-fit="pad"']
+]) {
+  if (vid.includes(needle)) good('视频模块：' + name + ' 在');
+  else bad('视频模块：缺 ' + name);
+}
+for (const p of ['submit', 'p1080', 'p720', 'custom']) {
+  if (vid.includes('data-preset="' + p + '"')) good('视频模块：预设 ' + p + ' 在');
+  else bad('视频模块：缺预设 ' + p);
+}
+for (const r of ['source', '16:9', '9:16', '4:3', '1:1']) {
+  if (vid.includes('data-ratio="' + r + '"')) good('视频模块：比例 ' + r + ' 在');
+  else bad('视频模块：缺比例 ' + r);
+}
+
+// matoga 模块：署名与来源
+if (mat.includes('芝世')) good('matoga 模块：作者署名在');
+else bad('matoga 模块：缺作者署名');
+if (mat.includes('github.com/xiongmiaozai/matoga')) good('matoga 模块：来源链接在');
+else bad('matoga 模块：缺来源链接');
+if (mat.includes('MIT')) good('matoga 模块：许可证说明在');
+else bad('matoga 模块：缺许可证说明');
+
+// 每个模块页都要能回到工具箱
+for (const [name, html] of [['图片', img], ['视频', vid], ['matoga', mat]]) {
+  if (html.includes('href="tools.html"')) good(name + '模块：有回工具箱的入口');
+  else bad(name + '模块：没有回工具箱的入口');
 }
 
 console.log(fail === 0 ? '\n结构自检全部通过' : `\n结构自检失败 ${fail} 项`);

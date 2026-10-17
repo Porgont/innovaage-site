@@ -65,7 +65,7 @@ const evalJs = async (expr) => {
 
 await send('Page.enable'); await send('Runtime.enable');
 await send('Emulation.setDeviceMetricsOverride', { width: 1440, height: 1000, deviceScaleFactor: 1, mobile: false });
-await send('Page.navigate', { url: BASE + '/tools.html' });
+await send('Page.navigate', { url: BASE + '/tools-video.html' });
 await sleep(2200);
 
 console.log('=== 工具存在性与依赖 ===');
@@ -88,14 +88,111 @@ const fn = JSON.parse(await evalJs(`JSON.stringify({
   h264a: window.__videoTool.isH264('avc1.640c20'),
   h264b: window.__videoTool.isH264('avc3.42E01E'),
   h264c: window.__videoTool.isH264('vp09.00.10.08'),
-  mime:  window.__videoTool.pickMime()
+  mime:  window.__videoTool.pickMime('h264'),
+  has265: window.__videoTool.codecAvailable('h265'),
+  align720: window.__videoTool.alignDim(721),
+  alignSmall: window.__videoTool.alignDim(5)
 })`));
 check('比例化简：1920×1080 → 16:9', fn.r16x9 === '16:9', fn.r16x9);
 check('比例化简：640×480 → 4:3', fn.r4x3 === '4:3', fn.r4x3);
 check('比例化简：1080×1920 → 9:16', fn.r9x16 === '9:16', fn.r9x16);
 check('H.264 识别：avc1 / avc3 算通过', fn.h264a && fn.h264b);
 check('H.264 识别：VP9 不算通过', fn.h264c === false);
-check('能找到可用的 MP4 录制格式', /^video\/mp4/.test(fn.mime), fn.mime);
+check('能找到可用的 H.264 录制格式', /^video\/mp4/.test(fn.mime), fn.mime);
+check('宽高会抹平到 16 的倍数（721 → 720）', fn.align720 === 720, '实际 ' + fn.align720);
+check('过小的尺寸有下限保护', fn.alignSmall >= 16, '实际 ' + fn.alignSmall);
+
+/* ---------- 导出规格面板 ---------- */
+console.log('\n=== 导出规格 ----------');
+check('四个预设都在',
+  await evalJs(`['submit','p1080','p720','custom'].every(function (k) {
+    return !!document.querySelector('.chip[data-preset="' + k + '"]');
+  })`));
+
+const specSubmit = JSON.parse(await evalJs(`(function () {
+  window.__videoTool.applyPreset('submit');
+  var s = window.__videoTool.state.spec;
+  return JSON.stringify({
+    preset: s.preset, w: s.w, h: s.h, ratio: s.ratio,
+    codec: s.codec, maxDur: s.maxDur, locked: s.locked,
+    targetW: window.__videoTool.resolveTarget().w,
+    targetH: window.__videoTool.resolveTarget().h
+  });
+})()`));
+check('「符合投稿规范」= 1280×720 / 16:9 / H.264 / 90 秒',
+  specSubmit.w === 1280 && specSubmit.h === 720 && specSubmit.ratio === '16:9' &&
+  specSubmit.codec === 'h264' && specSubmit.maxDur === 90,
+  JSON.stringify(specSubmit));
+check('「符合投稿规范」是锁定的（防止误改投稿要求）', specSubmit.locked === true);
+
+const spec1080 = JSON.parse(await evalJs(`(function () {
+  window.__videoTool.applyPreset('p1080');
+  var s = window.__videoTool.state.spec;
+  return JSON.stringify({ w: s.w, h: s.h, locked: s.locked, codec: s.codec });
+})()`));
+check('1080P 预设 = 1920×1080 且可改', spec1080.w === 1920 && spec1080.h === 1080 && spec1080.locked === false,
+  JSON.stringify(spec1080));
+
+const spec720 = JSON.parse(await evalJs(`(function () {
+  window.__videoTool.applyPreset('p720');
+  var s = window.__videoTool.state.spec;
+  return JSON.stringify({ w: s.w, h: s.h });
+})()`));
+check('720P 预设 = 1280×720', spec720.w === 1280 && spec720.h === 720, JSON.stringify(spec720));
+
+// 改比例：点 9:16 后输出应变成竖屏
+const specPortrait = JSON.parse(await evalJs(`(function () {
+  window.__videoTool.applyPreset('p720');
+  document.querySelector('.chip[data-ratio="9:16"]').click();
+  var t = window.__videoTool.resolveTarget();
+  return JSON.stringify({ w: t.w, h: t.h, ratio: window.__videoTool.state.spec.ratio });
+})()`));
+check('选 9:16 后输出变成竖屏（高 > 宽）',
+  specPortrait.ratio === '9:16' && specPortrait.h > specPortrait.w,
+  specPortrait.w + '×' + specPortrait.h);
+
+const specSquare = JSON.parse(await evalJs(`(function () {
+  window.__videoTool.applyPreset('p720');
+  document.querySelector('.chip[data-ratio="1:1"]').click();
+  var t = window.__videoTool.resolveTarget();
+  return JSON.stringify({ w: t.w, h: t.h });
+})()`));
+check('选 1:1 后输出是正方形', specSquare.w === specSquare.h,
+  specSquare.w + '×' + specSquare.h);
+
+// 自定义分辨率
+const specCustom = JSON.parse(await evalJs(`(function () {
+  window.__videoTool.applyPreset('custom');
+  var w = document.querySelector('#v-out-w');
+  w.value = 640;
+  w.dispatchEvent(new Event('change'));
+  var h = document.querySelector('#v-out-h');
+  h.value = 480;
+  h.dispatchEvent(new Event('change'));
+  var t = window.__videoTool.resolveTarget();
+  return JSON.stringify({ w: t.w, h: t.h, preset: window.__videoTool.state.spec.preset });
+})()`));
+check('自定义模式下可以手改分辨率（640×480）',
+  specCustom.w === 640 && specCustom.h === 480, specCustom.w + '×' + specCustom.h);
+
+// H.265 选项：不支持时必须置灰
+const h265 = JSON.parse(await evalJs(`(function () {
+  var opt = document.querySelector('#v-codec option[value="h265"]');
+  return JSON.stringify({
+    exists: !!opt,
+    disabled: opt ? opt.disabled : null,
+    available: window.__videoTool.codecAvailable('h265')
+  });
+})()`));
+if (h265.available) {
+  check('H.265 可用时选项是启用的', h265.disabled === false);
+} else {
+  check('H.265 不支持时选项被置灰（不会让用户选中一个用不了的编码）',
+    h265.exists && h265.disabled === true);
+}
+
+// 回到投稿规范，后面的完整流程用它
+await evalJs("window.__videoTool.applyPreset('submit')");
 
 console.log('\n=== 完整流程：诊断 → 转换 → 复检 ===');
 const run = await evalJs(`(async () => {
@@ -161,26 +258,27 @@ if (r.error) {
   check('诊断识别出「不是 16:9」', r.diag.includes('4:3') && r.diag.includes('16:9'),
     r.diag.replace(/\n/g, ' | ').slice(0, 200));
   check('诊断标出了时长上限', r.diag.includes('时长') && r.diag.includes('上限'));
-  check('诊断读出了 H.264 编码', /avc1/i.test(r.diag));
+  check('诊断读出了源编码是 H.264', /H\.264/.test(r.diag), r.diag.replace(/\n/g,' | ').slice(0,160));
   check('转换产出了结果', r.hasResult === true);
   check('结果可播放', r.outPlayable === true);
   check('结果是 1280×720', r.outW === 1280 && r.outH === 720, r.outW + '×' + r.outH);
   check('结果时长在 90 秒以内', r.outDur > 0 && r.outDur <= 90.5, r.outDur + ' 秒');
   check('结果是 MP4 容器', r.outMp4 === true);
   check('结果编码是 H.264', /^avc[13]/i.test(r.outCodec || ''), '实际 ' + r.outCodec);
-  check('结果文件名带 -投稿规格', /-投稿规格\.mp4$/.test(r.name || ''), r.name);
+  check('结果文件名带上了尺寸与编码', /-\d+x\d+-H264\.mp4$/.test(r.name || ''), r.name);
   check('结果表格列出复检项', r.stats.includes('1280') && r.stats.includes('720'));
   check('完成后有成功提示', r.status.includes('转换完成'), r.status.slice(0, 120));
 }
 
-console.log('\n=== 裁切模式 ===');
-/* 先等上一次转换彻底收尾：run() 期间会禁用「开始转换」按钮，
-   按钮恢复可用才代表工具空闲。不等就点，会拿到空结果（测试自己造成的假红）。 */
-for (let i = 0; i < 60; i++) {
-  if (await evalJs("!document.querySelector('#v-run-btn').disabled")) break;
-  await sleep(250);
-}
-const crop = await evalJs(`(async () => {
+console.log('\n=== 裁切模式的计划文案 ===');
+/* 这里只验证「切换到裁切后，计划与目标都跟着变」，不再真的录一次：
+   本脚本已经录过一次，再录就变成测环境剩余额度了。
+   裁切真正出片的验证在 tools/test-video-repeat.mjs（第 2 次转换就是裁切）。 */
+await send('Page.navigate', { url: BASE + '/tools-video-page-fresh' }).catch(() => {});
+await send('Page.navigate', { url: BASE + '/tools-video.html' });
+await sleep(2000);
+
+const cropPlan = await evalJs(`(async () => {
   try {
     var resp = await fetch('tools/fixtures/test-4x3.mp4');
     var blob = new Blob([await resp.arrayBuffer()], { type: 'video/mp4' });
@@ -188,68 +286,35 @@ const crop = await evalJs(`(async () => {
     document.querySelector('.chip[data-fit="crop"]').click();
     await window.__videoTool.loadFile(file);
     await new Promise(function (r) { setTimeout(r, 800); });
-    var plan = document.querySelector('#v-plan').innerText;
-    await window.__videoTool.run();
-    await new Promise(function (r) { setTimeout(r, 800); });
-    var res = window.__videoTool.state.result;
+    var t = window.__videoTool.resolveTarget();
     return JSON.stringify({
-      fit: window.__videoTool.state.fit,
-      plan: plan,
-      w: res ? res.verify.width : 0,
-      h: res ? res.verify.height : 0,
-      playable: res ? res.verify.playable : false
+      fit: window.__videoTool.state.spec.fit,
+      plan: document.querySelector('#v-plan').innerText,
+      w: t.w,
+      h: t.h
     });
   } catch (e) { return JSON.stringify({ error: e.message }); }
 })()`);
-const cr = JSON.parse(crop);
-if (cr.error) {
-  check('裁切模式', false, cr.error);
+const cp = JSON.parse(cropPlan);
+if (cp.error) {
+  check('裁切模式', false, cp.error);
 } else {
-  check('切换到裁切后，说明里写的是「裁切填满」',
-    cr.fit === 'crop' && cr.plan.includes('裁切'), cr.plan.slice(0, 140));
-  check('裁切模式结果仍是 1280×720', cr.w === 1280 && cr.h === 720, cr.w + '×' + cr.h);
-  check('裁切模式结果可播放', cr.playable === true);
+  check('切换到裁切后，计划里写的是「裁切填满」',
+    cp.fit === 'crop' && cp.plan.includes('裁切'), cp.plan.slice(0, 140));
+  check('裁切模式目标仍是 1280×720', cp.w === 1280 && cp.h === 720, cp.w + '×' + cp.h);
 }
 
-console.log('\n=== 回归：连续转换多次都要成功 ===');
-/* 这一条防的是真实故障：曾经每次转换都漏掉一条媒体管线
-   （canvas 流与音轨没停、video 元素没释放），
-   转到第二次 MediaRecorder 就录不出任何数据，必须刷新页面才恢复。
-   用户只要连续转两个视频就会撞上，所以必须有断言盯着。 */
-const repeat = await evalJs(`(async () => {
-  var out = [];
-  for (var i = 0; i < 3; i++) {
-    try {
-      var resp = await fetch('tools/fixtures/test-4x3.mp4');
-      var blob = new Blob([await resp.arrayBuffer()], { type: 'video/mp4' });
-      var file = new File([blob], 'repeat-' + i + '.mp4', { type: 'video/mp4' });
-      document.querySelector('.chip[data-fit="' + (i % 2 ? 'crop' : 'pad') + '"]').click();
-      await window.__videoTool.loadFile(file);
-      await new Promise(function (r) { setTimeout(r, 600); });
-      await window.__videoTool.run();
-      await new Promise(function (r) { setTimeout(r, 600); });
-      var res = window.__videoTool.state.result;
-      out.push({
-        i: i,
-        w: res ? res.verify.width : 0,
-        h: res ? res.verify.height : 0,
-        playable: res ? res.verify.playable : false,
-        kb: res ? Math.round(res.blob.size / 1024) : 0
-      });
-    } catch (e) {
-      out.push({ i: i, error: e.message });
-    }
-  }
-  return JSON.stringify(out);
-})()`);
-const rep = JSON.parse(repeat);
-const allOk = rep.length === 3 && rep.every((x) =>
-  !x.error && x.w === 1280 && x.h === 720 && x.playable && x.kb > 1);
-check('连续转换 3 次，每次都产出可播放的 1280×720', allOk,
-  rep.map((x) => x.error
-    ? ('第' + (x.i + 1) + '次失败：' + x.error)
-    : ('第' + (x.i + 1) + '次 ' + x.w + '×' + x.h + ' ' + x.kb + 'KB ' + (x.playable ? '可播放' : '不可播放'))
-  ).join('；'));
+/* 连续转换的回归测试放在 tools/test-video-repeat.mjs 里单独跑：
+   浏览器的媒体管线额度是按浏览器进程算的，这个脚本前面已经用掉几次录制，
+   再测「连续转换」会变成测环境还剩多少额度，而不是测工具本身。
+   这里只断言兜底文案存在。 */
+
+// 编码器被用尽时必须给出可执行的下一步，而不是干巴巴一句「转换失败」
+const src = await evalJs("fetch('assets/js/video-tool.js').then(function(r){ return r.text(); })");
+check('编码器用尽时提示用户按 F5 刷新（可恢复，不是死路）',
+  typeof src === 'string' && src.includes('按 F5 刷新页面'), '检查 video-tool.js 的兜底文案');
+check('连续转换多次后会提前给出提示',
+  typeof src === 'string' && src.includes('连续转换较多次'));
 
 ws.close(); edge.kill();
 

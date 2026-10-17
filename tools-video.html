@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>视频处理 | 工具箱 | 创想时代开发组</title>
+<meta name="description" content="诊断视频时长、分辨率、比例与编码，按投稿规范一键转成 H.264 / MP4 / 16:9，也可自定义比例与分辨率。">
+<meta name="keywords" content="视频转换,H.264,MP4,16比9,投稿视频规格,改分辨率,改比例">
+<link rel="canonical" href="https://innovaage.cn/tools-video.html">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0e1013" media="(prefers-color-scheme: dark)">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="创想时代开发组">
+<meta property="og:title" content="视频处理 | 工具箱 | 创想时代开发组">
+<meta property="og:description" content="诊断视频时长、分辨率、比例与编码，按投稿规范一键转成 H.264 / MP4 / 16:9，也可自定义比例与分辨率。">
+<meta property="og:url" content="https://innovaage.cn/tools-video.html">
+<meta property="og:image" content="https://innovaage.cn/assets/img/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://innovaage.cn/assets/img/og-image.jpg">
+
+<link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
+<link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+<!-- 主题：在页面渲染前决定用哪套，避免刷新时闪一下 -->
+<script>
+(function () {
+  try {
+    var t = localStorage.getItem('ia-theme');
+    if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+  } catch (e) {}
+})();
+</script>
+<link rel="stylesheet" href="assets/css/theme.css">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body data-page="tools">
+<a class="skip-link" href="#main">跳到主要内容</a>
+
+<header class="site-header">
+  <div class="wrap bar">
+    <a class="brand" href="index.html">
+      <img class="brand-mark" src="assets/img/logo-mark.png" alt="" width="112" height="128" aria-hidden="true">
+      <span class="brand-text">
+        <strong>创想时代开发组</strong>
+        <span>Innova Age Development Team</span>
+      </span>
+    </a>
+
+    <nav class="nav" aria-label="主导航">
+      <a href="index.html" data-nav="home">首页</a>
+      <a href="about.html" data-nav="about">关于我们</a>
+      <a href="works.html" data-nav="works">作品</a>
+      <a href="news.html"  data-nav="news">公告</a>
+      <a href="tools.html" data-nav="tools">工具箱</a>
+      <a href="join.html"  data-nav="join">加入我们</a>
+      <a href="join.html#panel-contact" data-nav="contact">联系我们</a>
+    </nav>
+
+    <button class="theme-toggle" id="theme-toggle" type="button"
+            aria-label="切换深浅主题" title="切换深浅主题">
+      <span class="ico" data-theme-icon aria-hidden="true">◐</span>
+      <span data-theme-label>主题</span>
+    </button>
+
+    <a class="btn btn--sm header-cta" href="join.html#panel-form">加入我们</a>
+  </div>
+</header>
+
+<!-- mobile-drawer:start -->
+<!-- 手机端：汉堡按钮 + 可收起侧栏。纯 CSS（隐藏 checkbox + label），零 JS。
+     位置很关键：必须放在页眉元素之后。
+     页眉带 backdrop-filter，它会成为 position:fixed 子元素的包含块，
+     放进去抽屉就铺不满屏幕了。 -->
+<div class="mnav">
+  <input type="checkbox" id="mnav-toggle" class="mnav-toggle" aria-label="展开或收起导航菜单">
+
+  <label class="mnav-btn" for="mnav-toggle" aria-label="打开导航菜单">
+    <span class="mnav-bars" aria-hidden="true"><i></i><i></i><i></i></span>
+    <span class="mnav-label">菜单</span>
+  </label>
+
+  <label class="mnav-overlay" for="mnav-toggle" aria-label="关闭导航菜单"></label>
+
+  <div class="mnav-drawer">
+    <div class="mnav-head">
+      <span class="mnav-title">站内导航</span>
+      <label class="mnav-close" for="mnav-toggle" aria-label="关闭导航菜单">×</label>
+    </div>
+    <nav class="mnav-links" aria-label="手机端导航">
+      <a href="index.html" data-nav="home">首页</a>
+      <a href="about.html" data-nav="about">关于我们</a>
+      <a href="works.html" data-nav="works">作品</a>
+      <a href="tools.html" data-nav="tools">工具箱</a>
+      <a href="news.html" data-nav="news">公告</a>
+      <a href="join.html" data-nav="join">加入我们</a>
+      <a href="join.html#panel-contact" data-nav="contact">联系我们</a>
+    </nav>
+    <a class="btn btn--sm mnav-cta" href="join.html#panel-form">加入我们</a>
+  </div>
+</div>
+<!-- mobile-drawer:end -->
+
+<main id="main">
+
+  <section class="hero" style="padding:52px 0 30px">
+    <div class="wrap">
+      <p class="crumb"><a href="tools.html">工具箱</a> / 视频处理</p>
+      <h1 style="font-size:clamp(24px,3.6vw,34px)">视频诊断与转换</h1>
+      <p class="lead">
+        投稿要求：<b>时长 1 分 30 秒以内、编码 H.264、MP4 格式、画面 16:9</b>。
+        选「符合投稿规范」一键转成合格版本；也可以自定义比例、分辨率与编码，当通用转换器用。
+      </p>
+    </div>
+  </section>
+
+  <section class="section section--tight">
+    <div class="wrap">
+      <div class="tool">
+
+        <!-- ---------- 左：选文件与设置 ---------- -->
+        <div class="tool-col">
+          <div class="panel">
+            <h3 style="margin-top:0">1. 选择视频</h3>
+
+            <label class="dropzone" id="v-dropzone" for="v-file-input" tabindex="0">
+              <span class="dropzone-icon" aria-hidden="true">🎬</span>
+              <b>点这里选视频，或把视频拖进来</b>
+              <span>建议先自己压到 200MB 以内，太大的文件浏览器处理会很慢</span>
+              <input type="file" id="v-file-input" accept="video/*" hidden>
+            </label>
+
+            <div class="file-list" id="v-file-list" hidden></div>
+          </div>
+
+          <div class="panel" style="margin-top:18px">
+            <h3 style="margin-top:0">2. 导出规格</h3>
+
+            <div class="field">
+              <label>预设</label>
+              <div class="preset-row">
+                <button class="chip is-active" type="button" data-preset="submit">符合投稿规范</button>
+                <button class="chip" type="button" data-preset="p1080">1080P</button>
+                <button class="chip" type="button" data-preset="p720">720P</button>
+                <button class="chip" type="button" data-preset="custom">自定义</button>
+              </div>
+            </div>
+
+            <p class="note" id="v-lock-note">
+              「符合投稿规范」= 1280×720 · 16:9 · H.264 · MP4 · 最长 90 秒。
+              这一档的数值是投稿要求，已锁定；需要别的规格请换预设或选「自定义」。
+            </p>
+
+            <div class="field" style="margin-top:18px">
+              <label>画面比例</label>
+              <div class="preset-row">
+                <button class="chip" type="button" data-ratio="source">原样</button>
+                <button class="chip is-active" type="button" data-ratio="16:9">16:9</button>
+                <button class="chip" type="button" data-ratio="9:16">9:16</button>
+                <button class="chip" type="button" data-ratio="4:3">4:3</button>
+                <button class="chip" type="button" data-ratio="1:1">1:1</button>
+              </div>
+            </div>
+
+            <div class="size-row" style="margin-top:16px">
+              <div class="field">
+                <label for="v-out-w">宽（像素）</label>
+                <input type="number" id="v-out-w" value="1280" min="16" max="3840" step="16">
+              </div>
+              <span style="text-align:center;color:var(--text-mute);font-size:13px">×</span>
+              <div class="field">
+                <label for="v-out-h">高（像素）</label>
+                <input type="number" id="v-out-h" value="720" min="16" max="3840" step="16">
+              </div>
+            </div>
+
+            <div class="field" style="margin-top:16px">
+              <label>画面不是目标比例时 <span class="hint">源视频和输出比例不一样怎么处理</span></label>
+              <div class="preset-row">
+                <button class="chip is-active" type="button" data-fit="pad">加黑边（画面完整）</button>
+                <button class="chip" type="button" data-fit="crop">裁切填满（无黑边）</button>
+              </div>
+            </div>
+
+            <div class="size-row" style="margin-top:16px">
+              <div class="field">
+                <label for="v-codec">编码</label>
+                <select id="v-codec">
+                  <option value="h264">H.264 (AVC)</option>
+                  <option value="h265">H.265 (HEVC)</option>
+                </select>
+              </div>
+              <span style="text-align:center;color:var(--text-mute);font-size:13px">/</span>
+              <div class="field">
+                <label for="v-max-dur">最长时长（秒）</label>
+                <input type="number" id="v-max-dur" value="90" min="1" max="600" step="1">
+              </div>
+            </div>
+
+            <div class="field" style="margin-top:16px">
+              <label for="v-max-mb">最大体积（MB）<span class="hint">0 = 不限，仅用于检查</span></label>
+              <input type="number" id="v-max-mb" value="0" min="0" max="2000" step="1">
+            </div>
+
+            <p class="note" id="v-h265-note" hidden>
+              ⚠ 你的浏览器不支持 H.265 编码，这一项已置灰。想看 H.265 效果可用系统自带的
+              视频工具或 ffmpeg 再转一次（投稿只要求 H.264，通常不需要 H.265）。
+            </p>
+
+            <p class="note" id="v-spec-summary" style="font-family:var(--mono)"></p>
+
+            <div class="btn-row" style="margin-top:20px">
+              <button class="btn" type="button" id="v-run-btn" disabled>开始转换</button>
+              <button class="btn btn--ghost" type="button" id="v-clear-btn" disabled>清空</button>
+            </div>
+
+            <div class="progress" id="v-progress" hidden>
+              <div class="progress-bar"><i id="v-progress-fill" style="width:0%"></i></div>
+              <span id="v-progress-text">准备中…</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ---------- 右：诊断与结果 ---------- -->
+        <div class="tool-col">
+          <div class="panel">
+            <h3 style="margin-top:0">3. 诊断</h3>
+            <dl class="stat-list" id="v-diag">
+              <div><dt>状态</dt><dd>等待选择文件…</dd></div>
+            </dl>
+            <p class="note" id="v-plan">选好文件后会告诉你具体要改什么。</p>
+          </div>
+
+          <div class="panel" style="margin-top:18px;display:flex;flex-direction:column;min-height:280px">
+            <h3 style="margin-top:0">4. 结果</h3>
+
+            <div class="preview-empty" id="v-preview-empty">
+              <span aria-hidden="true">🎞️</span>
+              <p>转换完成后这里会显示结果视频，并自动复检一遍是否符合目标规格。</p>
+            </div>
+
+            <div class="preview-wrap" id="v-preview-wrap" hidden>
+              <div class="preview-box">
+                <video id="v-preview" controls playsinline style="max-width:100%;max-height:340px"></video>
+              </div>
+              <dl class="stat-list" id="v-result-stats"></dl>
+              <div class="btn-row">
+                <a class="btn" id="v-download" download>下载结果</a>
+              </div>
+            </div>
+
+            <div class="form-status" id="v-status" hidden role="status" aria-live="polite"></div>
+          </div>
+
+          <div class="callout" style="margin-top:18px">
+            <span class="icon" aria-hidden="true">⏱️</span>
+            <div>
+              <b>关于耗时：</b>转换是边播放边录制，耗时大致等于视频时长
+              （90 秒的视频约需 90 秒）。转换期间请保持页面在前台，不要切走。
+            </div>
+          </div>
+
+          <div class="callout" style="margin-top:14px">
+            <span class="icon" aria-hidden="true">ℹ️</span>
+            <div>
+              <b>已知限制：</b>编码检测基于 MP4 容器，只对 MP4 / MOV 类文件有效；
+              WebM、MKV 等会提示「不是 MP4 容器」，转换时重新编码。重编码会有画质损失。
+              H.265 能否输出取决于浏览器与显卡，不支持时会自动置灰。
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="btn-row" style="margin-top:36px">
+        <a class="btn btn--ghost btn--sm" href="tools.html">← 回工具箱</a>
+        <a class="btn btn--ghost btn--sm" href="tools-image.html">← 图片处理</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <h4>创想时代开发组</h4>
+        <p style="margin:0">
+          Innova Age Development Team<br>
+          专注 Minecraft 基岩版（MCBE）资源创作。<br>
+          成立于 2016 年 3 月 10 日。
+        </p>
+      </div>
+
+      <div>
+        <h4>站内导航</h4>
+        <ul>
+          <li><a href="index.html">首页</a></li>
+          <li><a href="about.html">关于我们</a></li>
+          <li><a href="works.html">作品展示</a></li>
+          <li><a href="news.html">公告</a></li>
+          <li><a href="tools.html">工具箱</a></li>
+          <li><a href="join.html#panel-form">加入我们</a></li>
+          <li><a href="join.html#panel-contact">联系我们</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4>联系方式</h4>
+        <ul>
+                    <li>对外交流群：<span data-fill="qqPublic">—</span></li>
+          <li>对外审核群：<span data-fill="qqAudit">—</span></li>
+          <li>开发理事会：<span data-fill="qqCouncil">—</span></li>
+          <li>网易我的世界：<span data-fill="neteaseMc">—</span></li>
+          <li>网易大神：<span data-fill="neteaseHd">—</span></li>
+          <li>哔哩哔哩：<a href="#" data-fill-href="bilibili" target="_blank" rel="noopener" data-fill="bilibiliName">—</a></li>
+          <li>抖音：<span data-fill="douyin">—</span></li>
+          <li>GitHub：<a href="#" data-fill-href="siteRepo" target="_blank" rel="noopener">本网站源码</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>© <span data-year>2026</span> 创想时代开发组 · Innova Age Development Team</span>
+      <span>本站由 GitHub Pages 托管 · <a href="https://innovaage.cn">innovaage.cn</a></span>
+    </div>
+  </div>
+</footer>
+<script src="assets/js/site.js"></script>
+<script src="assets/vendor/mp4box.all.min.js"></script>
+<script src="assets/js/video-tool.js"></script>
+</body>
+</html>

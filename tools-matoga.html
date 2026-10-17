@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>matoga 材质贴图对比 | 工具箱 | 创想时代开发组</title>
+<meta name="description" content="matoga：基于 Electron + Three.js 的材质贴图对比工具，支持双文件夹差异比对与 3D PBR 实时预览。作者芝世。">
+<meta name="keywords" content="matoga,材质贴图对比,法线贴图,PBR,Three.js,Electron">
+<link rel="canonical" href="https://innovaage.cn/tools-matoga.html">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0e1013" media="(prefers-color-scheme: dark)">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="创想时代开发组">
+<meta property="og:title" content="matoga 材质贴图对比 | 工具箱 | 创想时代开发组">
+<meta property="og:description" content="matoga：基于 Electron + Three.js 的材质贴图对比工具，支持双文件夹差异比对与 3D PBR 实时预览。作者芝世。">
+<meta property="og:url" content="https://innovaage.cn/tools-matoga.html">
+<meta property="og:image" content="https://innovaage.cn/assets/img/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://innovaage.cn/assets/img/og-image.jpg">
+
+<link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
+<link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+<!-- 主题：在页面渲染前决定用哪套，避免刷新时闪一下 -->
+<script>
+(function () {
+  try {
+    var t = localStorage.getItem('ia-theme');
+    if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+  } catch (e) {}
+})();
+</script>
+<link rel="stylesheet" href="assets/css/theme.css">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body data-page="tools">
+<a class="skip-link" href="#main">跳到主要内容</a>
+
+<header class="site-header">
+  <div class="wrap bar">
+    <a class="brand" href="index.html">
+      <img class="brand-mark" src="assets/img/logo-mark.png" alt="" width="112" height="128" aria-hidden="true">
+      <span class="brand-text">
+        <strong>创想时代开发组</strong>
+        <span>Innova Age Development Team</span>
+      </span>
+    </a>
+
+    <nav class="nav" aria-label="主导航">
+      <a href="index.html" data-nav="home">首页</a>
+      <a href="about.html" data-nav="about">关于我们</a>
+      <a href="works.html" data-nav="works">作品</a>
+      <a href="news.html"  data-nav="news">公告</a>
+      <a href="tools.html" data-nav="tools">工具箱</a>
+      <a href="join.html"  data-nav="join">加入我们</a>
+      <a href="join.html#panel-contact" data-nav="contact">联系我们</a>
+    </nav>
+
+    <button class="theme-toggle" id="theme-toggle" type="button"
+            aria-label="切换深浅主题" title="切换深浅主题">
+      <span class="ico" data-theme-icon aria-hidden="true">◐</span>
+      <span data-theme-label>主题</span>
+    </button>
+
+    <a class="btn btn--sm header-cta" href="join.html#panel-form">加入我们</a>
+  </div>
+</header>
+
+<!-- mobile-drawer:start -->
+<!-- 手机端：汉堡按钮 + 可收起侧栏。纯 CSS（隐藏 checkbox + label），零 JS。
+     位置很关键：必须放在页眉元素之后。
+     页眉带 backdrop-filter，它会成为 position:fixed 子元素的包含块，
+     放进去抽屉就铺不满屏幕了。 -->
+<div class="mnav">
+  <input type="checkbox" id="mnav-toggle" class="mnav-toggle" aria-label="展开或收起导航菜单">
+
+  <label class="mnav-btn" for="mnav-toggle" aria-label="打开导航菜单">
+    <span class="mnav-bars" aria-hidden="true"><i></i><i></i><i></i></span>
+    <span class="mnav-label">菜单</span>
+  </label>
+
+  <label class="mnav-overlay" for="mnav-toggle" aria-label="关闭导航菜单"></label>
+
+  <div class="mnav-drawer">
+    <div class="mnav-head">
+      <span class="mnav-title">站内导航</span>
+      <label class="mnav-close" for="mnav-toggle" aria-label="关闭导航菜单">×</label>
+    </div>
+    <nav class="mnav-links" aria-label="手机端导航">
+      <a href="index.html" data-nav="home">首页</a>
+      <a href="about.html" data-nav="about">关于我们</a>
+      <a href="works.html" data-nav="works">作品</a>
+      <a href="tools.html" data-nav="tools">工具箱</a>
+      <a href="news.html" data-nav="news">公告</a>
+      <a href="join.html" data-nav="join">加入我们</a>
+      <a href="join.html#panel-contact" data-nav="contact">联系我们</a>
+    </nav>
+    <a class="btn btn--sm mnav-cta" href="join.html#panel-form">加入我们</a>
+  </div>
+</div>
+<!-- mobile-drawer:end -->
+
+<main id="main">
+
+  <section class="hero" style="padding:52px 0 30px">
+    <div class="wrap">
+      <p class="crumb"><a href="tools.html">工具箱</a> / matoga</p>
+      <p class="hero-badge"><span class="dot" aria-hidden="true"></span> 开发组成员作品</p>
+      <h1 style="font-size:clamp(24px,3.6vw,34px)">matoga · 材质贴图对比工具</h1>
+      <p class="lead">
+        一个基于 Electron + Three.js 的桌面应用，用于对比两个文件夹中的材质贴图内容，
+        并提供 3D 实时预览。<b>作者：芝世</b>。
+      </p>
+      <div class="btn-row">
+        <a class="btn" href="https://github.com/xiongmiaozai/matoga" target="_blank" rel="noopener">GitHub 仓库</a>
+        <a class="btn btn--ghost" href="https://xiongmiaozai.github.io/matoga" target="_blank" rel="noopener">项目主页</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 界面预览 ============ -->
+  <section class="section section--tight" style="padding-top:0">
+    <div class="wrap">
+      <figure class="shot-figure" style="margin:0">
+        <img src="assets/img/matoga-ui.jpg" width="1600" height="900" decoding="async"
+             alt="matoga 界面：左侧是左右两个文件夹与操作面板，中间是对比结果列表，右侧是 3D 材质预览">
+        <figcaption>
+          matoga v1.0.1 的实际界面：左边选两个文件夹，中间看差异列表，右边实时看 3D 材质效果。
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="section section--tight">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker">What it does</span>
+        <h2>它能做什么</h2>
+        <p>做材质包、光影、皮肤时，最麻烦的是「两边到底哪里不一样」。这个工具就是为了这个。</p>
+      </div>
+
+      <div class="tool-feature-grid">
+        <div class="tool-feature">
+          <b>文件夹对比</b>
+          <p>选左右两个文件夹，按名称对比内容，支持递归子目录与 MD5 哈希校验。</p>
+          <ul>
+            <li>五种状态分类：一致 / 内容不同 / 部分缺失 / 右侧缺失 / 右侧多余</li>
+            <li>忽略规则（系统文件 + 自定义通配符）</li>
+            <li>搜索、状态过滤、多字段排序</li>
+          </ul>
+        </div>
+
+        <div class="tool-feature">
+          <b>材质贴图识别</b>
+          <p>按后缀自动分组，认得出主贴图与配套通道图。</p>
+          <ul>
+            <li><code>_n</code> → 法线贴图</li>
+            <li><code>_s</code> → 高光贴图（LabPBR：R 粗糙度 / G 金属度 / B 自发光 / A 掩膜）</li>
+          </ul>
+        </div>
+
+        <div class="tool-feature">
+          <b>3D 材质预览</b>
+          <p>用 Three.js 实时渲染，改参数立刻看到效果。</p>
+          <ul>
+            <li>几何体：球体、立方体、平面、圆环、圆柱、胶囊</li>
+            <li>PBR 参数：金属度、粗糙度、法线强度、自发光</li>
+            <li>视差遮挡映射（POM），可从法线 alpha 通道取高度图</li>
+            <li>五种光照预设 + HDR 环境贴图（.hdr / .exr）</li>
+            <li>透明度模式：cutout / blend / glass</li>
+          </ul>
+        </div>
+
+        <div class="tool-feature">
+          <b>顺手处理文件</b>
+          <p>发现差异后直接在工具里处理，不用来回切窗口。</p>
+          <ul>
+            <li>复制 / 备份 / 删除、批量同步到左或右侧</li>
+            <li>撤销操作、在系统文件管理器中打开</li>
+            <li>对比结果导出为 HTML</li>
+            <li>深色 / 浅色主题，窗口配置持久化</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tight">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker">Get it</span>
+        <h2>下载与安装</h2>
+        <p>需要先装 Node.js，然后在项目目录里跑两条命令。</p>
+      </div>
+
+      <div class="tool">
+        <div class="tool-col">
+          <div class="panel">
+            <h3 style="margin-top:0">方式一：从源码运行</h3>
+            <pre class="code-block"><code>git clone https://github.com/xiongmiaozai/matoga.git
+cd matoga
+npm install
+npm start</code></pre>
+            <p class="note">开发模式（自动打开 DevTools）：<code>npm run dev</code></p>
+          </div>
+        </div>
+
+        <div class="tool-col">
+          <div class="panel">
+            <h3 style="margin-top:0">方式二：直接用打包版</h3>
+            <p style="color:var(--text-dim);font-size:14.5px">
+              项目仓库的 <code>releases</code> 目录里放了三个平台的压缩包（约 13 MB）：
+            </p>
+            <ul style="color:var(--text-dim);font-size:14px">
+              <li><a href="https://github.com/xiongmiaozai/matoga/tree/main/releases" target="_blank" rel="noopener">打开 releases 目录</a></li>
+              <li>Windows / macOS / Linux 各一个 zip</li>
+            </ul>
+            <p class="note">
+              zip 里是源码而不是安装包，解开后同样需要 <code>npm install</code>。
+              想省事就用方式一。
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout" style="margin-top:24px">
+        <span class="icon" aria-hidden="true">📄</span>
+        <div>
+          <b>项目信息：</b>技术栈 Electron 31 + Three.js 0.186 + 原生 JavaScript（无构建工具）。
+          采用 MIT License。按作者要求，使用本项目时需保留并标明
+          <b>作者：芝世（xiongmiaozai）</b> 与
+          <a href="https://github.com/xiongmiaozai/matoga" target="_blank" rel="noopener">来源地址</a>。
+        </div>
+      </div>
+
+      <div class="btn-row" style="margin-top:32px">
+        <a class="btn btn--ghost btn--sm" href="tools.html">← 回工具箱</a>
+        <a class="btn btn--ghost btn--sm" href="join.html#panel-contact">反馈问题</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <h4>创想时代开发组</h4>
+        <p style="margin:0">
+          Innova Age Development Team<br>
+          专注 Minecraft 基岩版（MCBE）资源创作。<br>
+          成立于 2016 年 3 月 10 日。
+        </p>
+      </div>
+
+      <div>
+        <h4>站内导航</h4>
+        <ul>
+          <li><a href="index.html">首页</a></li>
+          <li><a href="about.html">关于我们</a></li>
+          <li><a href="works.html">作品展示</a></li>
+          <li><a href="news.html">公告</a></li>
+          <li><a href="tools.html">工具箱</a></li>
+          <li><a href="join.html#panel-form">加入我们</a></li>
+          <li><a href="join.html#panel-contact">联系我们</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4>联系方式</h4>
+        <ul>
+                    <li>对外交流群：<span data-fill="qqPublic">—</span></li>
+          <li>对外审核群：<span data-fill="qqAudit">—</span></li>
+          <li>开发理事会：<span data-fill="qqCouncil">—</span></li>
+          <li>网易我的世界：<span data-fill="neteaseMc">—</span></li>
+          <li>网易大神：<span data-fill="neteaseHd">—</span></li>
+          <li>哔哩哔哩：<a href="#" data-fill-href="bilibili" target="_blank" rel="noopener" data-fill="bilibiliName">—</a></li>
+          <li>抖音：<span data-fill="douyin">—</span></li>
+          <li>GitHub：<a href="#" data-fill-href="siteRepo" target="_blank" rel="noopener">本网站源码</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>© <span data-year>2026</span> 创想时代开发组 · Innova Age Development Team</span>
+      <span>本站由 GitHub Pages 托管 · <a href="https://innovaage.cn">innovaage.cn</a></span>
+    </div>
+  </div>
+</footer>
+<script src="assets/js/site.js"></script>
+</body>
+</html>

@@ -7,6 +7,12 @@
 /* ---------- 基础 ---------- */
 *, *::before, *::after { box-sizing: border-box; }
 
+/* hidden 属性必须真的生效。
+   有些组件设了 display: flex / grid，会盖掉浏览器默认的
+   [hidden] { display: none }，导致「本该隐藏」的区块照样显示
+   （例如视频工具还没转换时，结果区就露出一个空播放器）。 */
+[hidden] { display: none !important; }
+
 html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
@@ -190,33 +196,56 @@ code {
 
 .nav {
   display: flex;
-  gap: 2px;
+  align-items: center;
+  gap: 0;
   margin-left: auto;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 }
 
+/* 导航项：平时只有文字，不做底色块，避免右上角看起来一堆按钮 */
 .nav a {
   position: relative;
-  padding: 8px 13px;
+  padding: 9px 13px;
   color: var(--text-dim);
-  font-size: 14px;
+  font-size: 13.5px;
+  font-weight: 500;
+  letter-spacing: .02em;
   border: 0;
-  border-radius: var(--radius);
+  border-radius: 0;
   white-space: nowrap;
+  transition: color .15s ease;
+}
+
+/* 悬停：文字加深 + 一条细灰线预告，不放底色块 */
+.nav a::before {
+  content: "";
+  position: absolute;
+  left: 13px;
+  right: 13px;
+  bottom: 2px;
+  height: 2px;
+  background: var(--line-strong);
+  opacity: 0;
+  transition: opacity .15s ease;
 }
 
 .nav a:hover {
   color: var(--text);
-  background: var(--bg-2);
+  background: transparent;
   border-bottom: 0;
 }
 
-/* 当前页：黑字 + 底部黄条，不用整块底色 */
+.nav a:hover::before { opacity: 1; }
+
+/* 当前页：黑字 + 底部黄条 */
 .nav a.is-active {
   color: var(--text);
   font-weight: 700;
   background: transparent;
 }
+
+.nav a.is-active::before { opacity: 0; }
+
 .nav a.is-active::after {
   content: "";
   position: absolute;
@@ -227,19 +256,23 @@ code {
   background: var(--gold);
 }
 
-.header-cta { flex-shrink: 0; }
+/* 导航与右侧控件之间加一条竖细线，分区更清楚 */
+.nav + .theme-toggle { margin-left: 14px; }
 
-/* ---------- 主题切换按钮 ---------- */
+.header-cta { flex-shrink: 0; margin-left: 10px; }
+
+/* ---------- 主题切换按钮 ----------
+   收成方形图标按钮，右上角只留一个小色块，不抢视线。 */
 .theme-toggle {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
+  justify-content: center;
+  gap: 0;
   flex-shrink: 0;
-  padding: 7px 12px;
+  width: 36px;
+  height: 36px;
+  padding: 0;
   font-family: var(--mono);
-  font-size: 11px;
-  letter-spacing: .12em;
-  text-transform: uppercase;
   color: var(--text-dim);
   background: transparent;
   border: 1px solid var(--line-2);
@@ -255,10 +288,14 @@ code {
 }
 
 .theme-toggle .ico {
-  font-size: 13px;
+  font-size: 15px;
   line-height: 1;
   letter-spacing: 0;
 }
+
+/* 桌面端不显示「主题」二字，靠 title 与 aria-label 说明；
+   手机侧栏里另有完整文案 */
+.theme-toggle [data-theme-label] { display: none; }
 
 /* ---------- 按钮 ---------- */
 .btn {
@@ -1261,8 +1298,10 @@ input[type="range"]::-webkit-slider-thumb {
 
 /* ---------- 正文里的超链接 ----------
    要让人一眼看出可以点：加下划线 + 一点底色，悬停时底色变黄、
-   后面跟一个 ↗ 表示会跳走。 */
-.wrap a:not(.btn):not(.brand):not(.work-more):not(.skip-link),
+   外链后面跟一个 ↗ 表示会跳走。
+   注意必须把导航（.nav / .mnav-links）排除掉 ——
+   导航本来就有自己的一套样式，套上这块会变成一排黄杠，很难看。 */
+.wrap a:not(.btn):not(.brand):not(.work-more):not(.skip-link):not(.module-card):not(.nav a):not(.mnav-links a):not(.footer-grid a),
 .callout a,
 .notice-body a,
 .stat-list a {
@@ -1279,7 +1318,31 @@ input[type="range"]::-webkit-slider-thumb {
   transition: background-color .15s ease;
 }
 
-.wrap a:not(.btn):not(.brand):not(.work-more):not(.skip-link):hover,
+/* 导航与模块卡片保持原样：不加下划线、不加底色高亮。
+   注意这里只重置「外观」，绝不能写 padding: revert ——
+   那会把导航项的内边距一并抹成 0，右上角就挤成一排没有间隔的字。 */
+.nav a,
+.mnav-links a,
+.module-card {
+  text-decoration: none !important;
+  background-image: none !important;
+}
+
+/* 页脚链接用更轻的样式：只加下划线，不要正文那种黄底高亮 */
+.footer-grid a {
+  text-decoration: none;
+  background: none;
+  font-weight: inherit;
+  border-bottom: 1px solid transparent;
+  transition: color .15s ease, border-color .15s ease;
+}
+
+.footer-grid a:hover {
+  color: var(--text);
+  border-bottom-color: var(--gold-dk);
+}
+
+.wrap a:not(.btn):not(.brand):not(.work-more):not(.skip-link):not(.module-card):hover,
 .callout a:hover,
 .notice-body a:hover,
 .stat-list a:hover {
@@ -1450,6 +1513,156 @@ input[type="range"]::-webkit-slider-thumb {
   .site-header .nav { display: none; }
   .site-header .header-cta { display: none; }
   .site-header .bar { flex-wrap: nowrap; min-height: 60px; }
+}
+
+/* ---------- 工具箱入口：模块卡片 ---------- */
+.module-grid {
+  display: grid;
+  gap: 18px;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+}
+
+.module-card {
+  position: relative;
+  display: grid;
+  gap: 8px;
+  padding: 24px 22px 20px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-top: 3px solid var(--line-2);
+  border-radius: var(--radius);
+  text-decoration: none;
+  color: inherit;
+  transition: transform .15s ease, border-color .15s ease, box-shadow .15s ease;
+}
+
+.module-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--line-strong);
+  box-shadow: var(--shadow-md);
+}
+
+/* 每张卡一个主题色，和作品卡片的做法一致 */
+.module-card--img   { border-top-color: var(--gold); }
+.module-card--video { border-top-color: var(--lapis); }
+.module-card--ext   { border-top-color: var(--diamond); }
+
+.module-tag {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--text-mute);
+}
+
+.module-name {
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: .01em;
+  color: var(--text);
+}
+
+.module-desc {
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--text-dim);
+}
+
+.module-go {
+  margin-top: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.module-card:hover .module-go { text-decoration: underline; text-underline-offset: 3px; }
+
+/* ---------- 特性网格（matoga 页）----------
+   类名用 tool-feature*，不要用 .feature ——
+   那个名字已经被首页「我们做什么」的横向特征行占用了（display:flex），
+   重名会把标题挤成竖排。 */
+.tool-feature-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+}
+
+.tool-feature {
+  padding: 20px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.tool-feature > b {
+  display: block;
+  font-size: 16px;
+  margin-bottom: 8px;
+  color: var(--text);
+}
+
+.tool-feature > p {
+  font-size: 14px;
+  color: var(--text-dim);
+  margin: 0 0 10px;
+}
+
+.tool-feature ul {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 13.5px;
+  color: var(--text-dim);
+}
+
+.tool-feature li { margin-bottom: 5px; }
+
+.tool-feature code,
+.code-block code,
+.note code {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  padding: 1px 5px;
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  color: var(--text);
+}
+
+/* 安装命令块 */
+.code-block {
+  margin: 0 0 10px;
+  padding: 14px 16px;
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--gold);
+  border-radius: var(--radius);
+  overflow-x: auto;
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+.code-block code {
+  background: none;
+  border: 0;
+  padding: 0;
+  white-space: pre;
+}
+
+/* 单张界面截图（matoga 页） */
+.shot-figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--line-2);
+  border-radius: var(--radius);
+  background: var(--panel);
+}
+
+.shot-figure figcaption {
+  margin-top: 12px;
+  font-size: 13px;
+  color: var(--text-dim);
+  text-align: center;
 }
 
 /* ---------- 公告列表 ---------- */

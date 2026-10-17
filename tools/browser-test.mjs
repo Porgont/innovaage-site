@@ -397,7 +397,7 @@ check('首页页脚显示三个真实群号',
 /* ============================================================
    3.7 工具箱：图片压到 1000×4000 以内
    ============================================================ */
-await open('/tools.html');
+await open('/tools-image.html');
 
 check('工具箱页导航高亮「工具箱」',
   await evalJs("document.querySelector('.nav a.is-active')?.textContent.trim() === '工具箱'"));
@@ -732,7 +732,7 @@ await sleep(300);
    再测视频会稳定读不到元数据（文件其实是好的），把十几条断言一起染红、
    反而掩盖真实故障。拆成两个文件后两边都稳定。
    ============================================================ */
-await open('/tools.html');
+await open('/tools-video.html');
 
 check('视频工具卡片与依赖就位',
   await evalJs(`!!document.querySelector('#v-run-btn') &&
@@ -751,6 +751,60 @@ check('编码检测不依赖外网 CDN',
 
 check('视频工具页无横向溢出',
   await evalJs('document.documentElement.scrollWidth <= window.innerWidth + 1'));
+
+/* ============================================================
+   3.11 工具箱入口页与 matoga 页
+   ============================================================ */
+await open('/tools.html');
+
+check('工具箱入口页有三张模块卡片',
+  await evalJs("document.querySelectorAll('.module-card').length === 3"),
+  '实际 ' + await evalJs("document.querySelectorAll('.module-card').length"));
+
+check('三张卡片分别指向三个模块页',
+  await evalJs(`(function(){
+    var hrefs = [...document.querySelectorAll('.module-card')].map(function (a) { return a.getAttribute('href'); });
+    return hrefs.indexOf('tools-image.html') >= 0 &&
+           hrefs.indexOf('tools-video.html') >= 0 &&
+           hrefs.indexOf('tools-matoga.html') >= 0;
+  })()`),
+  await evalJs("JSON.stringify([...document.querySelectorAll('.module-card')].map(a => a.getAttribute('href')))"));
+
+check('工具箱入口页导航高亮「工具箱」',
+  await evalJs("document.querySelector('.nav a.is-active')?.textContent.trim() === '工具箱'"));
+
+check('工具箱入口页无横向溢出',
+  await evalJs('document.documentElement.scrollWidth <= window.innerWidth + 1'));
+
+await open('/tools-matoga.html');
+
+check('matoga 页写明了作者署名',
+  await evalJs("document.body.innerText.includes('芝世')"));
+
+check('matoga 页有指向源码仓库的链接',
+  await evalJs(`!!document.querySelector('a[href="https://github.com/xiongmiaozai/matoga"]')`));
+
+check('matoga 页有指向项目主页的链接',
+  await evalJs(`!!document.querySelector('a[href*="xiongmiaozai.github.io/matoga"]')`));
+
+check('matoga 页写明了 MIT 许可证与署名要求',
+  await evalJs("document.body.innerText.includes('MIT') && document.body.innerText.includes('保留并标明')"));
+
+const matogaShotOk = await waitFor(
+  "document.querySelector('.shot-figure img') && document.querySelector('.shot-figure img').naturalWidth > 0"
+);
+check('matoga 界面截图真的加载出来了',
+  matogaShotOk,
+  'naturalWidth=' + await evalJs("document.querySelector('.shot-figure img')?.naturalWidth"));
+
+check('matoga 页有下载说明',
+  await evalJs("document.body.innerText.includes('releases')"));
+
+check('matoga 页无横向溢出',
+  await evalJs('document.documentElement.scrollWidth <= window.innerWidth + 1'));
+
+check('matoga 页能回到工具箱',
+  await evalJs(`!!document.querySelector('a[href="tools.html"]')`));
 
 
 /* ============================================================
@@ -973,6 +1027,9 @@ await open('/index.html');
 await open('/about.html');
 await open('/works.html');
 await open('/tools.html');
+await open('/tools-image.html');
+await open('/tools-video.html');
+await open('/tools-matoga.html');
 await open('/work.html?id=log-shader-sa');
 await open('/news.html');
 await open('/join.html');
