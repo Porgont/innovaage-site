@@ -20,7 +20,7 @@ const BASE = 'C:\\Users\\Ronsy\\.dsh-packs\\better-deepseek-harness-codex\\attac
 const JOBS = [
   { src: join(BASE, '40', '40dee195ed8c1da8b1f9addd2b62e153cc6d8f39bd42e8abb0785e1dbeb47935'), out: 'avatar-william.jpg', who: '威廉' },
   { src: join(BASE, 'f2', 'f230485354284c63348a5ba43caacbcc4a770a17e5f72484146fb49cf0d2cbbe'), out: 'avatar-ganning.jpg', who: '柑柠' },
-  { src: join(BASE, '73', '7392c4b17eb73a05b97b724ac7f409737ca8380615d4066d1111a3a8fb47d102'), out: 'avatar-suda.jpg', who: '苏打' },
+  { src: join(BASE, '73', '7392c4b17eb73a05b97b724ac7f409737ca8380615d4066d1111a3a8fb47d102'), out: 'avatar-suda.jpg', who: '暴走苏打' },
   { src: join(BASE, '7d', '7d6432283d6150dcc86a0c1ffcc50cf4ea12a6849e1b7de247b636b4f271f635'), out: 'avatar-yinghua.jpg', who: '樱花' },
   { src: join(BASE, 'c7', 'c75cbb1d218e716ae25a6f93cef43086afab53554bf7ca688acdc4b15529b974'), out: 'avatar-axiao.jpg', who: '阿潇' }
 ];

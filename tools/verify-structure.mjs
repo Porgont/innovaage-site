@@ -86,7 +86,7 @@ if (otherCards === OTHER_NAMES.length && OTHER_NAMES.every((who) => otherPart.in
 const AVATARS = [
   ['威廉', 'avatar-william.jpg'],
   ['柑柠', 'avatar-ganning.jpg'],
-  ['苏打', 'avatar-suda.jpg'],
+  ['暴走苏打', 'avatar-suda.jpg'],
   ['樱花', 'avatar-yinghua.jpg'],
   ['阿潇', 'avatar-axiao.jpg'],
   ['Log_坤', 'avatar-logkun.jpg'],
