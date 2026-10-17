@@ -835,6 +835,26 @@ check('首页 Hero 第一个按钮指向作品页',
 check('首页 Hero 有代投入口',
   await evalJs("[...document.querySelectorAll('.hero .btn-row a')].some(a => a.getAttribute('href') === 'join.html#panel-invest')"));
 
+/* ---------- 毛玻璃：页眉与首页 hero 的浮层 ---------- */
+check('页眉是毛玻璃（有 backdrop-filter）',
+  await evalJs(`(function(){
+    var s = getComputedStyle(document.querySelector('.site-header'));
+    return /blur/.test(s.backdropFilter || s.webkitBackdropFilter || '');
+  })()`),
+  await evalJs("(function(){ var s = getComputedStyle(document.querySelector('.site-header')); return s.backdropFilter || 'none'; })()"));
+
+check('首页 hero 的徽章与统计条是毛玻璃',
+  await evalJs(`(function(){
+    function has(el) {
+      if (!el) return false;
+      var s = getComputedStyle(el);
+      return /blur/.test(s.backdropFilter || s.webkitBackdropFilter || '');
+    }
+    return has(document.querySelector('.hero--banner .hero-badge')) &&
+           has(document.querySelector('.hero--banner .stat'));
+  })()`),
+  await evalJs("(function(){ var b = document.querySelector('.hero--banner .stat'); if (!b) return '无'; var s = getComputedStyle(b); return s.backdropFilter || 'none'; })()"));
+
 check('首页作品区在公告区之前（位置更突出）',
   await evalJs(`(function(){
     var s = document.querySelector('#showcase');

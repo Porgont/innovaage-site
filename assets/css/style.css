@@ -2654,6 +2654,81 @@ body.is-leaving main {
   transform: translate(2px, -2px);
 }
 
+/* ============================================================
+   ⑩ 毛玻璃
+   只用在「浮在内容或图片之上」的那几层：页眉、首页 hero 的徽章与统计、
+   标签页条、手机侧栏、截图灯箱。内容块本身不加，否则整页会发灰。
+   ============================================================ */
+
+/* 顶部页眉：更通透的磨砂 */
+.site-header {
+  background: color-mix(in srgb, var(--bg) 70%, transparent);
+  -webkit-backdrop-filter: saturate(190%) blur(18px);
+  backdrop-filter: saturate(190%) blur(18px);
+}
+
+/* 首页 hero 上的小徽章 */
+.hero--banner .hero-badge {
+  background: color-mix(in srgb, var(--bg) 55%, transparent);
+  border-color: color-mix(in srgb, var(--line-2) 70%, transparent);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+  backdrop-filter: blur(14px) saturate(160%);
+}
+
+/* 首页 hero 的统计条：透出底图 */
+.hero--banner .stat {
+  background: color-mix(in srgb, var(--bg) 54%, transparent);
+  border-color: color-mix(in srgb, var(--line) 60%, transparent);
+  -webkit-backdrop-filter: blur(16px) saturate(150%);
+  backdrop-filter: blur(16px) saturate(150%);
+}
+
+/* 标签页条：压住下面滚动的卡片 */
+.tabs {
+  background: color-mix(in srgb, var(--bg) 58%, transparent);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+
+/* 手机侧栏：抽屉与遮罩都做磨砂 */
+.mnav-toggle:checked ~ .mnav-drawer {
+  background: color-mix(in srgb, var(--panel) 82%, transparent);
+  -webkit-backdrop-filter: blur(22px) saturate(170%);
+  backdrop-filter: blur(22px) saturate(170%);
+}
+
+.mnav-toggle:checked ~ .mnav-overlay {
+  background: color-mix(in srgb, var(--ink) 46%, transparent);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+}
+
+/* 截图灯箱：背景磨砂，图本身保持锐利 */
+.lightbox {
+  background: color-mix(in srgb, var(--ink) 62%, transparent);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  backdrop-filter: blur(16px) saturate(140%);
+}
+
+/* 筛选 chip：轻玻璃，仅在有底色的背景上看得出来 */
+.chip {
+  background: color-mix(in srgb, var(--bg) 70%, transparent);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+
+/* 浏览器不支持 backdrop-filter 时退回不透明底，别让文字压在图片上看不清 */
+@supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+  .site-header { background: var(--bg); }
+  .hero--banner .hero-badge { background: var(--bg); }
+  .hero--banner .stat { background: var(--panel); }
+  .tabs { background: var(--bg); }
+  .chip { background: var(--bg-2); }
+  .mnav-toggle:checked ~ .mnav-drawer { background: var(--panel); }
+  .mnav-toggle:checked ~ .mnav-overlay { background: rgba(10, 12, 15, .55); }
+  .lightbox { background: rgba(10, 12, 15, .88); }
+}
+
 /* 负责人卡片轻轻抬起 */
 .officer {
   transition:
