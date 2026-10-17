@@ -110,9 +110,76 @@
     return new Blob([ab], { type: 'audio/wav' });
   }
 
+  /* MP3 能用的采样率（MPEG-1 / 2 / 2.5） */
+  var MP3_RATES = [8000, 11025, 12000, 16000, 22050, 24000, 32000, 44100, 48000];
+
+  function nearestMp3Rate(rate) {
+    if (MP3_RATES.indexOf(rate) >= 0) return rate;
+    var best = MP3_RATES[0];
+    var bestDiff = Math.abs(rate - best);
+    for (var i = 1; i < MP3_RATES.length; i++) {
+      var d = Math.abs(rate - MP3_RATES[i]);
+      if (d < bestDiff) { best = MP3_RATES[i]; bestDiff = d; }
+    }
+    return best;
+  }
+
+  function toInt16(f32) {
+    var out = new Int16Array(f32.length);
+    for (var i = 0; i < f32.length; i++) {
+      var s = f32[i];
+      if (s > 1) s = 1; else if (s < -1) s = -1;
+      out[i] = s < 0 ? s * 0x8000 : s * 0x7FFF;
+    }
+    return out;
+  }
+
+  /* AudioBuffer → MP3。lamejs 是自托管在 assets/vendor/lamejs/ 的，
+     浏览器自己没有 MP3 编码器（MediaRecorder 与 WebCodecs 都不支持）。 */
+  async function encodeMp3(buffer, kbps) {
+    if (typeof lamejs === 'undefined' || !lamejs.Mp3Encoder) {
+      throw new Error('MP3 编码库没加载出来，刷新页面再试');
+    }
+
+    var ch = buffer.numberOfChannels === 1 ? 1 : 2;
+    var enc = new lamejs.Mp3Encoder(ch, buffer.sampleRate, kbps || 192);
+    var left = toInt16(buffer.getChannelData(0));
+    var right = ch === 2 ? toInt16(buffer.getChannelData(1)) : null;
+
+    var BLOCK = 1152;
+    var parts = [];
+    var n = buffer.length;
+    var sinceYield = 0;
+
+    for (var i = 0; i < n; i += BLOCK) {
+      var end = Math.min(i + BLOCK, n);
+      var l = left.subarray(i, end);
+      var buf = right
+        ? enc.encodeBuffer(l, right.subarray(i, end))
+        : enc.encodeBuffer(l);
+      if (buf.length) parts.push(buf);
+
+      // 长文件别把主线程卡死
+      if (++sinceYield >= 400) {
+        sinceYield = 0;
+        await new Promise(function (r) { setTimeout(r, 0); });
+      }
+    }
+
+    var tail = enc.flush();
+    if (tail.length) parts.push(tail);
+
+    return new Blob(parts, { type: 'audio/mpeg' });
+  }
+
   /* ---------- 音频界面 ---------- */
 
-  var audio = { file: null, buffer: null, rate: 0, channels: 0, url: null };
+  var audio = {
+    file: null, buffer: null,
+    rate: 0, channels: 0,
+    format: 'mp3', bitrate: 192,
+    url: null
+  };
 
   function audioNote(msg, warn) {
     var el = $('#audio-note');
@@ -140,6 +207,34 @@
     });
   }
 
+  /* 按当前设置算输出参数：MP3 要先把采样率夹到合法的档位 */
+  function outputPlan() {
+    var buf = audio.buffer;
+    if (!buf) return null;
+
+    var isMp3 = audio.format === 'mp3';
+    var rate = audio.rate > 0 ? audio.rate : buf.sampleRate;
+    if (isMp3) rate = audio.rate > 0 ? nearestMp3Rate(audio.rate) : nearestMp3Rate(buf.sampleRate);
+
+    var ch = audio.channels > 0 ? audio.channels : buf.numberOfChannels;
+    if (isMp3) ch = Math.min(2, ch);
+
+    var seconds = buf.duration;
+    var bytes = isMp3
+      ? Math.round(seconds * (audio.bitrate * 1000 / 8))
+      : Math.round(seconds * ch * rate * 2);
+
+    return { isMp3: isMp3, rate: rate, channels: ch, seconds: seconds, bytes: bytes };
+  }
+
+  function describePlan(prefix) {
+    var plan = outputPlan();
+    if (!plan) return;
+    var fmt = plan.isMp3 ? ('MP3 ' + audio.bitrate + ' kbps') : 'WAV（16 位 PCM）';
+    audioNote(prefix + fmt + '，' + plan.rate + ' Hz，' + plan.channels + ' 声道，预计约 ' +
+      fmtBytes(plan.bytes) + '。', false);
+  }
+
   async function setAudioFile(file) {
     if (!file) return;
     audio.file = file;
@@ -158,8 +253,7 @@
       renderAudioFile(fmtBytes(file.size) + ' · 时长 ' + fmtTime(buf.duration) +
         ' · ' + buf.sampleRate + ' Hz · ' + buf.numberOfChannels + ' 声道');
       if (runBtn) runBtn.disabled = false;
-      audioNote('可以提取了。输出 16 位 PCM 的 WAV，预计约 ' +
-        fmtBytes(buf.duration * (audio.channels > 0 ? audio.channels : buf.numberOfChannels) * buf.sampleRate * 2) + '。', false);
+      describePlan('可以提取了：');
     } catch (e) {
       audioNote('这个文件浏览器解码不了：' + (e && e.message ? e.message : '未知原因') +
         '。试一下别的格式，或者先在别的工具里转一次。', true);
@@ -169,23 +263,25 @@
 
   async function runAudio() {
     if (!audio.buffer) return;
+    var plan = outputPlan();
     var btn = $('#audio-run');
     var old = btn ? btn.textContent : '';
-    if (btn) { btn.disabled = true; btn.textContent = '转换中…'; }
+    if (btn) { btn.disabled = true; btn.textContent = plan.isMp3 ? '编码 MP3…' : '转换中…'; }
 
     try {
-      var out = await conformBuffer(audio.buffer, audio.rate, audio.channels);
-      var blob = encodeWav(out);
+      var out = await conformBuffer(audio.buffer, plan.rate, plan.channels);
+      var blob = plan.isMp3 ? await encodeMp3(out, audio.bitrate) : encodeWav(out);
+      var ext = plan.isMp3 ? '.mp3' : '.wav';
 
       if (audio.url) URL.revokeObjectURL(audio.url);
       audio.url = URL.createObjectURL(blob);
 
-      var base = audio.file.name.replace(/\.[^.]+$/, '');
+      var base = audio.file.name.replace(/.[^.]+$/, '');
       var a = document.createElement('a');
       a.className = 'btn btn--sm';
       a.href = audio.url;
-      a.download = base + '.wav';
-      a.textContent = '下载 WAV（' + fmtBytes(blob.size) + '）';
+      a.download = base + ext;
+      a.textContent = '下载 ' + ext.slice(1).toUpperCase() + '（' + fmtBytes(blob.size) + '）';
 
       var bar = $('#audio-result');
       if (!bar) {
@@ -200,7 +296,9 @@
       tip.textContent = out.sampleRate + ' Hz · ' + out.numberOfChannels + ' 声道 · 时长 ' + fmtTime(out.duration);
       bar.appendChild(tip);
 
-      audioNote('转换完成。WAV 是无损的，所以比 MP3 大得多，拖到视频工具或其它软件还能再压。', false);
+      var src = audio.file.size;
+      audioNote('转换完成：' + fmtBytes(src) + ' → ' + fmtBytes(blob.size) +
+        (src > 0 ? '（' + Math.round(blob.size / src * 100) + '%）' : '') + '。', false);
     } catch (e) {
       audioNote('转换失败：' + (e && e.message ? e.message : '未知原因'), true);
     } finally {
@@ -228,21 +326,37 @@
       if (f) setAudioFile(f);
     });
 
-    $$('[data-rate]').forEach(function (b) {
+    function pick(attr, key, cast) {
+      $$('[' + attr + ']').forEach(function (b) {
+        b.addEventListener('click', function () {
+          $$('[' + attr + ']').forEach(function (x) { x.classList.remove('is-active'); });
+          b.classList.add('is-active');
+          audio[key] = cast(b.getAttribute(attr));
+          if (audio.buffer) describePlan('当前设置：');
+        });
+      });
+    }
+
+    pick('data-rate', 'rate', function (v) { return Number(v) || 0; });
+    pick('data-channels', 'channels', function (v) { return Number(v) || 0; });
+    pick('data-bitrate', 'bitrate', function (v) { return Number(v) || 192; });
+
+    // 输出格式：切到 WAV 时把码率那一栏收起来
+    $$('[data-format]').forEach(function (b) {
       b.addEventListener('click', function () {
-        $$('[data-rate]').forEach(function (x) { x.classList.remove('is-active'); });
+        $$('[data-format]').forEach(function (x) { x.classList.remove('is-active'); });
         b.classList.add('is-active');
-        audio.rate = Number(b.getAttribute('data-rate')) || 0;
+        audio.format = b.getAttribute('data-format') === 'wav' ? 'wav' : 'mp3';
+
+        var field = $('#bitrate-field');
+        if (field) field.hidden = audio.format !== 'mp3';
+
+        if (audio.buffer) describePlan('当前设置：');
       });
     });
 
-    $$('[data-channels]').forEach(function (b) {
-      b.addEventListener('click', function () {
-        $$('[data-channels]').forEach(function (x) { x.classList.remove('is-active'); });
-        b.classList.add('is-active');
-        audio.channels = Number(b.getAttribute('data-channels')) || 0;
-      });
-    });
+    var bitrateField = $('#bitrate-field');
+    if (bitrateField) bitrateField.hidden = audio.format !== 'mp3';
 
     var run = $('#audio-run');
     if (run) run.addEventListener('click', runAudio);
@@ -466,6 +580,9 @@
   /* 给自检用的入口 */
   window.IA_CONVERT = {
     encodeWav: encodeWav,
+    encodeMp3: encodeMp3,
+    nearestMp3Rate: nearestMp3Rate,
+    outputPlan: outputPlan,
     decodeAudio: decodeAudio,
     conformBuffer: conformBuffer,
     jsonToCsv: jsonToCsv,

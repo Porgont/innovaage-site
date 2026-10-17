@@ -72,17 +72,36 @@ const MAIN = `<main id="main">
           </div>
         </div>
 
+        <div class="grid grid--2" style="margin-top:18px">
+          <div class="field">
+            <label>输出格式</label>
+            <div class="preset-row">
+              <button class="chip" type="button" data-format="wav">WAV（无损）</button>
+              <button class="chip is-active" type="button" data-format="mp3">MP3（有损压缩）</button>
+            </div>
+          </div>
+
+          <div class="field" id="bitrate-field">
+            <label>MP3 码率</label>
+            <div class="preset-row">
+              <button class="chip" type="button" data-bitrate="128">128 kbps</button>
+              <button class="chip is-active" type="button" data-bitrate="192">192 kbps</button>
+              <button class="chip" type="button" data-bitrate="320">320 kbps</button>
+            </div>
+          </div>
+        </div>
+
         <div class="btn-row" style="margin-top:20px">
           <button class="btn" type="button" id="audio-run" disabled>提取音频</button>
           <button class="btn btn--ghost btn--sm" type="button" id="audio-clear" hidden>清空</button>
         </div>
 
         <p class="note" id="audio-note" style="margin-top:14px">
-          输出为 16 位 PCM 的 WAV，无损，但体积比 MP3 大很多。时长 10 分钟的文件大约 100 MB。
+          选 MP3 会按码率做有损压缩，体积比 WAV 小一个数量级；码率越高音质越好、体积越大。
         </p>
 
-        <p class="note note--warn" style="margin-top:10px">
-          没有 MP3 输出：浏览器原生不提供 MP3 编码，只有解码。需要 MP3 的话得额外引入第三方编码库。
+        <p class="note" style="margin-top:10px">
+          MP3 编码由自托管的 lamejs 完成（LGPL-3.0，<code>assets/vendor/lamejs/</code>），解码用的是浏览器自带能力。
         </p>
       </div>
     </div>
@@ -175,16 +194,18 @@ html = html.replace(
 );
 html = html.replace(/<meta property="og:url" content="[^"]*">/, '<meta property="og:url" content="https://innovaage.cn/tools-convert.html">');
 
-// 页面专属脚本挂在 site.js 之后
+// 页面专属脚本挂在 site.js 之后。lamejs 先加载（MP3 编码要用），再挂转换逻辑。
 html = html.replace(
   '<script src="assets/js/toolbox.js"></script>',
-  '<script src="assets/js/convert-tool.js"></script>'
+  '<script src="assets/vendor/lamejs/lamejs.iife.js"></script>\n<script src="assets/js/convert-tool.js"></script>'
 );
 
 writeFileSync(join(root, 'tools-convert.html'), html, 'utf8');
 
 const ids = ['audio-input', 'audio-run', 'audio-note', 'data-in', 'data-out',
-  'b64-in', 'b64-out', 'audio-dropzone', 'audio-file'];
+  'b64-in', 'b64-out', 'audio-dropzone', 'audio-file', 'bitrate-field'];
 console.log('  已生成 tools-convert.html');
 console.log('  关键节点: ' + ids.map((id) => (html.includes(`id="${id}"`) ? id + '✓' : id + '✗')).join(' '));
 console.log('  引用 convert-tool.js: ' + (html.includes('assets/js/convert-tool.js') ? '✓' : '✗'));
+console.log('  引用 lamejs: ' + (html.includes('assets/vendor/lamejs/lamejs.iife.js') ? '✓' : '✗'));
+console.log('  MP3 码率选项: ' + ((html.match(/data-bitrate=/g) || []).length) + ' 个');

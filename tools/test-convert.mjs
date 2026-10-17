@@ -191,14 +191,108 @@ const cap = JSON.parse(await evalJs(`(async () => {
   return JSON.stringify(out);
 })()`));
 
-check('确认浏览器真没有 MP3 编码器（页面上的说明不是瞎写）',
+check('浏览器原生确实没有 MP3 编码器（所以 MP3 必须靠自带编码库）',
   cap.mediaRecorderMp3 === false && cap.wcMp3 === false,
   'MediaRecorder=' + cap.mediaRecorderMp3 + '，WebCodecs=' + cap.wcMp3);
 
-const noteText = await evalJs("document.querySelector('#audio-note').textContent");
-check('页面上明确写了没有 MP3 输出',
-  typeof noteText === 'string' && noteText.includes('WAV'),
-  noteText.slice(0, 40));
+check('自托管的 lamejs 已加载',
+  await evalJs("typeof lamejs !== 'undefined' && !!lamejs.Mp3Encoder"),
+  'typeof lamejs = ' + await evalJs("typeof lamejs"));
+
+check('没有从外网 CDN 加载编码库',
+  await evalJs("[...document.querySelectorAll('script[src]')].every(s => !/^https?:/.test(s.getAttribute('src')))"));
+
+check('页面上注明了 MP3 编码来自自托管库',
+  await evalJs("document.body.innerText.includes('lamejs')"));
+
+/* ---------- MP3 编码 ---------- */
+console.log('\n=== MP3 编码 ===');
+
+function mkSine(n, sr, ch, freq) {
+  return `(function(){
+    var off = new OfflineAudioContext(${ch}, ${n}, ${sr});
+    var buf = off.createBuffer(${ch}, ${n}, ${sr});
+    for (var c = 0; c < ${ch}; c++) {
+      var d = buf.getChannelData(c);
+      for (var i = 0; i < d.length; i++) d[i] = Math.sin(2 * Math.PI * ${freq} * i / ${sr}) * 0.4 * (c ? -1 : 1);
+    }
+    return buf;
+  })()`;
+}
+
+const mp3 = JSON.parse(await evalJs(`(async () => {
+  var buf = ${mkSine(44100, 44100, 2, 440)};
+  var blob = await window.IA_CONVERT.encodeMp3(buf, 192);
+  var ab = await blob.arrayBuffer();
+  var u8 = new Uint8Array(ab);
+
+  var ac = new AudioContext();
+  var dec = null, err = '';
+  try { dec = await ac.decodeAudioData(ab.slice(0)); } catch (e) { err = e.name + ': ' + e.message; }
+  await ac.close();
+
+  return JSON.stringify({
+    type: blob.type,
+    bytes: ab.byteLength,
+    head: Array.from(u8.slice(0, 4)).map(function (b) { return b.toString(16).padStart(2, '0'); }).join(' '),
+    // MPEG 帧同步：高 11 位全 1
+    sync: u8[0] === 0xFF && (u8[1] & 0xE0) === 0xE0,
+    dur: dec ? +dec.duration.toFixed(2) : null,
+    ch: dec ? dec.numberOfChannels : null,
+    err: err || null
+  });
+})()`));
+
+check('编码结果是 MP3 的 MIME 类型', mp3.type === 'audio/mpeg', mp3.type);
+check('开头是合法的 MPEG 帧同步字', mp3.sync === true, '前 4 字节 ' + mp3.head);
+check('编出来的 MP3 能被浏览器解码回来（说明文件结构有效）',
+  mp3.err === null && mp3.ch === 2, mp3.err || ('声道 ' + mp3.ch));
+check('解码回来的时长对得上（1 秒，允许编码帧补齐）',
+  mp3.dur !== null && Math.abs(mp3.dur - 1) < 0.12, mp3.dur + ' 秒');
+check('体积远小于同长度的 WAV',
+  mp3.bytes < 44100 * 2 * 2 * 0.5,
+  mp3.bytes + ' 字节，WAV 约 ' + (44100 * 2 * 2) + ' 字节');
+
+// 码率越高体积越大
+const sizes = JSON.parse(await evalJs(`(async () => {
+  var buf = ${mkSine(44100, 44100, 2, 440)};
+  var out = {};
+  for (var kb of [128, 192, 320]) {
+    var b = await window.IA_CONVERT.encodeMp3(buf, kb);
+    out[kb] = b.size;
+  }
+  return JSON.stringify(out);
+})()`));
+check('码率越高文件越大', sizes['128'] < sizes['192'] && sizes['192'] < sizes['320'],
+  '128=' + sizes['128'] + ' / 192=' + sizes['192'] + ' / 320=' + sizes['320']);
+
+// 非标准采样率要夹到 MP3 支持的范围
+const rates = JSON.parse(await evalJs(`JSON.stringify({
+  high: window.IA_CONVERT.nearestMp3Rate(96000),
+  higher: window.IA_CONVERT.nearestMp3Rate(192000),
+  keep: window.IA_CONVERT.nearestMp3Rate(22050),
+  exact: window.IA_CONVERT.nearestMp3Rate(44100)
+})`));
+check('96k / 192k 的采样率会被夹到 48000',
+  rates.high === 48000 && rates.higher === 48000, rates.high + ' / ' + rates.higher);
+check('本来就是合法采样率的不动', rates.keep === 22050 && rates.exact === 44100,
+  rates.keep + ' / ' + rates.exact);
+
+// 输出格式切换要控制码率栏的显示
+const fmtUi = JSON.parse(await evalJs(`(function(){
+  var mp3Btn = document.querySelector('[data-format="mp3"]');
+  var wavBtn = document.querySelector('[data-format="wav"]');
+  var field = document.querySelector('#bitrate-field');
+  wavBtn.click();
+  var afterWav = { hidden: field.hidden, format: window.IA_CONVERT.state.format };
+  mp3Btn.click();
+  var afterMp3 = { hidden: field.hidden, format: window.IA_CONVERT.state.format };
+  return JSON.stringify({ afterWav: afterWav, afterMp3: afterMp3 });
+})()`));
+check('切到 WAV 时收起码率选项', fmtUi.afterWav.hidden === true && fmtUi.afterWav.format === 'wav',
+  JSON.stringify(fmtUi.afterWav));
+check('切回 MP3 时再显示码率选项', fmtUi.afterMp3.hidden === false && fmtUi.afterMp3.format === 'mp3',
+  JSON.stringify(fmtUi.afterMp3));
 
 /* ---------- 四、JSON ⇄ CSV ---------- */
 console.log('\n=== JSON ⇄ CSV ===');

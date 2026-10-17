@@ -100,7 +100,7 @@
       title: 'Bilibili PVP Textures',
       meta: '作者：青橘',
       category: 'tex',
-      desc: 'Bilibili 主题的 PVP 材质。'
+      desc: '取自作者早期作品 Bilibili UI 衍生而成的 PVP 材质，贴图与天空皆为原创。'
     },
     {
       id: 'deer-pvp-textures',
@@ -108,7 +108,7 @@
       title: 'Deer PVP 材质',
       meta: '作者：青橘',
       category: 'tex',
-      desc: 'Deer 主题的 PVP 材质。'
+      desc: '100% 原创的 PVP 材质，从方块到物品全部手绘，天空另外做了处理。'
     }
   ];
 
@@ -261,7 +261,7 @@
       name: 'Bilibili PVP Textures',
       author: '青橘',
       type: '材质 / Texture（PVP）',
-      tagline: 'Bilibili 主题的 PVP 材质',
+      tagline: '取自作者早期作品 Bilibili UI 衍生而成的 PVP 材质',
       cover: 'assets/img/qingju-bilibili-pvp.jpg',
       coverAlt: 'Bilibili PVP Textures：粉色主题的角色、武器与物品栏',
       facts: [
@@ -269,7 +269,9 @@
         { k: '作者', v: '青橘' },
         { k: '类型', v: '材质 / Texture（PVP）' }
       ],
-      intro: [],
+      intro: [
+        '贴图与天空皆为原创。'
+      ],
       shots: [
         { img: 'assets/img/qingju-bilibili-pvp.jpg', alt: 'Bilibili PVP Textures：粉色主题的角色、武器、血条与物品栏' }
       ]
@@ -279,7 +281,7 @@
       name: 'Deer PVP 材质',
       author: '青橘',
       type: '材质 / Texture（PVP）',
-      tagline: 'Deer 主题的 PVP 材质',
+      tagline: '100% 原创的 PVP 材质，从方块到物品全部手绘',
       cover: 'assets/img/qingju-deer-pvp.jpg',
       coverAlt: 'Deer PVP 材质：青绿色主题的角色与武器',
       facts: [
@@ -287,7 +289,10 @@
         { k: '作者', v: '青橘' },
         { k: '类型', v: '材质 / Texture（PVP）' }
       ],
-      intro: [],
+      intro: [
+        '从方块到物品全部手绘而成，天空部分另外做了处理。',
+        '材质绘制以 PVP 使用为主，不太建议日常使用，用不惯者慎用。'
+      ],
       shots: [
         { img: 'assets/img/qingju-deer-pvp.jpg', alt: 'Deer PVP 材质：青绿色主题的角色、武器与物品' }
       ]
