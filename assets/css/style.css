@@ -2534,18 +2534,18 @@ body.is-leaving main {
 /* 顶部导航：中文下面一行小英文 */
 .nav a {
   display: inline-flex;
-  flex-direction: column;
-  align-items: center;
+  flex-direction: row;
+  align-items: baseline;
   justify-content: center;
-  gap: 0;
-  line-height: 1.15;
+  gap: 7px;
+  line-height: 1.2;
 }
 
 .nav a small {
   font-family: var(--mono);
-  font-size: 8px;
+  font-size: 10.5px;
   font-weight: 400;
-  letter-spacing: .18em;
+  letter-spacing: .16em;
   text-transform: uppercase;
   color: var(--text-mute);
   transition: color .2s ease;
@@ -2733,11 +2733,27 @@ body.is-leaving main {
    标签页条、手机侧栏、截图灯箱。内容块本身不加，否则整页会发灰。
    ============================================================ */
 
-/* 顶部页眉：更通透的磨砂 */
+/* 页眉：在页面最顶上时完全透明，让首屏大图完整露出；
+   往下滑一段（JS 加 .is-scrolled）再淡成磨砂玻璃。 */
 .site-header {
-  background: color-mix(in srgb, var(--bg) 70%, transparent);
+  background: transparent;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  border-bottom-color: transparent;
+  transition:
+    background-color .38s ease,
+    border-color .38s ease,
+    box-shadow .38s ease,
+    -webkit-backdrop-filter .38s ease,
+    backdrop-filter .38s ease;
+}
+
+.site-header.is-scrolled {
+  background: color-mix(in srgb, var(--bg) 74%, transparent);
   -webkit-backdrop-filter: saturate(190%) blur(18px);
   backdrop-filter: saturate(190%) blur(18px);
+  border-bottom-color: var(--line);
+  box-shadow: 0 6px 20px color-mix(in srgb, var(--ink) 6%, transparent);
 }
 
 /* 首页 hero 上的小徽章 */
@@ -2793,7 +2809,7 @@ body.is-leaving main {
 
 /* 浏览器不支持 backdrop-filter 时退回不透明底，别让文字压在图片上看不清 */
 @supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
-  .site-header { background: var(--bg); }
+  .site-header.is-scrolled { background: var(--bg); }
   .hero--banner .hero-badge { background: var(--bg); }
   .hero--banner .stat { background: var(--panel); }
   .tabs { background: var(--bg); }
@@ -3351,6 +3367,54 @@ body.is-leaving::after {
   flex-wrap: wrap;
   gap: 10px;
 }
+
+/* ---------- ⑳ 页眉：贴最左最右 + 简洁品牌区 ----------
+   参考 A_SU ARCHIVE 那种：左边 logo + 站名 + 竖线 + 「官网」，
+   右边一串「中文 英文」并排的细字导航，整体贴边不居中。 */
+.site-header .bar {
+  max-width: none;
+  padding: 0 clamp(16px, 2.2vw, 44px);
+}
+
+.brand { gap: 10px; }
+
+.brand-name {
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: -.01em;
+  white-space: nowrap;
+}
+
+.brand-sep {
+  width: 1px;
+  height: 15px;
+  background: var(--line-2);
+  flex-shrink: 0;
+}
+
+.brand-sub {
+  font-size: 13px;
+  color: var(--text-mute);
+  white-space: nowrap;
+}
+
+/* 内容区变宽之后，长文章别拉成一整行 */
+.article-body { max-width: 74ch; }
+
+/* 截图分组标题（例如 RVHD / Java 版 / 基岩版），横跨整行 */
+.shot-group {
+  grid-column: 1 / -1;
+  margin: 10px 0 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--line);
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--text-mute);
+}
+
+.shot-group:first-child { margin-top: 0; }
 
 /* ---------- 响应式 ---------- */
 @media (max-width: 800px) {

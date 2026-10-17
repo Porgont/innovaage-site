@@ -59,7 +59,7 @@
   /* 结构 */
   --radius:    2px;       /* 终末地是近乎直角 */
   --pad:       24px;
-  --maxw:      1180px;
+  --maxw:      1440px;
   --shadow:    0 1px 2px rgba(20, 22, 26, .05), 0 8px 24px rgba(20, 22, 26, .06);
   --shadow-sm: 0 1px 2px rgba(20, 22, 26, .06);
   --grid-line: rgba(20, 22, 26, .045);

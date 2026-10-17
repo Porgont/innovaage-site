@@ -365,16 +365,16 @@
         }
       ],
       shots: [
-        { img: 'assets/img/fangzhen-rvhd-1.jpg', alt: 'RVHD 效果图：石材与发光方块的接缝细节' },
+        { group: 'RVHD', img: 'assets/img/fangzhen-rvhd-1.jpg', alt: 'RVHD 效果图：石材与发光方块的接缝细节' },
         { img: 'assets/img/fangzhen-rvhd-2.jpg', alt: 'RVHD 效果图：原木与树叶在日光下的表面质感' },
         { img: 'assets/img/fangzhen-rvhd-3.jpg', alt: 'RVHD 效果图：深色石材与木材的拼接纹理' },
-        { img: 'assets/img/fangzhen-shot-1.jpg', alt: '效果图：室内场景，木地板与原木家具' },
-        { img: 'assets/img/fangzhen-shot-2.jpg', alt: '效果图：草方块与各类矿石块' },
-        { img: 'assets/img/fangzhen-shot-3.jpg', alt: '效果图：草方块地形的表面细节' },
-        { img: 'assets/img/fangzhen-shot-4.jpg', alt: '效果图：浅色方块面板近景' },
-        { img: 'assets/img/fangzhen-shot-5.jpg', alt: '效果图：多种石材方块对照' },
-        { img: 'assets/img/fangzhen-shot-6.jpg', alt: '效果图：蓝色石材方块近景' },
-        { img: 'assets/img/fangzhen-shot-7.jpg', alt: '效果图：石材与矿石方块' }
+        { group: 'Java 版', img: 'assets/img/fangzhen-shot-1.jpg', alt: 'Java 版效果图：室内场景，木地板与原木家具' },
+        { img: 'assets/img/fangzhen-shot-2.jpg', alt: 'Java 版效果图：草方块与各类矿石块' },
+        { img: 'assets/img/fangzhen-shot-3.jpg', alt: 'Java 版效果图：草方块地形的表面细节' },
+        { group: '基岩版', img: 'assets/img/fangzhen-shot-4.jpg', alt: '基岩版效果图：浅色方块面板近景' },
+        { img: 'assets/img/fangzhen-shot-5.jpg', alt: '基岩版效果图：多种石材方块对照' },
+        { img: 'assets/img/fangzhen-shot-6.jpg', alt: '基岩版效果图：蓝色石材方块近景' },
+        { img: 'assets/img/fangzhen-shot-7.jpg', alt: '基岩版效果图：石材与矿石方块' }
       ]
     }
   };
@@ -1300,8 +1300,15 @@
     // 页面上只显示图片，不显示文字说明；说明只写进 alt 供屏幕阅读器与搜索引擎使用。
     var shots = $('#work-shots');
     if (shots && work.shots && work.shots.length) {
+      // 截图可以带 group 标记，分组变了就插一条小标题（例如按 Java / 基岩版分）
+      var lastGroup = null;
       shots.innerHTML = work.shots.map(function (s, i) {
-        return '' +
+        var head = '';
+        if (s.group && s.group !== lastGroup) {
+          lastGroup = s.group;
+          head = '<p class="shot-group">' + esc(s.group) + '</p>';
+        }
+        return head +
           '<figure class="shot">' +
             '<button class="shot-btn" type="button" data-index="' + i + '"' +
               ' aria-label="放大查看第 ' + (i + 1) + ' 张截图">' +
@@ -1541,6 +1548,34 @@
     });
   }
 
+  /* ---------- 页眉：顶部透明，下滑变毛玻璃 ----------
+     只在滚动时切一个类，具体动效全交给 CSS 过渡。
+     rAF 节流，别在被动事件里直接改样式。 */
+  function initHeaderScroll() {
+    var header = $('.site-header');
+    if (!header) return;
+
+    var THRESHOLD = 28;
+    var ticking = false;
+
+    function apply() {
+      ticking = false;
+      var y = window.pageYOffset || document.documentElement.scrollTop || 0;
+      header.classList.toggle('is-scrolled', y > THRESHOLD);
+    }
+
+    function onScroll() {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(apply);
+    }
+
+    apply();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    // 浏览器后退回来时会恢复滚动位置，得再算一次
+    window.addEventListener('pageshow', apply);
+  }
+
   /* ---------- 启动 ---------- */
   function boot() {
     markActiveNav();
@@ -1552,6 +1587,7 @@
     initCopy();
     initSurvey();
     initTheme();
+    initHeaderScroll();
     initHeroImage();
     initHeroParallax();
     initPageHero();

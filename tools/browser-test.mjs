@@ -900,13 +900,83 @@ check('首页 Hero 第一个按钮指向作品页',
 check('首页 Hero 有代投入口',
   await evalJs("[...document.querySelectorAll('.hero .btn-row a')].some(a => a.getAttribute('href') === 'join.html#panel-invest')"));
 
-/* ---------- 毛玻璃：页眉与首页 hero 的浮层 ---------- */
-check('页眉是毛玻璃（有 backdrop-filter）',
+/* ---------- 页眉：顶部透明，下滑变毛玻璃 ---------- */
+await evalJs("window.scrollTo(0, 0)");
+await sleep(600);
+
+check('页面在顶部时，页眉是透明的（不挡首屏大图）',
   await evalJs(`(function(){
-    var s = getComputedStyle(document.querySelector('.site-header'));
-    return /blur/.test(s.backdropFilter || s.webkitBackdropFilter || '');
+    var el = document.querySelector('.site-header');
+    var s = getComputedStyle(el);
+    var bg = s.backgroundColor || '';
+    var transparent = bg === 'rgba(0, 0, 0, 0)' || bg === 'transparent';
+    var noBlur = !/blur/.test(s.backdropFilter || s.webkitBackdropFilter || '');
+    return !el.classList.contains('is-scrolled') && transparent && noBlur;
+  })()`),
+  await evalJs("(function(){ var el = document.querySelector('.site-header'); var s = getComputedStyle(el); return s.backgroundColor + ' / ' + (s.backdropFilter || 'none') + ' / is-scrolled=' + el.classList.contains('is-scrolled'); })()"));
+
+await evalJs("window.scrollTo(0, 500)");
+await (async () => { for (let i = 0; i < 20; i++) { await sleep(50); if (await evalJs("document.querySelector('.site-header').classList.contains('is-scrolled')")) return; } })();
+await sleep(500);
+
+check('往下滑之后页眉变成毛玻璃（有 backdrop-filter）',
+  await evalJs(`(function(){
+    var el = document.querySelector('.site-header');
+    var s = getComputedStyle(el);
+    return el.classList.contains('is-scrolled') &&
+           /blur/.test(s.backdropFilter || s.webkitBackdropFilter || '');
   })()`),
   await evalJs("(function(){ var s = getComputedStyle(document.querySelector('.site-header')); return s.backdropFilter || 'none'; })()"));
+
+check('页眉的背景是跟主题走的半透明色，不是写死的白',
+  await evalJs(`(function(){
+    var bg = getComputedStyle(document.querySelector('.site-header')).backgroundColor;
+    // color(srgb 1 1 1 / 0.74) 这类带透明度的值，alpha 介于 0 和 1 之间
+    return /\/\s*0\.\d+\s*\)/.test(bg) || /rgba\(.*0\.\d+\)/.test(bg);
+  })()`),
+  await evalJs("getComputedStyle(document.querySelector('.site-header')).backgroundColor"));
+
+/* ---------- 页眉排版：贴边 + 品牌与导航形式 ---------- */
+check('页眉内容贴最左右，不再居中留白',
+  await evalJs(`(function(){
+    var bar = document.querySelector('.site-header .bar');
+    var s = getComputedStyle(bar);
+    var vw = window.innerWidth;
+    var r = bar.getBoundingClientRect();
+    // bar 要铺满视口宽度
+    return Math.abs(r.width - vw) < 2 &&
+           s.maxWidth === 'none' &&
+           parseFloat(s.paddingLeft) > 0;
+  })()`),
+  await evalJs("(function(){ var r = document.querySelector('.site-header .bar').getBoundingClientRect(); return Math.round(r.width) + ' / 视口 ' + window.innerWidth + ' / padding ' + getComputedStyle(document.querySelector('.site-header .bar')).paddingLeft; })()"));
+
+check('品牌区是「创想时代开发组 | 官网」',
+  await evalJs(`(function(){
+    var name = document.querySelector('.brand-name');
+    var sub = document.querySelector('.brand-sub');
+    var sep = document.querySelector('.brand-sep');
+    if (!name || !sub || !sep) return false;
+    return name.textContent.trim() === '创想时代开发组' && sub.textContent.trim() === '官网';
+  })()`),
+  await evalJs("(document.querySelector('.brand') || {}).innerText ? document.querySelector('.brand').innerText.replace(/\n/g, ' ').trim() : ''"));
+
+check('导航是「中文 英文」并排，不是上下两行',
+  await evalJs(`(function(){
+    var a = document.querySelector('.nav a');
+    if (!a) return false;
+    var s = getComputedStyle(a);
+    var span = a.querySelector('span');
+    var small = a.querySelector('small');
+    if (!span || !small) return false;
+    // 并排时两者垂直中心接近；上下堆叠会差出十几像素
+    var rs = span.getBoundingClientRect();
+    var rm = small.getBoundingClientRect();
+    return s.flexDirection === 'row' && Math.abs(rs.top - rm.top) < 6 && rm.left > rs.left;
+  })()`),
+  await evalJs("(function(){ var a = document.querySelector('.nav a'); var s = getComputedStyle(a); return s.flexDirection; })()"));
+
+await evalJs("window.scrollTo(0, 0)");
+await sleep(600);
 
 check('首页 hero 的徽章与统计条是毛玻璃',
   await evalJs(`(function(){
@@ -1362,6 +1432,13 @@ check('仿真工艺：外链按四个分组排列',
 
 check('仿真工艺：外链都在新窗口打开且带 noopener',
   await evalJs("[...document.querySelectorAll('.work-links a')].every(a => a.target === '_blank' && (a.rel || '').indexOf('noopener') >= 0)"));
+
+check('仿真工艺：截图按 RVHD / Java 版 / 基岩版分组',
+  await evalJs(`(function(){
+    var g = [...document.querySelectorAll('.shot-group')].map(function (e) { return e.textContent.trim(); });
+    return g.length === 3 && g[0] === 'RVHD' && /JAVA/i.test(g[1]) && g[2].indexOf('基岩') >= 0;
+  })()`),
+  await evalJs("[...document.querySelectorAll('.shot-group')].map(e => e.textContent.trim()).join(' / ')"));
 
 check('仿真工艺：10 张截图都加载出来',
   await waitFor(`(function(){
