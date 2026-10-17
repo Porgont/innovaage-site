@@ -81,18 +81,18 @@
     {
       id: 'lingling-v5000-oak7',
       img: 'assets/img/lingling-1.jpg',
-      title: '零零构想V5000 · 橡木7画质提升包',
+      title: '零雾构想V5000 · 橡木7画质提升包',
       meta: '作者：Log坤',
       category: 'addon',
-      desc: '把零零构想V5000 内置光影换成 Log 橡木7。'
+      desc: '把零雾构想V5000 内置光影换成 Log 橡木7。'
     },
     {
       id: 'lingling-universal',
       img: 'assets/img/lingling-u-1.jpg',
-      title: '零零构想通用版',
+      title: '零雾构想通用版',
       meta: '作者：零零〇五Fogg05',
       category: 'tex',
-      desc: '零零构想与 Log 光影再次联动，内置 V5003 与 Log 白桦木灵动视效包。'
+      desc: '零雾构想与 Log 白桦木再次联动，内置 V5003 与 Log 白桦木灵动视效包。'
     },
     {
       id: 'bilibili-pvp-textures',
@@ -209,22 +209,22 @@
     },
 
     'lingling-v5000-oak7': {
-      name: '零零构想V5000 · 橡木7画质提升包',
+      name: '零雾构想V5000 · 橡木7画质提升包',
       author: 'Log坤',
       type: 'Addon / 画质提升包',
-      tagline: '把零零构想V5000 内置光影由「Log6 桦木」更换为 Log 橡木7',
+      tagline: '把零雾构想V5000 内置光影由「Log6 桦木」更换为 Log 橡木7',
       cover: 'assets/img/lingling-1.jpg',
       coverAlt: '画质提升包效果：光泽方块地面的日光反射',
       // 介绍就是这张成品海报，不再另写文字
       poster: 'assets/img/lingling-poster.webp',
-      posterAlt: '零零构想V5000-橡木7画质提升包 组件介绍海报',
+      posterAlt: '零雾构想V5000-橡木7画质提升包 组件介绍海报',
       facts: [
-        { k: '作品名', v: '零零构想V5000-橡木7画质提升包' },
+        { k: '作品名', v: '零雾构想V5000-橡木7画质提升包' },
         { k: '作者', v: 'Log坤' },
         { k: '版本', v: 'V1.0（2026-10-13）' },
         { k: '类型', v: 'Addon / 画质提升包' },
         { k: '平台', v: 'Minecraft 基岩版' },
-        { k: '需先购买', v: '零零构想V5000 材质（组件码 8144171，付费四合一版本）' },
+        { k: '需先购买', v: '零雾构想V5000 材质（组件码 8144171，付费四合一版本）' },
         { k: '同时加载', v: 'SRC 实时阴影（组件码 0559302）' },
         { k: '海报', v: '柑柠' }
       ],
@@ -237,23 +237,23 @@
     },
 
     'lingling-universal': {
-      name: '零零构想通用版',
+      name: '零雾构想通用版',
       author: '零零〇五Fogg05',
       type: '材质 / Texture',
-      tagline: '零零构想与 Log 光影再次联动：内置零零构想V5003 与 Log 白桦木灵动视效图形美化包',
+      tagline: '零雾构想与 Log 白桦木再次联动：内置零雾构想V5003 与 Log 白桦木灵动视效图形美化包',
       cover: 'assets/img/lingling-u-1.jpg',
       coverAlt: '通用版效果：深色石墙在窗口日光下的 PBR 反射',
       // 介绍同样是成品海报
       poster: 'assets/img/lingling-universal-poster.webp',
-      posterAlt: '零零构想通用版 V2.3 组件介绍海报',
+      posterAlt: '零雾构想通用版 V2.3 组件介绍海报',
       facts: [
-        { k: '作品名', v: '零零构想通用版' },
+        { k: '作品名', v: '零雾构想通用版' },
         { k: '作者', v: '零零〇五Fogg05' },
         { k: '版本', v: 'V2.3（2026-10-14）' },
         { k: '类型', v: '材质 / Texture' },
         { k: '平台', v: 'Minecraft 基岩版' },
         { k: '移植与维护', v: '创想时代开发组 Log坤团队（家属授权）' },
-        { k: '内置', v: '零零构想V5003 + Log 白桦木灵动视效' },
+        { k: '内置', v: '零雾构想V5003 + Log 白桦木灵动视效' },
         { k: '获取', v: '中国版【创想时代开发组】账号免费发布' }
       ],
       intro: [],

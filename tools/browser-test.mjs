@@ -1100,15 +1100,15 @@ check('作品页显示总数与条目数一致',
 check('作品页封面能加载',
   await evalJs(`[...document.querySelectorAll('#showcase-grid img')].every(i => i.complete && i.naturalWidth > 0)`));
 
-/* 作者必须是真人/原作者，不能一律写成工作室 —— 之前就把两件零零构想作品错标成了「创想时代开发组」 */
-check('两件零零构想作品的作者写的是原作者，不是工作室',
+/* 作者必须是真人/原作者，不能一律写成工作室 —— 之前就把两件零雾构想作品错标成了「创想时代开发组」 */
+check('两件零雾构想作品的作者写的是原作者，不是工作室',
   await evalJs(`(function(){
     var map = {};
     [...document.querySelectorAll('#showcase-grid .work')].forEach(function (w) {
       map[w.querySelector('h3').textContent.trim()] = w.querySelector('.work-meta').innerText;
     });
-    var oak = map['零零构想V5000 · 橡木7画质提升包'] || '';
-    var uni = map['零零构想通用版'] || '';
+    var oak = map['零雾构想V5000 · 橡木7画质提升包'] || '';
+    var uni = map['零雾构想通用版'] || '';
     return oak.indexOf('Log坤') >= 0 && uni.indexOf('零零〇五Fogg05') >= 0 &&
            oak.indexOf('创想时代开发组') < 0 && uni.indexOf('创想时代开发组') < 0;
   })()`),
@@ -1483,32 +1483,32 @@ check('秋水三尺：没有残留上一件作品的鸣谢 / 须知',
 await open('/work.html?id=lingling-v5000-oak7');
 await sleep(1200);
 
-check('零零构想：标题正确',
+check('零雾构想：标题正确',
   (await evalJs("document.querySelector('#work-name').textContent.trim()")).includes('橡木7'),
   await evalJs("document.querySelector('#work-name').textContent.trim()"));
 
-check('零零构想：介绍用的就是海报，而且真的加载出来了',
+check('零雾构想：介绍用的就是海报，而且真的加载出来了',
   await waitFor(`(function(){
     var img = document.querySelector('#work-intro .work-poster img');
     return !!img && img.complete && img.naturalWidth > 0;
   })()`),
   await evalJs("(function(){ var i = document.querySelector('#work-intro .work-poster img'); return i ? i.getAttribute('src') + ' ' + i.naturalWidth + 'x' + i.naturalHeight : '没有海报'; })()"));
 
-check('零零构想：海报是竖长图（高度远大于宽度）',
+check('零雾构想：海报是竖长图（高度远大于宽度）',
   await evalJs(`(function(){
     var i = document.querySelector('#work-intro .work-poster img');
     return !!i && i.naturalHeight > i.naturalWidth * 2;
   })()`),
   await evalJs("(function(){ var i = document.querySelector('#work-intro .work-poster img'); return i ? i.naturalWidth + 'x' + i.naturalHeight : '无'; })()"));
 
-check('零零构想：信息栏写明要先买零零构想V5000 与 SRC 前置',
+check('零雾构想：信息栏写明要先买零雾构想V5000 与 SRC 前置',
   await evalJs(`(function(){
     var t = document.querySelector('#work-facts')?.innerText || '';
     return t.indexOf('8144171') >= 0 && t.indexOf('0559302') >= 0;
   })()`),
   await evalJs("(document.querySelector('#work-facts')?.innerText || '').replace(/\\s+/g, ' ').slice(0, 80)"));
 
-check('零零构想：海报不会撑出横向滚动',
+check('零雾构想：海报不会撑出横向滚动',
   await evalJs('document.documentElement.scrollWidth <= window.innerWidth + 1'));
 
 await open('/work.html?id=log-shader-sa');
