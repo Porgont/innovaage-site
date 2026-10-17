@@ -16,7 +16,7 @@
     surveyUrl: 'https://www.wjx.cn/vm/OtrfYCj.aspx',
 
     // ★★★ 三个 QQ 群 ★★★
-    qqFeedback: '1017068586',   // 创想时代 · 反馈建议（资源问题反馈）
+    qqFeedback: '1017068586',   // 反馈交流群（资源问题反馈）
     qqAudit: '1045216325',      // 对外审核群（加入我们）
     qqPublic: '788233856',      // 对外交流群（交流探讨）
     qqCouncil: '1018260006',    // 开发理事会（对外代投）
