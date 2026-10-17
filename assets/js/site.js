@@ -668,21 +668,77 @@
     }
   }
 
-  /* ---------- 首页大图 ---------- */
+  /* ---------- 首页大图（作品封面轮换） ----------
+     背景层不是固定一张图，而是把各作品的封面排成一组轮播：
+       第一张用 SITE_CONFIG.heroImage 负责首屏，
+       后面接 SHOWCASE 里每件作品的封面（去重）。
+     后面的图懒加载，切换时用 CSS 交叉淡入，不做位移动画，免得糊。 */
   function initHeroImage() {
     var box = $('#hero-figure');
     if (!box) return;
 
-    if (!SITE_CONFIG.heroImage) { box.hidden = true; return; }
+    var list = [];
+    function push(src, alt) {
+      if (!src) return;
+      for (var i = 0; i < list.length; i++) { if (list[i].src === src) return; }
+      list.push({ src: src, alt: alt || '' });
+    }
 
-    var img = new Image();
-    img.src = SITE_CONFIG.heroImage;
-    img.alt = SITE_CONFIG.heroImageAlt || '';
-    img.loading = 'eager';
-    img.decoding = 'async';
-    // 图挂了就整块收起来，别留一个破图标
-    img.onerror = function () { box.hidden = true; };
-    box.appendChild(img);
+    push(SITE_CONFIG.heroImage, SITE_CONFIG.heroImageAlt);
+    for (var k = 0; k < SHOWCASE.length; k++) {
+      push(SHOWCASE[k].img, SHOWCASE[k].title);
+    }
+
+    if (!list.length) { box.hidden = true; return; }
+
+    var slides = list.map(function (item, i) {
+      var img = new Image();
+      img.className = 'hero-slide' + (i === 0 ? ' is-active' : '');
+      img.alt = item.alt;
+      img.decoding = 'async';
+      img.loading = i === 0 ? 'eager' : 'lazy';
+      img.src = item.src;
+      if (i === 0) {
+        // 首图挂了就整块收起来，别留一个破图标
+        img.onerror = function () { box.hidden = true; };
+      }
+      box.appendChild(img);
+      return img;
+    });
+
+    if (slides.length < 2) return;
+
+    var cur = 0;
+    var timer = null;
+    var RM = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)');
+    // 关了动效就不自动轮换，只留第一张
+    if (RM && RM.matches) return;
+
+    function show(n) {
+      var next = (n + slides.length) % slides.length;
+      if (next === cur) return;
+      slides[cur].classList.remove('is-active');
+      slides[next].classList.add('is-active');
+      cur = next;
+    }
+
+    function tick() {
+      // 标签页在后台时不动，省电
+      if (document.visibilityState === 'hidden') return;
+      show(cur + 1);
+    }
+
+    timer = setInterval(tick, 6000);
+
+    // 从往返缓存回来时重置，避免几张图同时是 active
+    window.addEventListener('pageshow', function () {
+      slides.forEach(function (s, i) { s.classList.toggle('is-active', i === cur); });
+    });
+
+    // 页面卸载前清掉计时器
+    window.addEventListener('pagehide', function () {
+      if (timer) { clearInterval(timer); timer = null; }
+    });
   }
 
   /* ---------- 作品展示 ---------- */
@@ -941,6 +997,52 @@
     });
   }
 
+  /* ---------- 页面切换动效 ----------
+     进场靠 CSS 的 page-in 动画，这里只管两件事：
+       1. 点站内链接时先播 0.2 秒的离场态，再真正跳转
+       2. 从往返缓存回来（浏览器后退）时把离场态清掉，别让页面停在全透明
+     以下情况一律不拦：新窗口、下载、外站、页内锚点、按住修饰键点击。 */
+  function initPageTransition() {
+    var body = document.body;
+    var REDUCED = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    function clearLeaving() { body.classList.remove('is-leaving'); }
+
+    // 返回 / 前进时清掉，避免停在透明状态
+    window.addEventListener('pageshow', clearLeaving);
+    window.addEventListener('pagehide', clearLeaving);
+
+    document.addEventListener('click', function (e) {
+      if (e.defaultPrevented || e.button !== 0) return;
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      // 动画被关掉时直接放行，不做任何延迟
+      if (REDUCED && REDUCED.matches) return;
+
+      var a = e.target && e.target.closest ? e.target.closest('a') : null;
+      if (!a) return;
+      if (a.target === '_blank' || a.hasAttribute('download')) return;
+
+      var href = a.getAttribute('href');
+      if (!href || href.charAt(0) === '#') return;
+      if (/^(mailto:|tel:|javascript:)/i.test(href)) return;
+
+      var url;
+      try { url = new URL(a.href, location.href); } catch (err) { return; }
+      if (url.origin !== location.origin) return;
+      // 同页只换锚点的不拦
+      if (url.pathname === location.pathname && url.search === location.search && url.hash) return;
+
+      e.preventDefault();
+      body.classList.add('is-leaving');
+      setTimeout(function () { location.href = a.href; }, 200);
+
+      // 兜底：万一上面那次跳转被浏览器拦了，2 秒后把页面恢复回来
+      setTimeout(function () {
+        if (document.visibilityState !== 'hidden') clearLeaving();
+      }, 2000);
+    });
+  }
+
   /* ---------- 启动 ---------- */
   function boot() {
     markActiveNav();
@@ -955,6 +1057,7 @@
     initHeroImage();
     initShowcase();
     initWorkDetail();
+    initPageTransition();
   }
 
   if (document.readyState === 'loading') {

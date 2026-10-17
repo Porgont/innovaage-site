@@ -2230,6 +2230,218 @@ main { counter-reset: sec; }
   );
 }
 
+/* ---------- ⑤ 首页：整幅大图 hero ---------- */
+.hero--banner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: min(86vh, 780px);
+  padding: 0;
+  overflow: hidden;
+  border-bottom: 1px solid var(--line);
+  background: var(--bg-2);
+}
+
+.hero--banner .hero-figure {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border: 0;
+  border-radius: 0;
+  clip-path: none;
+  background: none;
+}
+
+/* 当背景用时不要右下切角，也不要那条黄角标 */
+.hero--banner .hero-figure::before,
+.hero--banner .hero-figure::after {
+  content: none;
+  display: none;
+}
+
+.hero--banner .hero-figure img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  aspect-ratio: auto;
+  display: block;
+  opacity: 0;
+  /* 轮换只用交叉淡入，不做位移，避免糊 */
+  transition: opacity 1.2s ease;
+}
+
+/* 每张图轮到时缓慢推近一点，画面不死板（14 秒走完，和 6 秒换图错开） */
+@keyframes hero-drift {
+  from { transform: scale(1); }
+  to   { transform: scale(1.06); }
+}
+
+.hero--banner .hero-figure img.is-active {
+  opacity: 1;
+  animation: hero-drift 14s cubic-bezier(.25, .1, .25, 1) forwards;
+}
+
+/* 渐隐遮罩：左侧接近纯色，保证深色文字读得清；右侧露出照片。
+   颜色全部由 var(--bg) 混合得出，深浅主题自动跟着变，不另加色值变量。 */
+.hero--banner .hero-veil {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    linear-gradient(to bottom, transparent 54%, var(--bg) 100%),
+    linear-gradient(to right,
+      var(--bg) 0%,
+      color-mix(in srgb, var(--bg) 95%, transparent) 32%,
+      color-mix(in srgb, var(--bg) 64%, transparent) 52%,
+      color-mix(in srgb, var(--bg) 20%, transparent) 74%,
+      transparent 100%);
+}
+
+.hero--banner .wrap {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  padding-top: 92px;
+  padding-bottom: 56px;
+}
+
+/* 正文不跟着照片铺满整幅，给右侧留出画面 */
+.hero-copy { max-width: 660px; }
+
+/* ---------- ⑥ 页面切换动效 ----------
+   进场是一条长缓出的位移 + 轻微模糊；离场只做很短的收缩，不让人等。
+   main 里没有 position:fixed 的元素（灯箱、手机侧栏都在 main 外），
+   所以这里的 transform / filter 不会破坏它们的定位。 */
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes page-out {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-10px);
+    filter: blur(4px);
+  }
+}
+
+main {
+  animation: page-in .58s cubic-bezier(.16, 1, .3, 1) both;
+}
+
+/* 离场直接换成另一条动画：进场那条带 fill: both 会一直持有 opacity:1，
+   用 transition 改不动它，只有替换 animation 才生效。 */
+body.is-leaving main {
+  animation: page-out .2s ease forwards;
+}
+
+/* ---------- ⑦ 交互动效：按钮与卡片的平滑反馈 ----------
+   统一用同一条缓出曲线，时长按元素大小区分：按钮最快，卡片稍慢。 */
+.btn {
+  transition:
+    transform .22s cubic-bezier(.16, 1, .3, 1),
+    box-shadow .3s cubic-bezier(.16, 1, .3, 1),
+    background-color .2s ease,
+    color .2s ease,
+    border-color .2s ease,
+    opacity .2s ease;
+}
+
+.btn:hover {
+  opacity: 1;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(20, 22, 26, .16);
+}
+
+/* 按下时回落一点点，给一个"被按住"的实感 */
+.btn:active {
+  transform: translateY(0) scale(.98);
+  box-shadow: 0 2px 6px rgba(20, 22, 26, .12);
+  transition-duration: .08s;
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+/* 作品卡片：悬停微抬，封面缓慢推近 */
+.work {
+  transition: transform .34s cubic-bezier(.16, 1, .3, 1);
+}
+
+.work:hover { transform: translateY(-4px); }
+
+.work-media { overflow: hidden; }
+
+.work-media img {
+  transition: transform .7s cubic-bezier(.16, 1, .3, 1);
+}
+
+.work:hover .work-media img { transform: scale(1.045); }
+
+/* 工具箱模块卡片同样处理 */
+.module-card {
+  transition:
+    transform .34s cubic-bezier(.16, 1, .3, 1),
+    border-color .2s ease,
+    background-color .2s ease;
+}
+
+.module-card:hover { transform: translateY(-4px); }
+
+/* 负责人卡片轻轻抬起 */
+.officer {
+  transition:
+    transform .28s cubic-bezier(.16, 1, .3, 1),
+    border-color .2s ease,
+    background-color .2s ease;
+}
+
+.officer:hover { transform: translateY(-2px); }
+
+/* 筛选 chip 与标签页：颜色平滑过渡，按下有回弹 */
+.chip,
+.tab {
+  transition:
+    background-color .2s ease,
+    color .2s ease,
+    border-color .2s ease,
+    transform .18s cubic-bezier(.16, 1, .3, 1);
+}
+
+.chip:active,
+.tab:active { transform: scale(.97); }
+
+/* 复制按钮与主题开关也统一一下 */
+.copy-btn,
+.theme-toggle {
+  transition:
+    background-color .2s ease,
+    color .2s ease,
+    border-color .2s ease,
+    transform .18s cubic-bezier(.16, 1, .3, 1);
+}
+
+.copy-btn:active,
+.theme-toggle:active { transform: scale(.94); }
+
 /* ---------- 改版的手机端适配 ---------- */
 @media (max-width: 800px) {
   :root { --cut: 10px; }
@@ -2250,6 +2462,27 @@ main { counter-reset: sec; }
   .hero .hero-title { font-size: clamp(18px, 4.6vw, 22px); }
 
   .btn { --cut: 7px; }
+
+  /* 整幅 hero 在手机上改成「上面一条图 + 下面正文」，文字不压在照片上 */
+  .hero--banner {
+    display: block;
+    min-height: 0;
+  }
+
+  .hero--banner .hero-figure { inset: 0 0 auto 0; height: 46vh; }
+
+  .hero--banner .hero-veil {
+    inset: 0 0 auto 0;
+    height: 46vh;
+    background: linear-gradient(to bottom, transparent 30%, var(--bg) 100%);
+  }
+
+  .hero--banner .wrap {
+    padding-top: calc(46vh + 18px);
+    padding-bottom: 34px;
+  }
+
+  .hero-copy { max-width: none; }
 }
 
 /* ---------- 响应式 ---------- */
