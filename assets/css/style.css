@@ -2244,12 +2244,14 @@ main { counter-reset: sec; }
 
 .hero--banner .hero-figure {
   position: absolute;
-  inset: 0;
+  /* 比 hero 大一圈，给视差位移留余量，平移时不会露出边缘 */
+  inset: -4%;
   z-index: 0;
   border: 0;
   border-radius: 0;
   clip-path: none;
   background: none;
+  will-change: transform;
 }
 
 /* 当背景用时不要右下切角，也不要那条黄角标 */

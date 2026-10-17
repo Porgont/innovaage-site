@@ -741,6 +741,66 @@
     });
   }
 
+  /* ---------- 首页底图视差 ----------
+     鼠标在 hero 里移动时，整层背景跟着轻微平移（最多 12px），
+     和图片自身那条 hero-drift 缩放动画分开作用在不同元素上，互不覆盖。
+     用 requestAnimationFrame 做缓动，避免直接跟手导致的生硬。 */
+  function initHeroParallax() {
+    var fig = $('.hero--banner .hero-figure');
+    if (!fig || !fig.parentElement) return;
+
+    // 触屏设备没有鼠标，直接不做
+    if (!window.matchMedia || !window.matchMedia('(pointer: fine)').matches) return;
+    var RM = window.matchMedia('(prefers-reduced-motion: reduce)');
+    if (RM && RM.matches) return;
+
+    var MAX = 12;          // 最大位移（px）：再大就不"略微"了
+    var EASE = 0.12;       // 每帧靠近目标的比例，越小越滞后
+    var tx = 0, ty = 0;    // 目标位移
+    var cx = 0, cy = 0;    // 当前位移
+    var raf = null;
+
+    function paint() {
+      cx += (tx - cx) * EASE;
+      cy += (ty - cy) * EASE;
+
+      var doneX = Math.abs(tx - cx) < 0.1;
+      var doneY = Math.abs(ty - cy) < 0.1;
+      if (doneX) cx = tx;
+      if (doneY) cy = ty;
+
+      fig.style.transform = 'translate3d(' + cx.toFixed(2) + 'px, ' + cy.toFixed(2) + 'px, 0)';
+
+      if (doneX && doneY) { raf = null; return; }
+      raf = requestAnimationFrame(paint);
+    }
+
+    function kick() {
+      if (!raf) raf = requestAnimationFrame(paint);
+    }
+
+    var hero = fig.parentElement;
+
+    window.addEventListener('pointermove', function (e) {
+      var r = hero.getBoundingClientRect();
+      // 鼠标离开 hero 区域就不跟，避免整页都在晃
+      if (e.clientY < r.top || e.clientY > r.bottom) return;
+
+      // 换到 -1 ~ 1 的区间，再反向推背景（背景往鼠标反方向走才有纵深）
+      var px = ((e.clientX - r.left) / r.width) * 2 - 1;
+      var py = ((e.clientY - r.top) / r.height) * 2 - 1;
+
+      tx = Math.max(-1, Math.min(1, px)) * -MAX;
+      ty = Math.max(-1, Math.min(1, py)) * -MAX;
+      kick();
+    }, { passive: true });
+
+    // 鼠标移出文档时回中
+    document.addEventListener('mouseleave', function () {
+      tx = 0; ty = 0; kick();
+    });
+  }
+
   /* ---------- 作品展示 ---------- */
   function initShowcase() {
     var host = $('#showcase-grid');
@@ -1055,6 +1115,7 @@
     initSurvey();
     initTheme();
     initHeroImage();
+    initHeroParallax();
     initShowcase();
     initWorkDetail();
     initPageTransition();
