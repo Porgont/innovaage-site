@@ -82,7 +82,7 @@
       id: 'lingling-v5000-oak7',
       img: 'assets/img/lingling-1.jpg',
       title: '零零构想V5000 · 橡木7画质提升包',
-      meta: '作者：创想时代开发组',
+      meta: '作者：Log坤',
       category: 'addon',
       desc: '把零零构想V5000 内置光影换成 Log 橡木7。'
     },
@@ -90,7 +90,7 @@
       id: 'lingling-universal',
       img: 'assets/img/lingling-u-1.jpg',
       title: '零零构想通用版',
-      meta: '作者：创想时代开发组',
+      meta: '作者：零零〇五Fogg05',
       category: 'tex',
       desc: '零零构想与 Log 光影再次联动，内置 V5003 与 Log 白桦木灵动视效包。'
     }
@@ -182,7 +182,7 @@
 
     'lingling-v5000-oak7': {
       name: '零零构想V5000 · 橡木7画质提升包',
-      author: '创想时代开发组',
+      author: 'Log坤',
       type: 'Addon / 画质提升包',
       tagline: '把零零构想V5000 内置光影由「Log6 桦木」更换为 Log 橡木7',
       cover: 'assets/img/lingling-1.jpg',
@@ -192,6 +192,7 @@
       posterAlt: '零零构想V5000-橡木7画质提升包 组件介绍海报',
       facts: [
         { k: '作品名', v: '零零构想V5000-橡木7画质提升包' },
+        { k: '作者', v: 'Log坤' },
         { k: '版本', v: 'V1.0（2026-10-13）' },
         { k: '类型', v: 'Addon / 画质提升包' },
         { k: '平台', v: 'Minecraft 基岩版' },
@@ -209,7 +210,7 @@
 
     'lingling-universal': {
       name: '零零构想通用版',
-      author: '创想时代开发组',
+      author: '零零〇五Fogg05',
       type: '材质 / Texture',
       tagline: '零零构想与 Log 光影再次联动：内置零零构想V5003 与 Log 白桦木灵动视效图形美化包',
       cover: 'assets/img/lingling-u-1.jpg',
@@ -219,11 +220,11 @@
       posterAlt: '零零构想通用版 V2.3 组件介绍海报',
       facts: [
         { k: '作品名', v: '零零构想通用版' },
+        { k: '作者', v: '零零〇五Fogg05' },
         { k: '版本', v: 'V2.3（2026-10-14）' },
         { k: '类型', v: '材质 / Texture' },
         { k: '平台', v: 'Minecraft 基岩版' },
-        { k: '原材质作者', v: '零零〇五Fogg05' },
-        { k: '移植与维护', v: '创想时代开发组 Log坤团队' },
+        { k: '移植与维护', v: '创想时代开发组 Log坤团队（家属授权）' },
         { k: '内置', v: '零零构想V5003 + Log 白桦木灵动视效' },
         { k: '获取', v: '中国版【创想时代开发组】账号免费发布' }
       ],

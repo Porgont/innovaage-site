@@ -947,6 +947,26 @@ check('作品页显示总数与条目数一致',
 check('作品页封面能加载',
   await evalJs(`[...document.querySelectorAll('#showcase-grid img')].every(i => i.complete && i.naturalWidth > 0)`));
 
+/* 作者必须是真人/原作者，不能一律写成工作室 —— 之前就把两件零零构想作品错标成了「创想时代开发组」 */
+check('两件零零构想作品的作者写的是原作者，不是工作室',
+  await evalJs(`(function(){
+    var map = {};
+    [...document.querySelectorAll('#showcase-grid .work')].forEach(function (w) {
+      map[w.querySelector('h3').textContent.trim()] = w.querySelector('.work-meta').innerText;
+    });
+    var oak = map['零零构想V5000 · 橡木7画质提升包'] || '';
+    var uni = map['零零构想通用版'] || '';
+    return oak.indexOf('Log坤') >= 0 && uni.indexOf('零零〇五Fogg05') >= 0 &&
+           oak.indexOf('创想时代开发组') < 0 && uni.indexOf('创想时代开发组') < 0;
+  })()`),
+  await evalJs(`(function(){
+    var map = {};
+    [...document.querySelectorAll('#showcase-grid .work')].forEach(function (w) {
+      map[w.querySelector('h3').textContent.trim()] = w.querySelector('.work-meta').innerText.replace(/\\s+/g, ' ').trim();
+    });
+    return JSON.stringify(map);
+  })()`));
+
 check('作品页不再出现我编的「默认允许使用」口径',
   await evalJs("!document.body.innerText.includes('作品默认允许')"));
 
