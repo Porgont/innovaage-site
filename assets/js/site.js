@@ -114,7 +114,16 @@
 
   /* 作品主页 —— 只在官网上发布的作品，字段与 SHOWCASE 相同。
      作品页默认打开的就是这一栏。 */
-  var SHOWCASE_HOME = [];
+  var SHOWCASE_HOME = [
+    {
+      id: 'fangzhen-tech',
+      img: 'assets/img/fangzhen-cover.jpg',
+      title: '仿真工艺系列材质',
+      meta: '作者：茫帛',
+      category: 'tex',
+      desc: '风格化写实、偏生存实用向的材质包，历时近四年制作，现有多种版本可选。'
+    }
+  ];
 
   /* 尚未正式发布的测试组件 —— 单独一栏，字段与 SHOWCASE 相同。
      ★ 测试组件不放 SHOWCASE，否则会混进首页与作品页的代表作品里。
@@ -299,6 +308,73 @@
       ],
       shots: [
         { img: 'assets/img/qingju-deer-pvp.jpg', alt: 'Deer PVP 材质：青绿色主题的角色、武器与物品' }
+      ]
+    },
+    'fangzhen-tech': {
+      name: '仿真工艺系列材质',
+      author: '茫帛',
+      type: '材质 / Texture',
+      tagline: '风格化写实、偏生存实用向的材质包，历时近四年制作',
+      cover: 'assets/img/fangzhen-cover.jpg',
+      coverAlt: '仿真工艺系列材质封面：REALCRAFT 标志与草方块地形',
+      facts: [
+        { k: '作品名', v: '仿真工艺系列材质' },
+        { k: '作者', v: '茫帛' },
+        { k: '类型', v: '材质 / Texture' },
+        { k: '平台', v: 'Minecraft 基岩版（网易中国版）/ Java 版' },
+        { k: '网易版规格', v: '128x / 256x / 永久更新版 / 远古怀旧版' },
+        { k: '方块贴图完成度', v: '80%' },
+        { k: 'RVHD 网易版', v: '已下架' },
+        { k: '联系 QQ', v: '112522280' }
+      ],
+      intro: [
+        '仿真工艺：一款风格化写实、偏生存实用向的材质包，历时近四年的制作，不断的优化、改进，目前有多种版本可供选择。',
+        '繁茂草地拓展包需要 1.21.11 以上版本才能生效；Java 版最佳游玩版本为 1.21.11。',
+        '目前方块贴图完成度为 80%。'
+      ],
+      links: [
+        {
+          title: '网易版（中国版）',
+          items: [
+            { label: '四合一', href: 'https://resource-minecraft.h5.163.com/#/detail?uid=3073187643&id=4689118647881567507&channel=netease' },
+            { label: '普通版 128x', href: 'https://resource-minecraft.h5.163.com/#/detail?uid=3073187643&id=4673766977794770501&channel=netease' },
+            { label: '普通版 256x', href: 'https://resource-minecraft.h5.163.com/#/detail?uid=3073187643&id=4673607031461400018&channel=netease' },
+            { label: '永久更新版', href: 'https://resource-minecraft.h5.163.com/#/detail?uid=3073187643&id=4659344896070953195&channel=netease' }
+          ]
+        },
+        {
+          title: '网易远古怀旧版（已停止维护）',
+          items: [
+            { label: '补丁包', href: 'https://resource-minecraft.h5.163.com/#/detail?uid=3073187643&id=4661394903323224801&channel=netease' },
+            { label: '256x 畅玩版', href: 'https://resource-minecraft.h5.163.com/#/detail?uid=3073187643&id=4659341914317305302&channel=netease' },
+            { label: '512x 测试版', href: 'https://resource-minecraft.h5.163.com/#/detail?uid=3073187643&id=4658767718024537686&channel=netease' }
+          ]
+        },
+        {
+          title: 'Java 版',
+          items: [
+            { label: '仿真工艺 JAVA 版（爱发电）', href: 'https://afdian.com/a/Mang2022823' },
+            { label: 'RVHD JAVA 版（MineGraph）', href: 'https://www.minegraph.cn/resourcepacks/47' }
+          ]
+        },
+        {
+          title: '作者主页',
+          items: [
+            { label: 'B 站空间', href: 'https://b23.tv/Qedjm9p' }
+          ]
+        }
+      ],
+      shots: [
+        { img: 'assets/img/fangzhen-rvhd-1.jpg', alt: 'RVHD 效果图：石材与发光方块的接缝细节' },
+        { img: 'assets/img/fangzhen-rvhd-2.jpg', alt: 'RVHD 效果图：原木与树叶在日光下的表面质感' },
+        { img: 'assets/img/fangzhen-rvhd-3.jpg', alt: 'RVHD 效果图：深色石材与木材的拼接纹理' },
+        { img: 'assets/img/fangzhen-shot-1.jpg', alt: '效果图：室内场景，木地板与原木家具' },
+        { img: 'assets/img/fangzhen-shot-2.jpg', alt: '效果图：草方块与各类矿石块' },
+        { img: 'assets/img/fangzhen-shot-3.jpg', alt: '效果图：草方块地形的表面细节' },
+        { img: 'assets/img/fangzhen-shot-4.jpg', alt: '效果图：浅色方块面板近景' },
+        { img: 'assets/img/fangzhen-shot-5.jpg', alt: '效果图：多种石材方块对照' },
+        { img: 'assets/img/fangzhen-shot-6.jpg', alt: '效果图：蓝色石材方块近景' },
+        { img: 'assets/img/fangzhen-shot-7.jpg', alt: '效果图：石材与矿石方块' }
       ]
     }
   };
@@ -1085,6 +1161,23 @@
      地址形如 work.html?id=log-shader-sa
      HTML 里已经写了一份默认内容（Log光影 · 橡木 SA），
      所以即使 JS 没跑起来或者 id 不对，页面也不会空白。 */
+  /* 作品详情页的外链按钮组
+     links: [{ title, items: [{ label, href }] }]
+     全部走 target=_blank，并带 rel=noopener */
+  function renderWorkLinks(groups) {
+    return '<div class="work-links">' + groups.map(function (g) {
+      var title = g.title
+        ? '<p class="work-links__title">' + esc(g.title) + '</p>'
+        : '';
+      var row = (g.items || []).map(function (it) {
+        return '<a class="btn btn--ghost btn--sm" href="' + esc(it.href) + '" ' +
+          'target="_blank" rel="noopener">' + esc(it.label) + '</a>';
+      }).join('');
+      return '<div class="work-links__group">' + title +
+        '<div class="work-links__row">' + row + '</div></div>';
+    }).join('') + '</div>';
+  }
+
   function initWorkDetail() {
     var host = $('#work-detail');
     if (!host) return;
@@ -1185,6 +1278,12 @@
           return '<p>' + esc(p) + '</p>';
         }).join(''));
       }
+
+      // 获取与外部链接：一律渲染成按钮，不做正文里的超链接
+      if (work.links && work.links.length) {
+        parts.push(renderWorkLinks(work.links));
+      }
+
       intro.innerHTML = parts.join('');
     }
 

@@ -1102,14 +1102,17 @@ check('一进作品页先看到「作品主页」，另外两栏隐藏',
   })()`),
   await evalJs("[...document.querySelectorAll('.tab-panel')].filter(p => !p.hidden).map(p => p.id).join(',')"));
 
-check('「作品主页」目前是空的，并给出了说明',
+check('「作品主页」里有仿真工艺系列材质，作者是茫帛',
   await evalJs(`(function(){
-    var box = document.querySelector('#showcase-home');
-    if (!box) return false;
-    var empty = box.querySelector('.works-empty');
-    return box.querySelectorAll('.work').length === 0 && !!empty && empty.textContent.trim().length > 0;
+    var w = [...document.querySelectorAll('#showcase-home .work')];
+    if (!w.length) return false;
+    var hit = w.filter(function (x) { return x.querySelector('h3').textContent.indexOf('仿真工艺') >= 0; });
+    if (hit.length !== 1) return false;
+    var meta = hit[0].querySelector('.work-meta').innerText;
+    var href = hit[0].querySelector('.work-more') ? (hit[0].querySelector('.work-more').getAttribute('href') || '') : '';
+    return meta.indexOf('茫帛') >= 0 && href.indexOf('fangzhen-tech') >= 0;
   })()`),
-  await evalJs("(document.querySelector('#showcase-home .works-empty') || {}).textContent"));
+  await evalJs("[...document.querySelectorAll('#showcase-home .work')].map(w => w.querySelector('h3').textContent + ' ' + w.querySelector('.work-meta').innerText.replace(/\\s+/g, ' ')).join(' | ')"));
 
 check('三个标签都有描边（不是纯文字）',
   await evalJs(`(function(){
@@ -1320,6 +1323,52 @@ check('放大层的背景也有淡入',
 
 await evalJs("document.querySelector('#lightbox-close').click()");
 await sleep(400);
+/* ---------- 仿真工艺：外链必须是按钮，不能是正文里的超链接 ---------- */
+await open('/work.html?id=fangzhen-tech');
+await sleep(1500);
+
+check('仿真工艺：标题与作者正确',
+  (await evalJs("document.querySelector('#work-name').textContent.trim()")) === '仿真工艺系列材质' &&
+  (await evalJs("document.querySelector('#work-author').textContent")).includes('茫帛'),
+  await evalJs("document.querySelector('#work-name').textContent.trim() + ' / ' + document.querySelector('#work-author').textContent.trim()"));
+
+check('仿真工艺：信息栏写明了平台与完成度',
+  await evalJs(`(function(){
+    var t = document.querySelector('#work-facts').innerText;
+    return t.indexOf('Java') >= 0 && t.indexOf('80%') >= 0 && t.indexOf('112522280') >= 0;
+  })()`));
+
+check('仿真工艺：外链全部渲染成按钮（class 带 btn）',
+  await evalJs(`(function(){
+    var links = [...document.querySelectorAll('.work-links a')];
+    return links.length === 10 && links.every(function (a) { return a.classList.contains('btn'); });
+  })()`),
+  await evalJs("document.querySelectorAll('.work-links a').length + ' 个'"));
+
+check('仿真工艺：正文里没有夹超链接',
+  await evalJs(`(function(){
+    var intro = document.querySelector('#work-intro');
+    if (!intro) return false;
+    // 正文段落里不允许出现 <a>
+    return [...intro.querySelectorAll('p')].every(function (p) { return p.querySelector('a') === null; });
+  })()`));
+
+check('仿真工艺：外链按四个分组排列',
+  await evalJs(`(function(){
+    var t = [...document.querySelectorAll('.work-links__title')].map(function (e) { return e.textContent.trim(); });
+    return t.length === 4 && t[0].indexOf('网易版') >= 0 && t[2].indexOf('Java') >= 0;
+  })()`),
+  await evalJs("[...document.querySelectorAll('.work-links__title')].map(e => e.textContent.trim()).join(' / ')"));
+
+check('仿真工艺：外链都在新窗口打开且带 noopener',
+  await evalJs("[...document.querySelectorAll('.work-links a')].every(a => a.target === '_blank' && (a.rel || '').indexOf('noopener') >= 0)"));
+
+check('仿真工艺：10 张截图都加载出来',
+  await waitFor(`(function(){
+    var imgs = [...document.querySelectorAll('#work-shots img')];
+    return imgs.length === 10 && imgs.every(function (i) { return i.complete && i.naturalWidth > 0; });
+  })()`),
+  await evalJs("document.querySelectorAll('#work-shots img').length + ' 张'"));
 /* ---------- 另外两件作品：地图与 Addon ---------- */
 await open('/work.html?id=qiushui-sanchi');
 await sleep(900);
@@ -1333,6 +1382,7 @@ check('秋水三尺：标题与作者正确',
 check('详情页面包屑跟着作品名变',
   (await evalJs("document.querySelector('#work-crumb').textContent.trim()")) === '秋水三尺',
   await evalJs("document.querySelector('#work-crumb').textContent.trim()"));
+
 
 check('秋水三尺：3 张截图都加载出来',
   await waitFor(`(function(){
