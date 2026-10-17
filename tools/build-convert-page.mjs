@@ -107,7 +107,42 @@ const MAIN = `<main id="main">
     </div>
   </section>
 
-  <!-- ============ 二、JSON 与 CSV ============ -->
+  <!-- ============ 二、PDF 转 Word ============ -->
+  <section class="section section--tight" id="pdf">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker">PDF</span>
+        <h2>PDF 转 Word</h2>
+        <p>把 PDF 里的文字抽出来，按阅读顺序写成 .docx。</p>
+      </div>
+
+      <div class="panel">
+        <label class="dropzone" id="pdf-dropzone" for="pdf-input" tabindex="0">
+          <span class="dropzone-icon" aria-hidden="true">📄</span>
+          <b>点这里选 PDF，或把文件拖进来</b>
+          <span>只提文字：扫描件和图片里的字提不出来</span>
+          <input type="file" id="pdf-input" accept="application/pdf,.pdf" hidden>
+        </label>
+
+        <div class="file-list" id="pdf-file" hidden></div>
+
+        <div class="btn-row" style="margin-top:20px">
+          <button class="btn" type="button" id="pdf-run" disabled>转成 Word</button>
+          <button class="btn btn--ghost btn--sm" type="button" id="pdf-clear" hidden>清空</button>
+        </div>
+
+        <p class="note" id="pdf-note" style="margin-top:14px">
+          转换在本地完成，PDF 不会上传到任何服务器。第一次使用会加载约 2.5 MB 的解析库。
+        </p>
+
+        <p class="note note--warn" style="margin-top:10px">
+          只提取文字：扫描件、图片里的文字提不出来；原文档的表格、图片、排版不会保留，会变成按行排列的段落。
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 三、JSON 与 CSV ============ -->
   <section class="section section--tight" id="data">
     <div class="wrap">
       <div class="section-head">
@@ -142,7 +177,7 @@ const MAIN = `<main id="main">
     </div>
   </section>
 
-  <!-- ============ 三、文本 Base64 ============ -->
+  <!-- ============ 四、文本 Base64 ============ -->
   <section class="section section--tight" id="b64">
     <div class="wrap">
       <div class="section-head">
@@ -197,15 +232,17 @@ html = html.replace(/<meta property="og:url" content="[^"]*">/, '<meta property=
 // 页面专属脚本挂在 site.js 之后。lamejs 先加载（MP3 编码要用），再挂转换逻辑。
 html = html.replace(
   '<script src="assets/js/toolbox.js"></script>',
-  '<script src="assets/vendor/lamejs/lamejs.iife.js"></script>\n<script src="assets/js/convert-tool.js"></script>'
+  '<script src="assets/vendor/lamejs/lamejs.iife.js"></script>\n<script src="assets/js/convert-tool.js"></script>\n<script src="assets/js/pdf-tool.js"></script>'
 );
 
 writeFileSync(join(root, 'tools-convert.html'), html, 'utf8');
 
 const ids = ['audio-input', 'audio-run', 'audio-note', 'data-in', 'data-out',
-  'b64-in', 'b64-out', 'audio-dropzone', 'audio-file', 'bitrate-field'];
+  'b64-in', 'b64-out', 'audio-dropzone', 'audio-file', 'bitrate-field',
+  'pdf-input', 'pdf-run', 'pdf-note', 'pdf-dropzone'];
 console.log('  已生成 tools-convert.html');
 console.log('  关键节点: ' + ids.map((id) => (html.includes(`id="${id}"`) ? id + '✓' : id + '✗')).join(' '));
 console.log('  引用 convert-tool.js: ' + (html.includes('assets/js/convert-tool.js') ? '✓' : '✗'));
 console.log('  引用 lamejs: ' + (html.includes('assets/vendor/lamejs/lamejs.iife.js') ? '✓' : '✗'));
+console.log('  引用 pdf-tool.js: ' + (html.includes('assets/js/pdf-tool.js') ? '✓' : '✗'));
 console.log('  MP3 码率选项: ' + ((html.match(/data-bitrate=/g) || []).length) + ' 个');
