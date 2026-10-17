@@ -93,6 +93,22 @@
       meta: '作者：零零〇五Fogg05',
       category: 'tex',
       desc: '零零构想与 Log 光影再次联动，内置 V5003 与 Log 白桦木灵动视效包。'
+    },
+    {
+      id: 'bilibili-pvp-textures',
+      img: 'assets/img/qingju-bilibili-pvp.jpg',
+      title: 'Bilibili PVP Textures',
+      meta: '作者：青橘',
+      category: 'tex',
+      desc: 'Bilibili 主题的 PVP 材质。'
+    },
+    {
+      id: 'deer-pvp-textures',
+      img: 'assets/img/qingju-deer-pvp.jpg',
+      title: 'Deer PVP 材质',
+      meta: '作者：青橘',
+      category: 'tex',
+      desc: 'Deer 主题的 PVP 材质。'
     }
   ];
 
@@ -238,6 +254,42 @@
         { img: 'assets/img/lingling-u-1.jpg', alt: '效果图：深色石墙与窗口日光，PBR 材质反射' },
         { img: 'assets/img/lingling-u-2.jpg', alt: '效果图：木质建筑与积雪场景的材质表现' },
         { img: 'assets/img/lingling-u-3.jpg', alt: '效果图：樱花林地，树冠与草地材质层次' }
+      ]
+    },
+
+    'bilibili-pvp-textures': {
+      name: 'Bilibili PVP Textures',
+      author: '青橘',
+      type: '材质 / Texture（PVP）',
+      tagline: 'Bilibili 主题的 PVP 材质',
+      cover: 'assets/img/qingju-bilibili-pvp.jpg',
+      coverAlt: 'Bilibili PVP Textures：粉色主题的角色、武器与物品栏',
+      facts: [
+        { k: '作品名', v: 'Bilibili PVP Textures' },
+        { k: '作者', v: '青橘' },
+        { k: '类型', v: '材质 / Texture（PVP）' }
+      ],
+      intro: [],
+      shots: [
+        { img: 'assets/img/qingju-bilibili-pvp.jpg', alt: 'Bilibili PVP Textures：粉色主题的角色、武器、血条与物品栏' }
+      ]
+    },
+
+    'deer-pvp-textures': {
+      name: 'Deer PVP 材质',
+      author: '青橘',
+      type: '材质 / Texture（PVP）',
+      tagline: 'Deer 主题的 PVP 材质',
+      cover: 'assets/img/qingju-deer-pvp.jpg',
+      coverAlt: 'Deer PVP 材质：青绿色主题的角色与武器',
+      facts: [
+        { k: '作品名', v: 'Deer PVP 材质' },
+        { k: '作者', v: '青橘' },
+        { k: '类型', v: '材质 / Texture（PVP）' }
+      ],
+      intro: [],
+      shots: [
+        { img: 'assets/img/qingju-deer-pvp.jpg', alt: 'Deer PVP 材质：青绿色主题的角色、武器与物品' }
       ]
     }
   };
@@ -1066,6 +1118,9 @@
     setText('#work-name', work.name || '');
     setText('#work-tagline', work.tagline || '');
     setText('#work-author', work.author ? '作者：' + work.author : '');
+    // 面包屑最后一级也要跟着换，否则一直停在 HTML 里写死的那个作品名
+    setText('#work-crumb', work.name || '');
+    if (work.name) document.title = work.name + ' | 作品 | 创想时代开发组';
 
     var desc = $('meta[name="description"]');
     if (desc) {

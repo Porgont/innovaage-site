@@ -1253,6 +1253,11 @@ check('秋水三尺：标题与作者正确',
   (await evalJs("document.querySelector('#work-author').textContent")).includes('余末YuuMo'),
   await evalJs("document.querySelector('#work-name').textContent.trim() + ' / ' + document.querySelector('#work-author').textContent.trim()"));
 
+// 面包屑最后一级过去一直停在 HTML 里写死的默认作品名上
+check('详情页面包屑跟着作品名变',
+  (await evalJs("document.querySelector('#work-crumb').textContent.trim()")) === '秋水三尺',
+  await evalJs("document.querySelector('#work-crumb').textContent.trim()"));
+
 check('秋水三尺：3 张截图都加载出来',
   await waitFor(`(function(){
     var imgs = [...document.querySelectorAll('#work-shots img')];
