@@ -1281,6 +1281,14 @@
     // 作品主页（作品页默认栏）：只在官网发布的作品
     renderWorks($('#showcase-home'), SHOWCASE_HOME, '目前还没有只在官网发布的作品。有作品在这里首发时，会先出现在这一栏。');
 
+    // 首页「作品主页」：同一份数据，首页按 data-limit 只显示前几件
+    var homeOnline = $('#showcase-online');
+    if (homeOnline) {
+      var onlineLimit = parseInt(homeOnline.getAttribute('data-limit'), 10);
+      var onlineList = onlineLimit > 0 ? SHOWCASE_HOME.slice(0, onlineLimit) : SHOWCASE_HOME.slice();
+      renderWorks(homeOnline, onlineList, '目前还没有只在官网发布的作品。有作品在这里首发时，会先出现在这一栏。');
+    }
+
     // 测试组件那一栏（作品页）
     renderWorks($('#showcase-test'), SHOWCASE_TEST, '暂时还没有测试组件。');
 
