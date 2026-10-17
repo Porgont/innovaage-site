@@ -95,10 +95,13 @@ innovaage-site/
     ├── browser-test.mjs      浏览器行为自检（页面）
     ├── verify-structure.mjs  页面结构守卫（页眉/侧栏/分区完整性）
     ├── test-video.mjs        视频工具自检（单独跑，原因见文件里注释）
+    ├── test-video-repeat.mjs 视频连续转换自检（再单独跑一个浏览器）
     ├── add-mobile-drawer.mjs 给所有页面注入手机端侧栏
-    ├── build-tool-pages.mjs  工具箱四个页面的一次性脚手架
     └── fixtures/             自检用的测试视频
 ```
+
+> 工具箱那四个页面是一次性生成后**手工维护**的，没有生成脚本。
+> 要改文案或结构直接改 `.html`；只有「手机侧栏」这类跨页一致的部分才用 `add-mobile-drawer.mjs` 统一注入。
 
 ---
 

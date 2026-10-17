@@ -128,7 +128,7 @@
         <img src="assets/img/matoga-ui.jpg" width="1600" height="900" decoding="async"
              alt="matoga 界面：左侧是左右两个文件夹与操作面板，中间是对比结果列表，右侧是 3D 材质预览">
         <figcaption>
-          matoga v1.0.1 的实际界面：左边选两个文件夹，中间看差异列表，右边实时看 3D 材质效果。
+          matoga v1.0.1 界面：左侧为两个待对比的文件夹，中间为差异列表，右侧为 3D 材质预览。
         </figcaption>
       </figure>
     </div>
@@ -138,24 +138,23 @@
     <div class="wrap">
       <div class="section-head">
         <span class="kicker">What it does</span>
-        <h2>它能做什么</h2>
-        <p>做材质包、光影、皮肤时，最麻烦的是「两边到底哪里不一样」。这个工具就是为了这个。</p>
+        <h2>功能</h2>
       </div>
 
       <div class="tool-feature-grid">
         <div class="tool-feature">
           <b>文件夹对比</b>
-          <p>选左右两个文件夹，按名称对比内容，支持递归子目录与 MD5 哈希校验。</p>
+          <p>选择左右两个文件夹，按文件名逐一比对，支持递归子目录与 MD5 校验。</p>
           <ul>
-            <li>五种状态分类：一致 / 内容不同 / 部分缺失 / 右侧缺失 / 右侧多余</li>
-            <li>忽略规则（系统文件 + 自定义通配符）</li>
-            <li>搜索、状态过滤、多字段排序</li>
+            <li>五种状态：一致 / 内容不同 / 部分缺失 / 右侧缺失 / 右侧多余</li>
+            <li>忽略规则：系统文件 + 自定义通配符</li>
+            <li>搜索、按状态过滤、多字段排序</li>
           </ul>
         </div>
 
         <div class="tool-feature">
-          <b>材质贴图识别</b>
-          <p>按后缀自动分组，认得出主贴图与配套通道图。</p>
+          <b>贴图后缀识别</b>
+          <p>按后缀把文件归为主贴图、法线贴图与高光贴图三类。</p>
           <ul>
             <li><code>_n</code> → 法线贴图</li>
             <li><code>_s</code> → 高光贴图（LabPBR：R 粗糙度 / G 金属度 / B 自发光 / A 掩膜）</li>
@@ -164,7 +163,7 @@
 
         <div class="tool-feature">
           <b>3D 材质预览</b>
-          <p>用 Three.js 实时渲染，改参数立刻看到效果。</p>
+          <p>基于 Three.js 的实时 PBR 渲染。</p>
           <ul>
             <li>几何体：球体、立方体、平面、圆环、圆柱、胶囊</li>
             <li>PBR 参数：金属度、粗糙度、法线强度、自发光</li>
@@ -175,8 +174,8 @@
         </div>
 
         <div class="tool-feature">
-          <b>顺手处理文件</b>
-          <p>发现差异后直接在工具里处理，不用来回切窗口。</p>
+          <b>文件操作</b>
+          <p>对差异文件直接处理，无需切换到系统文件管理器。</p>
           <ul>
             <li>复制 / 备份 / 删除、批量同步到左或右侧</li>
             <li>撤销操作、在系统文件管理器中打开</li>
@@ -193,7 +192,7 @@
       <div class="section-head">
         <span class="kicker">Get it</span>
         <h2>下载与安装</h2>
-        <p>需要先装 Node.js，然后在项目目录里跑两条命令。</p>
+        <p>需要 Node.js 环境。</p>
       </div>
 
       <div class="tool">
@@ -210,17 +209,16 @@ npm start</code></pre>
 
         <div class="tool-col">
           <div class="panel">
-            <h3 style="margin-top:0">方式二：直接用打包版</h3>
+            <h3 style="margin-top:0">方式二：下载压缩包</h3>
             <p style="color:var(--text-dim);font-size:14.5px">
-              项目仓库的 <code>releases</code> 目录里放了三个平台的压缩包（约 13 MB）：
+              项目仓库的 <code>releases</code> 目录内有三个平台的压缩包（约 13 MB）：
             </p>
             <ul style="color:var(--text-dim);font-size:14px">
               <li><a href="https://github.com/xiongmiaozai/matoga/tree/main/releases" target="_blank" rel="noopener">打开 releases 目录</a></li>
               <li>Windows / macOS / Linux 各一个 zip</li>
             </ul>
             <p class="note">
-              zip 里是源码而不是安装包，解开后同样需要 <code>npm install</code>。
-              想省事就用方式一。
+              压缩包内为源码，解开后同样需要 <code>npm install</code>。
             </p>
           </div>
         </div>

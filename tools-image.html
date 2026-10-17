@@ -110,8 +110,7 @@
       <p class="crumb"><a href="tools.html">工具箱</a> / 图片处理</p>
       <h1 style="font-size:clamp(24px,3.6vw,34px)">图片压到指定分辨率以内</h1>
       <p class="lead">
-        默认上限 <b>宽 1000 × 高 4000</b>（竖长画布，不是 4000×1000）。等比缩放，不会变形。
-        <b>图片不会上传到任何服务器</b>。
+        默认上限 <b>1000 × 4000</b>（宽 × 高）。等比缩放，只缩小不放大。
       </p>
     </div>
   </section>
@@ -160,7 +159,7 @@
             </div>
 
             <p class="note" id="fit-note">
-              图片会等比缩放到不超过这个范围，长边优先受限，不会拉伸变形。
+              等比缩放到不超过此范围，不会拉伸变形。
             </p>
           </div>
 
@@ -214,19 +213,17 @@
           <div class="callout" style="margin-top:18px">
             <span class="icon" aria-hidden="true">🔒</span>
             <div>
-              <b>隐私：</b>整个过程在你的浏览器里完成，图片不会上传，也不会有任何记录。
-              处理长图时页面可能短暂卡顿，属正常现象。
+              <b>本地处理：</b>图片不上传，处理过程在你的浏览器内完成。
+              处理长图时页面可能短暂卡顿。
             </div>
           </div>
 
           <div class="panel" style="margin-top:18px">
             <h3 style="margin-top:0">使用提示</h3>
             <ul style="color:var(--text-dim);font-size:14px;margin-bottom:0">
-              <li>只用等比缩小，<b>不会把小图放大</b>（放大只会更糊）。</li>
-              <li>如果图片本来就在范围内，会提示无需处理。</li>
-              <li>竖长图（如资源详情页长图）请保持默认的 1000 × 4000。</li>
-              <li>横图用 4000 × 1000，正方形图用 2048 × 2048，点上面的预设即可。</li>
-              <li>投稿要求看 <a href="join.html#panel-invest">代投与投稿</a> 页面的说明。</li>
+              <li>只缩小，不放大。原图在范围内时不做处理。</li>
+              <li>竖长图保持默认 1000 × 4000；横图用 4000 × 1000；正方形用 2048 × 2048。</li>
+              <li>投稿尺寸要求见 <a href="join.html#panel-invest">代投与投稿</a>。</li>
             </ul>
           </div>
         </div>

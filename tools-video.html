@@ -111,7 +111,7 @@
       <h1 style="font-size:clamp(24px,3.6vw,34px)">视频诊断与转换</h1>
       <p class="lead">
         投稿要求：<b>时长 1 分 30 秒以内、编码 H.264、MP4 格式、画面 16:9</b>。
-        选「符合投稿规范」一键转成合格版本；也可以自定义比例、分辨率与编码，当通用转换器用。
+        选「符合投稿规范」按要求转换，也可自定义比例、分辨率与编码。
       </p>
     </div>
   </section>
@@ -149,8 +149,7 @@
             </div>
 
             <p class="note" id="v-lock-note">
-              「符合投稿规范」= 1280×720 · 16:9 · H.264 · MP4 · 最长 90 秒。
-              这一档的数值是投稿要求，已锁定；需要别的规格请换预设或选「自定义」。
+              「符合投稿规范」= 1280×720 · 16:9 · H.264 · MP4 · 最长 90 秒，数值固定。
             </p>
 
             <div class="field" style="margin-top:18px">
@@ -205,8 +204,7 @@
             </div>
 
             <p class="note" id="v-h265-note" hidden>
-              ⚠ 你的浏览器不支持 H.265 编码，这一项已置灰。想看 H.265 效果可用系统自带的
-              视频工具或 ffmpeg 再转一次（投稿只要求 H.264，通常不需要 H.265）。
+              当前浏览器不支持 H.265 编码，该项已禁用。投稿要求为 H.264，一般不需要 H.265。
             </p>
 
             <p class="note" id="v-spec-summary" style="font-family:var(--mono)"></p>
@@ -230,7 +228,7 @@
             <dl class="stat-list" id="v-diag">
               <div><dt>状态</dt><dd>等待选择文件…</dd></div>
             </dl>
-            <p class="note" id="v-plan">选好文件后会告诉你具体要改什么。</p>
+            <p class="note" id="v-plan"></p>
           </div>
 
           <div class="panel" style="margin-top:18px;display:flex;flex-direction:column;min-height:280px">
@@ -238,7 +236,7 @@
 
             <div class="preview-empty" id="v-preview-empty">
               <span aria-hidden="true">🎞️</span>
-              <p>转换完成后这里会显示结果视频，并自动复检一遍是否符合目标规格。</p>
+              <p>转换结果与复检数据将显示在这里。</p>
             </div>
 
             <div class="preview-wrap" id="v-preview-wrap" hidden>
@@ -257,17 +255,15 @@
           <div class="callout" style="margin-top:18px">
             <span class="icon" aria-hidden="true">⏱️</span>
             <div>
-              <b>关于耗时：</b>转换是边播放边录制，耗时大致等于视频时长
-              （90 秒的视频约需 90 秒）。转换期间请保持页面在前台，不要切走。
+              <b>耗时：</b>转换采用实时录制，耗时约等于视频时长。转换期间请保持页面在前台。
             </div>
           </div>
 
           <div class="callout" style="margin-top:14px">
             <span class="icon" aria-hidden="true">ℹ️</span>
             <div>
-              <b>已知限制：</b>编码检测基于 MP4 容器，只对 MP4 / MOV 类文件有效；
-              WebM、MKV 等会提示「不是 MP4 容器」，转换时重新编码。重编码会有画质损失。
-              H.265 能否输出取决于浏览器与显卡，不支持时会自动置灰。
+              <b>限制：</b>编码检测仅支持 MP4 容器，WebM、MKV 等只做重新编码。
+              重编码会有画质损失。H.265 输出取决于浏览器与显卡支持。
             </div>
           </div>
         </div>

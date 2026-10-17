@@ -1074,7 +1074,7 @@
       setProgress(null);
       clearStatus();
       var plan = $('#v-plan');
-      if (plan) plan.textContent = '选好文件后会告诉你具体要改什么。';
+      if (plan) plan.textContent = '';
     });
 
     // 初始同步一次（预设默认是「符合投稿规范」）

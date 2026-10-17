@@ -757,6 +757,18 @@ check('视频工具页无横向溢出',
    ============================================================ */
 await open('/tools.html');
 
+check('工具箱入口页标题就是「工具箱」（不是「投稿用的工具箱」）',
+  await evalJs("document.querySelector('h1').textContent.trim() === '工具箱'"),
+  await evalJs("document.querySelector('h1').textContent.trim()"));
+
+check('工具箱入口页没有多余的说明性 callout',
+  await evalJs("document.querySelectorAll('.callout').length === 0"),
+  '实际 ' + await evalJs("document.querySelectorAll('.callout').length") + ' 个');
+
+check('工具箱入口页没有冗长的副标题段落',
+  await evalJs("!document.querySelector('.hero .lead')"),
+  await evalJs("document.querySelector('.hero .lead') ? '有：' + document.querySelector('.hero .lead').textContent.trim().slice(0, 40) : '无'"));
+
 check('工具箱入口页有三张模块卡片',
   await evalJs("document.querySelectorAll('.module-card').length === 3"),
   '实际 ' + await evalJs("document.querySelectorAll('.module-card').length"));
