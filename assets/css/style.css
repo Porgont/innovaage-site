@@ -3566,9 +3566,26 @@ main.overlap-hero {
   padding-top: 104px;
 }
 
-/* 在页面顶部时页眉直接压在图上，导航文字加深一档，保证读得清 */
-.site-header:not(.is-scrolled) .nav a { color: var(--text); }
-.site-header:not(.is-scrolled) .nav a small { color: var(--text-dim); }
+/* 在页面顶部时页眉直接压在图上。
+   原来靠一层白色渐变托底，那层去掉之后改成把文字颜色提到最重一档：
+   中文和英文都用 --text，英文靠字号和字距拉层次，不再用浅灰，
+   这样压在浅色画面上也不会发灰。
+   滚动后页眉有了 74% 的底色，回到正常配色即可。 */
+.site-header:not(.is-scrolled) .nav a {
+  color: var(--text);
+  font-weight: 700;
+}
+
+.site-header:not(.is-scrolled) .nav a small {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.site-header:not(.is-scrolled) .brand-name,
+.site-header:not(.is-scrolled) .brand-sub,
+.site-header:not(.is-scrolled) .brand-sep {
+  color: var(--text);
+}
 
 /* ---------- ㉒ 作品正文里的小标题与插图 ----------
    正文可以按顺序夹小标题、单张图、多张并排的图，图和文字按作者给的顺序走。 */
