@@ -996,11 +996,11 @@ html[data-theme="dark"] .tag--diamond { color: var(--gold); }
   background: var(--bg-2);
 }
 
+/* 详情页头图：按原图比例完整显示，不裁切。
+   早先写死了 16:7（窄屏 4:3）再 cover，16:9 或 4:3 的图都会被切掉边。 */
 .work-hero img {
   width: 100%;
   height: auto;
-  aspect-ratio: 16 / 7;
-  object-fit: cover;
   display: block;
 }
 
@@ -4024,8 +4024,6 @@ main.overlap-hero {
   .stat-list dd { font-size: 12.5px; }
 
   .invest-band { grid-template-columns: 1fr; gap: 22px; padding: 22px; }
-
-  .work-hero img { aspect-ratio: 4 / 3; }
 
   .shot-btn img { aspect-ratio: 4 / 3; }
 

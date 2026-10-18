@@ -1,4 +1,5 @@
-/* 给所有页面的 CSS 链接换一个版本号，强制浏览器重新下载样式表。
+/* 给所有页面的 CSS 与 site.js 换一个版本号，强制浏览器重新下载。
+   （JS 同样吃 600 秒缓存，改了数据不改链接的话会看到旧内容）
    GitHub Pages 给 style.css 设了 max-age=600，不改链接的话
    改动可能十分钟内看不到。改了版本号就是新 URL，缓存直接失效。
 
@@ -24,7 +25,7 @@ for (const page of pages) {
   let text = raw.split('\r\n').join('\n');
 
   const next = text.replace(
-    /((?:\/)?assets\/css\/(?:fonts|theme|style)\.css)(?:\?v=[\w.-]+)?/g,
+    /((?:\/)?assets\/(?:css\/(?:fonts|theme|style)\.css|js\/site\.js))(?:\?v=[\w.-]+)?/g,
     (_, href) => {
       links += 1;
       return `${href}?v=${VERSION}`;
