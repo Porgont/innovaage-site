@@ -1524,7 +1524,7 @@ input[type="range"]::-webkit-slider-thumb {
    外链后面跟一个 ↗ 表示会跳走。
    注意必须把导航（.nav / .mnav-links）排除掉 ——
    导航本来就有自己的一套样式，套上这块会变成一排黄杠，很难看。 */
-.wrap a:not(.btn):not(.brand):not(.work-more):not(.skip-link):not(.module-card):not(.nav a):not(.mnav-links a):not(.footer-grid a):not(.city-card):not(.city-nav__links a):not(.tab--jump):not(.ms-toc a):not(.work-toc a),
+.wrap a:not(.btn):not(.brand):not(.work-more):not(.skip-link):not(.module-card):not(.nav a):not(.mnav-links a):not(.footer-grid a):not(.city-card):not(.city-nav__links a):not(.tab--jump):not(.ms-toc a):not(.work-toc a):not(.officer-cat):not(.more-extra a),
 .callout a,
 .notice-body a,
 .stat-list a {
@@ -2357,6 +2357,45 @@ input[type="range"]::-webkit-slider-thumb {
 
 @media (prefers-reduced-motion: reduce) {
   .to-top { transition: opacity .15s ease, visibility .15s; transform: none; }
+}
+
+/* 撸猫入口：关于我们主席卡片里的一条链接 */
+.officer-cat {
+  margin-top: 6px;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .06em;
+  color: var(--gold-dk);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  justify-self: start;
+}
+
+.officer-cat:hover { border-bottom-color: var(--gold); }
+
+/* 撸猫入口：首页「其他页面」五张卡片下方右对齐那一行 */
+.more-extra {
+  margin: 18px 0 0;
+  text-align: right;
+}
+
+.more-extra a {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .16em;
+  color: var(--text-mute);
+  text-decoration: none;
+}
+
+.more-extra a:hover { color: var(--text); }
+
+/* 撸猫页标题下那三行 */
+.cat-lead {
+  margin: 0;
+  font-size: clamp(15px, 1.5vw, 17px);
+  font-weight: 600;
+  line-height: 1.9;
+  color: var(--text-dim);
 }
 
 /* ---------- 赛博撸猫 ---------- */
