@@ -225,7 +225,7 @@
         '本地图已在我的世界中国版、苦力怕论坛、我的世界中文论坛发布。本地图系列曾于多玩我的世界盒子多次被官方推荐同时广受好评，系列总下载量曾达到 15 万+。',
         '由于作者学业原因，本地图在两年内更新速度将会减缓。',
 
-        { heading: '版本要求' },
+        { heading: '❗ 版本要求' },
         '最新版地图（V14.FN）基岩版支持版本：1.18.30（及以上）。最新版地图（J2.0.1）Java 版版本：1.18.2（及以上）。',
         '注意：Java 版 1.20 及以上版本无法在蜂蜜块边缘起跳，第一章第七关蜂巢依赖该机制，请不要使用 1.20 及以上版本游玩 Java 版无人区跑酷。',
         '该地图同时已发布至我的世界中国版，作品名称为【创想七周年】无人区跑酷V14。',
@@ -306,6 +306,20 @@
             { img: 'assets/img/uransch-shot-7.jpg', alt: '无人区跑酷截图：游戏内视角' },
             { img: 'assets/img/uransch-shot-8.jpg', alt: '无人区跑酷截图：Java 版游戏内视角' }
           ]
+        },
+
+        { heading: '下载' },
+        {
+          links: [
+            {
+              solid: true,
+              items: [
+                { label: '百度网盘（提取码 5645）', href: 'https://pan.baidu.com/s/1sPVCbdoZAKqKuszGdI15JQ?pwd=5645' },
+                { label: '蓝奏云（基岩版，密码 c9f0）', href: 'https://wwd.lanzoue.com/b03e0780d' },
+                { label: '蓝奏云（Java 版，密码 3mqb）', href: 'https://wwd.lanzoue.com/b03fhs2ef' }
+              ]
+            }
+          ]
         }
       ],
       linksTop: true,
@@ -323,15 +337,6 @@
           solid: true,
           items: [
             { label: '资源中心：无人区跑酷V14', href: 'https://resource-minecraft.h5.163.com/#/detail?id=4661952103696763810&channel=nearme_vivo' }
-          ]
-        },
-        {
-          title: '下载',
-          solid: true,
-          items: [
-            { label: '百度网盘（提取码 5645）', href: 'https://pan.baidu.com/s/1sPVCbdoZAKqKuszGdI15JQ?pwd=5645' },
-            { label: '蓝奏云（基岩版，密码 c9f0）', href: 'https://wwd.lanzoue.com/b03e0780d' },
-            { label: '蓝奏云（Java 版，密码 3mqb）', href: 'https://wwd.lanzoue.com/b03fhs2ef' }
           ]
         },
         {

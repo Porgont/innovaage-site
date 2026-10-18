@@ -3599,20 +3599,37 @@ main.overlap-hero {
 
 /* ---------- ㉒ 作品正文里的小标题与插图 ----------
    正文可以按顺序夹小标题、单张图、多张并排的图，图和文字按作者给的顺序走。 */
+/* 正文小标题：跟页面上的「作品介绍」一个样式 ——
+   左侧黄竖条 + 「— 01」编号 + 大字，编号自动递增。 */
+#work-intro { counter-reset: worksec; }
+
 .work-heading {
-  margin: 34px 0 14px;
-  padding-top: 18px;
-  border-top: 1px solid var(--line);
-  font-size: 19px;
+  counter-increment: worksec;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin: 40px 0 16px;
+  padding-left: 16px;
+  border-left: 3px solid var(--gold);
+  font-size: 22px;
   font-weight: 800;
   letter-spacing: -.01em;
+  line-height: 1.35;
   color: var(--text);
+}
+
+.work-heading::before {
+  content: "— " counter(worksec, decimal-leading-zero);
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .18em;
+  color: var(--gold-dk);
+  white-space: nowrap;
 }
 
 .work-intro > .work-heading:first-child {
   margin-top: 24px;
-  padding-top: 0;
-  border-top: 0;
 }
 
 .work-figure {
