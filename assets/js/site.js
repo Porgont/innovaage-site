@@ -80,7 +80,7 @@
       title: '企业-灰色幽灵',
       meta: '作者：创想时代 Mingxiang｜渲染：创想时代 柑柠',
       category: 'skin',
-      desc: '付费皮肤，参考并较高水平地还原了游戏《碧蓝航线》的角色企业。'
+      desc: '付费皮肤，参考并较高水平地还原了游戏《碧蓝航线》的角色企业'
     },
     {
       id: 'log7-birch',
@@ -88,7 +88,7 @@
       title: 'Log7桦木 · 完整版',
       meta: '作者：创想时代 Log_坤',
       category: 'shader',
-      desc: '付费光影：可触碰的体积云、体积光与丁达尔效应、水面实时反射。'
+      desc: '付费光影：可触碰的体积云、体积光与丁达尔效应、水面实时反射'
     },
     {
       id: 'log-shader-sa',
@@ -96,7 +96,7 @@
       title: 'Log橡木SA',
       meta: '作者：Log坤',
       category: 'shader',
-      desc: '基岩版光影，主打水面镜面反射与自然光过渡。'
+      desc: '基岩版光影，主打水面镜面反射与自然光过渡'
     },
     {
       id: 'qiushui-sanchi',
@@ -112,7 +112,7 @@
       title: '零雾构想V5000 · 橡木7画质提升包',
       meta: '作者：Log坤',
       category: 'addon',
-      desc: '把零雾构想V5000 内置光影换成 Log 橡木7。'
+      desc: '把零雾构想V5000 内置光影换成 Log 橡木7'
     },
     {
       id: 'lingling-universal',
@@ -120,7 +120,7 @@
       title: '零雾构想通用版',
       meta: '作者：零雾〇5Fogg05、Windows、Log_坤',
       category: 'tex',
-      desc: '零雾构想与 Log 白桦木再次联动，内置 V5003 与 Log 白桦木灵动视效包。'
+      desc: '零雾构想与 Log 白桦木再次联动，内置 V5003 与 Log 白桦木灵动视效包'
     },
     {
       id: 'bilibili-pvp-textures',
@@ -128,7 +128,7 @@
       title: 'Bilibili PVP Textures',
       meta: '作者：青橘',
       category: 'tex',
-      desc: '取自作者早期作品 Bilibili UI 衍生而成的 PVP 材质，贴图与天空皆为原创。'
+      desc: '取自作者早期作品 Bilibili UI 衍生而成的 PVP 材质，贴图与天空皆为原创'
     },
     {
       id: 'deer-pvp-textures',
@@ -136,7 +136,7 @@
       title: 'Deer PVP 材质',
       meta: '作者：青橘',
       category: 'tex',
-      desc: '100% 原创的 PVP 材质，从方块到物品全部手绘，天空另外做了处理。'
+      desc: '100% 原创的 PVP 材质，从方块到物品全部手绘，天空另外做了处理'
     }
   ];
 
@@ -150,7 +150,7 @@
       title: '无人区跑酷',
       meta: '作者：柑柠',
       category: 'map',
-      desc: '箱庭式中高难度跑酷地图，从 2016 年做到现在，56 个关卡，基岩版与 Java 版同玩法。'
+      desc: '箱庭式中高难度跑酷地图，从 2016 年做到现在，56 个关卡，基岩版与 Java 版同玩法'
     },
     {
       id: 'fangzhen-tech',
@@ -159,7 +159,7 @@
       title: '仿真工艺系列材质',
       meta: '作者：茫帛',
       category: 'tex',
-      desc: '风格化写实、偏生存实用向的材质包，历时近四年制作，现有多种版本可选。'
+      desc: '风格化写实、偏生存实用向的材质包，历时近四年制作，现有多种版本可选'
     },
     {
       id: 'mengsea',
@@ -168,7 +168,7 @@
       title: '梦海旅者',
       meta: '作者：暴走苏打',
       category: 'map',
-      desc: '幻境与现实交织的大型剧情向解密地图，《幻世编年史》系列第一部。'
+      desc: '幻境与现实交织的大型剧情向解密地图，《幻世编年史》系列第一部'
     },
     {
       id: 'city',
@@ -177,7 +177,7 @@
       title: '创想之都',
       meta: '发起：苏打、柑柠',
       category: 'map',
-      desc: '由创想时代开发组苏打与柑柠发起的一个建设 MC 城市地图的大型项目，正式开始建设于 2022 年 8 月。'
+      desc: '由创想时代开发组苏打与柑柠发起的一个建设 MC 城市地图的大型项目，正式开始建设于 2022 年 8 月'
     }
   ];
 
