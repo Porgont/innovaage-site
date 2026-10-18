@@ -137,7 +137,9 @@ for (const page of pages) {
       if (!ids.includes(href.slice(1))) errors.push(`${page}: 页内锚点 ${href} 不存在`);
       continue;
     }
-    const [filePart] = href.split('#');
+    // 去掉 ?v= 这类查询串和 #锚点 再去对文件系统查，
+    // CSS 链接带版本号是正常写法，文件本身还是同一个。
+    const filePart = href.split('#')[0].split('?')[0];
     const target = href.startsWith('/')
       ? join(root, filePart.slice(1))
       : join(root, dirname(page), filePart);
