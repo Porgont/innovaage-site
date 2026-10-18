@@ -3609,9 +3609,13 @@ body.is-leaving::after {
   }
 
   /* 详情页顶图原来固定 62vh，手机上文字只有两三行，
-     下面会空出一大块；这里让它跟着内容走。 */
+     下面会空出一大块；这里让它跟着内容走，底部也收紧一点。 */
   .hero--page.hero--banner.hero--work {
     min-height: 0;
+  }
+
+  .hero--page.hero--banner.hero--work .wrap {
+    padding-bottom: 16px;
   }
 
   .hero--page.hero--banner .wrap {
@@ -3624,8 +3628,10 @@ body.is-leaving::after {
     height: 42vh;
   }
 
+  /* 手机上图和字是上下排的，图下面不需要再淡出一大片白，
+     只在图的最底部留一点过渡，否则画面上半截正常、下半截像空白。 */
   .hero--page.hero--banner .hero-veil {
-    background: linear-gradient(to bottom, transparent 34%, var(--bg) 100%);
+    background: linear-gradient(to bottom, transparent 68%, var(--bg) 100%);
   }
 }
 
