@@ -711,13 +711,12 @@ html[data-theme="dark"] .tag--diamond { color: var(--gold); }
   aspect-ratio: 16 / 9;
 }
 
-/* 作品卡片：整张图完整显示，不裁切。
-   框还是 3:2，图片按原始比例缩到框里，多出来的地方留底色边；
-   竖图、方图、16:9 都不会被切掉内容。 */
+/* 作品卡片封面：填满 16:9 的框，比例不对的裁掉多出来的部分。
+   只有卡片允许裁；详情页头图（.work-hero img）仍按原图比例完整显示。 */
 .work-media img {
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
   display: block;
   transition: transform .35s ease;
 }
