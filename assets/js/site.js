@@ -164,7 +164,15 @@
   /* 尚未正式发布的测试组件 —— 单独一栏，字段与 SHOWCASE 相同。
      ★ 测试组件不放 SHOWCASE，否则会混进首页与作品页的代表作品里。
      有要上测试的组件时往这个数组里加即可。 */
-  var SHOWCASE_TEST = [];
+  var SHOWCASE_TEST = [
+    {
+      id: 'vulkan-rtx-jog',
+      img: 'assets/img/jog-1.jpg',
+      title: 'Vulkan RTX-Jog光影',
+      category: 'shader',
+      desc: '基于Caustica0.1.1修改，改动有限'
+    }
+  ];
 
   /* ==========================================================
      ④ 作品详情 —— 代表作单独成页：work.html?id=xxx
@@ -182,6 +190,51 @@
        然后在 SHOWCASE 对应那条上填同名的 id，作品页就会出现「查看详情」入口。
      ========================================================== */
   var WORKS = {
+    'vulkan-rtx-jog': {
+      name: 'Vulkan RTX-Jog光影',
+      type: '光影 / Shader',
+      tagline: '基于Caustica0.1.1修改，改动有限',
+      cover: 'assets/img/jog-1.jpg',
+      coverAlt: 'Vulkan RTX-Jog光影',
+      linksTop: true,
+      facts: [
+        { k: '作品名', v: 'Vulkan RTX-Jog光影' },
+        { k: '类型', v: '光影 / Shader' },
+        { k: '简介', v: '基于Caustica0.1.1修改，改动有限' },
+        { k: 'Q 群下载', v: '980037287' }
+      ],
+      intro: [
+        '基于Caustica0.1.1修改，改动有限',
+        '自行构建 .jar 的流程详见「构建流程.txt」',
+        {
+          imgs: [
+            { img: 'assets/img/jog-2.jpg', alt: 'Vulkan RTX-Jog光影' },
+            { img: 'assets/img/jog-3.jpg', alt: 'Vulkan RTX-Jog光影' }
+          ]
+        },
+        {
+          imgs: [
+            { img: 'assets/img/jog-4.jpg', alt: 'Vulkan RTX-Jog光影' },
+            { img: 'assets/img/jog-5.jpg', alt: 'Vulkan RTX-Jog光影' }
+          ]
+        },
+        {
+          imgs: [
+            { img: 'assets/img/jog-6.jpg', alt: 'Vulkan RTX-Jog光影' },
+            { img: 'assets/img/jog-7.jpg', alt: 'Vulkan RTX-Jog光影' }
+          ]
+        }
+      ],
+      links: [
+        {
+          solid: true,
+          items: [
+            { label: 'GitHub 仓库', href: 'https://github.com/Log-Kun/Caustica0.1.1_Jog.git' },
+            { label: 'B 站视频', href: 'https://www.bilibili.com/video/BV1adYC68EX8' }
+          ]
+        }
+      ]
+    },
     'uransch': {
       name: '无人区跑酷',
       author: '柑柠',
