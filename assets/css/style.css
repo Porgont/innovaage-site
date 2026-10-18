@@ -2389,6 +2389,15 @@ input[type="range"]::-webkit-slider-thumb {
 
 .more-extra a:hover { color: var(--text); }
 
+/* 档案页「渲染」图集：两列排版，图更大 */
+.ms-shots.ms-shots--render {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@media (max-width: 700px) {
+  .ms-shots.ms-shots--render { grid-template-columns: 1fr; }
+}
+
 /* 个人档案页的引言块 */
 .gan-quote {
   margin: 22px 0 0;
