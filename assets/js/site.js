@@ -308,9 +308,11 @@
           ]
         }
       ],
+      linksTop: true,
       links: [
         {
           title: '发布与实况',
+          solid: true,
           items: [
             { label: '苦力怕论坛发布帖', href: 'https://klpbbs.com/thread-131463-1-1.html' },
             { label: 'B 站 53 分钟全通关', href: 'https://www.bilibili.com/video/BV1124y1G7WR/' }
@@ -318,12 +320,14 @@
         },
         {
           title: '我的世界中国版',
+          solid: true,
           items: [
             { label: '资源中心：无人区跑酷V14', href: 'https://resource-minecraft.h5.163.com/#/detail?id=4661952103696763810&channel=nearme_vivo' }
           ]
         },
         {
           title: '下载',
+          solid: true,
           items: [
             { label: '百度网盘（提取码 5645）', href: 'https://pan.baidu.com/s/1sPVCbdoZAKqKuszGdI15JQ?pwd=5645' },
             { label: '蓝奏云（基岩版，密码 c9f0）', href: 'https://wwd.lanzoue.com/b03e0780d' },
@@ -332,6 +336,7 @@
         },
         {
           title: '相关主页',
+          solid: true,
           items: [
             { label: '作者 B 站空间', href: 'https://space.bilibili.com/308683128' },
             { label: '脸盆SaMa B 站空间', href: 'https://space.bilibili.com/383902456' },
@@ -1670,8 +1675,12 @@
       var title = g.title
         ? '<p class="work-links__title">' + esc(g.title) + '</p>'
         : '';
+      // solid: true 的组用实心按钮（黑底白字），没写的沿用描边
+      var btnClass = g.solid
+        ? 'btn btn--sm work-links__solid'
+        : 'btn btn--ghost btn--sm';
       var row = (g.items || []).map(function (it) {
-        return '<a class="btn btn--ghost btn--sm" href="' + esc(it.href) + '" ' +
+        return '<a class="' + btnClass + '" href="' + esc(it.href) + '" ' +
           'target="_blank" rel="noopener">' + esc(it.label) + '</a>';
       }).join('');
       return '<div class="work-links__group">' + title +
@@ -1772,6 +1781,12 @@
     var intro = $('#work-intro');
     if (intro) {
       var parts = [];
+
+      // 链接块放最上面的作品（linksTop: true）：先渲染按钮，再走正文
+      if (work.linksTop && work.links && work.links.length) {
+        parts.push(renderWorkLinks(work.links));
+      }
+
       if (work.poster) {
         parts.push(
           '<figure class="work-poster">' +
@@ -1816,7 +1831,8 @@
       }
 
       // 获取与外部链接：一律渲染成按钮，不做正文里的超链接
-      if (work.links && work.links.length) {
+      // linksTop 的已经排在最前面了，这里不要再重复一遍
+      if (!work.linksTop && work.links && work.links.length) {
         parts.push(renderWorkLinks(work.links));
       }
 

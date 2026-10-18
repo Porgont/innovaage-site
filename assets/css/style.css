@@ -3484,7 +3484,13 @@ body.is-leaving::after {
   border-top: 1px solid var(--line);
 }
 
-.work-links__group + .work-links__group { margin-top: 20px; }
+.work-links__group + .work-intro > .work-links {
+  margin-bottom: 30px;
+  padding-bottom: 26px;
+  border-bottom: 1px solid var(--line);
+}
+
+.work-links__group { margin-top: 20px; }
 
 /* 放在 .work-intro 里会更具体，压过正文段落的字号 */
 /* 这些标题也是 .work-links__group 的首个子元素，会被 .work-intro p:first-child 顶掉，
