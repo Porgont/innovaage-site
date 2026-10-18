@@ -1368,56 +1368,79 @@
 
   /* ---------- 标签切换 ---------- */
   function initTabs() {
-    // 只处理真正切换面板的标签；标签行里可能有指向别的页面的链接（如「专题页」），
-    // 那种没有 aria-controls，不能当成标签来激活，否则会把面板全藏起来。
-    var tabs = $$('.tabs .tab').filter(function (t) {
-      return t.getAttribute('aria-controls');
-    });
-    if (!tabs.length) return;
-
-    function activate(tab, scroll) {
-      if (!tab) return;
-      var id = tab.getAttribute('aria-controls');
-
-      tabs.forEach(function (t) {
-        var on = t === tab;
-        t.classList.toggle('is-active', on);
-        t.setAttribute('aria-selected', on ? 'true' : 'false');
+    // 按 .tabs 分组处理：一个页面里可以有外层标签（MC 作品 / 其他作品）
+    // 和内层标签（海报 / 设计 / 渲染），互不干扰。
+    // 只处理真正切换面板的标签；标签行里指向别的页面的链接（如「专题页」）没有 aria-controls。
+    $$('.tabs').forEach(function (group) {
+      var tabs = Array.prototype.slice.call(group.querySelectorAll('.tab')).filter(function (t) {
+        return t.getAttribute('aria-controls');
       });
+      if (!tabs.length) return;
 
-      $$('.tab-panel').forEach(function (p) {
-        p.hidden = p.id !== id;
-      });
+      var panels = tabs.map(function (t) {
+        return $('#' + t.getAttribute('aria-controls'));
+      }).filter(Boolean);
 
-      // 切到带 #hash 的地址，方便直接分享某一栏
-      if (history.replaceState) {
-        history.replaceState(null, '', '#' + id);
-      }
+      function activate(tab, scroll) {
+        var id = tab.getAttribute('aria-controls');
 
-      if (scroll) {
-        var box = $('.tabs');
-        if (box) {
-          var y = box.getBoundingClientRect().top + window.pageYOffset - 90;
+        tabs.forEach(function (t) {
+          var on = t === tab;
+          t.classList.toggle('is-active', on);
+          t.setAttribute('aria-selected', on ? 'true' : 'false');
+        });
+
+        panels.forEach(function (p) {
+          p.hidden = p.id !== id;
+        });
+
+        // 内层标签：把外层包着它的面板也打开，否则点进来还是空的
+        var node = panels.filter(function (p) { return p.id === id; })[0];
+        node = node ? node.parentElement : null;
+        while (node) {
+          if (node.classList && node.classList.contains('tab-panel') && node.hidden) {
+            node.hidden = false;
+            var ctrl = document.querySelector('.tab[aria-controls="' + node.id + '"]');
+            if (ctrl) {
+              ctrl.classList.add('is-active');
+              ctrl.setAttribute('aria-selected', 'true');
+              // 外层同组的其它面板一并收起，避免同时露出两块
+              var ctrlGroup = ctrl.closest ? ctrl.closest('.tabs') : null;
+              if (ctrlGroup) {
+                Array.prototype.forEach.call(ctrlGroup.querySelectorAll('.tab[aria-controls]'), function (t) {
+                  if (t === ctrl) return;
+                  t.classList.remove('is-active');
+                  t.setAttribute('aria-selected', 'false');
+                  var tp = document.getElementById(t.getAttribute('aria-controls'));
+                  if (tp) tp.hidden = true;
+                });
+              }
+            }
+          }
+          node = node.parentElement;
+        }
+
+        if (history.replaceState) history.replaceState(null, '', '#' + id);
+
+        if (scroll) {
+          var y = group.getBoundingClientRect().top + window.pageYOffset - 90;
           window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
         }
       }
-    }
 
-    tabs.forEach(function (tab) {
-      tab.addEventListener('click', function () { activate(tab, true); });
-    });
+      tabs.forEach(function (tab) {
+        tab.addEventListener('click', function () { activate(tab, true); });
+      });
 
-    function openFromHash() {
       var hash = (location.hash || '').replace('#', '');
-      if (!hash) return;
-      var target = tabs.filter(function (t) {
-        return t.getAttribute('aria-controls') === hash;
-      })[0];
-      if (target && !target.classList.contains('is-active')) activate(target, false);
-    }
-
-    openFromHash();
-    window.addEventListener('hashchange', openFromHash);
+      if (hash) {
+        var target = tabs.filter(function (t) {
+          return t.getAttribute('aria-controls') === hash;
+        })[0];
+        // 标记里已经带 is-active 的标签也要跑一次：内层标签靠这一步顺带打开外层
+        if (target) activate(target, false);
+      }
+    });
   }
 
   /* ---------- 深浅主题切换 ----------

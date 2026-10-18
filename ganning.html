@@ -30,9 +30,9 @@
 })();
 </script>
 <link rel="preload" href="assets/fonts/noto-sans-sc.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/fonts.css?v=20261079">
-<link rel="stylesheet" href="assets/css/theme.css?v=20261079">
-<link rel="stylesheet" href="assets/css/style.css?v=20261079">
+<link rel="stylesheet" href="assets/css/fonts.css?v=20261084">
+<link rel="stylesheet" href="assets/css/theme.css?v=20261084">
+<link rel="stylesheet" href="assets/css/style.css?v=20261084">
 <link rel="alternate" type="application/rss+xml" title="创想时代开发组 · 公告" href="feed.xml">
 </head>
 
@@ -426,37 +426,48 @@
       </div>
 
       <div class="tab-panel" id="panel-other" role="tabpanel" aria-labelledby="tab-other" hidden>
-        <div class="ms-head" style="margin-top:34px">
-          <span class="ms-head__no">— 01</span>
-          <h2>渲染</h2>
+        <div class="tabs tabs--sub" role="tablist" aria-label="其他作品分类">
+          <button class="tab is-active" id="tab-poster" type="button" role="tab" aria-selected="true" aria-controls="panel-poster">海报</button>
+          <button class="tab" id="tab-design" type="button" role="tab" aria-selected="false" aria-controls="panel-design">设计</button>
+          <button class="tab" id="tab-render" type="button" role="tab" aria-selected="false" aria-controls="panel-render">渲染</button>
         </div>
 
-        <div class="ms-shots ms-shots--render">
-        <img src="assets/img/ganning/render-1.jpg?v=20261076" alt="渲染" data-zoom decoding="async">
-        <img src="assets/img/ganning/render-2.jpg?v=20261076" alt="渲染" data-zoom decoding="async">
-        <img src="assets/img/ganning/render-3.jpg?v=20261076" alt="渲染" data-zoom decoding="async">
-        <img src="assets/img/ganning/render-4.jpg?v=20261076" alt="渲染" data-zoom decoding="async">
-        <img src="assets/img/ganning/render-5.jpg?v=20261076" alt="渲染" data-zoom decoding="async">
-        <img src="assets/img/ganning/render-6.jpg?v=20261076" alt="渲染" data-zoom decoding="async">
-        <img src="assets/img/ganning/render-7.jpg?v=20261076" alt="渲染" data-zoom decoding="async">
-        <img src="assets/img/ganning/render-8.jpg?v=20261076" alt="渲染" data-zoom decoding="async">
-        <img src="assets/img/ganning/render-9.jpg?v=20261078" alt="渲染" data-zoom decoding="async">
-        <img src="assets/img/ganning/render-10.jpg?v=20261078" alt="渲染" data-zoom decoding="async">
-        <img src="assets/img/ganning/render-11.jpg?v=20261078" alt="渲染" data-zoom decoding="async">
+        <div class="tab-panel" id="panel-poster" role="tabpanel" aria-labelledby="tab-poster">
+          <div class="ms-shots ms-shots--poster">
+          <img src="assets/img/ganning/poster-1.jpg?v=20261081" alt="海报" data-zoom loading="lazy" decoding="async">
+          <img src="assets/img/ganning/poster-2.jpg?v=20261081" alt="海报" data-zoom loading="lazy" decoding="async">
+          <img src="assets/img/ganning/poster-3.jpg?v=20261081" alt="海报" data-zoom loading="lazy" decoding="async">
+          <img src="assets/img/ganning/poster-4.jpg?v=20261081" alt="海报" data-zoom loading="lazy" decoding="async">
+          <img src="assets/img/ganning/poster-5.jpg?v=20261081" alt="海报" data-zoom loading="lazy" decoding="async">
+          <img src="assets/img/ganning/poster-6.jpg?v=20261081" alt="海报" data-zoom loading="lazy" decoding="async">
+          </div>
         </div>
 
-        <div class="ms-head" style="margin-top:44px">
-          <span class="ms-head__no">— 02</span>
-          <h2>设计</h2>
+        <div class="tab-panel" id="panel-design" role="tabpanel" aria-labelledby="tab-design" hidden>
+          <figure class="ms-figure" style="margin-top:16px">
+            <img src="assets/img/ganning/design-1.jpg?v=20261081" alt="创想时代开发组 logo" data-zoom loading="lazy" decoding="async">
+          </figure>
+
+          <div class="ms-shots ms-shots--render" style="margin-top:12px">
+            <img src="assets/img/ganning/design-2.jpg?v=20261081" alt="普通作品边框" data-zoom loading="lazy" decoding="async">
+            <img src="assets/img/ganning/design-3.jpg?v=20261081" alt="新春作品边框" data-zoom loading="lazy" decoding="async">
+          </div>
         </div>
 
-        <figure class="ms-figure">
-          <img src="assets/img/ganning/design-1.jpg?v=20261079" alt="创想时代开发组 logo" data-zoom decoding="async">
-        </figure>
-
-        <div class="ms-shots ms-shots--render" style="margin-top:12px">
-          <img src="assets/img/ganning/design-2.jpg?v=20261079" alt="普通作品边框" data-zoom decoding="async">
-          <img src="assets/img/ganning/design-3.jpg?v=20261079" alt="新春作品边框" data-zoom decoding="async">
+        <div class="tab-panel" id="panel-render" role="tabpanel" aria-labelledby="tab-render" hidden>
+          <div class="ms-shots ms-shots--render" style="margin-top:16px">
+          <img src="assets/img/ganning/render-1.jpg?v=20261081" alt="渲染" data-zoom loading="lazy" decoding="async">
+          <img src="assets/img/ganning/render-2.jpg?v=20261081" alt="渲染" data-zoom loading="lazy" decoding="async">
+          <img src="assets/img/ganning/render-3.jpg?v=20261081" alt="渲染" data-zoom loading="lazy" decoding="async">
+          <img src="assets/img/ganning/render-4.jpg?v=20261081" alt="渲染" data-zoom loading="lazy" decoding="async">
+          <img src="assets/img/ganning/render-5.jpg?v=20261081" alt="渲染" data-zoom loading="lazy" decoding="async">
+          <img src="assets/img/ganning/render-6.jpg?v=20261081" alt="渲染" data-zoom loading="lazy" decoding="async">
+          <img src="assets/img/ganning/render-7.jpg?v=20261081" alt="渲染" data-zoom loading="lazy" decoding="async">
+          <img src="assets/img/ganning/render-8.jpg?v=20261081" alt="渲染" data-zoom loading="lazy" decoding="async">
+          <img src="assets/img/ganning/render-9.jpg?v=20261081" alt="渲染" data-zoom loading="lazy" decoding="async">
+          <img src="assets/img/ganning/render-10.jpg?v=20261081" alt="渲染" data-zoom loading="lazy" decoding="async">
+          <img src="assets/img/ganning/render-11.jpg?v=20261081" alt="渲染" data-zoom loading="lazy" decoding="async">
+          </div>
         </div>
       </div>
     </div>
@@ -516,6 +527,6 @@
     </div>
   </div>
 </footer>
-<script src="assets/js/site.js?v=20261079"></script>
+<script src="assets/js/site.js?v=20261084"></script>
 </body>
 </html>

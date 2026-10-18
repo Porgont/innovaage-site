@@ -2389,6 +2389,45 @@ input[type="range"]::-webkit-slider-thumb {
 
 .more-extra a:hover { color: var(--text); }
 
+/* 档案页内层索引：比外层小一号 */
+.tabs--sub {
+  margin-top: 22px;
+  margin-bottom: 6px;
+}
+
+.tabs--sub .tab {
+  padding: 8px 16px;
+  font-size: 13.5px;
+}
+
+/* 海报图集：竖长图按列排，避免网格留大片空白 */
+.ms-shots.ms-shots--poster {
+  display: block;
+  column-count: 3;
+  column-gap: 10px;
+  margin-top: 16px;
+}
+
+.ms-shots.ms-shots--poster img {
+  width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 0 10px;
+  break-inside: avoid;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  background: var(--bg-2);
+  cursor: zoom-in;
+}
+
+@media (max-width: 900px) {
+  .ms-shots.ms-shots--poster { column-count: 2; }
+}
+
+@media (max-width: 560px) {
+  .ms-shots.ms-shots--poster { column-count: 1; }
+}
+
 /* 档案页「渲染」图集：两列排版，图更大 */
 .ms-shots.ms-shots--render {
   grid-template-columns: repeat(2, minmax(0, 1fr));
