@@ -3664,7 +3664,6 @@ body.is-leaving::after {
   border-radius: 0;
   background: var(--bg-2);
   isolation: isolate;
-  clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--cut)), calc(100% - var(--cut)) 100%, 0 100%);
   text-decoration: none !important;
   background-image: none !important;
 }
