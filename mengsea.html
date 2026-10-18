@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>梦海旅者 | 作品 | 创想时代开发组</title>
+<meta name="description" content="梦海旅者：幻境与现实交织的大型剧情向解密地图，暴走苏打制作的《幻世编年史》系列第一部。含章节信息、组件码、配套皮肤与攻略视频。">
+<meta name="keywords" content="梦海旅者,SeaDream Voyager,幻世编年史,MC解密地图,剧情地图,暴走苏打,创想时代开发组">
+<link rel="canonical" href="https://innovaage.cn/mengsea.html">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0e1013" media="(prefers-color-scheme: dark)">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="创想时代开发组">
+<meta property="og:title" content="梦海旅者 | 作品 | 创想时代开发组">
+<meta property="og:description" content="幻境与现实交织的大型剧情向解密地图，《幻世编年史》系列第一部。作者：暴走苏打。">
+<meta property="og:url" content="https://innovaage.cn/mengsea.html">
+<meta property="og:image" content="https://innovaage.cn/assets/img/mengsea/poster.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://innovaage.cn/assets/img/mengsea/poster.jpg">
+
+<link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
+<link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+<script>
+(function () {
+  try {
+    var t = localStorage.getItem('ia-theme');
+    if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+  } catch (e) {}
+})();
+</script>
+<link rel="preload" href="assets/fonts/noto-sans-sc.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/css/fonts.css?v=20261061">
+<link rel="stylesheet" href="assets/css/theme.css?v=20261061">
+<link rel="stylesheet" href="assets/css/style.css?v=20261061">
+<link rel="alternate" type="application/rss+xml" title="创想时代开发组 · 公告" href="feed.xml">
+</head>
+
+<body data-page="works">
+<a class="skip-link" href="#main">跳到主要内容</a>
+
+<header class="site-header">
+  <div class="wrap bar">
+    <a class="brand" href="index.html">
+      <img class="brand-mark" src="assets/img/logo-mark.png" alt="" width="112" height="128" aria-hidden="true">
+      <strong class="brand-name">创想时代开发组</strong>
+      <span class="brand-sep" aria-hidden="true"></span>
+      <span class="brand-sub">官网</span>
+    </a>
+
+    <nav class="nav" aria-label="主导航">
+      <a href="index.html" data-nav="home"><span>首页</span><small>INDEX</small></a>
+      <a href="works.html" data-nav="works"><span>作品</span><small>WORKS</small></a>
+      <a href="news.html" data-nav="news"><span>公告</span><small>NEWS</small></a>
+      <a href="tools.html" data-nav="tools"><span>工具箱</span><small>TOOLS</small></a>
+      <a href="join.html" data-nav="join"><span>加入我们</span><small>JOIN</small></a>
+      <a href="about.html" data-nav="about"><span>关于我们</span><small>ABOUT</small></a>
+    </nav>
+
+    <button class="theme-toggle" id="theme-toggle" type="button"
+            aria-label="切换深浅主题" title="切换深浅主题">
+      <span class="ico" data-theme-icon aria-hidden="true">◐</span>
+      <span data-theme-label>主题</span>
+    </button>
+
+    <a class="btn btn--sm header-cta" href="join.html#panel-form">加入我们</a>
+  </div>
+</header>
+
+<div class="mnav">
+  <input type="checkbox" id="mnav-toggle" class="mnav-toggle" aria-label="展开或收起导航菜单">
+  <label class="mnav-btn" for="mnav-toggle" aria-label="打开导航菜单">
+    <span class="mnav-bars" aria-hidden="true"><i></i><i></i><i></i></span>
+    <span class="mnav-label">菜单</span>
+  </label>
+  <label class="mnav-overlay" for="mnav-toggle" aria-label="关闭导航菜单"></label>
+  <div class="mnav-drawer">
+    <div class="mnav-head">
+      <span class="mnav-title">站内导航</span>
+      <label class="mnav-close" for="mnav-toggle" aria-label="关闭导航菜单">×</label>
+    </div>
+    <nav class="mnav-links" aria-label="手机端导航">
+      <a href="index.html" data-nav="home">首页</a>
+      <a href="works.html" data-nav="works">作品</a>
+      <a href="news.html" data-nav="news">公告</a>
+      <a href="tools.html" data-nav="tools">工具箱</a>
+      <a href="join.html" data-nav="join">加入我们</a>
+      <a href="about.html" data-nav="about">关于我们</a>
+    </nav>
+    <a class="btn btn--sm mnav-cta" href="join.html#panel-form">加入我们</a>
+  </div>
+</div>
+
+<main id="main">
+
+  <section class="hero hero--page hero--banner" data-hero="assets/img/mengsea/cover.jpg" id="top">
+    <div class="wrap">
+      <div class="work-back" style="margin-top:0">
+        <a class="btn btn--ghost btn--sm" href="works.html">← 回到作品页</a>
+      </div>
+      <p class="crumb"><a href="works.html">作品展示</a> / 梦海旅者</p>
+      <p class="hero-badge"><span class="dot" aria-hidden="true"></span> 剧情向解密地图 · 《幻世编年史》第一部</p>
+      <p class="page-head__code">INDEX <span>/</span> 02 <span>/</span> <b>WORKS · SEADREAM</b></p>
+
+      <p class="hero-display" aria-hidden="true">
+        <span>SEADREAM</span>
+        <span class="hd-out">VOYAGER</span>
+      </p>
+
+      <h1 class="hero-title" style="font-size:clamp(30px,5vw,54px);margin-bottom:18px">梦海旅者</h1>
+
+      <div class="page-note">
+        <p>
+          幻境与现实交织的大型剧情向解密地图，本作为《幻世编年史》系列第一部，
+          讲述了 [零] 事件后陨石携带梦境幻石的 IF 线。来自向阳花高中的雨眠在与梦境怪物魇魔战斗中发现真相。
+        </p>
+      </div>
+
+      <div class="btn-row">
+        <a class="btn" href="#chapters">看章节信息</a>
+        <a class="btn btn--ghost" href="#codes">组件码</a>
+        <a class="btn btn--ghost" href="#skins">配套皮肤</a>
+        <a class="btn btn--ghost" href="https://space.bilibili.com/479080066" target="_blank" rel="noopener">作者 B 站</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tight">
+    <div class="wrap">
+      <nav class="ms-toc" id="toc" aria-label="本页目录">
+        <a href="#about"><i>01</i><span>作品信息</span></a>
+        <a href="#map-info"><i>02</i><span>地图信息</span></a>
+        <a href="#chapters"><i>03</i><span>章节信息</span></a>
+        <a href="#codes"><i>04</i><span>章节目录与组件码</span></a>
+        <a href="#skins"><i>05</i><span>配套皮肤</span></a>
+        <a href="#author"><i>06</i><span>创作者</span></a>
+      </nav>
+    </div>
+  </section>
+
+  <!-- 01 作品信息 -->
+  <section class="section section--tight" id="about">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker">About</span>
+        <h2>作品信息</h2>
+        <p>作者：暴走苏打　类型：地图 / 剧情解密　系列：《幻世编年史》第一部</p>
+      </div>
+
+      <div class="tool">
+        <div class="tool-col">
+          <p style="font-size:15.5px;line-height:1.9;color:var(--text-dim);margin:0">
+            幻境与现实交织的大型剧情向解密地图，本作为《幻世编年史》系列第一部，
+            讲述了 [零] 事件后陨石携带梦境幻石的 IF 线。
+            来自向阳花高中的雨眠在与梦境怪物魇魔战斗中发现真相。
+          </p>
+
+          <dl class="stat-list" style="margin-top:22px">
+            <div><dt>作品名</dt><dd>梦海旅者长篇地图系列</dd></div>
+            <div><dt>作者</dt><dd>暴走苏打</dd></div>
+            <div><dt>类型</dt><dd>地图 / 剧情解密</dd></div>
+            <div><dt>系列</dt><dd>《幻世编年史》第一部</dd></div>
+            <div><dt>平台</dt><dd>我的世界中国版</dd></div>
+            <div><dt>联机</dt><dd>支持</dd></div>
+          </dl>
+
+          <div class="btn-row" style="margin-top:20px">
+            <a class="btn btn--ghost btn--sm" href="#codes">查组件码</a>
+            <a class="btn btn--ghost btn--sm" href="https://space.bilibili.com/479080066" target="_blank" rel="noopener">作者 B 站</a>
+          </div>
+        </div>
+
+        <div class="tool-col">
+          <figure class="ms-figure">
+            <img src="assets/img/mengsea/poster.jpg" alt="梦海旅者海报：三位主角站在幻境门前" data-zoom decoding="async">
+            <figcaption>梦海旅者 · 幻世编年史</figcaption>
+          </figure>
+        </div>
+      </div>
+
+      <a class="ms-back-top" href="#toc">↑ 回到目录</a>
+    </div>
+  </section>
+
+  <!-- 02 地图信息 -->
+  <section class="section section--tight" id="map-info">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker">Map</span>
+        <h2>地图信息</h2>
+      </div>
+
+      <p style="font-size:15.5px;line-height:1.9;color:var(--text-dim);margin:0;max-width:74ch">
+        长期 / 持续更新的箱庭类长篇角色扮演地图，完结预计时长 20+h，
+        涵盖 11 章主线章节、20 个角色支线、20+ 其他支线以及各类补充章节，
+        游戏内容丰富，支持联机，量大管饱。
+      </p>
+
+      <p style="margin:20px 0 0;font-weight:700;color:var(--text)">地图关键词：</p>
+      <ul class="ms-keywords">
+        <li>剧情</li><li>解密</li><li>闯关</li><li>对话</li><li>PVE</li>
+        <li>长篇</li><li>RPG</li><li>故事</li>
+      </ul>
+      <p style="margin:12px 0 0;font-size:13px;color:var(--text-mute)">
+        不代表完整玩法，仅仅是涉及到一部分关键词内容。
+      </p>
+
+      <div class="city-stats" style="margin-top:26px">
+        <div><b>20+ h</b><span>完结预计时长</span></div>
+        <div><b>11 章</b><span>主线章节</span></div>
+        <div><b>20 个</b><span>角色支线</span></div>
+        <div><b>20+</b><span>其他支线</span></div>
+      </div>
+
+      <figure class="ms-figure" style="margin-top:26px">
+        <img src="assets/img/mengsea/logo.jpg" alt="SeaDream Voyager 梦海旅者 · 幻世编年史" data-zoom decoding="async">
+        <figcaption>SeaDream Voyager · 幻世编年史</figcaption>
+      </figure>
+
+      <a class="ms-back-top" href="#toc">↑ 回到目录</a>
+    </div>
+  </section>
+
+  <!-- 03 章节信息 -->
+  <section class="section section--tight" id="chapters">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker">Chapters</span>
+        <h2>章节信息</h2>
+        <p>按文档顺序列出已更新的章节，每一章都附攻略视频。</p>
+      </div>
+
+      <div class="ms-shots">
+        <img src="assets/img/mengsea/chapter-art-1.jpg" alt="梦海旅者章节画面" data-zoom decoding="async">
+        <img src="assets/img/mengsea/chapter-art-2.jpg" alt="梦海旅者章节画面" data-zoom decoding="async">
+        <img src="assets/img/mengsea/chapter-art-3.jpg" alt="梦海旅者章节画面" data-zoom decoding="async">
+      </div>
+
+      <article class="ms-chapter" id="ch-0">
+        <div class="ms-chapter__head">
+          <span class="ms-chapter__no">PROLOGUE</span>
+          <h3 class="ms-chapter__title">序章</h3>
+        </div>
+        <div class="ms-chapter__body">
+          <p>
+            主角雨眠在临近出发向阳花高中前对过往经历的回忆，第一次梦境门研究及第二次梦境门事故，
+            表面风平浪静的海风镇与梦痕研究所似乎暗藏危机。
+          </p>
+          <div class="ms-shots">
+            <img src="assets/img/mengsea/ch00-1.jpg" alt="序章画面" data-zoom decoding="async">
+            <img src="assets/img/mengsea/ch00-2.jpg" alt="序章画面" data-zoom decoding="async">
+            <img src="assets/img/mengsea/ch00-3.jpg" alt="序章画面" data-zoom decoding="async">
+          </div>
+          <div class="ms-chapter__foot">
+            <a class="btn btn--sm" href="https://www.bilibili.com/video/BV1ZYYTzUE1h" target="_blank" rel="noopener">序章攻略视频</a>
+            <a class="btn btn--ghost btn--sm" href="#codes">组件码 6868315</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="ms-chapter" id="ch-1">
+        <div class="ms-chapter__head">
+          <span class="ms-chapter__no">CHAPTER 01</span>
+          <h3 class="ms-chapter__title">第一章</h3>
+        </div>
+        <div class="ms-chapter__body">
+          <p>
+            初到向阳花高中的雨眠结识了洛思月和佑君等伙伴，并接受了来自幻世弗兰克的使者亚诺斯的指引，
+            镇上名叫宋知之人为纪念亡妻的安苹图书馆引起了大家的注意，
+            这座图书馆埋藏着安苹与师傅徐薇之间的秘密，也隐藏着梦境宫殿阿卡迪亚之森的真相。
+          </p>
+          <div class="ms-chapter__foot">
+            <a class="btn btn--sm" href="https://www.bilibili.com/video/BV18yFkzpEDa" target="_blank" rel="noopener">第一章攻略视频</a>
+            <a class="btn btn--ghost btn--sm" href="#codes">组件码 6230956</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="ms-chapter" id="ch-2">
+        <div class="ms-chapter__head">
+          <span class="ms-chapter__no">CHAPTER 02</span>
+          <h3 class="ms-chapter__title">第二章</h3>
+        </div>
+        <div class="ms-chapter__body">
+          <p>
+            一行人加入了向阳花高中课后文学社，梦海旅者正式成立，
+            后在学生会会长南卿的邀请下，众人前往海风镇剧院参与知名表演天才、学姐郑晗的学校演出《烬火》，
+            却在无意中发现了阴暗的宫殿斯提克斯之渊，
+            同时一位神秘仿佛知道许多真相的泽林报社记者鸣目开始接触主角团，阴谋似乎在暗中涌动。
+          </p>
+          <div class="ms-shots">
+            <img src="assets/img/mengsea/ch02-1.jpg" alt="第二章画面" data-zoom decoding="async">
+            <img src="assets/img/mengsea/ch02-2.jpg" alt="第二章画面" data-zoom decoding="async">
+            <img src="assets/img/mengsea/ch02-3.jpg" alt="第二章画面" data-zoom decoding="async">
+            <img src="assets/img/mengsea/ch02-4.jpg" alt="第二章画面" data-zoom decoding="async">
+            <img src="assets/img/mengsea/ch02-5.jpg" alt="第二章画面" data-zoom decoding="async">
+            <img src="assets/img/mengsea/ch02-6.jpg" alt="第二章画面" data-zoom decoding="async">
+          </div>
+          <div class="ms-chapter__foot">
+            <a class="btn btn--sm" href="https://www.bilibili.com/video/BV1ZKQcBZExU" target="_blank" rel="noopener">第二章攻略视频</a>
+            <a class="btn btn--ghost btn--sm" href="#codes">组件码 2390261</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="ms-chapter" id="ch-3">
+        <div class="ms-chapter__head">
+          <span class="ms-chapter__no">CHAPTER 03</span>
+          <h3 class="ms-chapter__title">第三章</h3>
+        </div>
+        <div class="ms-chapter__body">
+          <p>
+            众人惊讶于鸣目知道梦境宫殿的事情，随后鸣目向众人发出邀请前往无人的郊区，
+            在这里讲述他的一切来历以及他被梦痕研究所和梦境研究影响失去包括记忆的一切，
+            以鸣目和泽林报社记者作为身份来探寻背后隐藏的一切，
+            众人来到鸣目的梦境宫殿卡律布狄之牢，在与鸣目的交涉中达成了共同寻找真相的利益关系。
+          </p>
+          <div class="ms-shots">
+            <img src="assets/img/mengsea/ch03-1.jpg" alt="第三章画面" data-zoom decoding="async">
+            <img src="assets/img/mengsea/ch03-2.jpg" alt="第三章画面" data-zoom decoding="async">
+            <img src="assets/img/mengsea/ch03-3.jpg" alt="第三章画面" data-zoom decoding="async">
+          </div>
+          <div class="ms-chapter__foot">
+            <a class="btn btn--sm" href="https://www.bilibili.com/video/BV1LvRCBDEUe" target="_blank" rel="noopener">第三章攻略视频</a>
+            <a class="btn btn--ghost btn--sm" href="#codes">组件码 2671745</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="ms-chapter" id="ch-4">
+        <div class="ms-chapter__head">
+          <span class="ms-chapter__no">CHAPTER 04</span>
+          <h3 class="ms-chapter__title">第四章</h3>
+        </div>
+        <div class="ms-chapter__body">
+          <p>
+            雨眠在和哥哥若彦的聊天中，得知了柠苏公司和一个古老的神秘计划重映计划，
+            雨眠开始考虑这些是否同梦境研究一起构成巨大的阴谋，
+            但风靡学校的怪谈复仇系统引起了大家的注意，众人怀疑这是受到了梦境宫殿的影响，
+            并把目标锁定在南卿学姐的朋友，化名怪谈公主的温诚，
+            众人探索了梦境宫殿克诺索斯之宫，最终以骑士的名义拯救了温诚。
+          </p>
+          <div class="ms-shots">
+            <img src="assets/img/mengsea/ch04-1.jpg" alt="第四章画面" data-zoom decoding="async">
+            <img src="assets/img/mengsea/ch04-2.jpg" alt="第四章画面" data-zoom decoding="async">
+            <img src="assets/img/mengsea/ch04-3.jpg" alt="第四章画面" data-zoom decoding="async">
+          </div>
+          <div class="ms-chapter__foot">
+            <a class="btn btn--sm" href="https://www.bilibili.com/video/BV1gRME6oE77" target="_blank" rel="noopener">第四章攻略视频</a>
+            <a class="btn btn--ghost btn--sm" href="#codes">组件码 2165148</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="ms-chapter" id="ch-5">
+        <div class="ms-chapter__head">
+          <span class="ms-chapter__no">CHAPTER 05</span>
+          <h3 class="ms-chapter__title">第五章</h3>
+        </div>
+        <div class="ms-chapter__body">
+          <p>
+            若彦突然的到访与长期留在向阳花高中令众人惊讶，
+            但更加惊讶的是，若彦带来了研究所危险人物逃亡到海风镇的消息，
+            在大家惊慌之时，一个神秘的失去记忆的流浪之人把一个笔记本交给了雨眠，
+            并被告知这就是若彦哥捉拿之人，众人探索了梦境宫殿德尔斐城之墟，
+            却因为不知道此人真实身份探索受阻，为了得知一切的真相，雨眠向若彦隐瞒了此人的踪迹。
+          </p>
+          <div class="ms-chapter__foot">
+            <a class="btn btn--sm" href="https://www.bilibili.com/video/BV1LVhg6AEPB" target="_blank" rel="noopener">第五章攻略视频</a>
+            <a class="btn btn--ghost btn--sm" href="#codes">组件码 2190264</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="ms-chapter" id="ch-6">
+        <div class="ms-chapter__head">
+          <span class="ms-chapter__no">CHAPTER 06</span>
+          <h3 class="ms-chapter__title">第六章</h3>
+        </div>
+        <div class="ms-chapter__body">
+          <p>
+            为了得知神秘的失忆者的真实身份，雨眠、洛思月和南卿前往了柠苏公司为向阳花高中新建立的校区，
+            这里的档案馆存放了所有过往学生的信息，
+            因为在笔记本里找到的信息推测此人可能是学校的学生，
+            探险过后令人惊讶地发现竟然是雨眠另一位哥哥若兰，
+            同时鸣目和亚诺斯在后续的宫殿探索中发现了隐藏仿生体和终极仿生体，乃至魇魔培育的恐怖真相，
+            虽然仍然有很多疑惑，但一个防患于未然的计划已经在鸣目脑中悄然形成。
+          </p>
+          <div class="ms-shots">
+            <img src="assets/img/mengsea/ch06-1.jpg" alt="第六章画面" data-zoom decoding="async">
+            <img src="assets/img/mengsea/ch06-2.jpg" alt="第六章画面" data-zoom decoding="async">
+            <img src="assets/img/mengsea/ch06-3.jpg" alt="第六章画面" data-zoom decoding="async">
+          </div>
+          <div class="ms-chapter__foot">
+            <a class="btn btn--sm" href="https://www.bilibili.com/video/BV1hyh16ZEWY" target="_blank" rel="noopener">第六章攻略视频</a>
+            <a class="btn btn--ghost btn--sm" href="#codes">组件码 2105348</a>
+          </div>
+        </div>
+      </article>
+
+      <a class="ms-back-top" href="#toc">↑ 回到目录</a>
+    </div>
+  </section>
+
+  <!-- 04 章节目录与组件码 -->
+  <section class="section section--tight" id="codes">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker">Codes</span>
+        <h2>章节目录与组件码</h2>
+        <p>仅统计已更新的章节内容，同时提供不同版本中国版组件码。</p>
+      </div>
+
+      <div class="callout" style="margin:0 0 22px">
+        <span class="icon" aria-hidden="true">📌</span>
+        <div>
+          本地图全章节均在同一存档制作，因此建议您选择最新章节的地图存档便可以体验完整全部内容。<br>
+          本地图目前暂无国际版下载渠道，预计完整制作完毕后公开国际版下载渠道。<br>
+          无组件码的章节代表跟随某一版本进行了更新，无需单独下载。
+        </div>
+      </div>
+
+      <h3 style="margin:0 0 12px">主线章节</h3>
+      <ul class="ms-codes">
+        <li class="ms-code"><div><b>序章</b><span>6868315</span></div><button class="copy-btn" type="button" data-copy="6868315">复制</button></li>
+        <li class="ms-code"><div><b>第一章</b><span>6230956</span></div><button class="copy-btn" type="button" data-copy="6230956">复制</button></li>
+        <li class="ms-code"><div><b>第二章</b><span>2390261</span></div><button class="copy-btn" type="button" data-copy="2390261">复制</button></li>
+        <li class="ms-code"><div><b>第三章</b><span>2671745</span></div><button class="copy-btn" type="button" data-copy="2671745">复制</button></li>
+        <li class="ms-code"><div><b>第四章</b><span>2165148</span></div><button class="copy-btn" type="button" data-copy="2165148">复制</button></li>
+        <li class="ms-code"><div><b>第五章</b><span>2190264</span></div><button class="copy-btn" type="button" data-copy="2190264">复制</button></li>
+        <li class="ms-code"><div><b>第六章</b><span>2105348</span></div><button class="copy-btn" type="button" data-copy="2105348">复制</button></li>
+      </ul>
+
+      <h3 style="margin:28px 0 12px">补充章节</h3>
+      <ul class="ms-codes">
+        <li class="ms-code"><div><b>回响壹</b><span>2015028</span></div><button class="copy-btn" type="button" data-copy="2015028">复制</button></li>
+      </ul>
+
+      <h3 style="margin:28px 0 12px">社群章节</h3>
+      <ul class="ms-codes">
+        <li class="ms-code"><div><b>恋人.洛思月</b><span>社群章节</span></div></li>
+        <li class="ms-code"><div><b>魔术师.亚诺斯</b><span>社群章节</span></div></li>
+        <li class="ms-code"><div><b>教皇.宋知</b><span>社群章节</span></div></li>
+      </ul>
+
+      <p style="margin:18px 0 0;font-size:13px;color:var(--text-mute)">
+        社群章节暂无单独组件码，随版本更新。
+      </p>
+
+      <a class="ms-back-top" href="#toc">↑ 回到目录</a>
+    </div>
+  </section>
+
+  <!-- 05 配套皮肤 -->
+  <section class="section section--tight" id="skins">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker">Skins</span>
+        <h2>配套皮肤</h2>
+        <p>与中国版组件码分开获取，点「复制」带走组件码。</p>
+      </div>
+
+      <figure class="ms-figure" style="margin:0 0 22px">
+        <img src="assets/img/mengsea/skin-banner.jpg" alt="梦雨思月皮肤展示" data-zoom decoding="async">
+        <figcaption>梦雨思月 · Rain of Dreaming for Moon</figcaption>
+      </figure>
+
+      <div class="ms-skins">
+        <article class="ms-skin">
+          <img class="art" src="assets/img/mengsea/skin-yumian.jpg" alt="雨眠皮肤展示" data-zoom decoding="async">
+          <div class="ms-skin__body">
+            <img class="ms-skin__face" src="assets/img/mengsea/face-yumian.png" alt="" width="44" height="44">
+            <div>
+              <div class="ms-skin__name">雨眠</div>
+              <div class="ms-skin__sub">The Fool · 8957505</div>
+            </div>
+            <button class="copy-btn" type="button" data-copy="8957505">复制</button>
+          </div>
+        </article>
+
+        <article class="ms-skin">
+          <img class="art" src="assets/img/mengsea/skin-luosiyue.jpg" alt="洛思月皮肤展示" data-zoom decoding="async">
+          <div class="ms-skin__body">
+            <img class="ms-skin__face" src="assets/img/mengsea/face-luosiyue.png" alt="" width="44" height="44">
+            <div>
+              <div class="ms-skin__name">洛思月</div>
+              <div class="ms-skin__sub">The Lovers · 8549252</div>
+            </div>
+            <button class="copy-btn" type="button" data-copy="8549252">复制</button>
+          </div>
+        </article>
+
+        <article class="ms-skin">
+          <img class="art" src="assets/img/mengsea/skin-youjun.jpg" alt="佑君皮肤展示" data-zoom decoding="async">
+          <div class="ms-skin__body">
+            <img class="ms-skin__face" src="assets/img/mengsea/face-youjun.png" alt="" width="44" height="44">
+            <div>
+              <div class="ms-skin__name">佑君</div>
+              <div class="ms-skin__sub">Death · 8482897</div>
+            </div>
+            <button class="copy-btn" type="button" data-copy="8482897">复制</button>
+          </div>
+        </article>
+      </div>
+
+      <a class="ms-back-top" href="#toc">↑ 回到目录</a>
+    </div>
+  </section>
+
+  <!-- 06 创作者 -->
+  <section class="section section--tight" id="author">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker">Author</span>
+        <h2>创作者</h2>
+      </div>
+
+      <div class="tool">
+        <div class="tool-col">
+          <div class="panel">
+            <h3 style="margin-top:0">暴走苏打</h3>
+            <p style="color:var(--text-dim);font-size:14.5px;margin:0">
+              梦海旅者长篇地图系列的作者，创想时代开发组成员。攻略视频与皮肤也发布在他的 B 站主页。
+            </p>
+            <div class="btn-row" style="margin-top:16px">
+              <a class="btn btn--sm" href="https://space.bilibili.com/479080066" target="_blank" rel="noopener">作者 B 站</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="tool-col">
+          <div class="panel">
+            <h3 style="margin-top:0">回作品页</h3>
+            <p style="color:var(--text-dim);font-size:14.5px;margin:0">
+              作品页里还有本组的其他地图、材质与光影。
+            </p>
+            <div class="btn-row" style="margin-top:16px">
+              <a class="btn btn--ghost btn--sm" href="works.html">回作品页</a>
+              <a class="btn btn--ghost btn--sm" href="#top">回到顶部</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <a class="ms-back-top" href="#toc">↑ 回到目录</a>
+    </div>
+  </section>
+
+</main>
+
+<div class="lightbox" id="lightbox" hidden role="dialog" aria-modal="true" aria-label="图片放大查看">
+  <button class="lightbox-close" id="lightbox-close" type="button" aria-label="关闭">×</button>
+  <button class="lightbox-nav lightbox-prev" id="lightbox-prev" type="button" aria-label="上一张">‹</button>
+  <button class="lightbox-nav lightbox-next" id="lightbox-next" type="button" aria-label="下一张">›</button>
+  <figure class="lightbox-inner">
+    <img id="lightbox-img" alt="">
+    <figcaption id="lightbox-caption"></figcaption>
+  </figure>
+</div>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <h4>创想时代开发组</h4>
+        <p style="margin:0">
+          Innova Age Development Team<br>
+          专注 Minecraft 基岩版（MCBE）资源创作。<br>
+          成立于 2016 年 3 月 10 日。
+        </p>
+      </div>
+      <div>
+        <h4>站内导航</h4>
+        <ul>
+          <li><a href="index.html">首页</a></li>
+          <li><a href="about.html">关于我们</a></li>
+          <li><a href="works.html">作品展示</a></li>
+          <li><a href="news.html">公告</a></li>
+          <li><a href="tools.html">工具箱</a></li>
+          <li><a href="join.html#panel-form">加入我们</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>联系方式</h4>
+        <ul>
+          <li>反馈交流群：<span data-fill="qqFeedback">—</span></li>
+          <li>对外审核群：<span data-fill="qqAudit">—</span></li>
+          <li>开发理事会：<span data-fill="qqCouncil">—</span></li>
+          <li>对外交流群：<span data-fill="qqPublic">—</span></li>
+          <li>我的世界中国版资源中心搜索：<span data-fill="neteaseMc">—</span></li>
+          <li>网易大神：<span data-fill="neteaseHd">—</span></li>
+          <li>哔哩哔哩：<a href="#" data-fill-href="bilibili" target="_blank" rel="noopener" data-fill="bilibiliName">—</a></li>
+          <li>抖音：<span data-fill="douyin">—</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© <span data-year>2026</span> 创想时代开发组 · Innova Age Development Team</span>
+      <span><a href="https://innovaage.cn">innovaage.cn</a></span>
+    </div>
+  </div>
+</footer>
+<script src="assets/js/site.js?v=20261061"></script>
+</body>
+</html>

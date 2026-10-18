@@ -145,6 +145,7 @@
   var SHOWCASE_HOME = [
     {
       id: 'uransch',
+      href: 'work-rich.html?id=uransch',
       img: 'assets/img/uransch-cover.jpg',
       title: '无人区跑酷',
       meta: '作者：柑柠',
@@ -153,11 +154,21 @@
     },
     {
       id: 'fangzhen-tech',
+      href: 'work-rich.html?id=fangzhen-tech',
       img: 'assets/img/fangzhen-cover.jpg',
       title: '仿真工艺系列材质',
       meta: '作者：茫帛',
       category: 'tex',
       desc: '风格化写实、偏生存实用向的材质包，历时近四年制作，现有多种版本可选。'
+    },
+    {
+      id: 'mengsea',
+      href: 'mengsea.html',
+      img: 'assets/img/mengsea/cover.jpg',
+      title: '梦海旅者',
+      meta: '作者：暴走苏打',
+      category: 'map',
+      desc: '幻境与现实交织的大型剧情向解密地图，《幻世编年史》系列第一部。'
     },
     {
       id: 'city',
@@ -249,6 +260,7 @@
     },
     'uransch': {
       name: '无人区跑酷',
+      displayEn: 'URANSCH PARKOUR',
       author: '柑柠',
       type: '地图 / Map',
       tagline: '箱庭式中高难度跑酷地图，56 个关卡，基岩版与 Java 版同玩法',
@@ -633,6 +645,7 @@
     },
     'fangzhen-tech': {
       name: '仿真工艺系列材质',
+      displayEn: 'REALCRAFT TEXTURE',
       author: '茫帛',
       type: '材质 / Texture',
       tagline: '风格化写实、偏生存实用向的材质包，历时近四年制作',
@@ -1280,7 +1293,10 @@
       //   2) 没写 target 的：直接复制同一行里显示出来的那串文字
       var key = btn.getAttribute('data-copy-target');
 
+      var literal = btn.getAttribute('data-copy');
+
       function value() {
+        if (literal) return literal;
         if (key) return SITE_CONFIG[key] || '';
         var row = btn.closest('.contact-item');
         var shown = row && row.querySelector('.info b');
@@ -1916,6 +1932,25 @@
       }
 
       intro.innerHTML = parts.join('');
+
+      // 正文目录：小标题够多才做，少了没必要
+      var tocHost = $('#work-toc');
+      if (tocHost) {
+        var heads = $$('#work-intro .work-heading');
+        if (heads.length >= 3) {
+          heads.forEach(function (h, i) {
+            h.id = 'sec-' + (i + 1);
+          });
+          tocHost.innerHTML = '<nav class="work-toc" aria-label="正文目录">' +
+            '<p class="work-toc__title">本页目录</p><ol>' +
+            heads.map(function (h) {
+              return '<li><a href="#' + h.id + '">' + esc(h.textContent.trim()) + '</a></li>';
+            }).join('') +
+            '</ol></nav>';
+        } else {
+          tocHost.innerHTML = '';
+        }
+      }
     }
 
     // 鸣谢 / 反馈渠道
@@ -2296,6 +2331,161 @@
     }
   }
 
+
+  /* ---------- 作品主页：小站式作品详情 ----------
+     work-rich.html?id=xxx 用。和普通详情页不同的是：
+     顶部大图 + 目录 + 每一节做成卡片 + 图片可放大 + 链接集中到底部。 */
+  function initRichWork() {
+    var host = $('#rw-body');
+    if (!host) return;
+
+    var id = '';
+    try {
+      id = new URLSearchParams(location.search).get('id') || '';
+    } catch (e) {
+      var m = /[?&]id=([^&]+)/.exec(location.search);
+      id = m ? decodeURIComponent(m[1]) : '';
+    }
+
+    var work = WORKS[id];
+    if (!work) {
+      var first = Object.keys(WORKS)[0];
+      work = WORKS[first];
+      id = first;
+    }
+    if (!work) return;
+
+    document.title = work.name + ' | 创想时代开发组';
+
+    /* 头部 */
+    var setText = function (sel, text) {
+      var el = $(sel);
+      if (el && text) el.textContent = text;
+      return el;
+    };
+    setText('#rw-crumb', work.name);
+    setText('#rw-type', work.type || '作品');
+    setText('#rw-code', 'WORKS · ' + (work.displayEn || work.name));
+    setText('#rw-name', work.name);
+    setText('#rw-tagline', work.tagline || '');
+    setText('#rw-author', work.author ? '作者：' + work.author : '');
+
+    var display = $('#rw-display');
+    if (display && work.displayEn) {
+      var words = work.displayEn.split(' ');
+      display.innerHTML = words.map(function (w, i) {
+        return '<span' + (i === words.length - 1 && words.length > 1 ? ' class="hd-out"' : '') + '>' + esc(w) + '</span>';
+      }).join('');
+    }
+
+    buildHeroFigure($('#rw-head'), work.cover);
+
+    /* 顶部按钮 */
+    var cta = $('#rw-cta');
+    if (cta) {
+      cta.innerHTML =
+        '<a class="btn" href="#rw-body">看正文</a>' +
+        '<a class="btn btn--ghost" href="#rw-about">作品信息</a>' +
+        (work.links && work.links.length ? '<a class="btn btn--ghost" href="#rw-links-section">下载与链接</a>' : '');
+    }
+
+    /* 作品信息 */
+    var facts = $('#rw-facts');
+    if (facts && work.facts && work.facts.length) {
+      facts.innerHTML = work.facts.map(function (f) {
+        var v = f.bold ? '<b>' + esc(f.v) + '</b>' : esc(f.v);
+        return '<div><dt>' + esc(f.k) + '</dt><dd>' + v + '</dd></div>';
+      }).join('');
+    }
+
+    /* 正文：按小标题拆成卡片 */
+    var blocks = work.intro || [];
+    var sections = [{ title: '', items: [] }];
+    blocks.forEach(function (b) {
+      if (b && typeof b === 'object' && b.heading) {
+        sections.push({ title: b.heading, items: [] });
+      } else {
+        sections[sections.length - 1].items.push(b);
+      }
+    });
+
+    function renderItem(b) {
+      if (typeof b === 'string') return '<p>' + esc(b) + '</p>';
+
+      if (b.list) {
+        return '<ul class="feature-list">' + b.list.map(function (li) {
+          return '<li>' + esc(li) + '</li>';
+        }).join('') + '</ul>';
+      }
+
+      if (b.imgs && b.imgs.length) {
+        return '<div class="ms-shots">' + b.imgs.map(function (im) {
+          return '<img src="' + esc(im.img) + '" alt="' + esc(im.alt || '') + '" data-zoom decoding="async">';
+        }).join('') + '</div>';
+      }
+
+      if (b.img) {
+        return '<figure class="ms-figure"><img src="' + esc(b.img) + '" alt="' + esc(b.alt || '') + '" data-zoom decoding="async"></figure>';
+      }
+
+      if (b.links && b.links.length) {
+        return '<div class="ms-links">' + renderWorkLinks(b.links) + '</div>';
+      }
+
+      if (b.blockquote) return '<blockquote>' + esc(b.blockquote) + '</blockquote>';
+      return '';
+    }
+
+    var html = '';
+    var tocItems = [];
+    var idx = 0;
+
+    sections.forEach(function (sec) {
+      if (!sec.title && !sec.items.length) return;
+
+      if (!sec.title) {
+        html += '<section class="section section--tight"><div class="wrap">' +
+          sec.items.map(renderItem).join('') + '</div></section>';
+        return;
+      }
+
+      idx += 1;
+      var anchor = 'sec-' + idx;
+      tocItems.push({ id: anchor, label: sec.title });
+
+      html += '<section class="section section--tight ms-section" id="' + anchor + '">' +
+        '<div class="wrap">' +
+          '<div class="ms-head">' +
+            '<span class="ms-head__no">— ' + String(idx).padStart(2, '0') + '</span>' +
+            '<h2>' + esc(sec.title) + '</h2>' +
+          '</div>' +
+          '<div class="ms-section__body">' + sec.items.map(renderItem).join('') + '</div>' +
+        '</div>' +
+      '</section>';
+    });
+
+    host.innerHTML = html;
+
+    /* 目录 */
+    var toc = $('#rw-toc');
+    if (toc && tocItems.length) {
+      toc.innerHTML = '<a href="#rw-about"><i>00</i><span>作品信息</span></a>' +
+        tocItems.map(function (t, i) {
+          return '<a href="#' + t.id + '"><i>' + String(i + 1).padStart(2, '0') + '</i><span>' + esc(t.label) + '</span></a>';
+        }).join('') +
+        (work.links && work.links.length ? '<a href="#rw-links-section"><i>§</i><span>下载与链接</span></a>' : '');
+      toc.hidden = false;
+    }
+
+    /* 链接 */
+    if (work.links && work.links.length) {
+      var linkHost = $('#rw-links');
+      var linkSection = $('#rw-links-section');
+      if (linkHost) linkHost.innerHTML = renderWorkLinks(work.links);
+      if (linkSection) linkSection.hidden = false;
+    }
+  }
+
   /* 给一个 hero 挂上背景大图与压暗层。
      子页面（data-hero）和作品详情页（用作品封面）共用这一套。 */
   function buildHeroFigure(hero, src) {
@@ -2359,6 +2549,41 @@
     window.addEventListener('pageshow', apply);
   }
 
+  /* ---------- 页面内目录高亮 ----------
+     长页面（作品主页）顶部的目录条：滚动到哪一节，对应项就高亮。 */
+  function initAnchorToc() {
+    var toc = $('.ms-toc');
+    if (!toc) return;
+
+    var links = $$('.ms-toc a').filter(function (a) {
+      return (a.getAttribute('href') || '').charAt(0) === '#';
+    });
+    if (!links.length) return;
+
+    var targets = links.map(function (a) {
+      return { link: a, el: $(a.getAttribute('href')) };
+    }).filter(function (t) { return t.el; });
+
+    function update() {
+      var y = window.pageYOffset + 140;
+      var current = null;
+      targets.forEach(function (t) {
+        if (t.el.offsetTop <= y) current = t;
+      });
+      links.forEach(function (a) { a.classList.remove('is-active'); });
+      if (current) current.link.classList.add('is-active');
+    }
+
+    var ticking = false;
+    window.addEventListener('scroll', function () {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(function () { update(); ticking = false; });
+    }, { passive: true });
+
+    update();
+  }
+
   /* ---------- 启动 ---------- */
   function boot() {
     markActiveNav();
@@ -2379,7 +2604,9 @@
     initHeroParallax();
     initShowcase();
     initWorkDetail();
+    initRichWork();
     initZoomGallery();
+    initAnchorToc();
     initPageTransition();
     initPageIndex();
     initArticle();

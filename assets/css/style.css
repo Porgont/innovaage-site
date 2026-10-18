@@ -1524,7 +1524,7 @@ input[type="range"]::-webkit-slider-thumb {
    外链后面跟一个 ↗ 表示会跳走。
    注意必须把导航（.nav / .mnav-links）排除掉 ——
    导航本来就有自己的一套样式，套上这块会变成一排黄杠，很难看。 */
-.wrap a:not(.btn):not(.brand):not(.work-more):not(.skip-link):not(.module-card):not(.nav a):not(.mnav-links a):not(.footer-grid a):not(.city-card):not(.city-nav__links a):not(.tab--jump),
+.wrap a:not(.btn):not(.brand):not(.work-more):not(.skip-link):not(.module-card):not(.nav a):not(.mnav-links a):not(.footer-grid a):not(.city-card):not(.city-nav__links a):not(.tab--jump):not(.ms-toc a):not(.work-toc a),
 .callout a,
 .notice-body a,
 .stat-list a {
@@ -2298,6 +2298,356 @@ input[type="range"]::-webkit-slider-thumb {
 @media (max-width: 700px) {
   .topic-band__body { padding: 26px 22px; }
 }
+
+/* ---------- 梦海旅者作品主页 ---------- */
+.ms-toc {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 8px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--panel);
+}
+
+.ms-toc a {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  color: var(--text);
+  text-decoration: none;
+  transition: background-color .15s ease, border-color .15s ease;
+}
+
+.ms-toc a:hover,
+.ms-toc a.is-active {
+  background: var(--bg-2);
+  border-color: var(--line-2);
+}
+
+.ms-toc i {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-style: normal;
+  letter-spacing: .1em;
+  color: var(--gold-dk);
+}
+
+.ms-toc span { font-size: 14px; font-weight: 700; }
+
+.ms-keywords {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ms-keywords li {
+  padding: 6px 13px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-dim);
+  background: var(--bg-2);
+  border: 1px solid var(--line-2);
+  border-radius: 999px;
+}
+
+.ms-chapter {
+  scroll-margin-top: 96px;
+  margin-top: 26px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--panel);
+  overflow: hidden;
+}
+
+.ms-chapter__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 12px;
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--line);
+  background: var(--bg-2);
+}
+
+.ms-chapter__no {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .16em;
+  color: var(--gold-dk);
+}
+
+.ms-chapter__title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--text);
+}
+
+.ms-chapter__body { padding: 20px; }
+
+.ms-chapter__body p {
+  margin: 0;
+  font-size: 14.5px;
+  line-height: 1.9;
+  color: var(--text-dim);
+}
+
+.ms-chapter__foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.ms-shots {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.ms-shots img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  background: var(--bg-2);
+  cursor: zoom-in;
+}
+
+.ms-codes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ms-code {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--panel);
+}
+
+.ms-code b {
+  display: block;
+  font-size: 14px;
+  color: var(--text);
+}
+
+.ms-code span {
+  display: block;
+  margin-top: 3px;
+  font-family: var(--mono);
+  font-size: 13.5px;
+  letter-spacing: .06em;
+  color: var(--text-dim);
+}
+
+.ms-skins {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.ms-skin {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--panel);
+  overflow: hidden;
+}
+
+.ms-skin img.art {
+  width: 100%;
+  height: auto;
+  display: block;
+  cursor: zoom-in;
+  border-bottom: 1px solid var(--line);
+}
+
+.ms-skin__body {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+}
+
+.ms-skin__face {
+  width: 44px;
+  height: 44px;
+  image-rendering: pixelated;
+  border: 1px solid var(--line-2);
+  border-radius: 2px;
+  background: var(--bg-2);
+}
+
+.ms-skin__name {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--text);
+}
+
+.ms-skin__sub {
+  margin-top: 2px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .1em;
+  color: var(--text-mute);
+}
+
+.ms-skin .copy-btn { margin-left: auto; }
+
+.ms-back-top {
+  display: inline-block;
+  margin-top: 20px;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .1em;
+  color: var(--text-mute);
+  text-decoration: none;
+  border-bottom: 1px solid var(--line-2);
+}
+
+.ms-back-top:hover { color: var(--text); border-bottom-color: var(--gold); }
+
+.ms-figure {
+  margin: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--bg-2);
+  overflow: hidden;
+}
+
+.ms-figure img {
+  width: 100%;
+  height: auto;
+  display: block;
+  cursor: zoom-in;
+}
+
+.ms-figure figcaption {
+  padding: 10px 14px;
+  font-size: 12.5px;
+  color: var(--text-mute);
+  border-top: 1px solid var(--line);
+}
+
+/* 小站式作品页的节标题：用自己带的编号，不用页面级的自动计数 */
+.ms-head {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 26px;
+  padding: 18px 0 0 16px;
+  border-left: 3px solid var(--gold);
+  border-top: 1px solid var(--line);
+}
+
+.ms-head__no {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .18em;
+  color: var(--gold-dk);
+  white-space: nowrap;
+}
+
+.ms-head h2 {
+  margin: 0;
+  font-size: 27px;
+  font-weight: 800;
+  letter-spacing: -.015em;
+  color: var(--text);
+}
+
+/* 小站式作品页里每一节的内容排布 */
+.ms-section__body > p {
+  margin: 0 0 16px;
+  font-size: 15.5px;
+  line-height: 1.95;
+  color: var(--text-dim);
+}
+
+.ms-section__body > p:last-child { margin-bottom: 0; }
+
+.ms-section__body .feature-list {
+  margin: 0 0 18px;
+  font-size: 15px;
+}
+
+.ms-section__body .ms-shots { margin-top: 4px; }
+
+.ms-links .work-links {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
+}
+
+/* 作品详情页的正文目录（由 site.js 生成） */
+.work-toc {
+  margin: 0 0 28px;
+  padding: 16px 18px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--panel);
+}
+
+.work-toc__title {
+  margin: 0 0 10px;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--text-mute);
+}
+
+.work-toc ol {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 2px 18px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: wtoc;
+}
+
+.work-toc li { counter-increment: wtoc; }
+
+.work-toc a {
+  display: flex;
+  gap: 8px;
+  padding: 6px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-dim);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+
+.work-toc a::before {
+  content: counter(wtoc, decimal-leading-zero);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .08em;
+  color: var(--gold-dk);
+}
+
+.work-toc a:hover { color: var(--text); border-bottom-color: var(--line-2); }
 
 /* ---------- 创想之都子站 ---------- */
 .city-nav {
