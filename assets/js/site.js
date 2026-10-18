@@ -75,6 +75,14 @@
 
   var SHOWCASE = [
     {
+      id: 'enterprise-gray-ghost',
+      img: 'assets/img/enterprise-gray-ghost.jpg',
+      title: '企业-灰色幽灵',
+      meta: '作者：创想时代 Mingxiang｜渲染：创想时代 柑柠',
+      category: 'skin',
+      desc: '付费皮肤，参考并较高水平地还原了游戏《碧蓝航线》的角色企业。'
+    },
+    {
       id: 'log7-birch',
       img: 'assets/img/log7-1.jpg',
       title: 'Log7桦木 · 完整版',
@@ -166,6 +174,24 @@
        然后在 SHOWCASE 对应那条上填同名的 id，作品页就会出现「查看详情」入口。
      ========================================================== */
   var WORKS = {
+    'enterprise-gray-ghost': {
+      name: '企业-灰色幽灵',
+      author: '创想时代 Mingxiang',
+      type: '皮肤 / Skin',
+      tagline: '付费皮肤，参考并较高水平地还原了游戏《碧蓝航线》的角色企业',
+      cover: 'assets/img/enterprise-gray-ghost.jpg',
+      coverAlt: '企业-灰色幽灵皮肤渲染：白发兽耳、黑色制服与红色腰带，浅黄色背景',
+      facts: [
+        { k: '作品名', v: '企业-灰色幽灵' },
+        { k: '作者', v: '创想时代 Mingxiang' },
+        { k: '渲染', v: '创想时代 柑柠' },
+        { k: '类型', v: '皮肤 / Skin' },
+        { k: '价格', v: '付费皮肤' }
+      ],
+      intro: [
+        '付费皮肤，参考并较高水平地还原了游戏《碧蓝航线》的角色企业。'
+      ]
+    },
     'log7-birch': {
       name: 'Log7桦木 · 完整版',
       author: '创想时代 Log_坤',
