@@ -1524,7 +1524,7 @@ input[type="range"]::-webkit-slider-thumb {
    外链后面跟一个 ↗ 表示会跳走。
    注意必须把导航（.nav / .mnav-links）排除掉 ——
    导航本来就有自己的一套样式，套上这块会变成一排黄杠，很难看。 */
-.wrap a:not(.btn):not(.brand):not(.work-more):not(.skip-link):not(.module-card):not(.nav a):not(.mnav-links a):not(.footer-grid a),
+.wrap a:not(.btn):not(.brand):not(.work-more):not(.skip-link):not(.module-card):not(.nav a):not(.mnav-links a):not(.footer-grid a):not(.city-card):not(.city-nav__links a),
 .callout a,
 .notice-body a,
 .stat-list a {
@@ -2188,6 +2188,214 @@ input[type="range"]::-webkit-slider-thumb {
 .steps li b { color: var(--text); }
 
 /* ---------- 提示条 ---------- */
+/* ---------- 创想之都子站 ---------- */
+.city-nav {
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  background: var(--panel);
+}
+
+.city-nav .wrap {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  flex-wrap: wrap;
+}
+
+.city-nav__brand {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--gold-dk);
+  padding: 14px 0;
+  white-space: nowrap;
+}
+
+.city-nav__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+}
+
+.city-nav__links a {
+  display: block;
+  padding: 14px 13px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-dim);
+  border-bottom: 2px solid transparent;
+  transition: color .15s ease, border-color .15s ease;
+}
+
+.city-nav__links a:hover { color: var(--text); }
+
+.city-nav__links a.is-current {
+  color: var(--text);
+  border-bottom-color: var(--gold);
+}
+
+.city-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.city-stats > div {
+  padding: 18px 20px;
+  background: var(--panel);
+  border-right: 1px solid var(--line);
+}
+
+.city-stats > div:last-child { border-right: 0; }
+
+.city-stats b {
+  display: block;
+  font-size: 23px;
+  letter-spacing: -.01em;
+  color: var(--text);
+}
+
+.city-stats span {
+  display: block;
+  margin-top: 6px;
+  font-size: 12.5px;
+  color: var(--text-mute);
+}
+
+.city-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+  gap: 20px;
+}
+
+.city-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  color: inherit;
+  transition: transform .18s ease, border-color .18s ease;
+}
+
+.city-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--line-2);
+}
+
+.city-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+  border-bottom: 1px solid var(--line);
+  background: var(--bg-2);
+}
+
+.city-card__body {
+  padding: 16px 18px 18px;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+}
+
+.city-card__kicker {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--gold-dk);
+}
+
+.city-card h3 {
+  margin: 8px 0 8px;
+  font-size: 16.5px;
+  line-height: 1.45;
+  color: var(--text);
+}
+
+.city-card p {
+  margin: 0 0 14px;
+  font-size: 14px;
+  line-height: 1.75;
+  color: var(--text-dim);
+}
+
+.city-card .more {
+  margin-top: auto;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.city-shots {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 16px;
+}
+
+.city-shots figure,
+.city-map {
+  margin: 0;
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.city-shots img,
+.city-map img {
+  display: block;
+  width: 100%;
+  height: auto;
+  cursor: zoom-in;
+}
+
+.city-shots figcaption,
+.city-map figcaption {
+  padding: 11px 15px;
+  font-size: 12.5px;
+  color: var(--text-mute);
+  border-top: 1px solid var(--line);
+}
+
+.city-credit {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.city-credit li {
+  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-dim);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+}
+
+.city-post-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin: 0 0 18px;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .06em;
+  color: var(--text-mute);
+}
+
+.city-post-meta span { white-space: nowrap; }
+
 /* ---------- 工具页：要点 / 步骤 / 问答 / 红色警告 ---------- */
 .feature-list,
 .step-list {

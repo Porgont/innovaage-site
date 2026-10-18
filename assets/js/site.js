@@ -158,6 +158,15 @@
       meta: '作者：茫帛',
       category: 'tex',
       desc: '风格化写实、偏生存实用向的材质包，历时近四年制作，现有多种版本可选。'
+    },
+    {
+      id: 'city',
+      href: 'city.html',
+      img: 'assets/img/city/cover.jpg',
+      title: '创想之都',
+      meta: '发起：苏打、浦仙',
+      category: 'map',
+      desc: '由创想时代开发组苏打与浦仙发起的一个建设 MC 城市地图的大型项目，正式开始建设于 2022 年 8 月。'
     }
   ];
 
@@ -1621,8 +1630,10 @@
 
     host.innerHTML = list.map(function (it) {
       var cat = CATEGORIES[it.category] || '';
-      var detail = it.id
-        ? '<a class="work-more" href="work.html?id=' + esc(it.id) + '">查看详情 →</a>'
+      // 有 href 的直接指向自己的页面（比如创想之都的子站），否则走通用详情页
+      var detailHref = it.href || (it.id ? 'work.html?id=' + esc(it.id) : '');
+      var detail = detailHref
+        ? '<a class="work-more" href="' + detailHref + '">查看详情 →</a>'
         : '';
       return '' +
         '<article class="work">' +
@@ -2073,6 +2084,83 @@
     });
   }
 
+  /* ---------- 通用图片放大层 ----------
+     city 系列（创想之都子站）用：页面上标了 data-zoom 的图片都能点开，
+     复用同一个 #lightbox，支持左右翻页与 Esc 关闭。 */
+  function initZoomGallery() {
+    var box = $('#lightbox');
+    if (!box) return;
+
+    var items = $$('[data-zoom]').filter(function (el) {
+      return el.tagName === 'IMG' && el.getAttribute('src');
+    });
+    if (!items.length) return;
+
+    var img = $('#lightbox-img');
+    var cap = $('#lightbox-caption');
+    var prevBtn = $('#lightbox-prev');
+    var nextBtn = $('#lightbox-next');
+    var lastFocus = null;
+    var cur = 0;
+
+    function capOf(el) {
+      var fig = el.closest('figure');
+      var fc = fig ? fig.querySelector('figcaption') : null;
+      return fc ? fc.textContent.trim() : (el.getAttribute('alt') || '');
+    }
+
+    function show(i) {
+      cur = i;
+      var el = items[i];
+      img.src = el.getAttribute('src');
+      img.alt = el.getAttribute('alt') || '';
+      if (cap) {
+        var t = capOf(el);
+        cap.textContent = t;
+        cap.hidden = !t;
+      }
+    }
+
+    function step(dir) {
+      if (box.hidden || items.length < 2) return;
+      show((cur + dir + items.length) % items.length);
+    }
+
+    function open(i) {
+      lastFocus = document.activeElement;
+      show(i);
+      box.hidden = false;
+      document.body.style.overflow = 'hidden';
+      if (prevBtn) prevBtn.hidden = items.length < 2;
+      if (nextBtn) nextBtn.hidden = items.length < 2;
+      $('#lightbox-close').focus();
+    }
+
+    function close() {
+      box.hidden = true;
+      img.removeAttribute('src');
+      document.body.style.overflow = '';
+      if (lastFocus && lastFocus.focus) lastFocus.focus();
+    }
+
+    items.forEach(function (el, i) {
+      el.addEventListener('click', function () { open(i); });
+    });
+
+    if (prevBtn) prevBtn.addEventListener('click', function (e) { e.stopPropagation(); step(-1); });
+    if (nextBtn) nextBtn.addEventListener('click', function (e) { e.stopPropagation(); step(1); });
+    $('#lightbox-close').addEventListener('click', close);
+    box.addEventListener('click', function (e) {
+      if (e.target === box) close();
+    });
+    document.addEventListener('keydown', function (e) {
+      if (box.hidden) return;
+      if (e.key === 'Escape') close();
+      else if (e.key === 'ArrowLeft') step(-1);
+      else if (e.key === 'ArrowRight') step(1);
+    });
+  }
+
   /* ---------- 页面切换动效 ----------
      进场靠 CSS 的 page-in 动画，这里只管两件事：
        1. 点站内链接时先播 0.2 秒的离场态，再真正跳转
@@ -2280,6 +2368,7 @@
     initHeroParallax();
     initShowcase();
     initWorkDetail();
+    initZoomGallery();
     initPageTransition();
     initPageIndex();
     initArticle();
