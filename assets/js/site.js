@@ -187,6 +187,7 @@
   var SHOWCASE_TEST = [
     {
       id: 'vulkan-rtx-jog',
+      href: 'work-rich.html?id=vulkan-rtx-jog',
       img: 'assets/img/jog-1.jpg',
       title: 'Vulkan RTX-Jog光影',
       meta: '作者：创想时代 Log_坤',
@@ -213,6 +214,7 @@
   var WORKS = {
     'vulkan-rtx-jog': {
       name: 'Vulkan RTX-Jog光影',
+      displayEn: 'VULKAN RTX|JOG',
       author: '创想时代 Log_坤',
       type: '光影 / Shader',
       tagline: '基于Caustica0.1.1修改，改动有限',
@@ -227,22 +229,17 @@
         { k: 'Q 群下载', v: '980037287', bold: true }
       ],
       intro: [
+        { heading: '简介' },
         '基于Caustica0.1.1修改，改动有限',
+        { heading: '构建流程' },
         '自行构建 .jar 的流程详见「构建流程.txt」',
+        { heading: '效果预览' },
         {
           imgs: [
             { img: 'assets/img/jog-2.jpg', alt: 'Vulkan RTX-Jog光影' },
-            { img: 'assets/img/jog-3.jpg', alt: 'Vulkan RTX-Jog光影' }
-          ]
-        },
-        {
-          imgs: [
+            { img: 'assets/img/jog-3.jpg', alt: 'Vulkan RTX-Jog光影' },
             { img: 'assets/img/jog-4.jpg', alt: 'Vulkan RTX-Jog光影' },
-            { img: 'assets/img/jog-5.jpg', alt: 'Vulkan RTX-Jog光影' }
-          ]
-        },
-        {
-          imgs: [
+            { img: 'assets/img/jog-5.jpg', alt: 'Vulkan RTX-Jog光影' },
             { img: 'assets/img/jog-6.jpg', alt: 'Vulkan RTX-Jog光影' },
             { img: 'assets/img/jog-7.jpg', alt: 'Vulkan RTX-Jog光影' }
           ]
@@ -2372,7 +2369,8 @@
 
     var display = $('#rw-display');
     if (display && work.displayEn) {
-      var words = work.displayEn.split(' ');
+      // 用 | 手动分行：SEADREAM | VOYAGER 这种两行最好看，没有 | 就按空格分行
+      var words = work.displayEn.split(work.displayEn.indexOf('|') >= 0 ? '|' : ' ');
       display.innerHTML = words.map(function (w, i) {
         return '<span' + (i === words.length - 1 && words.length > 1 ? ' class="hd-out"' : '') + '>' + esc(w) + '</span>';
       }).join('');
@@ -2482,6 +2480,8 @@
       var linkHost = $('#rw-links');
       var linkSection = $('#rw-links-section');
       if (linkHost) linkHost.innerHTML = renderWorkLinks(work.links);
+      var linkNo = $('#rw-links-no');
+      if (linkNo) linkNo.textContent = '— ' + String(tocItems.length + 1).padStart(2, '0');
       if (linkSection) linkSection.hidden = false;
     }
   }
