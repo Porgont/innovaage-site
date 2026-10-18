@@ -2004,10 +2004,26 @@
     var img = $('#lightbox-img');
     var cap = $('#lightbox-caption');
     var lastFocus = null;
+    var cur = 0;
+    var prevBtn = $('#lightbox-prev');
+    var nextBtn = $('#lightbox-next');
+
+    function show(i) {
+      cur = i;
+      img.src = shots[i].img;
+      img.alt = shots[i].alt || '';
+    }
+
+    // 上一张 / 下一张，走到头就绕回另一头
+    function step(dir) {
+      if (box.hidden || shots.length < 2) return;
+      show((cur + dir + shots.length) % shots.length);
+    }
 
     function open(i) {
       var s = shots[i];
       if (!s) return;
+      cur = i;
       lastFocus = document.activeElement;
       img.src = s.img;
       // 放大层不显示文字说明，只把说明留给 alt
@@ -2015,6 +2031,9 @@
       if (cap) { cap.textContent = ''; cap.hidden = true; }
       box.hidden = false;
       document.body.style.overflow = 'hidden';
+      // 只有一张图时不显示翻页按钮
+      if (prevBtn) prevBtn.hidden = shots.length < 2;
+      if (nextBtn) nextBtn.hidden = shots.length < 2;
       $('#lightbox-close').focus();
     }
 
@@ -2038,13 +2057,19 @@
       });
     });
 
+    if (prevBtn) prevBtn.addEventListener('click', function (e) { e.stopPropagation(); step(-1); });
+    if (nextBtn) nextBtn.addEventListener('click', function (e) { e.stopPropagation(); step(1); });
+
     $('#lightbox-close').addEventListener('click', close);
     box.addEventListener('click', function (e) {
       // 点背景关闭，点图片本身不关
       if (e.target === box) close();
     });
     document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && !box.hidden) close();
+      if (box.hidden) return;
+      if (e.key === 'Escape') close();
+      else if (e.key === 'ArrowLeft') step(-1);
+      else if (e.key === 'ArrowRight') step(1);
     });
   }
 

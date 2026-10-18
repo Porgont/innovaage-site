@@ -33,9 +33,9 @@
 })();
 </script>
 <link rel="preload" href="assets/fonts/noto-sans-sc.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/fonts.css?v=20261029">
-<link rel="stylesheet" href="assets/css/theme.css?v=20261029">
-<link rel="stylesheet" href="assets/css/style.css?v=20261029">
+<link rel="stylesheet" href="assets/css/fonts.css?v=20261030">
+<link rel="stylesheet" href="assets/css/theme.css?v=20261030">
+<link rel="stylesheet" href="assets/css/style.css?v=20261030">
   <link rel="alternate" type="application/rss+xml" title="创想时代开发组 · 公告" href="feed.xml">
 </head>
 
@@ -105,7 +105,7 @@
 
 <main id="main">
 
-  <!-- 这个容器是给 assets/js/site.js?v=20261029 的 initWorkDetail() 用的门闩：
+  <!-- 这个容器是给 assets/js/site.js?v=20261030 的 initWorkDetail() 用的门闩：
        没有它（或 id 写错）整个详情渲染都会被跳过，页面只剩下面写死的静态兜底内容。
        改动本页结构时不要删掉它。 -->
   <div id="work-detail">
@@ -252,6 +252,8 @@
 <!-- 截图放大层 -->
 <div class="lightbox" id="lightbox" hidden role="dialog" aria-modal="true" aria-label="截图放大查看">
   <button class="lightbox-close" id="lightbox-close" type="button" aria-label="关闭">×</button>
+  <button class="lightbox-nav lightbox-prev" id="lightbox-prev" type="button" aria-label="上一张">‹</button>
+  <button class="lightbox-nav lightbox-next" id="lightbox-next" type="button" aria-label="下一张">›</button>
   <figure class="lightbox-inner">
     <img id="lightbox-img" alt="">
     <figcaption id="lightbox-caption"></figcaption>
@@ -304,6 +306,6 @@
   </div>
 </footer>
 
-<script src="assets/js/site.js?v=20261029"></script>
+<script src="assets/js/site.js?v=20261030"></script>
 </body>
 </html>
