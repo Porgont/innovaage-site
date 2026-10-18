@@ -2584,6 +2584,41 @@
     update();
   }
 
+  /* ---------- 回到顶部 ----------
+     往下滑过一屏才露出来，点一下平滑回顶。 */
+  function initBackToTop() {
+    if (document.querySelector('.to-top')) return;
+
+    var btn = document.createElement('button');
+    btn.className = 'to-top';
+    btn.type = 'button';
+    btn.setAttribute('aria-label', '回到顶部');
+    btn.title = '回到顶部';
+    btn.innerHTML = '<span aria-hidden="true">↑</span>';
+    document.body.appendChild(btn);
+
+    var ticking = false;
+
+    function update() {
+      var on = window.pageYOffset > window.innerHeight * 0.8;
+      btn.classList.toggle('is-on', on);
+      ticking = false;
+    }
+
+    window.addEventListener('scroll', function () {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(update);
+    }, { passive: true });
+
+    btn.addEventListener('click', function () {
+      var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+    });
+
+    update();
+  }
+
   /* ---------- 启动 ---------- */
   function boot() {
     markActiveNav();
@@ -2607,6 +2642,7 @@
     initRichWork();
     initZoomGallery();
     initAnchorToc();
+    initBackToTop();
     initPageTransition();
     initPageIndex();
     initArticle();
