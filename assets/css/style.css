@@ -2389,6 +2389,18 @@ input[type="range"]::-webkit-slider-thumb {
 
 .more-extra a:hover { color: var(--text); }
 
+/* 个人档案页的引言块 */
+.gan-quote {
+  margin: 22px 0 0;
+  padding: 14px 18px;
+  font-size: 14.5px;
+  line-height: 1.95;
+  color: var(--text-dim);
+  border-left: 3px solid var(--line-2);
+  background: var(--bg-2);
+  border-radius: 0 var(--radius) var(--radius) 0;
+}
+
 /* 撸猫页标题下那三行 */
 .cat-lead {
   margin: 0;
