@@ -3608,6 +3608,12 @@ body.is-leaving::after {
     min-height: 0;
   }
 
+  /* 详情页顶图原来固定 62vh，手机上文字只有两三行，
+     下面会空出一大块；这里让它跟着内容走。 */
+  .hero--page.hero--banner.hero--work {
+    min-height: 0;
+  }
+
   .hero--page.hero--banner .wrap {
     padding-top: calc(42vh + 18px);
     padding-bottom: 30px;
@@ -4024,9 +4030,13 @@ main.overlap-hero {
   main.overlap-hero { margin-top: -60px; }
 }
 
-/* 图铺到页眉下面之后，内容要往下让开，别被页眉压住 */
-.hero--page.hero--banner .wrap {
-  padding-top: 104px;
+/* 图铺到页眉下面之后，内容要往下让开，别被页眉压住。
+   只在桌面用这个值：手机上整幅图是叠在文字上面的，
+   padding 必须按图高（vh）来算，否则文字会压到图上、下方还多一截空白。 */
+@media (min-width: 801px) {
+  .hero--page.hero--banner .wrap {
+    padding-top: 104px;
+  }
 }
 
 /* 在页面顶部时页眉直接压在图上。
