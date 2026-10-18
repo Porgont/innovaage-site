@@ -709,10 +709,13 @@ html[data-theme="dark"] .tag--diamond { color: var(--gold); }
   aspect-ratio: 3 / 2;
 }
 
+/* 作品卡片：整张图完整显示，不裁切。
+   框还是 3:2，图片按原始比例缩到框里，多出来的地方留底色边；
+   竖图、方图、16:9 都不会被切掉内容。 */
 .work-media img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   display: block;
   transition: transform .35s ease;
 }

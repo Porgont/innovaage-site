@@ -145,7 +145,7 @@
   var SHOWCASE_HOME = [
     {
       id: 'uransch',
-      img: 'assets/img/uransch-card.jpg',
+      img: 'assets/img/uransch-cover.jpg',
       title: '无人区跑酷',
       meta: '作者：柑柠',
       category: 'map',
