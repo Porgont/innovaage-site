@@ -1524,7 +1524,7 @@ input[type="range"]::-webkit-slider-thumb {
    外链后面跟一个 ↗ 表示会跳走。
    注意必须把导航（.nav / .mnav-links）排除掉 ——
    导航本来就有自己的一套样式，套上这块会变成一排黄杠，很难看。 */
-.wrap a:not(.btn):not(.brand):not(.work-more):not(.skip-link):not(.module-card):not(.nav a):not(.mnav-links a):not(.footer-grid a):not(.city-card):not(.city-nav__links a),
+.wrap a:not(.btn):not(.brand):not(.work-more):not(.skip-link):not(.module-card):not(.nav a):not(.mnav-links a):not(.footer-grid a):not(.city-card):not(.city-nav__links a):not(.tab--jump),
 .callout a,
 .notice-body a,
 .stat-list a {
@@ -2188,32 +2188,32 @@ input[type="range"]::-webkit-slider-thumb {
 .steps li b { color: var(--text); }
 
 /* ---------- 提示条 ---------- */
-/* 作品页标签行里的「专题页」跳转（是链接，不是切换标签） */
+/* 作品页标签行里的「专题页」跳转（是链接，不是切换标签）。
+   盒子与文字排版全部沿用 .tabs--boxed .tab 和 .tab-badge 的尺寸，
+   连 display 都不改，才能和按钮标签一样高。 */
 .tab.tab--jump {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  text-decoration: none !important;
-  background-image: none !important;
-  border-bottom: 3px solid transparent;
-  border-radius: 0;
-  padding: 12px 22px;
+  display: inline-block;
+  /* 按钮的 line-height 是 normal（约 22px），链接会继承正文的 1.8，
+     不压回来就会比别的标签高 5px 左右。 */
+  line-height: normal;
+  text-decoration: none;
+  text-align: left;
 }
 
-.tab.tab--jump:hover {
-  color: var(--text);
-  border-bottom-color: var(--gold);
-}
-
+/* 「专题」徽标：尺寸与 .tab-badge 完全一致，保证标签盒子高度对齐 */
 .tab-jump {
+  display: inline-block;
+  margin-left: 8px;
+  vertical-align: 1px;
   padding: 2px 7px;
-  font-family: var(--mono);
-  font-size: 9.5px;
+  font-size: 11px;
   font-weight: 700;
-  letter-spacing: .12em;
+  line-height: 1.5;
+  letter-spacing: .02em;
   color: #fff;
-  background: var(--gold-dk);
-  border-radius: 2px;
+  background: #c98a06;
+  border-radius: 3px;
+  white-space: nowrap;
 }
 
 /* 首页专题引导横幅 */
