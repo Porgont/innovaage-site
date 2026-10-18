@@ -169,6 +169,7 @@
       id: 'vulkan-rtx-jog',
       img: 'assets/img/jog-1.jpg',
       title: 'Vulkan RTX-Jog光影',
+      meta: '作者：创想时代 Log_坤',
       category: 'shader',
       desc: '基于Caustica0.1.1修改，改动有限'
     }
@@ -192,6 +193,7 @@
   var WORKS = {
     'vulkan-rtx-jog': {
       name: 'Vulkan RTX-Jog光影',
+      author: '创想时代 Log_坤',
       type: '光影 / Shader',
       tagline: '基于Caustica0.1.1修改，改动有限',
       cover: 'assets/img/jog-1.jpg',
@@ -199,9 +201,10 @@
       linksTop: true,
       facts: [
         { k: '作品名', v: 'Vulkan RTX-Jog光影' },
+        { k: '作者', v: '创想时代 Log_坤' },
         { k: '类型', v: '光影 / Shader' },
         { k: '简介', v: '基于Caustica0.1.1修改，改动有限' },
-        { k: 'Q 群下载', v: '980037287' }
+        { k: 'Q 群下载', v: '980037287', bold: true }
       ],
       intro: [
         '基于Caustica0.1.1修改，改动有限',
@@ -1828,7 +1831,8 @@
     var facts = $('#work-facts');
     if (facts && work.facts && work.facts.length) {
       facts.innerHTML = work.facts.map(function (f) {
-        return '<div><dt>' + esc(f.k) + '</dt><dd>' + esc(f.v) + '</dd></div>';
+        var v = f.bold ? '<b>' + esc(f.v) + '</b>' : esc(f.v);
+        return '<div><dt>' + esc(f.k) + '</dt><dd>' + v + '</dd></div>';
       }).join('');
     }
 
