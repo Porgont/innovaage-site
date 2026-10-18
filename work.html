@@ -33,9 +33,9 @@
 })();
 </script>
 <link rel="preload" href="assets/fonts/noto-sans-sc.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/fonts.css?v=20261052">
-<link rel="stylesheet" href="assets/css/theme.css?v=20261052">
-<link rel="stylesheet" href="assets/css/style.css?v=20261052">
+<link rel="stylesheet" href="assets/css/fonts.css?v=20261054">
+<link rel="stylesheet" href="assets/css/theme.css?v=20261054">
+<link rel="stylesheet" href="assets/css/style.css?v=20261054">
   <link rel="alternate" type="application/rss+xml" title="创想时代开发组 · 公告" href="feed.xml">
 </head>
 
@@ -105,13 +105,13 @@
 
 <main id="main">
 
-  <!-- 这个容器是给 assets/js/site.js?v=20261052 的 initWorkDetail() 用的门闩：
+  <!-- 这个容器是给 assets/js/site.js?v=20261054 的 initWorkDetail() 用的门闩：
        没有它（或 id 写错）整个详情渲染都会被跳过，页面只剩下面写死的静态兜底内容。
        改动本页结构时不要删掉它。 -->
   <div id="work-detail">
 
   <!-- ============ 作品头部 ============ -->
-  <section class="hero" style="padding:44px 0 40px">
+  <section class="hero hero--page hero--banner hero--work" id="work-head">
     <div class="wrap">
       <p class="hero-badge"><span class="dot" aria-hidden="true"></span>
         <span id="work-type">光影 / Shader</span>
@@ -121,11 +121,6 @@
       <p class="lead" id="work-tagline" style="margin-bottom:14px">基岩版光影，主打水面反射与自然光过渡</p>
       <p style="font-family:var(--mono);font-size:12.5px;letter-spacing:.06em;color:var(--text-mute);margin:0 0 26px"
          id="work-author">作者：Log坤</p>
-
-      <!-- 封面图不写死：由 site.js 按 ?id= 填。这里留图会闪出别的作品的封面。 -->
-      <figure class="work-hero" id="work-cover-figure" style="margin:0" hidden>
-        <img id="work-cover" alt="" decoding="async">
-      </figure>
     </div>
   </section>
 
@@ -138,6 +133,11 @@
       <a href="works.html">作品展示</a> /
       <span id="work-crumb">Log橡木SA</span>
     </p>
+
+    <!-- 完整封面（不裁切），顶图只是它的裁切版当背景 -->
+    <figure class="work-hero" id="work-cover-figure" style="margin:0 0 30px" hidden>
+      <img id="work-cover" alt="" decoding="async">
+    </figure>
   </div>
 
   <!-- ============ 介绍 + 信息栏 ============ -->
@@ -309,6 +309,6 @@
   </div>
 </footer>
 
-<script src="assets/js/site.js?v=20261052"></script>
+<script src="assets/js/site.js?v=20261054"></script>
 </body>
 </html>

@@ -3551,6 +3551,11 @@ body.is-leaving::after {
 /* ---------- ⑬ 子页面整幅头图 ----------
    和首页同一套：背景图 + 渐隐遮罩 + 内容压在图上。
    这里只覆盖高度与内边距，图与遮罩的样式复用 .hero--banner。 */
+/* 作品详情页的顶图比子页面矮一点：下面还要放完整封面 */
+.hero--page.hero--banner.hero--work {
+  min-height: min(62vh, 580px);
+}
+
 .hero--page.hero--banner {
   padding: 0;
   min-height: min(74vh, 700px);

@@ -1796,6 +1796,9 @@
 
     document.title = work.name + ' | 创想时代开发组';
 
+    // 顶图就用这件作品的封面（和下面那张完整封面是同一张）
+    buildHeroFigure($('#work-head'), work.cover);
+
     // 标记 JS 真的跑通了。
     // 页面里有一份写死的兜底内容，长得和渲染结果几乎一样，
     // 光比对文字无法区分「JS 渲染成功」和「JS 没跑、只是静态兜底」，
@@ -2293,34 +2296,38 @@
     }
   }
 
+  /* 给一个 hero 挂上背景大图与压暗层。
+     子页面（data-hero）和作品详情页（用作品封面）共用这一套。 */
+  function buildHeroFigure(hero, src) {
+    if (!hero || !src) return;
+    if (hero.querySelector('.hero-figure')) return;   // 防重复执行
+
+    var fig = document.createElement('div');
+    fig.className = 'hero-figure';
+    fig.setAttribute('aria-hidden', 'true');
+
+    var img = new Image();
+    img.src = src;
+    img.alt = '';
+    img.loading = 'eager';
+    img.decoding = 'async';
+    // 轮播那套 CSS 把 .hero-figure img 默认设成 opacity:0，
+    // 靠 is-active 才显出来。这里只有一张图，直接标成激活。
+    img.className = 'is-active';
+    img.onerror = function () { fig.hidden = true; };
+    fig.appendChild(img);
+
+    var veil = document.createElement('div');
+    veil.className = 'hero-veil';
+    veil.setAttribute('aria-hidden', 'true');
+
+    hero.insertBefore(fig, hero.firstChild);
+    hero.insertBefore(veil, fig.nextSibling);
+  }
+
   function initPageHero() {
     $$('.hero--page[data-hero]').forEach(function (hero) {
-      if (hero.querySelector('.hero-figure')) return;   // 防重复执行
-
-      var src = hero.getAttribute('data-hero');
-      if (!src) return;
-
-      var fig = document.createElement('div');
-      fig.className = 'hero-figure';
-      fig.setAttribute('aria-hidden', 'true');
-
-      var img = new Image();
-      img.src = src;
-      img.alt = '';
-      img.loading = 'eager';
-      img.decoding = 'async';
-      // 轮播那套 CSS 把 .hero-figure img 默认设成 opacity:0，
-      // 靠 is-active 才显出来。子页面只有一张图，直接标成激活。
-      img.className = 'is-active';
-      img.onerror = function () { fig.hidden = true; };
-      fig.appendChild(img);
-
-      var veil = document.createElement('div');
-      veil.className = 'hero-veil';
-      veil.setAttribute('aria-hidden', 'true');
-
-      hero.insertBefore(fig, hero.firstChild);
-      hero.insertBefore(veil, fig.nextSibling);
+      buildHeroFigure(hero, hero.getAttribute('data-hero'));
     });
   }
 
