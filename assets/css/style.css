@@ -701,12 +701,14 @@ html[data-theme="dark"] .tag--diamond { color: var(--gold); }
   box-shadow: var(--shadow);
 }
 
+/* 作品卡片封面统一 16:9。图片仍按 contain 完整显示，
+   本身不是 16:9 的（3:2、4:3）会左右留一点底色边。 */
 .work-media {
   position: relative;
   background: var(--bg-2);
   border-bottom: 1px solid var(--line);
   overflow: hidden;
-  aspect-ratio: 3 / 2;
+  aspect-ratio: 16 / 9;
 }
 
 /* 作品卡片：整张图完整显示，不裁切。
