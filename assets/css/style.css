@@ -1027,6 +1027,11 @@ html[data-theme="dark"] .tag--diamond { color: var(--gold); }
 .crumb a { color: var(--text-mute); border-bottom-color: transparent; }
 .crumb a:hover { color: var(--text); border-bottom-color: var(--gold); }
 
+/* 详情页左上角的返回按钮 */
+.work-back {
+  margin: 20px 0 4px;
+}
+
 /* 作品信息挪到正文上方（所有作品通用）。
    宽屏时排成两列，不然一行从左拉到右太空。 */
 .work-info-top {
