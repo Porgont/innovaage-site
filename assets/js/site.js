@@ -1825,7 +1825,16 @@
       }
     }
 
-    initLightbox(shotList);
+    // 正文里的图也能点开放大：接到同一份列表里，序号接着截图往后排
+    var allShots = shotList.slice();
+    $$('#work-intro img').forEach(function (el) {
+      var src = el.getAttribute('src');
+      if (!src) return;
+      el.setAttribute('data-index', String(allShots.length));
+      allShots.push({ img: src, alt: el.getAttribute('alt') || work.name });
+    });
+
+    initLightbox(allShots);
   }
 
   /* ---------- 截图放大 ----------
@@ -1873,6 +1882,13 @@
     $$('.shot-btn').forEach(function (btn) {
       btn.addEventListener('click', function () {
         open(Number(btn.getAttribute('data-index')));
+      });
+    });
+
+    // 正文插图：点一下放大
+    $$('#work-intro img[data-index]').forEach(function (el) {
+      el.addEventListener('click', function () {
+        open(Number(el.getAttribute('data-index')));
       });
     });
 
