@@ -1027,6 +1027,27 @@ html[data-theme="dark"] .tag--diamond { color: var(--gold); }
 .crumb a { color: var(--text-mute); border-bottom-color: transparent; }
 .crumb a:hover { color: var(--text); border-bottom-color: var(--gold); }
 
+/* 作品信息挪到正文上方（所有作品通用）。
+   宽屏时排成两列，不然一行从左拉到右太空。 */
+.work-info-top {
+  margin-bottom: 30px;
+}
+
+/* 顶部信息栏改成一块块独立的格子：多列排列时不会有半截分割线 */
+.work-info-top .stat-list {
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 10px;
+  border: 0;
+  border-radius: 0;
+  overflow: visible;
+}
+
+.work-info-top .stat-list > div {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 11px 14px;
+}
+
 .work-layout {
   display: grid;
   grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
