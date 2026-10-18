@@ -1355,7 +1355,11 @@
 
   /* ---------- 标签切换 ---------- */
   function initTabs() {
-    var tabs = $$('.tabs .tab');
+    // 只处理真正切换面板的标签；标签行里可能有指向别的页面的链接（如「专题页」），
+    // 那种没有 aria-controls，不能当成标签来激活，否则会把面板全藏起来。
+    var tabs = $$('.tabs .tab').filter(function (t) {
+      return t.getAttribute('aria-controls');
+    });
     if (!tabs.length) return;
 
     function activate(tab, scroll) {

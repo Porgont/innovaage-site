@@ -2188,6 +2188,117 @@ input[type="range"]::-webkit-slider-thumb {
 .steps li b { color: var(--text); }
 
 /* ---------- 提示条 ---------- */
+/* 作品页标签行里的「专题页」跳转（是链接，不是切换标签） */
+.tab.tab--jump {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none !important;
+  background-image: none !important;
+  border-bottom: 3px solid transparent;
+  border-radius: 0;
+  padding: 12px 22px;
+}
+
+.tab.tab--jump:hover {
+  color: var(--text);
+  border-bottom-color: var(--gold);
+}
+
+.tab-jump {
+  padding: 2px 7px;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  color: #fff;
+  background: var(--gold-dk);
+  border-radius: 2px;
+}
+
+/* 首页专题引导横幅 */
+.topic-band {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--bg-2);
+  min-height: 250px;
+  text-decoration: none !important;
+  background-image: none !important;
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--cut)), calc(100% - var(--cut)) 100%, 0 100%);
+}
+
+.topic-band img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .7s cubic-bezier(.16, 1, .3, 1);
+}
+
+.topic-band:hover img { transform: scale(1.04); }
+
+.topic-band__veil {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg,
+    rgba(8, 10, 13, .88) 0%,
+    rgba(8, 10, 13, .70) 42%,
+    rgba(8, 10, 13, .18) 100%);
+}
+
+.topic-band__body {
+  position: relative;
+  z-index: 2;
+  display: block;
+  padding: 34px 32px;
+  max-width: 620px;
+}
+
+.topic-band__kicker {
+  display: block;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 10px;
+}
+
+.topic-band__title {
+  display: block;
+  font-size: clamp(24px, 3.4vw, 34px);
+  font-weight: 800;
+  letter-spacing: -.01em;
+  color: #fff;
+  margin-bottom: 12px;
+}
+
+.topic-band__desc {
+  display: block;
+  font-size: 14.5px;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, .82);
+  margin-bottom: 18px;
+}
+
+.topic-band__go {
+  display: inline-block;
+  padding: 10px 20px;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #14161a;
+  background: var(--gold);
+  border-radius: 2px;
+}
+
+@media (max-width: 700px) {
+  .topic-band__body { padding: 26px 22px; }
+}
+
 /* ---------- 创想之都子站 ---------- */
 .city-nav {
   border-top: 1px solid var(--line);
