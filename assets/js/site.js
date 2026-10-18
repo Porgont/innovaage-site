@@ -147,7 +147,7 @@
       id: 'uransch',
       img: 'assets/img/uransch-card.jpg',
       title: '无人区跑酷',
-      meta: '作者：纤云浦仙',
+      meta: '作者：柑柠',
       category: 'map',
       desc: '箱庭式中高难度跑酷地图，从 2016 年做到现在，56 个关卡，基岩版与 Java 版同玩法。'
     },
@@ -184,14 +184,14 @@
   var WORKS = {
     'uransch': {
       name: '无人区跑酷',
-      author: '纤云浦仙（原甘蓝浦光）',
+      author: '柑柠',
       type: '地图 / Map',
       tagline: '箱庭式中高难度跑酷地图，56 个关卡，基岩版与 Java 版同玩法',
       cover: 'assets/img/uransch-cover.jpg',
       coverAlt: '无人区跑酷海报：箱庭式跑酷地图的场景拼图',
       facts: [
         { k: '作品名', v: '无人区跑酷' },
-        { k: '作者', v: '纤云浦仙（原甘蓝浦光）' },
+        { k: '作者', v: '柑柠' },
         { k: '技术指导', v: '脸盆SaMa、Ender_Elaina' },
         { k: '类型', v: '地图 / 跑酷' },
         { k: '平台', v: 'Minecraft 基岩版 / Java 版 / 中国版' },
