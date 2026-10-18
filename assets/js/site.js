@@ -2619,6 +2619,73 @@
     update();
   }
 
+  /* ---------- 赛博撸猫 ----------
+     点猫头：眯眼、抖一下、冒爱心、换一句招呼，次数存本地。 */
+  function initCyberCat() {
+    var stage = $('#cat-stage');
+    var btn = $('#cat-btn');
+    var bubble = $('#cat-bubble');
+    var countEl = $('#cat-count');
+    if (!stage || !btn) return;
+
+    var WORDS = ['喵', '呼噜噜', '咪', '喵喵喵', '蹭蹭'];
+    var KEY = 'ia-cat-pets';
+    var count = 0;
+
+    try {
+      count = parseInt(localStorage.getItem(KEY) || '0', 10) || 0;
+    } catch (e) {
+      count = 0;
+    }
+    if (countEl) countEl.textContent = String(count);
+
+    var timer = null;
+    var looseTimer = null;
+
+    function heart() {
+      var h = document.createElement('span');
+      h.className = 'cat-heart';
+      h.textContent = '♥';
+      h.style.setProperty('--dx', (Math.random() * 90 - 45).toFixed(0) + 'px');
+      h.style.left = (42 + Math.random() * 16).toFixed(1) + '%';
+      stage.appendChild(h);
+      setTimeout(function () {
+        if (h.parentNode) h.parentNode.removeChild(h);
+      }, 1100);
+    }
+
+    function pet() {
+      count += 1;
+      if (countEl) countEl.textContent = String(count);
+      try {
+        localStorage.setItem(KEY, String(count));
+      } catch (e) {}
+
+      stage.classList.add('is-pet');
+      clearTimeout(timer);
+      timer = setTimeout(function () { stage.classList.remove('is-pet'); }, 450);
+
+      if (bubble) {
+        var word = count % 7 === 0 ? '喵喵喵喵喵！' : WORDS[Math.floor(Math.random() * WORDS.length)];
+        bubble.textContent = word;
+        bubble.classList.add('is-on');
+        clearTimeout(looseTimer);
+        looseTimer = setTimeout(function () { bubble.classList.remove('is-on'); }, 1100);
+      }
+
+      heart();
+      if (count % 5 === 0) heart();
+    }
+
+    btn.addEventListener('click', pet);
+    btn.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        pet();
+      }
+    });
+  }
+
   /* ---------- 启动 ---------- */
   function boot() {
     markActiveNav();
@@ -2643,6 +2710,7 @@
     initZoomGallery();
     initAnchorToc();
     initBackToTop();
+    initCyberCat();
     initPageTransition();
     initPageIndex();
     initArticle();
