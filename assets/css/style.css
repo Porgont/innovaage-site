@@ -2597,6 +2597,23 @@ input[type="range"]::-webkit-slider-thumb {
 
 .work-band__kicker::before { content: "— "; }
 
+.work-band__en {
+  display: block;
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: clamp(17px, 1.8vw, 23px);
+  line-height: .95;
+  letter-spacing: -.02em;
+  text-transform: uppercase;
+  color: var(--text);
+  margin-bottom: 2px;
+}
+
+.work-band__en .hd-out {
+  color: transparent;
+  -webkit-text-stroke: 1.1px var(--text);
+}
+
 .work-band__title {
   font-size: clamp(19px, 2.2vw, 24px);
   font-weight: 800;
@@ -2653,6 +2670,46 @@ input[type="range"]::-webkit-slider-thumb {
   .work-band__no { font-size: 52px; }
   .work-band__barcode { width: 108px; height: 40px; }
 }
+
+/* ---------- 黄色记号笔 ----------
+   重要的词用一块黄色矩形垫底，文字保持深色，和海报上的划重点一致。 */
+.mark,
+h1 em,
+.hero h1 em,
+.hero-title em,
+.work-band__title mark {
+  padding: 0 .12em;
+  color: #14161a;
+  background: #f5c518;
+  border-radius: 1px;
+  font-style: normal;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+/* 深色主题下压一点亮度，避免黄块太刺眼 */
+[data-theme="dark"] .mark,
+[data-theme="dark"] h1 em,
+[data-theme="dark"] .hero h1 em,
+[data-theme="dark"] .hero-title em,
+[data-theme="dark"] .work-band__title mark {
+  background: #d8ac12;
+  color: #14161a;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .mark,
+  :root:not([data-theme="light"]) h1 em,
+  :root:not([data-theme="light"]) .hero h1 em,
+  :root:not([data-theme="light"]) .hero-title em,
+  :root:not([data-theme="light"]) .work-band__title mark {
+    background: #d8ac12;
+    color: #14161a;
+  }
+}
+
+/* 标题里垫了黄块，悬停变色就不要影响它 */
+.work-band:hover .work-band__title mark { color: #14161a; }
 
 /* ---------- 赛博撸猫 ---------- */
 .cat-stage {

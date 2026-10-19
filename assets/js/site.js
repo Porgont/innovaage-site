@@ -148,6 +148,7 @@
       href: 'work-rich.html?id=uransch',
       img: 'assets/img/uransch-cover.jpg',
       title: '无人区跑酷',
+      en: 'URANSCH PARKOUR',
       meta: '作者：柑柠',
       category: 'map',
       desc: '箱庭式中高难度跑酷地图，从 2016 年做到现在，56 个关卡，基岩版与 Java 版同玩法'
@@ -157,6 +158,7 @@
       href: 'work-rich.html?id=fangzhen-tech',
       img: 'assets/img/fangzhen-cover.jpg',
       title: '仿真工艺系列材质',
+      en: 'REALCRAFT TEXTURE',
       meta: '作者：茫帛',
       category: 'tex',
       desc: '风格化写实、偏生存实用向的材质包，历时近四年制作，现有多种版本可选'
@@ -166,6 +168,7 @@
       href: 'mengsea.html',
       img: 'assets/img/mengsea/cover.jpg',
       title: '梦海旅者',
+      en: 'SEADREAM VOYAGER',
       meta: '作者：暴走苏打',
       category: 'map',
       desc: '幻境与现实交织的大型剧情向解密地图，《幻世编年史》系列第一部'
@@ -175,6 +178,7 @@
       href: 'city.html',
       img: 'assets/img/city/cover.jpg',
       title: '创想之都',
+      en: 'CHUANGXIANG CITY',
       meta: '发起：苏打、柑柠',
       category: 'map',
       desc: '由创想时代开发组苏打与柑柠发起的一个建设 MC 城市地图的大型项目，正式开始建设于 2022 年 8 月'
@@ -1745,6 +1749,9 @@
         '<span class="work-band__media"><img src="' + esc(it.img) + '" alt="' + esc(it.title) + '" decoding="async"></span>' +
         '<span class="work-band__body">' +
           '<span class="work-band__kicker">' + esc(kicker) + '</span>' +
+          (it.en ? '<span class="work-band__en">' + it.en.split(' ').map(function (w, wi, arr) {
+            return '<span' + (wi > 0 ? ' class="hd-out"' : '') + '>' + esc(w) + '</span>';
+          }).join(' ') + '</span>' : '') +
           '<span class="work-band__title">' + esc(it.title) + '</span>' +
           (it.desc ? '<span class="work-band__desc">' + esc(it.desc) + '</span>' : '') +
           '<span class="work-band__go">查看详情 →</span>' +
