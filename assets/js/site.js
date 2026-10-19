@@ -773,21 +773,18 @@
   var ANNOUNCEMENTS = [
     {
       id: 'subdomain-open',
-      date: '2026-10-17',
-      title: 'innovaage.cn 二级域名对全体成员开放',
+      date: '2023-07-05',
+      title: '关于innovaage.cn二级域名开放使用的公告',
       color: 'diamond',
       tags: ['站点'],
       body:
-        '全新官网 innovaage.cn 正在持续准备中，具体完工可访问时间未确定。\n\n' +
-        '为扩大域名的使用范围，现对创想时代全体成员**免费开放二级域名**。' +
-        '二级域名由申请人自行决定，**只能用字母**；不带二级域名的 innovaage.cn 保留给官网使用。\n\n' +
-        '<strong>申请方式：</strong>到首席开发官处申请，需要说明三件事——\n\n' +
-        '- 想要的二级域名，即 \`xxx.innovaage.cn\` 里的 xxx\n' +
-        '- 具体用途\n' +
-        '- 需要解析到的地方（即这个域名要用在哪里）\n\n' +
-        '<strong>例子：</strong>小明要开一个《我的世界》服务器，但这台服务器只有一个公网 IP：\`xx.xxx.xx.xxx\`。' +
-        '他申请二级域名 \`xiaoming\` 后，把 \`xiaoming.innovaage.cn\` 解析到该 IP，这个域名就能直接当服务器地址用。\n\n' +
-        '二级域名的使用**不限量，也不收费**。'
+        '目前创想时代开发组全新官网innovaage.cn正在持续准备中，具体完工可访问时间未确定。\n\n' +
+        '为了扩大域名的使用范围，决定对创想时代全体成员免费开放使用该域名，二级域名由申请人自行决定。\n\n' +
+        '<strong>你必须想一个心仪的二级域名</strong>，比如说weilian，simao，只能用字母，因为不带二级域名的innovaage.cn是以后用作官网的域名。\n\n' +
+        '需要申请使用该域名的创想时代成员，请在首席开发官处进行申请，需要说明具体用途。\n\n' +
+        '注解：例如小明需要开一个我的世界服务器，但是这个服务器只有一个公网ip：xx.xxx.xx.xxx，那么小明可以申请使用创想时代的innovaage.cn域名，然后使用二级域名xiaoming，那么就可以将xiaoming.innovaage.cn作为他的服务器ip地址。\n\n' +
+        '如果您需要申请，需要想好一个二级域名，即xxx.innovaage.cn中的xxx，以及提供用途，还有需要解析到的地方（解析，简单来说就是把这个域名用在哪个地方，比如说可像上面举的例子一样，就是把xiaoming.innovaage.cn解析到了他的服务器公网ip xx.xxx.xx.xxx）\n\n' +
+        '<strong>二级域名的使用不限量且不收费。</strong>'
     },
     {
       id: 'invest-and-audit-rules',
