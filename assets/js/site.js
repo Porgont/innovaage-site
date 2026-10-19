@@ -1739,7 +1739,9 @@
       var href = it.href || (it.id ? 'work-rich.html?id=' + esc(it.id) : '');
       var kicker = [cat, it.meta].filter(Boolean).join(' · ');
       var no = String(i + 1).padStart(2, '0');
-      return '<a class="work-band" href="' + href + '">' +
+      var ACCENTS = ['#5867d8', '#3f8f54', '#7b53a8', '#2f86b8', '#c98a06'];
+      var accent = ACCENTS[i % ACCENTS.length];
+      return '<a class="work-band" href="' + href + '" style="--band-accent:' + accent + '">' +
         '<span class="work-band__media"><img src="' + esc(it.img) + '" alt="' + esc(it.title) + '" decoding="async"></span>' +
         '<span class="work-band__body">' +
           '<span class="work-band__kicker">' + esc(kicker) + '</span>' +
