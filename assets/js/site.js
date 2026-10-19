@@ -3371,15 +3371,20 @@
      键名对应导航链接的 data-nav。 */
   var NAV_MENUS = {
     works: [
-      { title: '作品', links: [
-        { t: '作品主页', h: 'works.html' },
-        { t: '无人区跑酷', h: 'work-rich.html?id=uransch' },
-        { t: '仿真工艺系列材质', h: 'work-rich.html?id=fangzhen-tech' }
-      ] },
       { title: '专题页', links: [
+        { t: '无人区跑酷', h: 'work-rich.html?id=uransch' },
+        { t: '仿真工艺系列材质', h: 'work-rich.html?id=fangzhen-tech' },
         { t: '梦海旅者', h: 'mengsea.html' },
-        { t: '创想之都', h: 'city.html' },
-        { t: '柑柠档案', h: 'ganning.html' }
+        { t: '创想之都', h: 'city.html' }
+      ] },
+      { title: '代表作品', links: [
+        { t: '代表作品', h: 'works.html#panel-works' },
+        { t: '作品主页', h: 'works.html' },
+        { t: '尚未发布的测试组件', h: 'works.html#panel-tests' }
+      ] },
+      { title: '相关', links: [
+        { t: '柑柠档案', h: 'ganning.html' },
+        { t: '赛博撸猫', h: 'cat.html' }
       ] }
     ],
     news: [
@@ -3387,9 +3392,13 @@
         { t: '全部公告', h: 'news.html' }
       ] },
       { title: '近期', links: [
-        { t: '开放代投业务，同步公布入室审核条例', h: 'article.html?id=invest-and-audit-rules' },
-        { t: 'innovaage.cn 二级域名对全体成员开放', h: 'article.html?id=subdomain-open' },
-        { t: '创想时代开发组官网开放', h: 'article.html?id=site-launch' }
+        { t: '代投业务与入室审核条例', h: 'article.html?id=invest-and-audit-rules' },
+        { t: '二级域名对全体成员开放', h: 'article.html?id=subdomain-open' },
+        { t: '官网开放', h: 'article.html?id=site-launch' }
+      ] },
+      { title: '相关', links: [
+        { t: '加入我们', h: 'join.html' },
+        { t: '关于我们', h: 'about.html' }
       ] }
     ],
     tools: [
@@ -3401,6 +3410,10 @@
       { title: '组员作品', links: [
         { t: 'matoga 材质贴图对比', h: 'tools-matoga.html' },
         { t: 'MCBE 打包器', h: 'tools-mcbe.html' }
+      ] },
+      { title: '相关', links: [
+        { t: '作品主页', h: 'works.html' },
+        { t: '全部公告', h: 'news.html' }
       ] }
     ],
     join: [
@@ -3419,6 +3432,15 @@
       ] }
     ]
   };
+
+  /* 面板底部那条快捷行：都是站内真实入口 */
+  var NAV_QUICK = [
+    { t: '首页', h: 'index.html' },
+    { t: '公告', h: 'news.html' },
+    { t: '工具箱', h: 'tools.html' },
+    { t: '加入我们', h: 'join.html' },
+    { t: '关于我们', h: 'about.html' }
+  ];
 
   /* 悬停展开、离开收起；键盘 Tab 到链接也会展开。只在宽屏启用。 */
   function initNavMenus() {
@@ -3477,14 +3499,22 @@
     function build(key) {
       var cols = NAV_MENUS[key];
       if (!cols) return '';
-      return '<div class="nav-mega__inner">' + cols.map(function (col) {
-        return '<div class="nav-mega__col">' +
-          '<p class="nav-mega__title">' + esc(col.title) + '</p>' +
-          col.links.map(function (l) {
-            return '<a class="nav-mega__link" href="' + esc(l.h) + '">' + esc(l.t) + '</a>';
+      return '<div class="nav-mega__inner">' +
+          cols.map(function (col) {
+            return '<div class="nav-mega__col">' +
+              '<p class="nav-mega__title">' + esc(col.title) + '</p>' +
+              col.links.map(function (l) {
+                return '<a class="nav-mega__link" href="' + esc(l.h) + '">' + esc(l.t) + '</a>';
+              }).join('') +
+            '</div>';
           }).join('') +
+        '</div>' +
+        '<div class="nav-mega__quick">' +
+          NAV_QUICK.map(function (l) {
+            return '<a class="nav-mega__quicklink" href="' + esc(l.h) + '">' + esc(l.t) + '</a>';
+          }).join('') +
+          '<button type="button" class="nav-mega__search" data-mega-search>搜索站内内容</button>' +
         '</div>';
-      }).join('') + '</div>';
     }
 
     function place() {
@@ -3526,6 +3556,16 @@
       a.addEventListener('focus', function () { open(key); });
       a.addEventListener('pointerleave', function () { close(160); });
       a.addEventListener('blur', function () { close(160); });
+    });
+
+    panel.addEventListener('click', function (e) {
+      var btn = e.target && e.target.closest ? e.target.closest('[data-mega-search]') : null;
+      if (btn) {
+        e.preventDefault();
+        close(0);
+        var opener = document.querySelector('.search-open');
+        if (opener) opener.click();
+      }
     });
 
     panel.addEventListener('pointerenter', function () { clearTimeout(timer); });
