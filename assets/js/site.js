@@ -3288,13 +3288,14 @@
 
     var box = document.createElement('section');
     box.className = 'section section--tight share-home';
-    box.innerHTML =
-      '<div class="wrap share-home__inner">' +
-        '<p class="share-home__label">把官网分享出去</p>' +
-      '</div>';
+    box.innerHTML = '<div class="wrap share-home__inner"></div>';
     main.appendChild(box);
 
     addShareRow(box.querySelector('.share-home__inner'), document.title.split('|')[0].trim() || '创想时代开发组');
+
+    // 首页这条是站点级分享，不挂「本页浏览」，免得抢眼
+    var views = box.querySelector('.share-row__views');
+    if (views) views.remove();
   }
 
   /* 作品类页面兜底：只要带「返回」那一行又没有分享，就补一个。
