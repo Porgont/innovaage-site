@@ -1748,6 +1748,19 @@
           hit +
         '</article>';
     }).join('');
+
+    // 跨页共享元素过渡：卡片封面与详情页顶图用同一个过渡名，
+    // 点进详情时封面会从卡片位置长过去。不支持的浏览器直接跳过。
+    if (window.CSS && CSS.supports && CSS.supports('view-transition-name: none')) {
+      Array.prototype.forEach.call(host.querySelectorAll('.work'), function (card) {
+        var hit = card.querySelector('.work-hit');
+        var media = card.querySelector('.work-media');
+        if (!hit || !media) return;
+        var m = /[?&]id=([^&]+)/.exec(hit.getAttribute('href') || '');
+        if (!m) return;
+        media.style.viewTransitionName = 'wv-' + m[1];
+      });
+    }
   }
 
   /* ---------- 作品页的类型筛选 ----------
@@ -1971,6 +1984,10 @@
     var cover = $('#work-cover');
     var coverFigure = $('#work-cover-figure');
     if (cover && coverFigure && work.cover) {
+      // 和列表页卡片封面同名，才有共享元素过渡
+      if (id && window.CSS && CSS.supports && CSS.supports('view-transition-name: none')) {
+        cover.style.viewTransitionName = 'wv-' + id;
+      }
       cover.src = work.cover;
       cover.alt = work.coverAlt || work.name;
       coverFigure.hidden = false;
@@ -3705,6 +3722,58 @@
     });
   }
 
+  /* ---------- 首屏数字：进视口时从 0 滚到目标值 ----------
+     只处理「数字开头 + 后缀」的项（2016 / 5000 万+ / 80+），
+     带汉字前缀的「近 10 年」「TOP 20」原样不动，绝不改文案。 */
+  function initStatCount() {
+    var stats = $$('.hero-stats .stat b');
+    if (!stats.length) return;
+
+    var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)');
+    if (reduced && reduced.matches) return;
+
+    function easeOut(t) { return 1 - Math.pow(1 - t, 3); }
+
+    stats.forEach(function (el) {
+      var original = el.textContent;
+      var m = /^(\d{2,})(\D*)$/.exec(original);
+      if (!m) return;
+
+      var target = parseInt(m[1], 10);
+      var suffix = m[2];
+      var done = false;
+
+      function run() {
+        if (done) return;
+        done = true;
+        var start = 0;
+        var dur = 1200;
+        el.textContent = '0' + suffix;
+        function step(now) {
+          if (!start) start = now;
+          var p = Math.min(1, (now - start) / dur);
+          el.textContent = Math.round(easeOut(p) * target) + suffix;
+          if (p < 1) {
+            window.requestAnimationFrame(step);
+          } else {
+            el.textContent = original;   // 收尾回到原文，格式一定一致
+          }
+        }
+        window.requestAnimationFrame(step);
+      }
+
+      if (!('IntersectionObserver' in window)) { run(); return; }
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          io.disconnect();
+          run();
+        });
+      }, { threshold: 0.4 });
+      io.observe(el);
+    });
+  }
+
   /* ---------- 启动 ---------- */
   function boot() {
     markActiveNav();
@@ -3741,6 +3810,7 @@
     initPageTransition();
     initPageIndex();
     initArticle();
+    initStatCount();
   }
 
   if (document.readyState === 'loading') {

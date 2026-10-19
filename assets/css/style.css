@@ -7130,3 +7130,206 @@ body.nav-open::before { opacity: 1; }
     animation: none;
   }
 }
+
+/* ================= 高级感细修 ================= */
+
+/* ④ 排版：标题换行平衡，正文避免孤字与断词难看 */
+h1, h2, h3, h4,
+.hero-display,
+.brand-name,
+.section-head h2,
+.work h3,
+.ms-head,
+.article-title {
+  text-wrap: balance;
+}
+
+p, li,
+.work-sub,
+.ms-section__body > p,
+.work-intro p,
+.article-body p {
+  text-wrap: pretty;
+}
+
+/* ⑥ 区块标题底部那根线：随滚动从左侧展开（不支持滚动时间线就直接显示） */
+.section-head::after {
+  content: "";
+  position: absolute;
+  left: -1px;
+  right: -1px;
+  bottom: -1px;
+  height: 2px;
+  display: block;
+  background: var(--gold);
+  transform-origin: left center;
+}
+
+@supports (animation-timeline: view()) {
+  .section-head::after {
+    transform: scaleX(0);
+    animation: sec-rule-in linear both;
+    animation-timeline: view();
+    animation-range: entry 12% cover 32%;
+  }
+
+  @keyframes sec-rule-in {
+    from { transform: scaleX(0); }
+    to   { transform: scaleX(1); }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .section-head::after {
+    transform: none;
+    animation: none;
+  }
+}
+
+/* ⑦ 灯箱改用 @starting-style：打开是过渡，关闭瞬时，不用再维护两套 keyframes */
+@supports (transition-behavior: allow-discrete) {
+  .lightbox:not([hidden]) {
+    animation: none;
+    opacity: 1;
+    transition: opacity .22s ease;
+  }
+
+  .lightbox:not([hidden]) .lightbox-inner img {
+    animation: none;
+    opacity: 1;
+    transform: none;
+    transition:
+      transform .38s var(--ease-out, cubic-bezier(.16, 1, .3, 1)),
+      opacity .3s ease;
+  }
+
+  @starting-style {
+    .lightbox:not([hidden]) { opacity: 0; }
+
+    .lightbox:not([hidden]) .lightbox-inner img {
+      opacity: 0;
+      transform: scale(.82);
+    }
+  }
+}
+
+/* ⑩ 长页：屏幕外的卡片跳过渲染，滚动更跟手 */
+.work,
+.notice {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 440px;
+}
+
+/* ① 命名过渡分组统一时长与缓动（名字按作品 id 动态生成，这里统一收口） */
+::view-transition-group(*) {
+  animation-duration: .44s;
+  animation-timing-function: cubic-bezier(.16, 1, .3, 1);
+}
+
+::view-transition-old(*),
+::view-transition-new(*) {
+  animation-duration: .3s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation-duration: .01s !important;
+    animation-delay: 0s !important;
+  }
+}
+
+/* ---------- 手机端抽屉：毛玻璃底 + 白卡片条目 ---------- */
+@media (max-width: 800px) {
+  /* 遮罩淡一点，让底下的页面透进毛玻璃 */
+  .mnav-toggle:checked ~ .mnav-overlay {
+    background: rgba(10, 12, 15, .16);
+  }
+
+  .mnav-toggle:checked ~ .mnav-drawer {
+    background: color-mix(in srgb, var(--panel) 66%, transparent);
+    -webkit-backdrop-filter: blur(26px) saturate(160%);
+    backdrop-filter: blur(26px) saturate(160%);
+  }
+
+  /* 条目改成和作品卡一样的白底描边块 */
+  .mnav-links {
+    display: grid;
+    gap: 10px;
+    padding: 6px 20px 0 !important;
+    counter-reset: mnav;
+  }
+
+  .mnav-links a {
+    display: flex !important;
+    align-items: center;
+    gap: 14px;
+    padding: 15px 16px !important;
+    font-size: 19px !important;
+    font-weight: 700;
+    letter-spacing: -.01em;
+    color: var(--text);
+    background: var(--panel) !important;
+    border: 1px solid var(--line) !important;
+    border-left: 3px solid var(--gold) !important;
+    border-radius: var(--radius) !important;
+    box-shadow: var(--shadow-sm) !important;
+    transition:
+      transform .18s var(--ease-out, cubic-bezier(.16, 1, .3, 1)),
+      border-color .16s ease,
+      box-shadow .18s ease;
+  }
+
+  /* 装饰用的 01–06 小号编号，和作品卡右上角那套同一个语言 */
+  .mnav-links a::before {
+    counter-increment: mnav;
+    content: counter(mnav, decimal-leading-zero);
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    color: var(--text-mute);
+    flex: none;
+  }
+
+  /* 右侧一个淡箭头，表示「点了会走」 */
+  .mnav-links a::after {
+    content: "→";
+    margin-left: auto;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-mute);
+    transition: transform .18s ease, color .16s ease;
+  }
+
+  .mnav-links a:active,
+  .mnav-links a:focus-visible {
+    transform: translateY(-2px);
+    border-color: var(--line-2) !important;
+    border-left-color: var(--gold) !important;
+    box-shadow: var(--shadow-lift) !important;
+  }
+
+  .mnav-links a:active::after,
+  .mnav-links a:focus-visible::after {
+    transform: translateX(3px);
+    color: var(--gold-dk);
+  }
+
+  /* 底部黑按钮跟卡片拉开一点距离 */
+  .mnav-links a.mnav-cta {
+    margin-top: 12px;
+    border-left-color: transparent !important;
+  }
+
+  .mnav-links a.mnav-cta::before,
+  .mnav-links a.mnav-cta::after {
+    content: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mnav-links a { transition: none; }
+    .mnav-links a::after { transition: none; }
+  }
+}

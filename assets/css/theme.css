@@ -62,10 +62,10 @@
   --radius:    2px;       /* 终末地是近乎直角 */
   --pad:       24px;
   --maxw:      1440px;
-  --shadow:    0 1px 2px rgba(20, 22, 26, .05), 0 8px 24px rgba(20, 22, 26, .06);
+  --shadow:    0 1px 2px rgba(20, 22, 26, .06), 0 12px 30px rgba(20, 22, 26, .07);
   /* 卡片抬起时用：更大更淡，离纸感更强 */
-  --shadow-lift: 0 2px 6px rgba(20, 22, 26, .05), 0 16px 36px rgba(20, 22, 26, .10);
-  --shadow-sm: 0 1px 2px rgba(20, 22, 26, .06);
+  --shadow-lift: 0 2px 4px rgba(20, 22, 26, .08), 0 22px 46px rgba(20, 22, 26, .13);
+  --shadow-sm: 0 1px 2px rgba(20, 22, 26, .07);
   --grid-line: rgba(20, 22, 26, .045);
 
   /* 字体 */
@@ -153,9 +153,9 @@
     --warn-bg:   #241d0f;
     --warn-line: #6b5a22;
 
-    --shadow:    0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px rgba(0, 0, 0, .35);
-  --shadow-lift: 0 2px 6px rgba(0, 0, 0, .45), 0 18px 40px rgba(0, 0, 0, .5);
-    --shadow-sm: 0 1px 2px rgba(0, 0, 0, .4);
+    --shadow:    0 1px 2px rgba(0, 0, 0, .55), 0 12px 32px rgba(0, 0, 0, .45);
+  --shadow-lift: 0 2px 4px rgba(0, 0, 0, .6), 0 24px 52px rgba(0, 0, 0, .62);
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, .55);
     --grid-line: rgba(255, 255, 255, .05);
 
     --btn-bg:      #f0f2f5;
@@ -220,10 +220,10 @@ html[data-theme="light"] {
   --err-fg:    #a33223;
   --warn-bg:   #fffaea;
   --warn-line: #ecd28a;
-  --shadow:    0 1px 2px rgba(20, 22, 26, .05), 0 8px 24px rgba(20, 22, 26, .06);
+  --shadow:    0 1px 2px rgba(20, 22, 26, .06), 0 12px 30px rgba(20, 22, 26, .07);
   /* 卡片抬起时用：更大更淡，离纸感更强 */
-  --shadow-lift: 0 2px 6px rgba(20, 22, 26, .05), 0 16px 36px rgba(20, 22, 26, .10);
-  --shadow-sm: 0 1px 2px rgba(20, 22, 26, .06);
+  --shadow-lift: 0 2px 4px rgba(20, 22, 26, .08), 0 22px 46px rgba(20, 22, 26, .13);
+  --shadow-sm: 0 1px 2px rgba(20, 22, 26, .07);
   --grid-line: rgba(20, 22, 26, .045);
   --btn-bg:      #1a1c20;
   --btn-fg:      #ffffff;
@@ -278,9 +278,9 @@ html[data-theme="dark"] {
   --err-fg:    #f0a396;
   --warn-bg:   #241d0f;
   --warn-line: #6b5a22;
-  --shadow:    0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px rgba(0, 0, 0, .35);
-  --shadow-lift: 0 2px 6px rgba(0, 0, 0, .45), 0 18px 40px rgba(0, 0, 0, .5);
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, .4);
+  --shadow:    0 1px 2px rgba(0, 0, 0, .55), 0 12px 32px rgba(0, 0, 0, .45);
+  --shadow-lift: 0 2px 4px rgba(0, 0, 0, .6), 0 24px 52px rgba(0, 0, 0, .62);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, .55);
   --grid-line: rgba(255, 255, 255, .05);
   --btn-bg:      #f0f2f5;
   --btn-fg:      #0e1013;
