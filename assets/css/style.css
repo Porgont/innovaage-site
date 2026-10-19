@@ -2575,6 +2575,8 @@ input[type="range"]::-webkit-slider-thumb {
 
 .work-band:hover .work-band__title { color: var(--gold-dk); }
 
+.work-band:hover .work-band__title .mark { color: var(--text); }
+
 .work-band:hover .work-band__go {
   background: var(--text);
   color: var(--bg);

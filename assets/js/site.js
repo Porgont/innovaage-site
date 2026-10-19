@@ -1783,7 +1783,7 @@
           (it.en ? '<span class="work-band__en">' + it.en.split(' ').map(function (w, wi, arr) {
             return '<span' + (wi > 0 ? ' class="hd-out"' : '') + '>' + esc(w) + '</span>';
           }).join(' ') + '</span>' : '') +
-          '<span class="work-band__title">' + esc(it.title) + '<span class="work-band__badge">专题页</span></span>' +
+          '<span class="work-band__title"><span class="mark">' + esc(it.title) + '</span><span class="work-band__badge">专题页</span></span>' +
           (it.desc ? '<span class="work-band__desc">' + escMark(it.desc) + '</span>' : '') +
           '<span class="work-band__go">查看详情 →</span>' +
         '</span>' +
