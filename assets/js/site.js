@@ -160,6 +160,7 @@
       en: 'URANSCH PARKOUR',
       meta: '作者：柑柠',
       category: 'map',
+      plat: 'BE/JE',
       desc: '箱庭式<span class="mark">中高难度</span>跑酷地图，从 2016 年做到现在，<span class="mark">56 个关卡</span>，基岩版与 Java 版同玩法'
     },
     {
@@ -170,6 +171,7 @@
       en: 'REALCRAFT TEXTURE',
       meta: '作者：茫帛',
       category: 'tex',
+      plat: 'BE/JE',
       desc: '<span class="mark">风格化写实</span>、偏生存实用向的材质包，<span class="mark">历时近四年</span>制作，现有多种版本可选'
     },
     {
@@ -180,6 +182,7 @@
       en: 'SEADREAM VOYAGER',
       meta: '作者：暴走苏打',
       category: 'map',
+      plat: '仅BE',
       desc: '幻境与现实交织的<span class="mark">大型剧情向解密</span>地图，《幻世编年史》系列第一部'
     },
     {
@@ -190,6 +193,7 @@
       en: 'CHUANGXIANG CITY',
       meta: '发起：苏打、柑柠',
       category: 'map',
+      plat: 'BE/JE',
       desc: '由创想时代开发组苏打与柑柠发起的一个建设 MC 城市地图的<span class="mark">大型项目</span>，正式开始建设于 2022 年 8 月'
     }
   ];
@@ -1806,7 +1810,10 @@
           }).join(' ') + '</span>' : '') +
           '<span class="work-band__title"><span class="mark">' + esc(it.title) + '</span><span class="work-band__badge">专题页</span></span>' +
           (it.desc ? '<span class="work-band__desc">' + escMark(it.desc) + '</span>' : '') +
-          '<span class="work-band__go">查看详情 →</span>' +
+          '<span class="work-band__actions">' +
+            '<span class="work-band__go">查看详情 →</span>' +
+            (it.plat ? '<span class="work-band__plat">' + esc(it.plat) + '</span>' : '') +
+          '</span>' +
         '</span>' +
         '<span class="work-band__deco" aria-hidden="true">' +
           '<span class="work-band__no">' + no + '</span>' +
