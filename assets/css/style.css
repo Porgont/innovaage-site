@@ -6742,18 +6742,22 @@ a.module-card:hover .module-go {
   border-color: var(--gold);
 }
 
-/* 展开时把正文整体虚化，页眉和面板保持清楚 */
-main,
-.site-footer {
-  transition: filter .42s var(--ease-out, ease);
+/* 展开时整页虚化：用一层铺满视口的蒙版做背景模糊，
+   比给 main 加 filter 覆盖得全（页脚、页头以外的元素都算上）。 */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  background: color-mix(in srgb, var(--bg) 18%, transparent);
+  -webkit-backdrop-filter: blur(10px) saturate(130%);
+  backdrop-filter: blur(10px) saturate(130%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .42s var(--ease-out, ease);
 }
 
-/* main 上有 page-in 动画，动画里的 filter: blur(0) 会一直生效，
-   普通声明压不过它，这里必须 !important 才能把整页虚化 */
-body.nav-open main,
-body.nav-open .site-footer {
-  filter: blur(10px) !important;
-}
+body.nav-open::before { opacity: 1; }
 
 [data-theme="dark"] .nav-mega.is-open {
   box-shadow: 0 22px 50px rgba(0, 0, 0, .55);
@@ -6776,8 +6780,7 @@ body.nav-open .site-footer {
 
 @media (prefers-reduced-motion: reduce) {
   .nav-mega { transition: none; }
-  main, .site-footer { transition: none; }
-  body.nav-open main, body.nav-open .site-footer { filter: none; }
+  body::before { transition: none; }
 }
 
 /* ---------- 手机端菜单：苹果式整屏推下 ----------

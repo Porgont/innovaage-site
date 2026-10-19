@@ -3370,6 +3370,24 @@
   /* 顶部导航的悬停面板：只放站内真实存在的页面，不放新写的介绍文字。
      键名对应导航链接的 data-nav。 */
   var NAV_MENUS = {
+    home: [
+      { title: '首页', links: [
+        { t: '系列作品专题页', h: 'index.html#online' },
+        { t: '代表作品', h: 'index.html#showcase' },
+        { t: '测试中作品', h: 'index.html#testing' },
+        { t: '工具箱', h: 'index.html#tools' },
+        { t: '其他页面', h: 'index.html#more' }
+      ] },
+      { title: '关于', links: [
+        { t: '我们是谁', h: 'index.html#intro' },
+        { t: '我们做什么', h: 'index.html#what-we-do' },
+        { t: '开放代投业务', h: 'index.html#invest' },
+        { t: '最新公告', h: 'index.html#latest-news' }
+      ] },
+      { title: '页尾', links: [
+        { t: '想一起做点东西？', h: 'index.html#join-cta' }
+      ] }
+    ],
     works: [
       { title: '专题页', links: [
         { t: '无人区跑酷', h: 'work-rich.html?id=uransch' },
@@ -3557,6 +3575,23 @@
     });
 
     panel.addEventListener('click', function (e) {
+      // 同一页里的锚点：平滑滚过去，不重新加载
+      var a = e.target && e.target.closest ? e.target.closest('a[href]') : null;
+      if (a) {
+        var u = new URL(a.href, location.href);
+        if (u.pathname === location.pathname && u.hash) {
+          var target = document.querySelector(u.hash);
+          if (target) {
+            e.preventDefault();
+            close(0);
+            var y = target.getBoundingClientRect().top + window.pageYOffset - 80;
+            window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
+            history.replaceState(null, '', u.hash);
+            return;
+          }
+        }
+      }
+
       var btn = e.target && e.target.closest ? e.target.closest('[data-mega-search]') : null;
       if (btn) {
         e.preventDefault();
