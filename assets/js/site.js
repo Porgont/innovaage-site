@@ -1724,6 +1724,33 @@
     });
   }
 
+
+  /* 系列作品专题页的横幅式列表：一张作品一条通栏大横幅，样式沿用专题页那条 .topic-band */
+  function renderWorkBands(host, list, emptyText) {
+    if (!host) return;
+
+    if (!list.length) {
+      host.innerHTML = '<p class="works-empty">' + esc(emptyText) + '</p>';
+      return;
+    }
+
+    host.innerHTML = list.map(function (it) {
+      var cat = CATEGORIES[it.category] || '';
+      var href = it.href || (it.id ? 'work-rich.html?id=' + esc(it.id) : '');
+      var kicker = [cat, it.meta].filter(Boolean).join(' · ');
+      return '<a class="topic-band" href="' + href + '">' +
+        '<img src="' + esc(it.img) + '" alt="' + esc(it.title) + '" decoding="async">' +
+        '<span class="topic-band__veil" aria-hidden="true"></span>' +
+        '<span class="topic-band__body">' +
+          '<span class="topic-band__kicker">' + esc(kicker) + '</span>' +
+          '<span class="topic-band__title">' + esc(it.title) + '</span>' +
+          (it.desc ? '<span class="topic-band__desc">' + esc(it.desc) + '</span>' : '') +
+          '<span class="topic-band__go">查看详情 →</span>' +
+        '</span>' +
+      '</a>';
+    }).join('');
+  }
+
   function initShowcase() {
     var mainHost = $('#showcase-grid');
     if (mainHost) {
@@ -1739,14 +1766,14 @@
     }
 
     // 系列作品专题页（作品页默认栏）：在官网发布的作品
-    renderWorks($('#showcase-home'), SHOWCASE_HOME, '目前还没有在官网发布的作品。有作品在这里首发时，会先出现在这一栏。');
+    renderWorkBands($('#showcase-home'), SHOWCASE_HOME, '目前还没有在官网发布的作品。有作品在这里首发时，会先出现在这一栏。');
 
     // 首页「系列作品专题页」：同一份数据，首页按 data-limit 只显示前几件
     var homeOnline = $('#showcase-online');
     if (homeOnline) {
       var onlineLimit = parseInt(homeOnline.getAttribute('data-limit'), 10);
       var onlineList = onlineLimit > 0 ? SHOWCASE_HOME.slice(0, onlineLimit) : SHOWCASE_HOME.slice();
-      renderWorks(homeOnline, onlineList, '目前还没有在官网发布的作品。有作品在这里首发时，会先出现在这一栏。');
+      renderWorkBands(homeOnline, onlineList, '目前还没有在官网发布的作品。有作品在这里首发时，会先出现在这一栏。');
     }
 
     // 测试组件那一栏（作品页）
