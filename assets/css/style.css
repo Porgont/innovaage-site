@@ -6993,3 +6993,18 @@ body.nav-open::before { opacity: 1; }
   .mnav-sub { transition: none; }
   .mnav-chev { transition: none; }
 }
+
+/* 手机端二级里的小分组标题，和电脑端那三栏对齐 */
+@media (max-width: 800px) {
+  .mnav-subtitle {
+    margin: 14px 0 2px 14px;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--text-mute);
+  }
+
+  .mnav-subtitle:first-child { margin-top: 6px; }
+}

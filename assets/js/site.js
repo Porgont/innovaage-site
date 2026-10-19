@@ -3395,12 +3395,10 @@
         { t: '创想之都', h: 'city.html' }
       ] },
       { title: '代表作品', links: [
-        { t: '代表作品', h: 'works.html#panel-works' },
-        { t: '作品主页', h: 'works.html' },
-        { t: '尚未发布的测试组件', h: 'works.html#panel-tests' }
+        { t: '代表作品', h: 'works.html#panel-works' }
       ] },
-      { title: '相关', links: [
-        { t: '赛博撸猫', h: 'cat.html' }
+      { title: '测试组件', links: [
+        { t: '尚未发布的测试组件', h: 'works.html#panel-tests' }
       ] }
     ],
     news: [
@@ -3484,14 +3482,14 @@
 
       var html = '<a class="mnav-home" href="index.html">首页</a>';
       GROUPS.forEach(function (g) {
-        var sub = '<a href="' + g.page + '">' + esc(g.pageLabel) + '</a>';
+        var sub = '';
         var seen = {};
-        seen[g.page] = 1;
         (NAV_MENUS[g.key] || []).forEach(function (col) {
-          // 手机上一行只放一条，公告那种长标题不进二级
-          if (g.key === 'news') return;
           // 「相关」那列在手机上是重复入口，跳过
           if (col.title === '相关') return;
+          // 公告的长标题不进二级，只留全部公告
+          if (g.key === 'news' && col.title !== '公告') return;
+          sub += '<p class="mnav-subtitle">' + esc(col.title) + '</p>';
           col.links.forEach(function (l) {
             if (seen[l.h]) return;
             seen[l.h] = 1;
