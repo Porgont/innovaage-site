@@ -1622,7 +1622,7 @@ input[type="range"]::-webkit-slider-thumb {
    外链后面跟一个 ↗ 表示会跳走。
    注意必须把导航（.nav / .mnav-links）排除掉 ——
    导航本来就有自己的一套样式，套上这块会变成一排黄杠，很难看。 */
-.wrap a:not(.btn):not(.brand):not(.work-more):not(.skip-link):not(.module-card):not(.nav a):not(.mnav-links a):not(.footer-grid a):not(.city-card):not(.city-nav__links a):not(.tab--jump):not(.ms-toc a):not(.work-toc a):not(.officer-cat):not(.more-extra a):not(.work-band):not(.topic-band):not(.work-hit):not(.work):not(.notice-hit):not(.officer-hit),
+.wrap a:not(.btn):not(.brand):not(.work-more):not(.skip-link):not(.module-card):not(.nav a):not(.mnav-links a):not(.footer-grid a):not(.city-card):not(.city-nav__links a):not(.tab--jump):not(.ms-toc a):not(.work-toc a):not(.officer-cat):not(.more-extra a):not(.work-band):not(.topic-band):not(.work-hit):not(.work):not(.notice-hit):not(.officer-hit):not(.work-pager__link),
 .callout a,
 .notice-body a,
 .stat-list a {
@@ -1665,7 +1665,7 @@ input[type="range"]::-webkit-slider-thumb {
 
 /* 悬停变黄底的规则也必须排除导航 —— 上面那条非悬停的排了，这条以前漏了，
    结果鼠标一划过导航就整块变成黄底。 */
-.wrap a:not(.btn):not(.brand):not(.work-more):not(.skip-link):not(.module-card):not(.nav a):not(.mnav-links a):hover,
+.wrap a:not(.btn):not(.brand):not(.work-more):not(.skip-link):not(.module-card):not(.nav a):not(.mnav-links a):not(.footer-grid a):not(.city-card):not(.city-nav__links a):not(.tab--jump):not(.ms-toc a):not(.work-toc a):not(.officer-cat):not(.more-extra a):not(.work-band):not(.topic-band):not(.work-hit):not(.work):not(.notice-hit):not(.officer-hit):not(.work-pager__link):hover,
 .callout a:hover,
 .notice-body a:hover,
 .stat-list a:hover {
@@ -3363,39 +3363,65 @@ html.is-searching { overflow: hidden; }
 .work-pager {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 14px;
+  gap: 16px;
 }
 
+/* 和公告卡片同一套观感：白面板 + 左侧色条 + 悬停抬升投影 */
 .work-pager__link {
+  position: relative;
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  padding: 18px 20px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
+  gap: 8px;
+  padding: 20px 24px;
   background: var(--panel);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--line-2);
+  border-radius: var(--radius);
   text-decoration: none !important;
-  transition: border-color .16s ease, transform .18s ease;
+  background-image: none !important;
+  transition: border-color .16s ease, box-shadow .18s ease, transform .18s ease;
 }
 
 .work-pager__link:hover {
-  border-color: var(--gold);
+  border-color: var(--line-2);
+  border-left-color: var(--gold);
+  box-shadow: 0 12px 28px rgba(12, 14, 18, .12);
   transform: translateY(-2px);
 }
 
-.work-pager__link--next { text-align: right; }
+.work-pager__link:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+}
+
+.work-pager__link--next {
+  text-align: right;
+  align-items: flex-end;
+  border-left: 1px solid var(--line);
+  border-right: 3px solid var(--line-2);
+}
+
+.work-pager__link--next:hover {
+  border-left-color: var(--line-2);
+  border-right-color: var(--gold);
+}
 
 .work-pager__dir {
   font-family: var(--mono);
   font-size: 11px;
   letter-spacing: .1em;
   color: var(--text-mute);
+  transition: color .16s ease;
 }
 
+.work-pager__link:hover .work-pager__dir { color: var(--gold-dk); }
+
 .work-pager__name {
-  font-size: 16px;
+  font-size: 17px;
   font-weight: 700;
   color: var(--text);
+  background: none !important;
+  text-decoration: none !important;
 }
 
 @media (max-width: 700px) {
