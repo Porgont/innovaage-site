@@ -1,0 +1,16 @@
+﻿{
+  "name": "创想时代开发组 · 官网",
+  "short_name": "创想时代",
+  "description": "专注 Minecraft 基岩版（MCBE）的资源创作团队，地图 / 皮肤 / 光影 / 材质 / Addon。",
+  "lang": "zh-CN",
+  "start_url": "/index.html",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#f5c518",
+  "icons": [
+    { "src": "/assets/img/pwa-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/assets/img/pwa-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/assets/img/pwa-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

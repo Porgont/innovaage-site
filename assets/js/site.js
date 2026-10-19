@@ -1221,6 +1221,18 @@
     host.setAttribute('data-article-id', n.id);
     document.title = n.title + ' | 创想时代开发组';
 
+    injectJsonLd({
+      '@context': 'https://schema.org',
+      '@type': 'NewsArticle',
+      headline: n.title,
+      datePublished: n.date,
+      dateModified: n.date,
+      url: location.href,
+      inLanguage: 'zh-CN',
+      author: { '@type': 'Organization', name: '创想时代开发组', url: new URL('index.html', location.href).href },
+      publisher: { '@type': 'Organization', name: '创想时代开发组' }
+    });
+
     if (nameEl) nameEl.textContent = n.title;
 
     var d = String(n.date || '').split('-');
@@ -2125,6 +2137,20 @@
       }
     }
 
+    // 分享与结构化数据
+    addShareRow($('#work-intro') || host, work.name);
+    injectJsonLd({
+      '@context': 'https://schema.org',
+      '@type': 'CreativeWork',
+      name: work.name,
+      author: work.author ? { '@type': 'Person', name: work.author } : undefined,
+      description: plainText(work.tagline || ''),
+      image: work.cover ? new URL(work.cover, location.href).href : undefined,
+      url: location.href,
+      inLanguage: 'zh-CN',
+      isPartOf: { '@type': 'CollectionPage', name: '创想时代开发组 作品展示', url: new URL('works.html', location.href).href }
+    });
+
     // 正文里的图也能点开放大：接到同一份列表里，序号接着截图往后排
     var allShots = shotList.slice();
     $$('#work-intro img').forEach(function (el) {
@@ -2589,6 +2615,38 @@
       if (linkNo) linkNo.textContent = '— ' + String(tocItems.length + 1).padStart(2, '0');
       if (linkSection) linkSection.hidden = false;
     }
+
+    /* 上一件 / 下一件：按系列作品专题页的排列顺序走 */
+    var bandList = (SHOWCASE_HOME || []).filter(function (x) { return x && x.href && x.title; });
+    var at = -1;
+    bandList.forEach(function (x, i) { if (x.id === id) at = i; });
+    if (at >= 0 && bandList.length > 1) {
+      var prevW = bandList[(at - 1 + bandList.length) % bandList.length];
+      var nextW = bandList[(at + 1) % bandList.length];
+      var pager = document.createElement('section');
+      pager.className = 'section section--tight';
+      pager.innerHTML = '<div class="wrap"><nav class="work-pager" aria-label="作品翻页">' +
+        '<a class="work-pager__link" href="' + esc(prevW.href) + '">' +
+          '<span class="work-pager__dir">← 上一件</span>' +
+          '<span class="work-pager__name">' + esc(prevW.title) + '</span></a>' +
+        '<a class="work-pager__link work-pager__link--next" href="' + esc(nextW.href) + '">' +
+          '<span class="work-pager__dir">下一件 →</span>' +
+          '<span class="work-pager__name">' + esc(nextW.title) + '</span></a>' +
+        '</nav></div>';
+      host.appendChild(pager);
+    }
+
+    addShareRow(host, work.name);
+    injectJsonLd({
+      '@context': 'https://schema.org',
+      '@type': 'CreativeWork',
+      name: work.name,
+      author: work.author ? { '@type': 'Person', name: work.author } : undefined,
+      description: plainText(work.tagline || ''),
+      image: work.cover ? new URL(work.cover, location.href).href : undefined,
+      url: location.href,
+      inLanguage: 'zh-CN'
+    });
   }
 
   /* 给一个 hero 挂上背景大图与压暗层。
@@ -2732,6 +2790,273 @@
     return loaded;
   }
 
+
+  /* ---------- 站内搜索 ----------
+     索引在浏览器里现拼：页面清单 + WORKS + SHOWCASE_HOME + SHOWCASE + ANNOUNCEMENTS。
+     不生成额外文件，也不花一次请求，改完内容搜索自动跟着变。 */
+  var SEARCH_PAGES = [
+    { t: '首页', u: 'index.html', k: '页面 首页 团队 简介 数据 公告 加入 联系' },
+    { t: '作品展示', u: 'works.html', k: '页面 作品 列表 代表作品 测试 专题页' },
+    { t: '公告', u: 'news.html', k: '页面 公告 新闻 更新 通知' },
+    { t: '工具箱', u: 'tools.html', k: '页面 工具 图片 视频 格式转换 打包器' },
+    { t: '图片处理工具', u: 'tools-image.html', k: '工具 压缩 图片 分辨率 格式 转换' },
+    { t: '视频处理工具', u: 'tools-video.html', k: '工具 视频 转码 投稿 规格 录屏' },
+    { t: '格式转换工具', u: 'tools-convert.html', k: '工具 转换 mp3 wav pdf word json csv base64' },
+    { t: 'MCBE 打包器', u: 'tools-mcbe.html', k: '工具 打包 apk 安卓 mcbe' },
+    { t: '材质对比工具 matoga', u: 'tools-matoga.html', k: '工具 材质 对比 matoga 芝世' },
+    { t: '加入我们', u: 'join.html', k: '加入 招募 审核 部门 报名 问卷 联系' },
+    { t: '关于我们', u: 'about.html', k: '关于 团队 历史 成员 宗旨 部门' },
+    { t: '赛博撸猫', u: 'cat.html', k: '撸猫 彩蛋 猫 威廉 喵喵喵' },
+    { t: '柑柠档案', u: 'ganning.html', k: '柑柠 档案 作品 海报 设计 渲染' },
+    { t: '梦海旅者', u: 'mengsea.html', k: '梦海旅者 地图 专题 幻世编年史' },
+    { t: '创想之都', u: 'city.html', k: '创想之都 城市 地图 专题' },
+    { t: '创想之都 · 介绍', u: 'city-intro.html', k: '创想之都 介绍 背景' },
+    { t: '创想之都 · 地图', u: 'city-maps.html', k: '创想之都 地图 轨道交通 卫星图' },
+    { t: '创想之都 · 图集', u: 'city-gallery.html', k: '创想之都 图集 截图' },
+    { t: '创想之都 · 公告', u: 'city-news.html', k: '创想之都 公告 停建' },
+    { t: '创想之都 · 参与与下载', u: 'city-join.html', k: '创想之都 参与 下载 加入' }
+  ];
+
+  function plainText(s) {
+    return String(s == null ? '' : s)
+      .replace(/<[^>]*>/g, ' ')
+      .replace(/[#*`>|\-]{1,}/g, ' ');
+  }
+
+  function buildSearchIndex() {
+    var out = SEARCH_PAGES.map(function (p) {
+      return { title: p.t, url: p.u, kind: '页面', text: p.k || '' };
+    });
+
+    // 作品详情（WORKS）
+    Object.keys(WORKS || {}).forEach(function (id) {
+      var w = WORKS[id];
+      if (!w) return;
+      var href = w.rich || /^work-rich/.test(w.href || '') ? 'work-rich.html?id=' + id : 'work.html?id=' + id;
+      // 专题页走 work-rich，普通详情走 work.html：用 SHOWCASE_HOME 判断不准，这里按 href 优先
+      if (w.href) href = w.href;
+      else if (SHOWCASE_HOME && SHOWCASE_HOME.some(function (x) { return x.id === id && x.href; })) {
+        href = SHOWCASE_HOME.filter(function (x) { return x.id === id; })[0].href;
+      }
+      out.push({
+        title: w.name || id,
+        url: href,
+        kind: '作品',
+        text: [w.author, w.type, plainText(w.tagline)].filter(Boolean).join(' ')
+      });
+    });
+
+    // 系列作品专题页的横幅（可能没进 WORKS）
+    (SHOWCASE_HOME || []).forEach(function (x) {
+      if (!x || !x.title) return;
+      out.push({
+        title: x.title,
+        url: x.href || ('work.html?id=' + x.id),
+        kind: '专题页',
+        text: [x.en, x.meta, x.desc].filter(Boolean).join(' ')
+      });
+    });
+
+    // 代表作品 / 测试组件（没进 WORKS 的那些）
+    [].concat(SHOWCASE || [], SHOWCASE_TEST || []).forEach(function (x) {
+      if (!x || !x.title) return;
+      out.push({
+        title: x.title,
+        url: x.href || ('work.html?id=' + x.id),
+        kind: '作品',
+        text: [x.meta, x.desc].filter(Boolean).join(' ')
+      });
+    });
+
+    // 公告
+    (ANNOUNCEMENTS || []).forEach(function (a) {
+      if (!a || !a.title) return;
+      out.push({
+        title: a.title,
+        url: 'article.html?id=' + a.id,
+        kind: '公告',
+        text: [a.date, (a.tags || []).join(' '), plainText(a.body).slice(0, 600)].filter(Boolean).join(' ')
+      });
+    });
+
+    // 同一件作品可能同时出现在 WORKS 与 SHOWCASE_HOME 里，按「标题 + 地址」去重
+    var seen = {};
+    return out.filter(function (it) {
+      var key = it.title + '|' + it.url;
+      if (seen[key]) return false;
+      seen[key] = true;
+      return true;
+    });
+  }
+
+  function initSearch() {
+    var bar = document.querySelector('.site-header .bar');
+    if (!bar) return;
+
+    var trigger = document.createElement('button');
+    trigger.type = 'button';
+    trigger.className = 'search-open';
+    trigger.setAttribute('aria-label', '搜索站内内容');
+    trigger.setAttribute('title', '搜索（快捷键 /）');
+    trigger.innerHTML = '<span class="search-open__ico" aria-hidden="true">⌕</span><span class="search-open__label">搜索</span>';
+    var anchor = bar.querySelector('.theme-toggle');
+    bar.insertBefore(trigger, anchor || null);
+
+    var modal = document.createElement('div');
+    modal.className = 'search-modal';
+    modal.hidden = true;
+    modal.innerHTML =
+      '<div class="search-modal__veil" data-search-close></div>' +
+      '<div class="search-modal__panel" role="dialog" aria-modal="true" aria-label="站内搜索">' +
+        '<div class="search-modal__bar">' +
+          '<span class="search-modal__ico" aria-hidden="true">⌕</span>' +
+          '<input id="search-input" class="search-modal__input" type="search" ' +
+            'placeholder="搜作品、公告、页面…" autocomplete="off" aria-label="搜索关键词">' +
+          '<button type="button" class="search-modal__close" data-search-close aria-label="关闭搜索">×</button>' +
+        '</div>' +
+        '<div class="search-results" id="search-results"></div>' +
+        '<p class="search-hint">↑↓ 选择 · 回车打开 · Esc 关闭</p>' +
+      '</div>';
+    document.body.appendChild(modal);
+
+    var input = modal.querySelector('#search-input');
+    var results = modal.querySelector('#search-results');
+    var index = null;
+    var active = -1;
+    var lastFocus = null;
+
+    function open() {
+      if (!index) index = buildSearchIndex();
+      lastFocus = document.activeElement;
+      modal.hidden = false;
+      document.documentElement.classList.add('is-searching');
+      input.value = '';
+      render('');
+      setTimeout(function () { input.focus(); }, 20);
+    }
+
+    function close() {
+      modal.hidden = true;
+      document.documentElement.classList.remove('is-searching');
+      if (lastFocus && lastFocus.focus) lastFocus.focus();
+    }
+
+    function render(q) {
+      var terms = q.toLowerCase().split(/\s+/).filter(Boolean);
+      active = -1;
+      if (!terms.length) {
+        results.innerHTML = '<p class="search-empty">输入作品名、公告标题或关键词试试</p>';
+        return;
+      }
+      var hits = index.filter(function (it) {
+        var hay = (it.title + ' ' + it.text).toLowerCase();
+        return terms.every(function (t) { return hay.indexOf(t) >= 0; });
+      }).sort(function (a, b) {
+        var at = a.title.toLowerCase().indexOf(terms[0]) >= 0 ? 0 : 1;
+        var bt = b.title.toLowerCase().indexOf(terms[0]) >= 0 ? 0 : 1;
+        return at - bt;
+      }).slice(0, 12);
+
+      if (!hits.length) {
+        results.innerHTML = '<p class="search-empty">没找到「' + esc(q) + '」，换个词试试</p>';
+        return;
+      }
+
+      results.innerHTML = hits.map(function (it, i) {
+        return '<a class="search-hit" href="' + esc(it.url) + '" data-i="' + i + '">' +
+          '<span class="search-hit__kind">' + esc(it.kind) + '</span>' +
+          '<span class="search-hit__title">' + esc(it.title) + '</span>' +
+        '</a>';
+      }).join('');
+    }
+
+    function move(dir) {
+      var items = results.querySelectorAll('.search-hit');
+      if (!items.length) return;
+      active = (active + dir + items.length) % items.length;
+      items.forEach(function (el, i) { el.classList.toggle('is-active', i === active); });
+      items[active].scrollIntoView({ block: 'nearest' });
+    }
+
+    trigger.addEventListener('click', open);
+    modal.addEventListener('click', function (e) {
+      if (e.target.closest('[data-search-close]')) close();
+    });
+    input.addEventListener('input', function () { render(input.value.trim()); });
+    input.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowDown') { e.preventDefault(); move(1); }
+      else if (e.key === 'ArrowUp') { e.preventDefault(); move(-1); }
+      else if (e.key === 'Enter') {
+        var items = results.querySelectorAll('.search-hit');
+        var pick = active >= 0 ? items[active] : items[0];
+        if (pick) { location.href = pick.getAttribute('href'); }
+      }
+    });
+    document.addEventListener('keydown', function (e) {
+      var typing = /^(INPUT|TEXTAREA)$/.test(document.activeElement.tagName) || document.activeElement.isContentEditable;
+      if (e.key === 'Escape' && !modal.hidden) { close(); return; }
+      if (!modal.hidden) return;
+      if (e.key === '/' && !typing) { e.preventDefault(); open(); }
+      else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); open(); }
+    });
+  }
+
+  /* ---------- 分享 ---------- */
+  function addShareRow(host, title) {
+    if (!host) return;
+    var url = location.href;
+    var t = title || document.title;
+    var row = document.createElement('div');
+    row.className = 'share-row';
+    row.innerHTML =
+      '<span class="share-row__label">分享</span>' +
+      '<button type="button" class="share-btn" data-share-copy>复制链接</button>' +
+      '<a class="share-btn" target="_blank" rel="noopener" href="https://connect.qq.com/widget/shareqq/index.html?url=' +
+        encodeURIComponent(url) + '&title=' + encodeURIComponent(t) + '">QQ</a>' +
+      '<a class="share-btn" target="_blank" rel="noopener" href="https://service.weibo.com/share/share.php?url=' +
+        encodeURIComponent(url) + '&title=' + encodeURIComponent(t) + '">微博</a>';
+    host.appendChild(row);
+
+    var btn = row.querySelector('[data-share-copy]');
+    btn.addEventListener('click', function () {
+      var done = function () {
+        btn.textContent = '已复制';
+        setTimeout(function () { btn.textContent = '复制链接'; }, 1600);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(url).then(done, done);
+      } else {
+        var ta = document.createElement('textarea');
+        ta.value = url;
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); } catch (e) {}
+        document.body.removeChild(ta);
+        done();
+      }
+    });
+  }
+
+  /* ---------- 结构化数据 ----------
+     让搜索引擎知道这页是什么，而不是只看到一堆 HTML。 */
+  function injectJsonLd(obj) {
+    if (!obj) return;
+    var s = document.createElement('script');
+    s.type = 'application/ld+json';
+    s.textContent = JSON.stringify(obj);
+    document.head.appendChild(s);
+  }
+
+  /* ---------- PWA ---------- */
+  function initPwa() {
+    if (!('serviceWorker' in navigator)) return;
+    var local = location.hostname === '127.0.0.1' || location.hostname === 'localhost';
+    if (location.protocol !== 'https:' && !local) return;
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('sw.js').catch(function () {});
+    });
+  }
+
   function initBackToTop() {
     if (document.querySelector('.to-top')) return;
 
@@ -2856,6 +3181,8 @@
     initZoomGallery();
     initAnchorToc();
     initAnalytics();
+    initSearch();
+    initPwa();
     initBackToTop();
     initCyberCat();
     initPageTransition();

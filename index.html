@@ -24,6 +24,8 @@
 
 <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
 <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#f5c518">
 <!-- 主题：在页面渲染前决定用哪套，避免刷新时闪一下 -->
 <script>
 (function () {
@@ -34,10 +36,12 @@
 })();
 </script>
 <link rel="preload" href="assets/fonts/noto-sans-sc.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/fonts.css?v=20261109">
-<link rel="stylesheet" href="assets/css/theme.css?v=20261109">
-<link rel="stylesheet" href="assets/css/style.css?v=20261109">
+<link rel="stylesheet" href="assets/css/fonts.css?v=20261110">
+<link rel="stylesheet" href="assets/css/theme.css?v=20261110">
+<link rel="stylesheet" href="assets/css/style.css?v=20261110">
   <link rel="alternate" type="application/rss+xml" title="创想时代开发组 · 公告" href="feed.xml">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"创想时代开发组","alternateName":"Innova Age Development Team","url":"https://innovaage.cn/","logo":"https://innovaage.cn/assets/img/logo-mark.png","foundingDate":"2016-03-10","description":"专注 Minecraft 基岩版（MCBE）的资源创作团队，作品类型覆盖地图、皮肤、光影、材质与 Addon。","sameAs":["https://space.bilibili.com/488348167"]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"创想时代开发组 · 官网","url":"https://innovaage.cn/","inLanguage":"zh-CN","publisher":{"@type":"Organization","name":"创想时代开发组"}}</script>
 </head>
 
 <body data-page="home">
@@ -109,7 +113,7 @@
 
   <!-- ============ Hero：整幅大图 + 覆盖文字 ============ -->
   <section class="hero hero--banner">
-    <!-- 背景大图：路径在 assets/js/site.js?v=20261109 的 heroImage，留空则整块自动隐藏 -->
+    <!-- 背景大图：路径在 assets/js/site.js?v=20261110 的 heroImage，留空则整块自动隐藏 -->
     <div class="hero-figure" id="hero-figure" aria-hidden="true"></div>
     <div class="hero-veil" aria-hidden="true"></div>
 
@@ -158,7 +162,7 @@
 
       <div class="more-grid">
         <a class="more-card" href="works.html">
-          <img src="assets/img/jog-hero-works.jpg" alt="" loading="lazy" decoding="async">
+          <img src="assets/img/jog-hero-works.jpg" width="2730" height="1536" alt="" loading="lazy" decoding="async">
           <span class="more-card__veil" aria-hidden="true"></span>
           <span class="more-card__body">
             <span class="more-card__en">Works</span>
@@ -168,7 +172,7 @@
         </a>
 
         <a class="more-card" href="news.html">
-          <img src="assets/img/jog-hero-news.jpg" alt="" loading="lazy" decoding="async">
+          <img src="assets/img/jog-hero-news.jpg" width="2730" height="1536" alt="" loading="lazy" decoding="async">
           <span class="more-card__veil" aria-hidden="true"></span>
           <span class="more-card__body">
             <span class="more-card__en">News</span>
@@ -178,7 +182,7 @@
         </a>
 
         <a class="more-card" href="tools.html">
-          <img src="assets/img/jog-hero-tools.jpg" alt="" loading="lazy" decoding="async">
+          <img src="assets/img/jog-hero-tools.jpg" width="2730" height="1536" alt="" loading="lazy" decoding="async">
           <span class="more-card__veil" aria-hidden="true"></span>
           <span class="more-card__body">
             <span class="more-card__en">Tools</span>
@@ -188,7 +192,7 @@
         </a>
 
         <a class="more-card" href="join.html">
-          <img src="assets/img/jog-hero-join.jpg" alt="" loading="lazy" decoding="async">
+          <img src="assets/img/jog-hero-join.jpg" width="2730" height="1536" alt="" loading="lazy" decoding="async">
           <span class="more-card__veil" aria-hidden="true"></span>
           <span class="more-card__body">
             <span class="more-card__en">Join</span>
@@ -198,7 +202,7 @@
         </a>
 
         <a class="more-card" href="about.html">
-          <img src="assets/img/jog-hero-about.jpg" alt="" loading="lazy" decoding="async">
+          <img src="assets/img/jog-hero-about.jpg" width="2730" height="1536" alt="" loading="lazy" decoding="async">
           <span class="more-card__veil" aria-hidden="true"></span>
           <span class="more-card__body">
             <span class="more-card__en">About</span>
@@ -218,7 +222,7 @@
   <section class="section section--tight" id="topic">
     <div class="wrap">
       <a class="topic-band" href="city.html">
-        <img src="assets/img/city/cover.jpg" alt="" decoding="async">
+        <img src="assets/img/city/cover.jpg" width="1920" height="1080" alt="" decoding="async">
         <span class="topic-band__veil" aria-hidden="true"></span>
         <span class="topic-band__body">
           <span class="topic-band__kicker">专题页 · Topic</span>
@@ -535,6 +539,6 @@
 
 <script src="assets/vendor/marked/marked.umd.js"></script>
 <script src="assets/vendor/dompurify/purify.min.js"></script>
-<script src="assets/js/site.js?v=20261109"></script>
+<script src="assets/js/site.js?v=20261110"></script>
 </body>
 </html>
