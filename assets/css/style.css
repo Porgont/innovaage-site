@@ -578,7 +578,7 @@ html[data-theme="dark"] .tag--diamond { color: var(--gold); }
   font-style: normal;
   position: relative;
   color: var(--text);
-  background: linear-gradient(transparent 62%, var(--gold) 62%, var(--gold) 92%, transparent 92%);
+  background: linear-gradient(transparent 58%, var(--gold) 58%);
   padding: 0 2px;
 }
 
@@ -2765,14 +2765,14 @@ h1 em,
 .hero-title em {
   font-style: normal;
   padding: 0 .08em;
-  background: linear-gradient(transparent 62%, var(--gold) 62%, var(--gold) 92%, transparent 92%);
+  background: linear-gradient(transparent 58%, var(--gold) 58%);
 }
 
 [data-theme="dark"] .mark,
 [data-theme="dark"] h1 em,
 [data-theme="dark"] .hero h1 em,
 [data-theme="dark"] .hero-title em {
-  background: linear-gradient(transparent 62%, #d8ac12 62%, #d8ac12 92%, transparent 92%);
+  background: linear-gradient(transparent 58%, #d8ac12 58%);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -2780,7 +2780,7 @@ h1 em,
   :root:not([data-theme="light"]) h1 em,
   :root:not([data-theme="light"]) .hero h1 em,
   :root:not([data-theme="light"]) .hero-title em {
-    background: linear-gradient(transparent 62%, #d8ac12 62%, #d8ac12 92%, transparent 92%);
+    background: linear-gradient(transparent 58%, #d8ac12 58%);
   }
 }
 
