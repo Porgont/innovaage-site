@@ -2006,8 +2006,8 @@
       }
       if (work.intro && work.intro.length) {
         parts.push(work.intro.map(function (p) {
-          // 纯字符串 = 一段正文
-          if (typeof p === 'string') return '<p>' + esc(p) + '</p>';
+          // 纯字符串 = 一段正文（正文里允许 <span class="mark"> 画下划线）
+          if (typeof p === 'string') return '<p>' + escMark(p) + '</p>';
           // { heading } = 小标题
           if (p.heading) return '<h3 class="work-heading">' + esc(p.heading) + '</h3>';
           // { img } = 单张大图
@@ -2029,7 +2029,7 @@
           // { list } = 一组条目
           if (p.list && p.list.length) {
             return '<ul class="work-list">' + p.list.map(function (it) {
-              return '<li>' + esc(it) + '</li>';
+              return '<li>' + escMark(it) + '</li>';
             }).join('') + '</ul>';
           }
           // { links } = 一组按钮
