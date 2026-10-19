@@ -6872,3 +6872,58 @@ body.nav-open .site-footer {
 @media (max-width: 800px) and (prefers-reduced-motion: reduce) {
   .mnav-toggle:checked ~ .mnav-drawer { animation: none; }
 }
+
+/* ---------- 正文图片悬停放大 ----------
+   图片外面那层 figure 已经有 overflow: hidden、圆角和边框，放大不会溢出。
+   过渡写在这里是为了压过 img.img-loaded 的图片淡入过渡（后者排在前面）。 */
+#work-intro img,
+#work-intro img.img-loaded,
+.ms-section__body img,
+.ms-section__body img.img-loaded,
+.ms-shots img,
+.ms-shots img.img-loaded,
+.work-figure img,
+.work-figure img.img-loaded,
+.ms-figure img,
+.ms-figure img.img-loaded {
+  transform-origin: center;
+  transition:
+    transform .5s var(--ease-out, cubic-bezier(.16, 1, .3, 1)),
+    opacity .28s ease;
+  will-change: transform;
+}
+
+#work-intro figure:hover img,
+#work-intro .ms-shots img:hover,
+.ms-section__body figure:hover img,
+.ms-section__body .ms-shots img:hover,
+.work-figure:hover img,
+.ms-figure:hover img {
+  transform: scale(1.045);
+}
+
+/* 可点开大图的图统一手型光标 */
+#work-intro img[data-zoom],
+.ms-section__body img[data-zoom],
+.work-figure img {
+  cursor: zoom-in;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #work-intro img,
+  .ms-section__body img,
+  .ms-shots img,
+  .work-figure img,
+  .ms-figure img {
+    transition: none;
+  }
+
+  #work-intro figure:hover img,
+  #work-intro .ms-shots img:hover,
+  .ms-section__body figure:hover img,
+  .ms-section__body .ms-shots img:hover,
+  .work-figure:hover img,
+  .ms-figure:hover img {
+    transform: none;
+  }
+}

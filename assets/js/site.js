@@ -3383,7 +3383,6 @@
         { t: '尚未发布的测试组件', h: 'works.html#panel-tests' }
       ] },
       { title: '相关', links: [
-        { t: '柑柠档案', h: 'ganning.html' },
         { t: '赛博撸猫', h: 'cat.html' }
       ] }
     ],
@@ -3427,8 +3426,7 @@
     about: [
       { title: '关于', links: [
         { t: '关于我们', h: 'about.html' },
-        { t: '赛博撸猫', h: 'cat.html' },
-        { t: '柑柠档案', h: 'ganning.html' }
+        { t: '赛博撸猫', h: 'cat.html' }
       ] }
     ]
   };
