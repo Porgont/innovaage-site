@@ -2646,7 +2646,7 @@ input[type="range"]::-webkit-slider-thumb {
   text-decoration: none !important;
   background-image: none !important;
   border-left: 4px solid var(--band-accent, var(--gold));
-  transition: border-color .18s ease, box-shadow .22s ease, transform .22s ease;
+  transition: border-color .18s ease, box-shadow .3s ease, transform .3s var(--ease-out, cubic-bezier(.16, 1, .3, 1));
 }
 
 [data-theme="dark"] .work-band {
@@ -2662,8 +2662,8 @@ input[type="range"]::-webkit-slider-thumb {
 .work-band:hover {
   border-color: var(--line-2);
   border-left-color: var(--gold);
-  box-shadow: 0 12px 28px rgba(12, 14, 18, .12);
-  transform: translateY(-2px);
+  box-shadow: var(--shadow-lift);
+  transform: translateY(-4px);
 }
 
 .work-band__media {
@@ -6390,5 +6390,29 @@ main.overlap-hero {
     transition: none;
     transform: none;
     filter: none;
+  }
+}
+
+/* ---------- 悬停位移：提高一级选择器 ----------
+   进场动画的 [data-reveal].is-in { transform: none } 是 (0,2,0)、
+   又排在 .work:hover / .work-band:hover 后面，会把悬停的位移吃掉。
+   这里换成「标签 + 类」，级数更高，不依赖顺序。 */
+article.work:hover,
+a.work-band:hover {
+  transform: translateY(-4px);
+}
+
+article.work:hover {
+  box-shadow: var(--shadow-lift);
+}
+
+a.work-band:hover {
+  box-shadow: var(--shadow-lift);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  article.work:hover,
+  a.work-band:hover {
+    transform: none;
   }
 }
