@@ -2677,9 +2677,7 @@ input[type="range"]::-webkit-slider-thumb {
 
 .work-band:hover .work-band__media img { transform: scale(1.04); }
 
-.work-band:hover .work-band__title { color: var(--gold-dk); }
-
-.work-band:hover .work-band__title .mark { color: var(--text); }
+.work-band:hover .work-band__title { color: var(--text); }
 
 .work-band:hover .work-band__go {
   background: var(--text);
@@ -2795,6 +2793,22 @@ input[type="range"]::-webkit-slider-thumb {
   color: var(--text);
 }
 
+/* 横条里面积大，记号做成细下划线，整块高亮看着像选中文字 */
+.work-band__title .mark,
+.work-band__desc .mark {
+  background-image: linear-gradient(transparent 80%, rgba(47, 124, 246, .40) 80%);
+}
+
+.work-band:hover .work-band__title .mark,
+.work-band:hover .work-band__desc .mark {
+  background-image: linear-gradient(transparent 80%, rgba(47, 124, 246, .85) 80%);
+}
+
+[data-theme="dark"] .work-band__title .mark,
+[data-theme="dark"] .work-band__desc .mark {
+  background-image: linear-gradient(transparent 80%, rgba(127, 182, 255, .45) 80%);
+}
+
 .work-band__badge {
   display: inline-block;
   margin-left: 10px;
@@ -2825,8 +2839,8 @@ input[type="range"]::-webkit-slider-thumb {
   padding: 8px 16px;
   font-size: 12.5px;
   font-weight: 700;
-  color: #14161a;
-  background: var(--gold);
+  color: #fff;
+  background: var(--accent-solid, #2f7cf6);
   border-radius: 2px;
   transition: background-color .18s ease, color .18s ease;
 }

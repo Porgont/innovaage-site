@@ -38,6 +38,7 @@
   --gold:      #61a5ff;   /* 浅蓝：标记线、编号、当前态（工作室代表色） */
   --gold-dk:   #1f6fe0;
   --gold-soft: #eef5ff;   /* 蓝底浅色块 */
+  --accent-solid: #2f7cf6;   /* 实心蓝：按钮底、标签底（配白字） */
 
   /* 功能色 */
   --green:     #1f7a45;
@@ -87,9 +88,9 @@
   --btn-ghost-bg:     #ffffff;
   --btn-ghost-fg:     #1a1c20;
   --btn-ghost-border: #1a1c20;
-  --btn-gold-bg:     #61a5ff;
-  --btn-gold-fg:     #10161f;
-  --btn-gold-border: #3d87f0;
+  --btn-gold-bg:     #2f7cf6;
+  --btn-gold-fg:     #ffffff;
+  --btn-gold-border: #2f7cf6;
 
   /* 输入框 */
   --input-bg:     #ffffff;
@@ -133,6 +134,7 @@
     --gold:      #7fb6ff;
     --gold-dk:   #b3d2ff;
     --gold-soft: #16283f;
+    --accent-solid: #3d84f0;
 
     --green:     #4cb87a;
     --green-dk:  #2f8a55;
@@ -161,9 +163,9 @@
     --btn-ghost-bg:     transparent;
     --btn-ghost-fg:     #eef1f5;
     --btn-ghost-border: #3a414b;
-    --btn-gold-bg:     #7fb6ff;
-    --btn-gold-fg:     #0b1220;
-    --btn-gold-border: #b3d2ff;
+    --btn-gold-bg:     #3d84f0;
+    --btn-gold-fg:     #ffffff;
+    --btn-gold-border: #3d84f0;
 
     --input-bg:     #16191e;
     --input-border: #3a414b;
@@ -201,6 +203,7 @@ html[data-theme="light"] {
   --gold:      #61a5ff;
   --gold-dk:   #1f6fe0;
   --gold-soft: #eef5ff;
+  --accent-solid: #2f7cf6;   /* 实心蓝：按钮底、标签底（配白字） */
   --green:     #1f7a45;
   --green-dk:  #155c33;
   --redstone:  #c0392b;
@@ -225,9 +228,9 @@ html[data-theme="light"] {
   --btn-ghost-bg:     #ffffff;
   --btn-ghost-fg:     #1a1c20;
   --btn-ghost-border: #1a1c20;
-  --btn-gold-bg:     #61a5ff;
-  --btn-gold-fg:     #10161f;
-  --btn-gold-border: #3d87f0;
+  --btn-gold-bg:     #2f7cf6;
+  --btn-gold-fg:     #ffffff;
+  --btn-gold-border: #2f7cf6;
   --input-bg:     #ffffff;
   --input-border: #c9ced6;
   --focus-ring:   rgba(97, 165, 255, .45);
@@ -257,6 +260,7 @@ html[data-theme="dark"] {
   --gold:      #7fb6ff;
   --gold-dk:   #b3d2ff;
   --gold-soft: #16283f;
+  --accent-solid: #3d84f0;
   --green:     #4cb87a;
   --green-dk:  #2f8a55;
   --redstone:  #e2685a;
@@ -281,9 +285,9 @@ html[data-theme="dark"] {
   --btn-ghost-bg:     transparent;
   --btn-ghost-fg:     #eef1f5;
   --btn-ghost-border: #3a414b;
-  --btn-gold-bg:     #7fb6ff;
-  --btn-gold-fg:     #0b1220;
-  --btn-gold-border: #b3d2ff;
+  --btn-gold-bg:     #3d84f0;
+  --btn-gold-fg:     #ffffff;
+  --btn-gold-border: #3d84f0;
   --input-bg:     #16191e;
   --input-border: #3a414b;
   --focus-ring:   rgba(127, 182, 255, .35);
