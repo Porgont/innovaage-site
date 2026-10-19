@@ -1668,7 +1668,7 @@
       return;
     }
 
-    host.innerHTML = list.map(function (it) {
+    host.innerHTML = list.map(function (it, i) {
       var cat = CATEGORIES[it.category] || '';
       // 有 href 的直接指向自己的页面（比如创想之都的子站），否则走通用详情页
       var detailHref = it.href || (it.id ? 'work.html?id=' + esc(it.id) : '');
@@ -1734,10 +1734,11 @@
       return;
     }
 
-    host.innerHTML = list.map(function (it) {
+    host.innerHTML = list.map(function (it, i) {
       var cat = CATEGORIES[it.category] || '';
       var href = it.href || (it.id ? 'work-rich.html?id=' + esc(it.id) : '');
       var kicker = [cat, it.meta].filter(Boolean).join(' · ');
+      var no = String(i + 1).padStart(2, '0');
       return '<a class="work-band" href="' + href + '">' +
         '<span class="work-band__media"><img src="' + esc(it.img) + '" alt="' + esc(it.title) + '" decoding="async"></span>' +
         '<span class="work-band__body">' +
@@ -1745,6 +1746,10 @@
           '<span class="work-band__title">' + esc(it.title) + '</span>' +
           (it.desc ? '<span class="work-band__desc">' + esc(it.desc) + '</span>' : '') +
           '<span class="work-band__go">查看详情 →</span>' +
+        '</span>' +
+        '<span class="work-band__deco" aria-hidden="true">' +
+          '<span class="work-band__no">' + no + '</span>' +
+          '<span class="work-band__barcode"></span>' +
         '</span>' +
       '</a>';
     }).join('');
