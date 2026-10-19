@@ -3097,10 +3097,7 @@
       '<button type="button" class="share-menu__item" role="menuitem" data-share-text>复制标题和链接</button>' +
       (canSystemShare
         ? '<button type="button" class="share-menu__item" role="menuitem" data-share-sys>用其他应用分享…</button>'
-        : '') +
-      '<a class="share-menu__item" role="menuitem" target="_blank" rel="noopener" ' +
-        'href="https://service.weibo.com/share/share.php?url=' +
-        encodeURIComponent(url) + '&title=' + encodeURIComponent(t) + '">分享到微博</a>';
+        : '');
 
     row.innerHTML =
       '<span class="share">' +
@@ -3228,6 +3225,25 @@
     if (top) addShareRow(top, title);
   }
 
+
+
+  /* 首页最下面放一个站点级分享 */
+  function initHomeShare() {
+    if (document.body.getAttribute('data-page') !== 'home') return;
+    if (document.querySelector('.share-home')) return;
+    var main = document.querySelector('main');
+    if (!main) return;
+
+    var box = document.createElement('section');
+    box.className = 'section section--tight share-home';
+    box.innerHTML =
+      '<div class="wrap share-home__inner">' +
+        '<p class="share-home__label">把官网分享出去</p>' +
+      '</div>';
+    main.appendChild(box);
+
+    addShareRow(box.querySelector('.share-home__inner'), document.title.split('|')[0].trim() || '创想时代开发组');
+  }
 
   /* 作品类页面兜底：只要带「返回」那一行又没有分享，就补一个。
      覆盖梦海旅者、创想之都各页这类手写页面（work.html / work-rich.html 各自已经挂过了）。 */
@@ -3413,6 +3429,7 @@
     initWorkDetail();
     initRichWork();
     initDetailShare();
+    initHomeShare();
     initZoomGallery();
     initAnchorToc();
     initAnalytics();
