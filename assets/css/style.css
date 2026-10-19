@@ -1592,7 +1592,7 @@ input[type="range"]::-webkit-slider-thumb {
    外链后面跟一个 ↗ 表示会跳走。
    注意必须把导航（.nav / .mnav-links）排除掉 ——
    导航本来就有自己的一套样式，套上这块会变成一排黄杠，很难看。 */
-.wrap a:not(.btn):not(.brand):not(.work-more):not(.skip-link):not(.module-card):not(.nav a):not(.mnav-links a):not(.footer-grid a):not(.city-card):not(.city-nav__links a):not(.tab--jump):not(.ms-toc a):not(.work-toc a):not(.officer-cat):not(.more-extra a):not(.work-band):not(.topic-band):not(.work-hit):not(.work),
+.wrap a:not(.btn):not(.brand):not(.work-more):not(.skip-link):not(.module-card):not(.nav a):not(.mnav-links a):not(.footer-grid a):not(.city-card):not(.city-nav__links a):not(.tab--jump):not(.ms-toc a):not(.work-toc a):not(.officer-cat):not(.more-extra a):not(.work-band):not(.topic-band):not(.work-hit):not(.work):not(.notice-hit),
 .callout a,
 .notice-body a,
 .stat-list a {
@@ -1963,6 +1963,7 @@ input[type="range"]::-webkit-slider-thumb {
 .notice-list { display: grid; gap: 14px; }
 
 .notice {
+  position: relative;
   display: grid;
   grid-template-columns: 96px 1fr;
   gap: 22px;
@@ -2052,6 +2053,31 @@ input[type="range"]::-webkit-slider-thumb {
   font-size: 14.5px;
   line-height: 1.8;
   margin: 0;
+}
+
+.notice-hit {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  background: none !important;
+  text-decoration: none !important;
+  border: 0 !important;
+  border-radius: var(--radius);
+}
+
+.notice:hover {
+  border-color: var(--line-2);
+  box-shadow: 0 10px 26px rgba(12, 14, 18, .10);
+}
+
+.notice:hover .notice-more {
+  color: var(--text);
+  border-bottom-color: var(--gold);
+}
+
+.notice:focus-within {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
 }
 
 .notice-more {

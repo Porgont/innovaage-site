@@ -1071,22 +1071,22 @@
         : '';
 
       // 列表只给标题 + 一小段正文，全文在 article.html 里
+      // 整张卡片都能点：里面不再放第二个链接，只铺一层透明链接
       return '' +
         '<article class="notice notice--' + esc(n.color || 'green') + (media ? ' has-media' : '') + '">' +
           '<div class="notice-date">' + dateBlock + '</div>' +
           media +
           '<div class="notice-body">' +
             '<h3>' +
-              (href
-                ? '<a href="' + esc(href) + '">' + esc(n.title || '') + '</a>'
-                : esc(n.title || '')) +
+              esc(n.title || '') +
               (n.pin ? ' <span class="tag tag--redstone">置顶</span>' : '') +
             '</h3>' +
             (excerpt ? '<p class="notice-excerpt">' + esc(excerpt) + '</p>' : '') +
             '<div class="notice-meta">' + tags +
-              (href ? '<a class="notice-more" href="' + esc(href) + '">阅读全文 →</a>' : '') +
+              (href ? '<span class="notice-more">阅读全文 →</span>' : '') +
             '</div>' +
           '</div>' +
+          (href ? '<a class="notice-hit" href="' + esc(href) + '" aria-label="阅读公告：' + esc(n.title || '') + '"></a>' : '') +
         '</article>';
     }).join('');
 
