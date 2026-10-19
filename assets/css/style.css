@@ -7071,3 +7071,52 @@ body.nav-open::before { opacity: 1; }
     transition: none;
   }
 }
+
+/* ---------- 手机端抽屉：跟电脑面板同一套细节 ---------- */
+@media (max-width: 800px) {
+  /* 标题前一小段蓝线，和面板栏目对齐 */
+  .mnav-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .mnav-title::before {
+    content: "";
+    width: 14px;
+    height: 2px;
+    background: var(--gold);
+    flex: none;
+  }
+
+  /* 抽屉打开时，标题、链接、按钮依次从右淡入 */
+  .mnav-toggle:checked ~ .mnav-drawer .mnav-head,
+  .mnav-toggle:checked ~ .mnav-drawer .mnav-links a,
+  .mnav-toggle:checked ~ .mnav-drawer .mnav-cta {
+    animation: mnav-item .42s var(--ease-out, cubic-bezier(.16, 1, .3, 1)) both;
+  }
+
+  .mnav-toggle:checked ~ .mnav-drawer .mnav-links a:nth-child(1) { animation-delay: .06s; }
+  .mnav-toggle:checked ~ .mnav-drawer .mnav-links a:nth-child(2) { animation-delay: .10s; }
+  .mnav-toggle:checked ~ .mnav-drawer .mnav-links a:nth-child(3) { animation-delay: .14s; }
+  .mnav-toggle:checked ~ .mnav-drawer .mnav-links a:nth-child(4) { animation-delay: .18s; }
+  .mnav-toggle:checked ~ .mnav-drawer .mnav-links a:nth-child(5) { animation-delay: .22s; }
+  .mnav-toggle:checked ~ .mnav-drawer .mnav-links a:nth-child(6) { animation-delay: .26s; }
+  .mnav-toggle:checked ~ .mnav-drawer .mnav-cta { animation-delay: .32s; }
+
+  @keyframes mnav-item {
+    from { opacity: 0; transform: translateX(14px); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  /* 点下去那一下给反馈 */
+  .mnav-links a:active { color: var(--gold-dk); }
+}
+
+@media (max-width: 800px) and (prefers-reduced-motion: reduce) {
+  .mnav-toggle:checked ~ .mnav-drawer .mnav-head,
+  .mnav-toggle:checked ~ .mnav-drawer .mnav-links a,
+  .mnav-toggle:checked ~ .mnav-drawer .mnav-cta {
+    animation: none;
+  }
+}
