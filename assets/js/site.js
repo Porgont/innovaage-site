@@ -3388,10 +3388,7 @@
       ] }
     ],
     news: [
-      { title: '公告', links: [
-        { t: '全部公告', h: 'news.html' }
-      ] },
-      { title: '近期', links: [
+      { title: '近期公告', links: [
         { t: '代投业务与入室审核条例', h: 'article.html?id=invest-open' },
         { t: '二级域名对全体成员开放', h: 'article.html?id=subdomain-open' },
         { t: '官网开放', h: 'article.html?id=site-launch' }
@@ -3434,7 +3431,8 @@
 
   /* 面板里的大号入口：目前只有工具箱用得上 */
   var NAV_ALL = {
-    tools: { t: '全部工具', h: 'tools.html' }
+    tools: { t: '全部工具', h: 'tools.html' },
+    news: { t: '全部公告', h: 'news.html' }
   };
 
   /* 面板底部那条快捷行：都是站内真实入口 */

@@ -6923,32 +6923,38 @@ body.nav-open::before { opacity: 1; }
 }
 
 /* 面板里的大号入口（工具箱用）：整条居中，字号明显大一号 */
+/* 大入口：实心黑按钮，一看就是「整站入口」 */
 .nav-mega__all {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 12px;
-  padding: 6px 0 22px;
-  font-size: 25px;
-  font-weight: 800;
-  letter-spacing: -.01em;
-  color: var(--text);
+  width: fit-content;
+  margin: 2px auto 24px;
+  padding: 14px 34px;
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: .01em;
+  color: var(--bg);
+  background: var(--text);
+  border-radius: var(--radius);
   text-decoration: none !important;
   background-image: none !important;
   border-bottom: 0 !important;
-  transition: color .16s ease;
+  box-shadow: 3px 3px 0 var(--gold);
+  transition: transform .18s var(--ease-out, cubic-bezier(.16, 1, .3, 1)), box-shadow .18s ease;
 }
 
 .nav-mega__all span {
   display: inline-block;
-  font-size: 20px;
-  color: var(--text-mute);
-  transition: transform .2s ease, color .16s ease;
+  font-size: 17px;
+  transition: transform .2s ease;
 }
 
-.nav-mega__all:hover { color: var(--gold-dk); }
-
-.nav-mega__all:hover span {
-  transform: translateX(4px);
-  color: var(--gold-dk);
+.nav-mega__all:hover {
+  color: var(--bg);
+  transform: translate(-1px, -2px);
+  box-shadow: 5px 6px 0 var(--gold);
 }
+
+.nav-mega__all:hover span { transform: translateX(4px); }
