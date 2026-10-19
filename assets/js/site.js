@@ -3360,6 +3360,46 @@
     targets.forEach(function (el) { io.observe(el); });
   }
 
+
+  /* ---------- 图片加载态 ----------
+     还没解码完的图先给一层呼吸底色，加载完淡入；懒加载和新插进来的图也算上。 */
+  function initImageStates() {
+    var mark = function (img) {
+      if (!img || img.tagName !== 'IMG') return;
+      if (img.classList.contains('img-loaded')) return;
+      if (img.complete && img.naturalWidth > 0) {
+        img.classList.remove('img-waiting');
+        img.classList.add('img-loaded');
+        return;
+      }
+      img.classList.add('img-waiting');
+      img.addEventListener('load', function () {
+        img.classList.remove('img-waiting');
+        img.classList.add('img-loaded');
+      }, { once: true });
+      img.addEventListener('error', function () {
+        img.classList.remove('img-waiting');
+        img.classList.add('img-loaded');
+      }, { once: true });
+    };
+
+    $$('img').forEach(mark);
+
+    // 后面 JS 渲染出来的图（作品卡、专题页正文、截图）也要接上
+    if ('MutationObserver' in window) {
+      var mo = new MutationObserver(function (records) {
+        records.forEach(function (r) {
+          Array.prototype.forEach.call(r.addedNodes, function (node) {
+            if (!node || node.nodeType !== 1) return;
+            if (node.tagName === 'IMG') mark(node);
+            else if (node.querySelectorAll) node.querySelectorAll('img').forEach(mark);
+          });
+        });
+      });
+      mo.observe(document.body, { childList: true, subtree: true });
+    }
+  }
+
   function initBackToTop() {
     if (document.querySelector('.to-top')) return;
 
@@ -3483,6 +3523,7 @@
     initRichWork();
     initDetailShare();
     initHomeShare();
+    initImageStates();
     initZoomGallery();
     initAnchorToc();
     initAnalytics();

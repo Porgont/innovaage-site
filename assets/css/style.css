@@ -2921,6 +2921,86 @@ h1 em,
   right: auto;
 }
 
+/* ---------- 加载骨架 ----------
+   容器还没被 JS 填内容时（:empty）先铺一块呼吸中的灰底，
+   数据一到内容就顶上去，::before 自动消失，不需要额外脚本。 */
+@keyframes skeleton-shimmer {
+  from { background-position: 130% 0; }
+  to   { background-position: -30% 0; }
+}
+
+.showcase:empty,
+#rw-body:empty,
+#work-detail:empty,
+#rw-facts:empty,
+#work-facts:empty {
+  position: relative;
+  min-height: 180px;
+}
+
+.showcase:empty::before,
+#rw-body:empty::before,
+#work-detail:empty::before,
+#rw-facts:empty::before,
+#work-facts:empty::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background-image: linear-gradient(100deg,
+    var(--bg-2) 34%, var(--line) 50%, var(--bg-2) 66%);
+  background-size: 220% 100%;
+  animation: skeleton-shimmer 1.3s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .showcase:empty::before,
+  #rw-body:empty::before,
+  #work-detail:empty::before,
+  #rw-facts:empty::before,
+  #work-facts:empty::before { animation: none; }
+}
+
+/* 图片没加载完时先显示呼吸底色，加载完淡入 */
+img.img-waiting {
+  background-image: linear-gradient(100deg,
+    var(--bg-2) 34%, var(--line) 50%, var(--bg-2) 66%);
+  background-size: 220% 100%;
+  animation: skeleton-shimmer 1.4s linear infinite;
+  opacity: .55;
+}
+
+img.img-loaded {
+  animation: none;
+  background-image: none;
+  opacity: 1;
+  transition: opacity .28s ease;
+}
+
+/* 二维码生成的转圈 */
+.share-qr__tip::before {
+  content: "";
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  margin-right: 6px;
+  vertical-align: -2px;
+  border: 2px solid #c9c9c9;
+  border-top-color: #14161a;
+  border-radius: 50%;
+  animation: qr-spin .7s linear infinite;
+}
+
+.share-qr__img ~ .share-qr__tip::before { display: none; }
+
+@keyframes qr-spin { to { transform: rotate(360deg); } }
+
+@media (prefers-reduced-motion: reduce) {
+  img.img-waiting { animation: none; }
+  .share-qr__tip::before { animation: none; }
+}
+
 /* ---------- 站内搜索 ---------- */
 .search-open {
   display: inline-flex;
