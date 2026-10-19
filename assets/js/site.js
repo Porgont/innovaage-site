@@ -3387,26 +3387,6 @@
         { t: '想一起做点东西？', h: 'index.html#join-cta' }
       ] }
     ],
-    works: [
-      { title: '专题页', links: [
-        { t: '无人区跑酷', h: 'work-rich.html?id=uransch' },
-        { t: '仿真工艺系列材质', h: 'work-rich.html?id=fangzhen-tech' },
-        { t: '梦海旅者', h: 'mengsea.html' },
-        { t: '创想之都', h: 'city.html' }
-      ] },
-      { title: '代表作品', links: [
-        { t: '代表作品', h: 'works.html#panel-works' },
-        { t: '企业-灰色幽灵', h: 'work.html?id=enterprise-gray-ghost' },
-        { t: 'Log7桦木 · 完整版', h: 'work.html?id=log7-birch' },
-        { t: 'Log橡木SA', h: 'work.html?id=log-shader-sa' },
-        { t: '秋水三尺', h: 'work.html?id=qiushui-sanchi' },
-        { t: '零雾构想V5000 · 橡木7画质提升包', h: 'work.html?id=lingling-v5000-oak7' }
-      ] },
-      { title: '测试组件', links: [
-        { t: '尚未发布的测试组件', h: 'works.html#panel-tests' },
-        { t: 'Vulkan RTX-Jog光影', h: 'work-rich.html?id=vulkan-rtx-jog' }
-      ] }
-    ],
     news: [
       { title: '公告', links: [
         { t: '全部公告', h: 'news.html' }
@@ -3488,6 +3468,11 @@
 
       var html = '<a class="mnav-home" href="index.html">首页</a>';
       GROUPS.forEach(function (g) {
+        // 没有二级菜单的（比如作品），直接当一个链接
+        if (!NAV_MENUS[g.key]) {
+          html += '<a class="mnav-direct" href="' + g.page + '">' + esc(g.label) + '</a>';
+          return;
+        }
         var sub = '';
         var seen = {};
         (NAV_MENUS[g.key] || []).forEach(function (col) {

@@ -7008,3 +7008,19 @@ body.nav-open::before { opacity: 1; }
 
   .mnav-subtitle:first-child { margin-top: 6px; }
 }
+
+/* 手机端：没有二级菜单的栏目，直接当一级链接（字号和展开项一致） */
+@media (max-width: 800px) {
+  .mnav-links a.mnav-direct {
+    display: block;
+    padding: 7px 0;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -.01em;
+    color: var(--text);
+    border: 0 !important;
+    background: none !important;
+  }
+
+  .mnav-links a.mnav-direct:active { color: var(--gold-dk); }
+}
