@@ -6930,3 +6930,66 @@ body.nav-open::before { opacity: 1; }
     transform: none;
   }
 }
+
+/* ---------- 手机端菜单：一级 + 可展开的二级 ---------- */
+@media (max-width: 800px) {
+  .mnav-links .mnav-group { margin: 0; }
+
+  .mnav-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 7px 0;
+    font-family: inherit;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -.01em;
+    color: var(--text);
+    background: none;
+    border: 0;
+    cursor: pointer;
+    text-align: left;
+  }
+
+  .mnav-chev {
+    font-size: 20px;
+    font-weight: 400;
+    color: var(--text-mute);
+    transition: transform .25s ease, color .2s ease;
+  }
+
+  .mnav-trigger[aria-expanded="true"] .mnav-chev {
+    transform: rotate(45deg);
+    color: var(--gold-dk);
+  }
+
+  .mnav-trigger:active { color: var(--gold-dk); }
+
+  .mnav-sub {
+    height: 0;
+    overflow: hidden;
+    transition: height .3s var(--ease-out, cubic-bezier(.16, 1, .3, 1));
+  }
+
+  .mnav-sub a {
+    display: block;
+    padding: 6px 0 6px 14px;
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--text-dim);
+    border-left: 2px solid var(--line);
+    background: none !important;
+  }
+
+  .mnav-sub a:first-child {
+    color: var(--text);
+  }
+
+  .mnav-sub a:active { color: var(--gold-dk); }
+}
+
+@media (max-width: 800px) and (prefers-reduced-motion: reduce) {
+  .mnav-sub { transition: none; }
+  .mnav-chev { transition: none; }
+}

@@ -3471,37 +3471,61 @@
     header.appendChild(panel);
 
 
-    /* 手机端抽屉也换成苹果式：分组标题 + 大字号链接，点链接自动收起 */
+    /* 手机端抽屉：先给一级导航，点进去才展开二级（苹果那套） */
     var drawer = document.querySelector('.mnav-links');
     if (drawer) {
-      var ORDER = [
-        ['works', '作品'],
-        ['news', '公告'],
-        ['tools', '工具箱'],
-        ['join', '加入我们'],
-        ['about', '关于我们']
+      var GROUPS = [
+        { key: 'works', label: '作品', page: 'works.html', pageLabel: '作品主页' },
+        { key: 'news', label: '公告', page: 'news.html', pageLabel: '全部公告' },
+        { key: 'tools', label: '工具箱', page: 'tools.html', pageLabel: '工具箱' },
+        { key: 'join', label: '加入我们', page: 'join.html', pageLabel: '加入我们' },
+        { key: 'about', label: '关于我们', page: 'about.html', pageLabel: '关于我们' }
       ];
+
       var html = '<a class="mnav-home" href="index.html">首页</a>';
-      var seenAll = {};
-      ORDER.forEach(function (pair) {
-        var cols = NAV_MENUS[pair[0]];
-        if (!cols) return;
-        // 手机上一行只有一条，公告那种长标题放进来会撑成好几行，只留「全部公告」
-        if (pair[0] === 'news') cols = [{ title: cols[0].title, links: cols[0].links.slice(0, 1) }];
-        html += '<p class="mnav-group">' + esc(pair[1]) + '</p>';
+      GROUPS.forEach(function (g) {
+        var sub = '<a href="' + g.page + '">' + esc(g.pageLabel) + '</a>';
         var seen = {};
-        cols.forEach(function (col) {
+        seen[g.page] = 1;
+        (NAV_MENUS[g.key] || []).forEach(function (col) {
+          // 手机上一行只放一条，公告那种长标题不进二级
+          if (g.key === 'news') return;
+          // 「相关」那列在手机上是重复入口，跳过
+          if (col.title === '相关') return;
           col.links.forEach(function (l) {
-            if (seenAll[l.h]) return;
-            seenAll[l.h] = 1;
-            html += '<a href="' + esc(l.h) + '">' + esc(l.t) + '</a>';
+            if (seen[l.h]) return;
+            seen[l.h] = 1;
+            sub += '<a href="' + esc(l.h) + '">' + esc(l.t) + '</a>';
           });
         });
+        html += '<div class="mnav-group">' +
+            '<button type="button" class="mnav-trigger" aria-expanded="false">' +
+              esc(g.label) +
+              '<span class="mnav-chev" aria-hidden="true">+</span>' +
+            '</button>' +
+            '<div class="mnav-sub">' + sub + '</div>' +
+          '</div>';
       });
       drawer.innerHTML = html;
 
       var toggle = document.getElementById('mnav-toggle');
       drawer.addEventListener('click', function (e) {
+        var t = e.target && e.target.closest ? e.target.closest('.mnav-trigger') : null;
+        if (t) {
+          var open = t.getAttribute('aria-expanded') === 'true';
+          // 一次只开一个，避免抽屉太长
+          Array.prototype.forEach.call(drawer.querySelectorAll('.mnav-trigger'), function (x) {
+            x.setAttribute('aria-expanded', 'false');
+            var sub = x.parentElement.querySelector('.mnav-sub');
+            if (sub) sub.style.height = '';
+          });
+          if (!open) {
+            t.setAttribute('aria-expanded', 'true');
+            var box = t.parentElement.querySelector('.mnav-sub');
+            if (box) box.style.height = box.scrollHeight + 'px';
+          }
+          return;
+        }
         var a = e.target && e.target.closest ? e.target.closest('a') : null;
         if (a && toggle) toggle.checked = false;
       });
