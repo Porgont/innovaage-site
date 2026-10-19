@@ -1652,7 +1652,7 @@ input[type="range"]::-webkit-slider-thumb {
    外链后面跟一个 ↗ 表示会跳走。
    注意必须把导航（.nav / .mnav-links）排除掉 ——
    导航本来就有自己的一套样式，套上这块会变成一排黄杠，很难看。 */
-.wrap a:not(.btn):not(.brand):not(.work-more):not(.skip-link):not(.module-card):not(.nav a):not(.mnav-links a):not(.footer-grid a):not(.city-card):not(.city-nav__links a):not(.tab--jump):not(.ms-toc a):not(.work-toc a):not(.officer-cat):not(.more-extra a):not(.work-band):not(.topic-band):not(.work-hit):not(.work):not(.notice-hit):not(.officer-hit):not(.work-pager__link):not(.work-link),
+.wrap a:not(.btn):not(.brand):not(.work-more):not(.skip-link):not(.module-card):not(.nav a):not(.mnav-links a):not(.footer-grid a):not(.city-card):not(.city-nav__links a):not(.tab--jump):not(.ms-toc a):not(.work-toc a):not(.officer-cat):not(.more-extra a):not(.work-band):not(.topic-band):not(.work-hit):not(.work):not(.notice-hit):not(.officer-hit):not(.work-pager__link):not(.work-link):not(.page-head__home),
 .callout a,
 .notice-body a,
 .stat-list a {
@@ -1695,7 +1695,7 @@ input[type="range"]::-webkit-slider-thumb {
 
 /* 悬停变黄底的规则也必须排除导航 —— 上面那条非悬停的排了，这条以前漏了，
    结果鼠标一划过导航就整块变成黄底。 */
-.wrap a:not(.btn):not(.brand):not(.work-more):not(.skip-link):not(.module-card):not(.nav a):not(.mnav-links a):not(.footer-grid a):not(.city-card):not(.city-nav__links a):not(.tab--jump):not(.ms-toc a):not(.work-toc a):not(.officer-cat):not(.more-extra a):not(.work-band):not(.topic-band):not(.work-hit):not(.work):not(.notice-hit):not(.officer-hit):not(.work-pager__link):not(.work-link):hover,
+.wrap a:not(.btn):not(.brand):not(.work-more):not(.skip-link):not(.module-card):not(.nav a):not(.mnav-links a):not(.footer-grid a):not(.city-card):not(.city-nav__links a):not(.tab--jump):not(.ms-toc a):not(.work-toc a):not(.officer-cat):not(.more-extra a):not(.work-band):not(.topic-band):not(.work-hit):not(.work):not(.notice-hit):not(.officer-hit):not(.work-pager__link):not(.work-link):not(.page-head__home):hover,
 .callout a:hover,
 .notice-body a:hover,
 .stat-list a:hover {
@@ -4888,13 +4888,38 @@ body.is-leaving main {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
-  gap: 9px;
-  margin: 0 0 4px;
+  gap: 10px;
+  margin: 0 0 6px;
   font-family: var(--mono);
-  font-size: 10.5px;
-  letter-spacing: .2em;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: .16em;
   text-transform: uppercase;
-  color: var(--text-mute);
+  color: var(--text-dim);
+}
+
+.page-head__code b {
+  color: var(--text);
+}
+
+/* INDEX 回首页：字大一号，带细下划线，悬停转蓝 */
+.page-head__home {
+  color: var(--text);
+  text-decoration: none !important;
+  background-image: none !important;
+  border-bottom: 2px solid var(--gold);
+  padding-bottom: 1px;
+  transition: color .16s ease, border-color .16s ease;
+}
+
+.page-head__home:hover {
+  color: var(--gold-dk);
+  border-bottom-color: var(--gold-dk);
+}
+
+.page-head__home:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
 }
 
 .page-head__code span { color: var(--line-2); }
@@ -4902,6 +4927,8 @@ body.is-leaving main {
 
 /* 超大描边编号：参考图里那个压在标题上方的 01 */
 .page-head__num {
+  /* 装饰用的超大数字，别让它盖住上面的 INDEX 面包屑挡住点击 */
+  pointer-events: none;
   margin: 0 0 .04em;
   font-family: var(--display);
   font-weight: 800;
