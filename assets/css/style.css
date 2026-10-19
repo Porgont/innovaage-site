@@ -6612,3 +6612,85 @@ a.module-card:hover .module-go {
 @media (prefers-reduced-motion: reduce) {
   a.module-card:hover { transform: none; }
 }
+
+/* ---------- 顶部导航悬停面板 ----------
+   像苹果官网那样：鼠标放到导航项上，从页眉下方展开一整条面板。
+   只在宽屏启用（脚本里也做了同样的宽度判断）。 */
+.nav-mega {
+  position: fixed;
+  left: 0;
+  right: 0;
+  z-index: 120;
+  display: none;
+  padding: 0 clamp(16px, 2.2vw, 44px);
+  background: color-mix(in srgb, var(--bg) 96%, transparent);
+  border-bottom: 1px solid var(--line);
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
+  backdrop-filter: blur(18px) saturate(150%);
+  box-shadow: 0 18px 40px rgba(12, 14, 18, .10);
+  opacity: 0;
+  transform: translateY(-8px);
+  transition: opacity .22s var(--ease-out, ease), transform .26s var(--ease-out, ease);
+}
+
+.nav-mega.is-open {
+  display: block;
+  opacity: 1;
+  transform: none;
+}
+
+.nav-mega__inner {
+  display: flex;
+  gap: clamp(40px, 8vw, 120px);
+  padding: 28px 0 30px;
+  max-width: 1440px;
+}
+
+.nav-mega__col {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 160px;
+}
+
+.nav-mega__title {
+  margin: 0 0 2px;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--text-mute);
+}
+
+.nav-mega__link {
+  font-size: 15.5px;
+  font-weight: 600;
+  color: var(--text);
+  text-decoration: none !important;
+  background-image: none !important;
+  border-bottom: 0 !important;
+  line-height: 1.5;
+  transition: color .14s ease;
+}
+
+.nav-mega__link:hover {
+  color: var(--gold-dk);
+}
+
+[data-theme="dark"] .nav-mega {
+  box-shadow: 0 18px 40px rgba(0, 0, 0, .55);
+}
+
+/* 导航项展开时高亮 */
+.nav a.is-open span {
+  color: var(--gold-dk);
+}
+
+@media (max-width: 999px) {
+  .nav-mega { display: none !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-mega { transition: none; transform: none; }
+}

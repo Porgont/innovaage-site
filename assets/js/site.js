@@ -3366,6 +3366,140 @@
   }
 
 
+
+  /* 顶部导航的悬停面板：只放站内真实存在的页面，不放新写的介绍文字。
+     键名对应导航链接的 data-nav。 */
+  var NAV_MENUS = {
+    works: [
+      { title: '作品', links: [
+        { t: '作品主页', h: 'works.html' },
+        { t: '无人区跑酷', h: 'work-rich.html?id=uransch' },
+        { t: '仿真工艺系列材质', h: 'work-rich.html?id=fangzhen-tech' }
+      ] },
+      { title: '专题页', links: [
+        { t: '梦海旅者', h: 'mengsea.html' },
+        { t: '创想之都', h: 'city.html' },
+        { t: '柑柠档案', h: 'ganning.html' }
+      ] }
+    ],
+    news: [
+      { title: '公告', links: [
+        { t: '全部公告', h: 'news.html' }
+      ] },
+      { title: '近期', links: [
+        { t: '开放代投业务，同步公布入室审核条例', h: 'article.html?id=invest-and-audit-rules' },
+        { t: 'innovaage.cn 二级域名对全体成员开放', h: 'article.html?id=subdomain-open' },
+        { t: '创想时代开发组官网开放', h: 'article.html?id=site-launch' }
+      ] }
+    ],
+    tools: [
+      { title: '常用工具', links: [
+        { t: '图片处理', h: 'tools-image.html' },
+        { t: '视频处理', h: 'tools-video.html' },
+        { t: '格式转换', h: 'tools-convert.html' }
+      ] },
+      { title: '组员作品', links: [
+        { t: 'matoga 材质贴图对比', h: 'tools-matoga.html' },
+        { t: 'MCBE 打包器', h: 'tools-mcbe.html' }
+      ] }
+    ],
+    join: [
+      { title: '加入我们', links: [
+        { t: '报名加入', h: 'join.html#panel-form' },
+        { t: '代投与投稿', h: 'join.html#panel-invest' },
+        { t: '联系方式', h: 'join.html#panel-contact' },
+        { t: '入室审核条例', h: 'join.html#panel-rules' }
+      ] }
+    ],
+    about: [
+      { title: '关于', links: [
+        { t: '关于我们', h: 'about.html' },
+        { t: '赛博撸猫', h: 'cat.html' },
+        { t: '柑柠档案', h: 'ganning.html' }
+      ] }
+    ]
+  };
+
+  /* 悬停展开、离开收起；键盘 Tab 到链接也会展开。只在宽屏启用。 */
+  function initNavMenus() {
+    var header = document.querySelector('.site-header');
+    var nav = document.querySelector('.nav');
+    if (!header || !nav || !window.matchMedia) return;
+    var wide = window.matchMedia('(min-width: 1000px)');
+
+    var panel = document.createElement('div');
+    panel.className = 'nav-mega';
+    panel.id = 'nav-mega';
+    panel.setAttribute('aria-hidden', 'true');
+    header.appendChild(panel);
+
+    var links = Array.prototype.slice.call(nav.querySelectorAll('a[data-nav]'));
+    var openKey = null;
+    var timer = null;
+
+    function build(key) {
+      var cols = NAV_MENUS[key];
+      if (!cols) return '';
+      return '<div class="nav-mega__inner">' + cols.map(function (col) {
+        return '<div class="nav-mega__col">' +
+          '<p class="nav-mega__title">' + esc(col.title) + '</p>' +
+          col.links.map(function (l) {
+            return '<a class="nav-mega__link" href="' + esc(l.h) + '">' + esc(l.t) + '</a>';
+          }).join('') +
+        '</div>';
+      }).join('') + '</div>';
+    }
+
+    function place() {
+      var r = header.getBoundingClientRect();
+      panel.style.top = Math.round(r.bottom) + 'px';
+    }
+
+    function open(key) {
+      if (!wide.matches) return;
+      if (!NAV_MENUS[key]) return;
+      clearTimeout(timer);
+      if (openKey !== key) {
+        panel.innerHTML = build(key);
+        openKey = key;
+      }
+      place();
+      panel.classList.add('is-open');
+      panel.setAttribute('aria-hidden', 'false');
+      links.forEach(function (a) {
+        a.classList.toggle('is-open', a.getAttribute('data-nav') === key);
+      });
+    }
+
+    function close(delay) {
+      clearTimeout(timer);
+      timer = setTimeout(function () {
+        panel.classList.remove('is-open');
+        panel.setAttribute('aria-hidden', 'true');
+        links.forEach(function (a) { a.classList.remove('is-open'); });
+        openKey = null;
+      }, delay || 120);
+    }
+
+    links.forEach(function (a) {
+      var key = a.getAttribute('data-nav');
+      a.addEventListener('pointerenter', function () { open(key); });
+      a.addEventListener('focus', function () { open(key); });
+      a.addEventListener('pointerleave', function () { close(160); });
+      a.addEventListener('blur', function () { close(160); });
+    });
+
+    panel.addEventListener('pointerenter', function () { clearTimeout(timer); });
+    panel.addEventListener('pointerleave', function () { close(120); });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') close(0);
+    });
+    document.addEventListener('click', function (e) {
+      if (!header.contains(e.target)) close(0);
+    });
+    wide.addEventListener('change', function () { if (!wide.matches) close(0); });
+  }
+
   /* ---------- 图片加载态 ----------
      还没解码完的图先给一层呼吸底色，加载完淡入；懒加载和新插进来的图也算上。 */
   function initImageStates() {
@@ -3527,6 +3661,7 @@
     initWorkDetail();
     initRichWork();
     initDetailShare();
+    initNavMenus();
     initHomeShare();
     initImageStates();
     initZoomGallery();
