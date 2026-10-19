@@ -2790,6 +2790,8 @@ h1 em,
 .footer-stats {
   display: inline-flex;
   gap: 14px;
+  margin-right: 46px;   /* 给右下角回到顶部按钮让位 */
+  flex-wrap: wrap;
   font-family: var(--mono);
   font-size: 11.5px;
   letter-spacing: .04em;
@@ -2803,7 +2805,7 @@ h1 em,
 }
 
 @media (max-width: 700px) {
-  .footer-stats { gap: 10px; font-size: 11px; }
+  .footer-stats { gap: 10px; font-size: 11px; margin-right: 44px; }
 }
 
 /* ---------- 赛博撸猫 ---------- */
