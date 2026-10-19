@@ -1677,11 +1677,24 @@
       // 有 href 的直接指向自己的页面（比如创想之都的子站），否则走通用详情页
       var detailHref = it.href || (it.id ? 'work.html?id=' + esc(it.id) : '');
       var detail = detailHref
-        ? '<a class="work-more" href="' + detailHref + '">查看详情 →</a>'
+        ? '<span class="work-more">查看详情 →</span>'
+        : '';
+      var ACCENTS = ['#5867d8', '#3f8f54', '#7b53a8', '#2f86b8', '#c98a06'];
+      var accent = ACCENTS[i % ACCENTS.length];
+      var no = String(i + 1).padStart(2, '0');
+      // 整块可点：一层透明链接铺满卡片，里面不再放第二个链接
+      var hit = detailHref
+        ? '<a class="work-hit" href="' + detailHref + '" aria-label="查看' + esc(it.title) + '"></a>'
         : '';
       return '' +
-        '<article class="work">' +
-          '<div class="work-media"><img src="' + esc(it.img) + '" alt="' + esc(it.title + (it.meta ? ' ' + it.meta : '')) + '" decoding="async"></div>' +
+        '<article class="work" style="--band-accent:' + accent + '">' +
+          '<div class="work-media">' +
+            '<img src="' + esc(it.img) + '" alt="' + esc(it.title + (it.meta ? ' ' + it.meta : '')) + '" decoding="async">' +
+            '<span class="work-deco" aria-hidden="true">' +
+              '<span class="work-deco__no">' + no + '</span>' +
+              '<span class="work-deco__code"></span>' +
+            '</span>' +
+          '</div>' +
           '<div class="work-body">' +
             '<h3>' + esc(it.title) + '</h3>' +
             (it.desc ? '<p>' + esc(it.desc) + '</p>' : '') +
@@ -1691,6 +1704,7 @@
               detail +
             '</div>' +
           '</div>' +
+          hit +
         '</article>';
     }).join('');
   }

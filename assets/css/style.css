@@ -688,12 +688,80 @@ html[data-theme="dark"] .tag--diamond { color: var(--gold); }
 }
 
 .work {
+  position: relative;
   background: var(--panel);
   border: 1px solid var(--line);
+  border-left: 3px solid var(--band-accent, var(--gold));
   border-radius: var(--radius);
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  transition: transform .2s ease, box-shadow .22s ease, border-color .2s ease;
+}
+
+.work:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 32px rgba(12, 14, 18, .12);
+  border-color: var(--band-accent, var(--gold));
+}
+
+.work:hover .work-media img { transform: scale(1.04); }
+
+.work:hover h3 { color: var(--gold-dk); }
+
+.work:hover .work-more { border-bottom-color: var(--text); }
+
+/* 整块可点：透明链接铺满卡片 */
+.work-hit {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  background: none !important;
+  text-decoration: none !important;
+  border-bottom: 0 !important;
+  padding: 0 !important;
+}
+
+.work:hover .work-hit { cursor: pointer; }
+
+/* 封面上的装饰：大号描边编号 + 条形码 */
+.work-deco {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.work-deco__no {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 34px;
+  line-height: 1;
+  letter-spacing: -.04em;
+  color: transparent;
+  -webkit-text-stroke: 1.2px rgba(255, 255, 255, .92);
+  text-shadow: 0 1px 6px rgba(0, 0, 0, .35);
+}
+
+.work-deco__code {
+  position: absolute;
+  right: 12px;
+  bottom: 10px;
+  width: 64px;
+  height: 14px;
+  background-image: repeating-linear-gradient(90deg,
+    rgba(255, 255, 255, .95) 0 2px, transparent 2px 4px,
+    rgba(255, 255, 255, .95) 4px 5px, transparent 5px 8px);
+  opacity: .9;
+}
+
+.work:hover .work-deco__no { -webkit-text-stroke-color: var(--gold); }
+
+@media (prefers-reduced-motion: reduce) {
+  .work,
+  .work-media img { transition: none; transform: none; }
 }
 
 .work:hover {
@@ -1524,7 +1592,7 @@ input[type="range"]::-webkit-slider-thumb {
    外链后面跟一个 ↗ 表示会跳走。
    注意必须把导航（.nav / .mnav-links）排除掉 ——
    导航本来就有自己的一套样式，套上这块会变成一排黄杠，很难看。 */
-.wrap a:not(.btn):not(.brand):not(.work-more):not(.skip-link):not(.module-card):not(.nav a):not(.mnav-links a):not(.footer-grid a):not(.city-card):not(.city-nav__links a):not(.tab--jump):not(.ms-toc a):not(.work-toc a):not(.officer-cat):not(.more-extra a):not(.work-band):not(.topic-band),
+.wrap a:not(.btn):not(.brand):not(.work-more):not(.skip-link):not(.module-card):not(.nav a):not(.mnav-links a):not(.footer-grid a):not(.city-card):not(.city-nav__links a):not(.tab--jump):not(.ms-toc a):not(.work-toc a):not(.officer-cat):not(.more-extra a):not(.work-band):not(.topic-band):not(.work-hit):not(.work),
 .callout a,
 .notice-body a,
 .stat-list a {
