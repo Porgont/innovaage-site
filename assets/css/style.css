@@ -6922,3 +6922,33 @@ body.nav-open::before { opacity: 1; }
   }
 }
 
+/* 面板里的大号入口（工具箱用）：整条居中，字号明显大一号 */
+.nav-mega__all {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 6px 0 22px;
+  font-size: 25px;
+  font-weight: 800;
+  letter-spacing: -.01em;
+  color: var(--text);
+  text-decoration: none !important;
+  background-image: none !important;
+  border-bottom: 0 !important;
+  transition: color .16s ease;
+}
+
+.nav-mega__all span {
+  display: inline-block;
+  font-size: 20px;
+  color: var(--text-mute);
+  transition: transform .2s ease, color .16s ease;
+}
+
+.nav-mega__all:hover { color: var(--gold-dk); }
+
+.nav-mega__all:hover span {
+  transform: translateX(4px);
+  color: var(--gold-dk);
+}

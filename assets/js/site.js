@@ -3432,6 +3432,11 @@
     ]
   };
 
+  /* 面板里的大号入口：目前只有工具箱用得上 */
+  var NAV_ALL = {
+    tools: { t: '全部工具', h: 'tools.html' }
+  };
+
   /* 面板底部那条快捷行：都是站内真实入口 */
   var NAV_QUICK = [
     { t: '首页', h: 'index.html' },
@@ -3472,6 +3477,10 @@
             '</div>';
           }).join('') +
         '</div>' +
+        (NAV_ALL[key]
+          ? '<a class="nav-mega__all" href="' + esc(NAV_ALL[key].h) + '">' +
+              esc(NAV_ALL[key].t) + '<span aria-hidden="true">→</span></a>'
+          : '') +
         '<div class="nav-mega__quick">' +
           NAV_QUICK.map(function (l) {
             return '<a class="nav-mega__quicklink" href="' + esc(l.h) + '">' + esc(l.t) + '</a>';
