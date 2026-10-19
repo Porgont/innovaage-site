@@ -2757,45 +2757,32 @@ input[type="range"]::-webkit-slider-thumb {
   .work-band__barcode { width: 108px; height: 40px; }
 }
 
-/* ---------- 黄色记号笔 ----------
-   重要的词用一块黄色矩形垫底，文字保持深色，和海报上的划重点一致。 */
+/* ---------- 黄色下划线 ----------
+   重要的词在字底垫一道黄色横条，不盖住文字本身。 */
 .mark,
 h1 em,
 .hero h1 em,
-.hero-title em,
-.work-band__title mark {
-  padding: 0 .12em;
-  color: #14161a;
-  background: #f5c518;
-  border-radius: 1px;
+.hero-title em {
   font-style: normal;
-  -webkit-box-decoration-break: clone;
-  box-decoration-break: clone;
+  padding: 0 .08em;
+  background: linear-gradient(transparent 62%, var(--gold) 62%, var(--gold) 92%, transparent 92%);
 }
 
-/* 深色主题下压一点亮度，避免黄块太刺眼 */
 [data-theme="dark"] .mark,
 [data-theme="dark"] h1 em,
 [data-theme="dark"] .hero h1 em,
-[data-theme="dark"] .hero-title em,
-[data-theme="dark"] .work-band__title mark {
-  background: #d8ac12;
-  color: #14161a;
+[data-theme="dark"] .hero-title em {
+  background: linear-gradient(transparent 62%, #d8ac12 62%, #d8ac12 92%, transparent 92%);
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) .mark,
   :root:not([data-theme="light"]) h1 em,
   :root:not([data-theme="light"]) .hero h1 em,
-  :root:not([data-theme="light"]) .hero-title em,
-  :root:not([data-theme="light"]) .work-band__title mark {
-    background: #d8ac12;
-    color: #14161a;
+  :root:not([data-theme="light"]) .hero-title em {
+    background: linear-gradient(transparent 62%, #d8ac12 62%, #d8ac12 92%, transparent 92%);
   }
 }
-
-/* 标题里垫了黄块，悬停变色就不要影响它 */
-.work-band:hover .work-band__title mark { color: #14161a; }
 
 /* ---------- 赛博撸猫 ---------- */
 .cat-stage {

@@ -151,7 +151,7 @@
       en: 'URANSCH PARKOUR',
       meta: '作者：柑柠',
       category: 'map',
-      desc: '箱庭式中高难度跑酷地图，从 2016 年做到现在，56 个关卡，基岩版与 Java 版同玩法'
+      desc: '箱庭式<span class="mark">中高难度</span>跑酷地图，从 2016 年做到现在，<span class="mark">56 个关卡</span>，基岩版与 Java 版同玩法'
     },
     {
       id: 'fangzhen-tech',
@@ -161,7 +161,7 @@
       en: 'REALCRAFT TEXTURE',
       meta: '作者：茫帛',
       category: 'tex',
-      desc: '风格化写实、偏生存实用向的材质包，历时近四年制作，现有多种版本可选'
+      desc: '<span class="mark">风格化写实</span>、偏生存实用向的材质包，<span class="mark">历时近四年</span>制作，现有多种版本可选'
     },
     {
       id: 'mengsea',
@@ -171,7 +171,7 @@
       en: 'SEADREAM VOYAGER',
       meta: '作者：暴走苏打',
       category: 'map',
-      desc: '幻境与现实交织的大型剧情向解密地图，《幻世编年史》系列第一部'
+      desc: '幻境与现实交织的<span class="mark">大型剧情向解密</span>地图，《幻世编年史》系列第一部'
     },
     {
       id: 'city',
@@ -181,7 +181,7 @@
       en: 'CHUANGXIANG CITY',
       meta: '发起：苏打、柑柠',
       category: 'map',
-      desc: '由创想时代开发组苏打与柑柠发起的一个建设 MC 城市地图的大型项目，正式开始建设于 2022 年 8 月'
+      desc: '由创想时代开发组苏打与柑柠发起的一个建设 MC 城市地图的<span class="mark">大型项目</span>，正式开始建设于 2022 年 8 月'
     }
   ];
 
@@ -264,7 +264,7 @@
       displayEn: 'URANSCH PARKOUR',
       author: '柑柠',
       type: '地图 / Map',
-      tagline: '箱庭式中高难度跑酷地图，56 个关卡，基岩版与 Java 版同玩法',
+      tagline: '箱庭式<span class="mark">中高难度</span>跑酷地图，<span class="mark">56 个关卡</span>，基岩版与 Java 版同玩法',
       cover: 'assets/img/uransch-cover.jpg',
       coverAlt: '无人区跑酷海报：箱庭式跑酷地图的场景拼图',
       facts: [
@@ -649,7 +649,7 @@
       displayEn: 'REALCRAFT TEXTURE',
       author: '茫帛',
       type: '材质 / Texture',
-      tagline: '风格化写实、偏生存实用向的材质包，历时近四年制作',
+      tagline: '<span class="mark">风格化写实</span>、偏生存实用向的材质包，<span class="mark">历时近四年</span>制作',
       cover: 'assets/img/fangzhen-cover.jpg',
       coverAlt: '仿真工艺系列材质封面：REALCRAFT 标志与草方块地形',
       facts: [
@@ -664,7 +664,7 @@
       ],
       // 正文按作者给的说明排：图插在对应版本的位置，链接跟着图走
       intro: [
-        '仿真工艺：一款风格化写实、偏生存实用向的材质包，历时近四年的制作，不断的优化、改进，目前有多种版本可供选择。',
+        '仿真工艺：一款<span class="mark">风格化写实</span>、偏生存实用向的材质包，历时近四年的制作，不断的优化、改进，目前有多种版本可供选择。',
         '繁茂草地拓展包需要 1.21.11 以上版本才能生效；Java 版最佳游玩版本为 1.21.11。目前方块贴图完成度为 80%。',
 
         { heading: '基岩版（网易中国版）' },
@@ -840,6 +840,23 @@
       return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
     });
   }
+
+  /* 简介里允许画黄色下划线的 <span class="mark">，其余一律照旧转义 */
+  function plain(s) {
+    return String(s == null ? '' : s).replace(/<[^>]*>/g, '');
+  }
+
+  function escMark(s) {
+    var src = String(s == null ? '' : s);
+    var OPEN = '\u0001';
+    var CLOSE = '\u0002';
+    return esc(
+      src.split('<span class="mark">').join(OPEN).split('</span>').join(CLOSE)
+    )
+      .split(OPEN).join('<span class="mark">')
+      .split(CLOSE).join('</span>');
+  }
+
 
   function toast(msg) {
     var el = $('#toast');
@@ -1697,7 +1714,7 @@
           '</div>' +
           '<div class="work-body">' +
             '<h3>' + esc(it.title) + '</h3>' +
-            (it.desc ? '<p>' + esc(it.desc) + '</p>' : '') +
+            (it.desc ? '<p>' + escMark(it.desc) + '</p>' : '') +
             '<div class="work-meta">' +
               (cat ? '<span class="tag tag--gold">' + esc(cat) + '</span>' : '') +
               (it.meta ? '<span>' + esc(it.meta) + '</span>' : '') +
@@ -1767,7 +1784,7 @@
             return '<span' + (wi > 0 ? ' class="hd-out"' : '') + '>' + esc(w) + '</span>';
           }).join(' ') + '</span>' : '') +
           '<span class="work-band__title">' + esc(it.title) + '<span class="work-band__badge">专题页</span></span>' +
-          (it.desc ? '<span class="work-band__desc">' + esc(it.desc) + '</span>' : '') +
+          (it.desc ? '<span class="work-band__desc">' + escMark(it.desc) + '</span>' : '') +
           '<span class="work-band__go">查看详情 →</span>' +
         '</span>' +
         '<span class="work-band__deco" aria-hidden="true">' +
@@ -1910,7 +1927,8 @@
 
     setText('#work-type', work.type || '');
     setText('#work-name', work.name || '');
-    setText('#work-tagline', work.tagline || '');
+    var tagEl = $('#work-tagline');
+    if (tagEl) tagEl.innerHTML = escMark(work.tagline || '');
     setText('#work-author', work.author ? '作者：' + work.author : '');
     // 面包屑最后一级也要跟着换，否则一直停在 HTML 里写死的那个作品名
     setText('#work-crumb', work.name || '');
@@ -1920,7 +1938,7 @@
     if (desc) {
       desc.setAttribute('content',
         work.name + (work.author ? '（作者 ' + work.author + '）' : '') + '：' +
-        (work.tagline || '') + ' —— 创想时代开发组作品展示。');
+        plain(work.tagline || '') + ' —— 创想时代开发组作品展示。');
     }
 
     // 头图
@@ -2441,7 +2459,8 @@
     setText('#rw-type', work.type || '作品');
     setText('#rw-code', 'WORKS · ' + (work.displayEn || work.name));
     setText('#rw-name', work.name);
-    setText('#rw-tagline', work.tagline || '');
+    var rwTag = $('#rw-tagline');
+    if (rwTag) rwTag.innerHTML = escMark(work.tagline || '');
     setText('#rw-author', work.author ? '作者：' + work.author : '');
 
     var display = $('#rw-display');
