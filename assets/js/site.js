@@ -3091,20 +3091,23 @@
 
     var row = document.createElement('div');
     row.className = 'share-row';
+    var canSystemShare = !!(navigator.share && navigator.canShare ? true : navigator.share);
+    var items =
+      '<button type="button" class="share-menu__item" role="menuitem" data-share-copy>复制链接</button>' +
+      '<button type="button" class="share-menu__item" role="menuitem" data-share-text>复制标题和链接</button>' +
+      (canSystemShare
+        ? '<button type="button" class="share-menu__item" role="menuitem" data-share-sys>用其他应用分享…</button>'
+        : '') +
+      '<a class="share-menu__item" role="menuitem" target="_blank" rel="noopener" ' +
+        'href="https://service.weibo.com/share/share.php?url=' +
+        encodeURIComponent(url) + '&title=' + encodeURIComponent(t) + '">分享到微博</a>';
+
     row.innerHTML =
       '<span class="share">' +
         '<button type="button" class="share-btn share-trigger" aria-haspopup="true" aria-expanded="false">' +
           '<span class="share-trigger__ico" aria-hidden="true">↗</span> 分享' +
         '</button>' +
-        '<span class="share-menu" role="menu" hidden>' +
-          '<button type="button" class="share-menu__item" role="menuitem" data-share-copy>复制链接</button>' +
-          '<a class="share-menu__item" role="menuitem" target="_blank" rel="noopener" ' +
-            'href="https://connect.qq.com/widget/shareqq/index.html?url=' +
-            encodeURIComponent(url) + '&title=' + encodeURIComponent(t) + '">分享到 QQ</a>' +
-          '<a class="share-menu__item" role="menuitem" target="_blank" rel="noopener" ' +
-            'href="https://service.weibo.com/share/share.php?url=' +
-            encodeURIComponent(url) + '&title=' + encodeURIComponent(t) + '">分享到微博</a>' +
-        '</span>' +
+        '<span class="share-menu" role="menu" hidden>' + items + '</span>' +
       '</span>';
     host.appendChild(row);
 
@@ -3152,6 +3155,38 @@
         trigger.focus();
       }
     });
+
+    var copyTextBtn = row.querySelector('[data-share-text]');
+    if (copyTextBtn) {
+      copyTextBtn.addEventListener('click', function () {
+        var text = t + '\n' + url;
+        var done = function () {
+          copyTextBtn.textContent = '已复制';
+          setTimeout(function () {
+            copyTextBtn.textContent = '复制标题和链接';
+            shut();
+          }, 900);
+        };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(done, done);
+        } else {
+          var ta = document.createElement('textarea');
+          ta.value = text;
+          document.body.appendChild(ta);
+          ta.select();
+          try { document.execCommand('copy'); } catch (e) {}
+          document.body.removeChild(ta);
+          done();
+        }
+      });
+    }
+
+    var sysBtn = row.querySelector('[data-share-sys]');
+    if (sysBtn && navigator.share) {
+      sysBtn.addEventListener('click', function () {
+        navigator.share({ title: t, text: t, url: url }).then(shut, function () {});
+      });
+    }
 
     var copyBtn = row.querySelector('[data-share-copy]');
     copyBtn.addEventListener('click', function () {
