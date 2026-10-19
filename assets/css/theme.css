@@ -31,6 +31,7 @@
   --text:      #14161a;
   --text-dim:  #5b616b;
   --text-mute: #8b919b;
+  --body-ink:  #2b3038;   /* 正文：深灰，比 --text-dim 清楚 */
 
   /* 强调色：终末地是黑 + 黄 */
   --ink:       #1a1c20;   /* 实心黑：主按钮、标签底 */
@@ -128,6 +129,7 @@
     --text:      #eef1f5;
     --text-dim:  #a8b0bb;
     --text-mute: #767e89;
+    --body-ink:  #c9cfd8;
 
     --ink:       #f0f2f5;
     --ink-fg:    #0e1013;
@@ -198,6 +200,7 @@ html[data-theme="light"] {
   --text:      #14161a;
   --text-dim:  #5b616b;
   --text-mute: #8b919b;
+  --body-ink:  #2b3038;   /* 正文：深灰，比 --text-dim 清楚 */
   --ink:       #1a1c20;
   --ink-fg:    #ffffff;
   --gold:      #61a5ff;
@@ -255,6 +258,7 @@ html[data-theme="dark"] {
   --text:      #eef1f5;
   --text-dim:  #a8b0bb;
   --text-mute: #767e89;
+  --body-ink:  #c9cfd8;
   --ink:       #f0f2f5;
   --ink-fg:    #0e1013;
   --gold:      #7fb6ff;

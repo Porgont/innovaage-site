@@ -1189,10 +1189,10 @@ html[data-theme="dark"] .tag--diamond { color: var(--gold); }
 }
 
 .work-intro p {
-  color: var(--text-dim);
-  font-size: 15px;
-  line-height: 1.9;
-  margin: 0 0 1.1em;
+  color: var(--body-ink, #2b3038);
+  font-size: 17px;
+  line-height: 1.95;
+  margin: 0 0 1.15em;
 }
 
 /* 首段稍微放大一点，做出层次 */
@@ -4045,10 +4045,10 @@ html.is-searching { overflow: hidden; }
 
 /* 小站式作品页里每一节的内容排布 */
 .ms-section__body > p {
-  margin: 0 0 16px;
-  font-size: 15.5px;
-  line-height: 1.95;
-  color: var(--text-dim);
+  margin: 0 0 18px;
+  font-size: 17px;
+  line-height: 2;
+  color: var(--body-ink, #2b3038);
 }
 
 .ms-section__body > p:last-child { margin-bottom: 0; }
