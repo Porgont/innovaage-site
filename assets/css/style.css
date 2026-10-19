@@ -4482,27 +4482,35 @@ td code { white-space: nowrap; }
 main { counter-reset: sec; }
 
 .section-head {
+  position: relative;
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
   column-gap: 14px;
   row-gap: 9px;
   margin-bottom: 34px;
-  padding: 24px 0 3px 16px;
+  padding: 22px 24px 20px;
+  background: var(--panel);
+  border: 1px solid var(--line);
   border-left: 3px solid var(--gold);
+  border-radius: var(--radius);
   counter-increment: sec;
+  transition: border-color .16s ease, box-shadow .18s ease;
 }
 
-/* 标题上方一条贯穿细线，档案分隔的感觉 */
-.section-head::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  height: 1px;
-  background: var(--line);
+/* 和公告卡片一样：描边加深 + 一层投影 */
+.section-head:hover {
+  border-color: var(--line-2);
+  border-left-color: var(--gold);
+  box-shadow: 0 10px 26px rgba(12, 14, 18, .10);
 }
+
+[data-theme="dark"] .section-head:hover {
+  box-shadow: 0 10px 26px rgba(0, 0, 0, .45);
+}
+
+/* 白底面板自己就有边框，原来那条贯穿细线不要了 */
+.section-head::after { display: none; }
 
 .section-head::before {
   content: "— " counter(sec, decimal-leading-zero);
