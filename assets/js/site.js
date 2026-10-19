@@ -140,7 +140,7 @@
     }
   ];
 
-  /* 作品主页 —— 在官网上发布的作品，字段与 SHOWCASE 相同。
+  /* 系列作品专题页 —— 在官网上发布的作品，字段与 SHOWCASE 相同。
      作品页默认打开的就是这一栏。 */
   var SHOWCASE_HOME = [
     {
@@ -1738,10 +1738,10 @@
       renderWorks(mainHost, list, '作品还在整理中。');
     }
 
-    // 作品主页（作品页默认栏）：在官网发布的作品
+    // 系列作品专题页（作品页默认栏）：在官网发布的作品
     renderWorks($('#showcase-home'), SHOWCASE_HOME, '目前还没有在官网发布的作品。有作品在这里首发时，会先出现在这一栏。');
 
-    // 首页「作品主页」：同一份数据，首页按 data-limit 只显示前几件
+    // 首页「系列作品专题页」：同一份数据，首页按 data-limit 只显示前几件
     var homeOnline = $('#showcase-online');
     if (homeOnline) {
       var onlineLimit = parseInt(homeOnline.getAttribute('data-limit'), 10);
@@ -1991,7 +1991,7 @@
     var shots = $('#work-shots');
     var shotsSection = shots ? shots.closest('section') : null;
 
-    // 作品主页（SHOWCASE_HOME）里的作品一律不列截图 —— 图片都直接插在正文对应位置。
+    // 系列作品专题页（SHOWCASE_HOME）里的作品一律不列截图 —— 图片都直接插在正文对应位置。
     // 这条是硬规则，写在代码里，不靠数据里记得清空 shots。
     var isSiteWork = SHOWCASE_HOME.some(function (it) { return it.id === work.id; });
     var shotList = isSiteWork ? [] : (work.shots || []);
@@ -2352,7 +2352,7 @@
   }
 
 
-  /* ---------- 作品主页：小站式作品详情 ----------
+  /* ---------- 系列作品专题页：小站式作品详情 ----------
      work-rich.html?id=xxx 用。和普通详情页不同的是：
      顶部大图 + 目录 + 每一节做成卡片 + 图片可放大 + 链接集中到底部。 */
   function initRichWork() {
@@ -2573,7 +2573,7 @@
   }
 
   /* ---------- 页面内目录高亮 ----------
-     长页面（作品主页）顶部的目录条：滚动到哪一节，对应项就高亮。 */
+     长页面（系列作品专题页）顶部的目录条：滚动到哪一节，对应项就高亮。 */
   function initAnchorToc() {
     var toc = $('.ms-toc');
     if (!toc) return;
