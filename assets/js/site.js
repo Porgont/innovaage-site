@@ -1885,10 +1885,8 @@
       var title = g.title
         ? '<p class="work-links__title">' + esc(g.title) + '</p>'
         : '';
-      // solid: true 的组用实心按钮（黑底白字），没写的沿用描边
-      var btnClass = g.solid
-        ? 'btn btn--sm work-links__solid'
-        : 'btn btn--ghost btn--sm';
+      // 正文外链用自己的一套「链接块」，和返回、换页那种小按钮区分开
+      var btnClass = g.solid ? 'work-link work-link--solid' : 'work-link';
       var row = (g.items || []).map(function (it) {
         return '<a class="' + btnClass + '" href="' + esc(it.href) + '" ' +
           'target="_blank" rel="noopener">' + esc(it.label) + '</a>';
