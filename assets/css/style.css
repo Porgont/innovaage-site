@@ -4007,9 +4007,23 @@ html.is-searching { overflow: hidden; }
   align-items: baseline;
   gap: 12px;
   margin-bottom: 26px;
-  padding: 18px 0 0 16px;
+  padding: 18px 22px 18px 20px;
+  background: var(--panel);
+  border: 1px solid var(--line);
   border-left: 3px solid var(--gold);
-  border-top: 1px solid var(--line);
+  border-radius: var(--radius);
+  transition: border-color .16s ease, box-shadow .18s ease;
+}
+
+/* 和区块标题条、公告卡片同一套悬停：描边加深 + 一层投影，不上浮 */
+.ms-head:hover {
+  border-color: var(--line-2);
+  border-left-color: var(--gold);
+  box-shadow: 0 10px 26px rgba(12, 14, 18, .10);
+}
+
+[data-theme="dark"] .ms-head:hover {
+  box-shadow: 0 10px 26px rgba(0, 0, 0, .45);
 }
 
 .ms-head__no {
