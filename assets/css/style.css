@@ -2621,6 +2621,24 @@ input[type="range"]::-webkit-slider-thumb {
   color: var(--text);
 }
 
+.work-band__badge {
+  display: inline-block;
+  margin-left: 10px;
+  padding: 2px 9px;
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  line-height: 1.5;
+  color: #fff;
+  background: #f5c518;
+  border-radius: 2px;
+  vertical-align: middle;
+  transform: translateY(-2px);
+}
+
+.work-band:hover .work-band__badge { color: #fff; }
+
 .work-band__desc {
   font-size: 14px;
   line-height: 1.75;
