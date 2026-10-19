@@ -304,9 +304,13 @@ code {
 
 .theme-toggle:hover {
   color: var(--text);
-  border-color: var(--line-strong);
+  border-color: var(--gold);
   background: var(--bg-2);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(12, 14, 18, .12);
 }
+
+.theme-toggle:active { transform: translateY(0); box-shadow: none; }
 
 .theme-toggle .ico {
   font-size: 15px;
@@ -340,7 +344,22 @@ code {
   transition: transform .1s ease, opacity .15s ease, background-color .15s ease;
 }
 
-.btn:hover { opacity: .86; border-bottom-color: var(--btn-border); }
+.btn:hover {
+  opacity: .96;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(12, 14, 18, .16);
+  border-bottom-color: var(--btn-border);
+}
+
+.btn--ghost:hover {
+  border-color: var(--gold);
+}
+
+/* 和卡片一致的按下反馈：回落到原位并收掉投影 */
+.btn:active {
+  transform: translateY(0);
+  box-shadow: var(--btn-shadow);
+}
 .btn:active { transform: translateY(1px); }
 
 .btn--ghost {
@@ -701,8 +720,19 @@ html[data-theme="dark"] .tag--diamond { color: var(--gold); }
 
 .work:hover {
   transform: translateY(-2px);
-  box-shadow: 0 14px 32px rgba(12, 14, 18, .12);
-  border-color: var(--band-accent, var(--gold));
+  box-shadow: 0 12px 28px rgba(12, 14, 18, .12);
+  border-color: var(--line-2);
+  border-left-color: var(--gold);
+}
+
+/* 和翻页卡同一套：矩形本身描金边、带一点浮起的投影 */
+.work-media {
+  transition: box-shadow .18s ease, border-color .16s ease;
+}
+
+.work:hover .work-media {
+  border-bottom-color: var(--gold);
+  box-shadow: inset 0 0 0 2px var(--gold), 0 8px 18px -6px rgba(12, 14, 18, .18);
 }
 
 .work:hover .work-media img { transform: scale(1.04); }
@@ -2252,6 +2282,14 @@ input[type="range"]::-webkit-slider-thumb {
 /* 长网址（如 GitHub 仓库地址）在窄栏里降一档字号，断行好看些 */
 .contact-item .info b.is-long { font-size: 13px; line-height: 1.5; }
 
+.copy-btn:hover {
+  transform: translateY(-2px);
+  border-color: var(--gold);
+  box-shadow: 0 8px 18px rgba(12, 14, 18, .12);
+}
+
+.copy-btn:active { transform: translateY(0); box-shadow: none; }
+
 .copy-btn {
   flex-shrink: 0;
   padding: 7px 13px;
@@ -2622,9 +2660,19 @@ input[type="range"]::-webkit-slider-thumb {
 }
 
 .work-band:hover {
-  border-color: var(--band-accent, var(--gold));
-  box-shadow: 0 14px 32px rgba(12, 14, 18, .12);
+  border-color: var(--line-2);
+  border-left-color: var(--gold);
+  box-shadow: 0 12px 28px rgba(12, 14, 18, .12);
   transform: translateY(-2px);
+}
+
+.work-band__media {
+  transition: box-shadow .18s ease, border-color .16s ease;
+}
+
+.work-band:hover .work-band__media {
+  border-right-color: var(--gold);
+  box-shadow: inset 0 0 0 2px var(--gold), 0 8px 18px -6px rgba(12, 14, 18, .18);
 }
 
 .work-band:hover .work-band__media img { transform: scale(1.04); }
@@ -2839,6 +2887,29 @@ h1 em,
   :root:not([data-theme="light"]) .hero h1 em,
   :root:not([data-theme="light"]) .hero-title em {
     background: linear-gradient(transparent 58%, #d8ac12 58%);
+  }
+}
+
+/* 按钮悬停统一：和翻页卡、封面矩形同一套 */
+.btn,
+.copy-btn,
+.search-open,
+.share-btn {
+  transition:
+    transform var(--dur-fast, .18s) var(--ease-out, ease),
+    box-shadow var(--dur-fast, .18s) var(--ease-out, ease),
+    border-color .16s ease,
+    background-color .16s ease,
+    opacity .15s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn:hover, .btn:active,
+  .copy-btn:hover, .copy-btn:active,
+  .search-open:hover, .search-open:active,
+  .share-btn:hover, .share-btn:active {
+    transform: none;
+    box-shadow: none;
   }
 }
 
@@ -3072,7 +3143,13 @@ img.img-loaded {
   transition: border-color .16s ease, color .16s ease;
 }
 
-.search-open:hover { border-color: var(--gold); }
+.search-open:hover {
+  border-color: var(--gold);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(12, 14, 18, .12);
+}
+
+.search-open:active { transform: translateY(0); box-shadow: none; }
 
 .search-open__ico { font-size: 15px; line-height: 1; }
 
@@ -3244,7 +3321,11 @@ html.is-searching { overflow: hidden; }
 .share-btn:hover {
   border-color: var(--gold);
   background: var(--gold-soft);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(12, 14, 18, .12);
 }
+
+.share-btn:active { transform: translateY(0); box-shadow: none; }
 
 /* 分享：一个按钮 + 弹出菜单 */
 .share {
