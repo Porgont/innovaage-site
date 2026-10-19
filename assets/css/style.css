@@ -6725,3 +6725,96 @@ body.nav-open .site-footer {
   main, .site-footer { transition: none; }
   body.nav-open main, body.nav-open .site-footer { filter: none; }
 }
+
+/* ---------- 手机端菜单：苹果式整屏推下 ----------
+   复用原来的 checkbox 抽屉，只换成整屏排版与大字号链接。 */
+@media (max-width: 800px) {
+  .mnav-toggle:checked ~ .mnav-overlay { display: none !important; }
+
+  .mnav-toggle:checked ~ .mnav-drawer {
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: auto;
+    padding: 0;
+    gap: 0;
+    background: var(--bg);
+    border-left: 0;
+    box-shadow: none;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    animation: mnav-slide .42s var(--ease-out, cubic-bezier(.16, 1, .3, 1));
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  @keyframes mnav-slide {
+    from { transform: translateY(-100%); opacity: .7; }
+    to   { transform: translateY(0); opacity: 1; }
+  }
+
+  .mnav-head {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    padding: 16px 20px;
+    margin: 0;
+    background: var(--bg);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .mnav-title {
+    font-size: 11px;
+    letter-spacing: .2em;
+  }
+
+  .mnav-close {
+    width: 36px;
+    height: 36px;
+    font-size: 24px;
+  }
+
+  .mnav-links {
+    display: block;
+    padding: 10px 20px 24px;
+  }
+
+  .mnav-group {
+    margin: 28px 0 6px;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--text-mute);
+  }
+
+  .mnav-links a {
+    display: block;
+    padding: 7px 0;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -.01em;
+    color: var(--text);
+    border: 0 !important;
+    border-radius: 0;
+    background: none !important;
+  }
+
+  .mnav-links a.mnav-home {
+    font-size: 27px;
+    padding: 10px 0 14px;
+  }
+
+  .mnav-links a:active { color: var(--gold-dk); }
+
+  .mnav-cta {
+    margin: 26px 20px 44px;
+    display: inline-flex;
+  }
+}
+
+@media (max-width: 800px) and (prefers-reduced-motion: reduce) {
+  .mnav-toggle:checked ~ .mnav-drawer { animation: none; }
+}

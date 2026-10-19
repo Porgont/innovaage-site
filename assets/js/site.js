@@ -3433,6 +3433,43 @@
     panel.setAttribute('aria-hidden', 'true');
     header.appendChild(panel);
 
+
+    /* 手机端抽屉也换成苹果式：分组标题 + 大字号链接，点链接自动收起 */
+    var drawer = document.querySelector('.mnav-links');
+    if (drawer) {
+      var ORDER = [
+        ['works', '作品'],
+        ['news', '公告'],
+        ['tools', '工具箱'],
+        ['join', '加入我们'],
+        ['about', '关于我们']
+      ];
+      var html = '<a class="mnav-home" href="index.html">首页</a>';
+      var seenAll = {};
+      ORDER.forEach(function (pair) {
+        var cols = NAV_MENUS[pair[0]];
+        if (!cols) return;
+        // 手机上一行只有一条，公告那种长标题放进来会撑成好几行，只留「全部公告」
+        if (pair[0] === 'news') cols = [{ title: cols[0].title, links: cols[0].links.slice(0, 1) }];
+        html += '<p class="mnav-group">' + esc(pair[1]) + '</p>';
+        var seen = {};
+        cols.forEach(function (col) {
+          col.links.forEach(function (l) {
+            if (seenAll[l.h]) return;
+            seenAll[l.h] = 1;
+            html += '<a href="' + esc(l.h) + '">' + esc(l.t) + '</a>';
+          });
+        });
+      });
+      drawer.innerHTML = html;
+
+      var toggle = document.getElementById('mnav-toggle');
+      drawer.addEventListener('click', function (e) {
+        var a = e.target && e.target.closest ? e.target.closest('a') : null;
+        if (a && toggle) toggle.checked = false;
+      });
+    }
+
     var links = Array.prototype.slice.call(nav.querySelectorAll('a[data-nav]'));
     var openKey = null;
     var timer = null;
