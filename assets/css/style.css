@@ -6354,3 +6354,41 @@ main.overlap-hero {
   .panel, .card, .notice, .contact-item, .steps li { border-color: #bbb; background: #fff; }
   a { border-bottom: 0; }
 }
+
+/* ---------- 封面悬停：放大 + 虚化 ----------
+   注意：上面 img.img-loaded 为了淡入写了 transition: opacity .28s，
+   它会盖掉这里的过渡，所以这两条必须放在文件靠后的位置。 */
+.work-band__media img,
+.work-band__media img.img-loaded {
+  transform-origin: center;
+  transition:
+    transform .5s var(--ease-out, cubic-bezier(.16, 1, .3, 1)),
+    filter .34s ease,
+    opacity .28s ease;
+}
+
+.work-media img,
+.work-media img.img-loaded {
+  transform-origin: center;
+  transition:
+    transform .55s var(--ease-out, cubic-bezier(.16, 1, .3, 1)),
+    filter .34s ease,
+    opacity .28s ease;
+}
+
+.work:hover .work-media img {
+  transform: scale(1.08);
+  filter: blur(2px);
+}
+
+/* 减少动效时连过渡一起关掉（这条要排在最后，不然会被上面的规则盖回来） */
+@media (prefers-reduced-motion: reduce) {
+  .work-band__media img,
+  .work-band:hover .work-band__media img,
+  .work-media img,
+  .work:hover .work-media img {
+    transition: none;
+    transform: none;
+    filter: none;
+  }
+}
