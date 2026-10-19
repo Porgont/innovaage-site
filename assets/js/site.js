@@ -32,6 +32,15 @@
     douyin: '创想时代开发组',          // 抖音账号名
     bilibiliName: '创想时代开发组',    // B 站账号名
     bilibili: 'https://space.bilibili.com/488348167',  // B 站主页链接
+
+    /* 访问量统计：
+       busuanzi  true = 页脚显示「访问 N 次 / 访客 N 人」（不蒜子，免费、不用注册）
+       baiduId   填百度统计的站点 ID（形如 a1b2c3d4e5f6...）就同时上报到百度统计后台
+       两个都要的话就都填 */
+    analytics: {
+      busuanzi: true,
+      baiduId: ''
+    },
     discord: '',                       // Discord 邀请链接
     site: 'https://innovaage.cn',
 
@@ -2682,6 +2691,47 @@
 
   /* ---------- 回到顶部 ----------
      往下滑过一屏才露出来，点一下平滑回顶。 */
+
+  /* ---------- 访问量统计 ----------
+     只在 SITE_CONFIG.analytics 里开了才加载外部脚本，关掉就完全不发请求。 */
+  function initAnalytics() {
+    var cfg = (SITE_CONFIG && SITE_CONFIG.analytics) || {};
+    var loaded = false;
+
+    function script(src) {
+      var s = document.createElement('script');
+      s.src = src;
+      s.async = true;
+      s.referrerPolicy = 'no-referrer-when-downgrade';
+      document.head.appendChild(s);
+      return s;
+    }
+
+    /* 不蒜子：页脚显示累计访问与访客数 */
+    if (cfg.busuanzi) {
+      var bar = document.querySelector('.footer-bottom');
+      if (bar) {
+        var box = document.createElement('span');
+        box.className = 'footer-stats';
+        box.innerHTML =
+          '<span id="busuanzi_container_site_pv">访问 <b id="busuanzi_value_site_pv">—</b> 次</span>' +
+          '<span id="busuanzi_container_site_uv">访客 <b id="busuanzi_value_site_uv">—</b> 人</span>';
+        bar.appendChild(box);
+      }
+      script('https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js');
+      loaded = true;
+    }
+
+    /* 百度统计：填了站点 ID 才上报 */
+    if (cfg.baiduId) {
+      window._hmt = window._hmt || [];
+      script('https://hm.baidu.com/hm.js?' + encodeURIComponent(cfg.baiduId));
+      loaded = true;
+    }
+
+    return loaded;
+  }
+
   function initBackToTop() {
     if (document.querySelector('.to-top')) return;
 
@@ -2805,6 +2855,7 @@
     initRichWork();
     initZoomGallery();
     initAnchorToc();
+    initAnalytics();
     initBackToTop();
     initCyberCat();
     initPageTransition();
