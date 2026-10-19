@@ -2468,24 +2468,100 @@ input[type="range"]::-webkit-slider-thumb {
   gap: 18px;
 }
 
-.showcase--bands .topic-band,
-#showcase-home .topic-band,
-#showcase-online .topic-band {
-  min-height: 220px;
+/* 左图右文的横排条目：封面完整显示、不裁切 */
+.work-band {
+  display: grid;
+  grid-template-columns: 320px minmax(0, 1fr);
+  align-items: stretch;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--panel);
+  overflow: hidden;
+  text-decoration: none !important;
+  background-image: none !important;
+  transition: border-color .16s ease;
+}
+
+.work-band:hover { border-color: var(--line-2); }
+
+.work-band__media {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  background: var(--bg-2);
+  border-right: 1px solid var(--line);
+}
+
+.work-band__media img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 188px;
+  object-fit: contain;
+  border-radius: 2px;
+}
+
+.work-band__body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+  padding: 20px 24px;
+}
+
+.work-band__kicker {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--gold-dk);
+}
+
+.work-band__title {
+  font-size: clamp(19px, 2.2vw, 24px);
+  font-weight: 800;
+  letter-spacing: -.01em;
+  color: var(--text);
+}
+
+.work-band__desc {
+  font-size: 14px;
+  line-height: 1.75;
+  color: var(--text-dim);
+}
+
+.work-band__go {
+  align-self: flex-start;
+  margin-top: 4px;
+  padding: 8px 16px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #14161a;
+  background: var(--gold);
+  border-radius: 2px;
 }
 
 @media (max-width: 700px) {
-  .showcase--bands .topic-band,
-  #showcase-home .topic-band,
-  #showcase-online .topic-band {
-    min-height: 180px;
+  .work-band {
+    grid-template-columns: minmax(0, 1fr);
   }
 
-  #showcase-home .topic-band__body,
-  #showcase-online .topic-band__body { padding: 22px 18px; }
+  .work-band__media {
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+    padding: 10px;
+  }
 
-  #showcase-home .topic-band__desc,
-  #showcase-online .topic-band__desc { font-size: 13.5px; }
+  .work-band__media img {
+    max-height: 150px;
+    width: auto;
+    margin: 0 auto;
+  }
+
+  .work-band__body {
+    padding: 16px 18px;
+  }
 }
 
 /* ---------- 赛博撸猫 ---------- */

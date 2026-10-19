@@ -1725,7 +1725,7 @@
   }
 
 
-  /* 系列作品专题页的横幅式列表：一张作品一条通栏大横幅，样式沿用专题页那条 .topic-band */
+  /* 系列作品专题页的横排版式：左侧一张小封面（完整显示不裁切），右侧文字与按钮 */
   function renderWorkBands(host, list, emptyText) {
     if (!host) return;
 
@@ -1738,14 +1738,13 @@
       var cat = CATEGORIES[it.category] || '';
       var href = it.href || (it.id ? 'work-rich.html?id=' + esc(it.id) : '');
       var kicker = [cat, it.meta].filter(Boolean).join(' · ');
-      return '<a class="topic-band" href="' + href + '">' +
-        '<img src="' + esc(it.img) + '" alt="' + esc(it.title) + '" decoding="async">' +
-        '<span class="topic-band__veil" aria-hidden="true"></span>' +
-        '<span class="topic-band__body">' +
-          '<span class="topic-band__kicker">' + esc(kicker) + '</span>' +
-          '<span class="topic-band__title">' + esc(it.title) + '</span>' +
-          (it.desc ? '<span class="topic-band__desc">' + esc(it.desc) + '</span>' : '') +
-          '<span class="topic-band__go">查看详情 →</span>' +
+      return '<a class="work-band" href="' + href + '">' +
+        '<span class="work-band__media"><img src="' + esc(it.img) + '" alt="' + esc(it.title) + '" decoding="async"></span>' +
+        '<span class="work-band__body">' +
+          '<span class="work-band__kicker">' + esc(kicker) + '</span>' +
+          '<span class="work-band__title">' + esc(it.title) + '</span>' +
+          (it.desc ? '<span class="work-band__desc">' + esc(it.desc) + '</span>' : '') +
+          '<span class="work-band__go">查看详情 →</span>' +
         '</span>' +
       '</a>';
     }).join('');
