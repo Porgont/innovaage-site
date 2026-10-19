@@ -2245,6 +2245,32 @@
       // 点背景关闭，点图片本身不关
       if (e.target === box) close();
     });
+
+    /* 手机上左右滑动切换：位移超过 40px 且横向多于纵向才算。
+       两个灯箱入口都会挂监听，这里用 dataset 保证只挂一次，避免一次滑动翻两张。 */
+    (function () {
+      if (box.dataset.swipeReady === '1') return;
+      box.dataset.swipeReady = '1';
+      var startX = 0, startY = 0, tracking = false;
+      box.addEventListener('touchstart', function (e) {
+        if (e.touches.length !== 1) { tracking = false; return; }
+        tracking = true;
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
+      }, { passive: true });
+
+      box.addEventListener('touchend', function (e) {
+        if (!tracking) return;
+        tracking = false;
+        var t = e.changedTouches[0];
+        if (!t) return;
+        var dx = t.clientX - startX;
+        var dy = t.clientY - startY;
+        if (Math.abs(dx) < 40 || Math.abs(dx) < Math.abs(dy) * 1.4) return;
+        if (typeof step === 'function') step(dx < 0 ? 1 : -1);
+      }, { passive: true });
+    })();
+
     document.addEventListener('keydown', function (e) {
       if (box.hidden) return;
       if (e.key === 'Escape') close();
@@ -2322,6 +2348,29 @@
     box.addEventListener('click', function (e) {
       if (e.target === box) close();
     });
+    /* 同一个 #lightbox，滑动监听共用上面那套开关 */
+    (function () {
+      if (box.dataset.swipeReady === '1') return;
+      box.dataset.swipeReady = '1';
+      var startX = 0, startY = 0, tracking = false;
+      box.addEventListener('touchstart', function (e) {
+        if (e.touches.length !== 1) { tracking = false; return; }
+        tracking = true;
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
+      }, { passive: true });
+      box.addEventListener('touchend', function (e) {
+        if (!tracking) return;
+        tracking = false;
+        var t = e.changedTouches[0];
+        if (!t) return;
+        var dx = t.clientX - startX;
+        var dy = t.clientY - startY;
+        if (Math.abs(dx) < 40 || Math.abs(dx) < Math.abs(dy) * 1.4) return;
+        step(dx < 0 ? 1 : -1);
+      }, { passive: true });
+    })();
+
     document.addEventListener('keydown', function (e) {
       if (box.hidden) return;
       if (e.key === 'Escape') close();
@@ -2891,7 +2940,8 @@
 
   function initSearch() {
     var bar = document.querySelector('.site-header .bar');
-    if (!bar) return;
+    var slot = document.querySelector('[data-search-slot]');
+    if (!bar && !slot) return;
 
     var trigger = document.createElement('button');
     trigger.type = 'button';
@@ -2899,8 +2949,13 @@
     trigger.setAttribute('aria-label', '搜索站内内容');
     trigger.setAttribute('title', '搜索（快捷键 /）');
     trigger.innerHTML = '<span class="search-open__ico" aria-hidden="true">⌕</span><span class="search-open__label">搜索</span>';
-    var anchor = bar.querySelector('.theme-toggle');
-    bar.insertBefore(trigger, anchor || null);
+    if (bar) {
+      var anchor = bar.querySelector('.theme-toggle');
+      bar.insertBefore(trigger, anchor || null);
+    } else {
+      trigger.classList.add('search-open--inline');
+      slot.appendChild(trigger);
+    }
 
     var modal = document.createElement('div');
     modal.className = 'search-modal';
@@ -2941,11 +2996,37 @@
       if (lastFocus && lastFocus.focus) lastFocus.focus();
     }
 
+    /* 把命中的词在标题里标黄 */
+    function highlight(text, terms) {
+      var html = esc(text);
+      terms.forEach(function (t) {
+        if (!t) return;
+        var safe = t.replace(/[.*+?^${}()|[\]\\]/g, '\\    function render(q) {');
+        html = html.replace(new RegExp('(' + safe + ')', 'gi'), '<mark class="search-hit__hl">$1</mark>');
+      });
+      return html;
+    }
+
+    /* 首页与空态都能点的常用入口 */
+    function hotList(label) {
+      var picks = [
+        { t: '无人区跑酷', u: 'work-rich.html?id=uransch' },
+        { t: '梦海旅者', u: 'mengsea.html' },
+        { t: '全部作品', u: 'works.html' },
+        { t: '最新公告', u: 'news.html' },
+        { t: '加入我们', u: 'join.html' }
+      ];
+      return '<p class="search-hint search-hint--inline">' + esc(label) + '</p>' +
+        '<div class="search-hot">' + picks.map(function (p) {
+          return '<a class="search-hot__item" href="' + esc(p.u) + '">' + esc(p.t) + '</a>';
+        }).join('') + '</div>';
+    }
+
     function render(q) {
       var terms = q.toLowerCase().split(/\s+/).filter(Boolean);
       active = -1;
       if (!terms.length) {
-        results.innerHTML = '<p class="search-empty">输入作品名、公告标题或关键词试试</p>';
+        results.innerHTML = hotList('试试这几个');
         return;
       }
       var hits = index.filter(function (it) {
@@ -2958,14 +3039,14 @@
       }).slice(0, 12);
 
       if (!hits.length) {
-        results.innerHTML = '<p class="search-empty">没找到「' + esc(q) + '」，换个词试试</p>';
+        results.innerHTML = '<p class="search-empty">没找到「' + esc(q) + '」</p>' + hotList('也可能是想找这些');
         return;
       }
 
       results.innerHTML = hits.map(function (it, i) {
         return '<a class="search-hit" href="' + esc(it.url) + '" data-i="' + i + '">' +
           '<span class="search-hit__kind">' + esc(it.kind) + '</span>' +
-          '<span class="search-hit__title">' + esc(it.title) + '</span>' +
+          '<span class="search-hit__title">' + highlight(it.title, terms) + '</span>' +
         '</a>';
       }).join('');
     }
@@ -3017,6 +3098,15 @@
         encodeURIComponent(url) + '&title=' + encodeURIComponent(t) + '">微博</a>';
     host.appendChild(row);
 
+    var cfg = (SITE_CONFIG && SITE_CONFIG.analytics) || {};
+    if (cfg.busuanzi) {
+      var seen = document.createElement('span');
+      seen.className = 'share-row__views';
+      seen.id = 'busuanzi_container_page_pv';
+      seen.innerHTML = '本页浏览 <b id="busuanzi_value_page_pv">—</b> 次';
+      row.appendChild(seen);
+    }
+
     var btn = row.querySelector('[data-share-copy]');
     btn.addEventListener('click', function () {
       var done = function () {
@@ -3055,6 +3145,33 @@
     window.addEventListener('load', function () {
       navigator.serviceWorker.register('sw.js').catch(function () {});
     });
+  }
+
+
+  /* ---------- 滚动进场 ----------
+     只给「首屏看不到的大块」加淡入上移，避免长页一屏一屏地刷出来太花。
+     元素标签也是这里加的：脚本没跑起来就完全不会隐藏任何内容。 */
+  function initReveal() {
+    if (!('IntersectionObserver' in window)) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    var targets = $$('.section-head, .showcase > *, .work-band, .topic-band, .panel, .work-pager, .ms-shots, .officer');
+
+    targets.forEach(function (el, i) {
+      if (el.closest('.hero')) return;
+      el.setAttribute('data-reveal', '');
+      el.style.setProperty('--reveal-delay', (i % 4) * 60 + 'ms');
+    });
+
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        en.target.classList.add('is-in');
+        io.unobserve(en.target);
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.06 });
+
+    targets.forEach(function (el) { io.observe(el); });
   }
 
   function initBackToTop() {
@@ -3182,6 +3299,7 @@
     initAnchorToc();
     initAnalytics();
     initSearch();
+    initReveal();
     initPwa();
     initBackToTop();
     initCyberCat();
