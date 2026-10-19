@@ -2588,11 +2588,11 @@
     });
 
     function renderItem(b) {
-      if (typeof b === 'string') return '<p>' + esc(b) + '</p>';
+      if (typeof b === 'string') return '<p>' + escMark(b) + '</p>';
 
       if (b.list) {
         return '<ul class="feature-list">' + b.list.map(function (li) {
-          return '<li>' + esc(li) + '</li>';
+          return '<li>' + escMark(li) + '</li>';
         }).join('') + '</ul>';
       }
 
