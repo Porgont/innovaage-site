@@ -3466,6 +3466,7 @@
       place();
       panel.classList.add('is-open');
       panel.setAttribute('aria-hidden', 'false');
+      document.body.classList.add('nav-open');
       links.forEach(function (a) {
         a.classList.toggle('is-open', a.getAttribute('data-nav') === key);
       });
@@ -3476,6 +3477,7 @@
       timer = setTimeout(function () {
         panel.classList.remove('is-open');
         panel.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('nav-open');
         links.forEach(function (a) { a.classList.remove('is-open'); });
         openKey = null;
       }, delay || 120);
