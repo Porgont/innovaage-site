@@ -3029,6 +3029,31 @@ html.is-searching { overflow: hidden; }
   border-top: 1px solid var(--line);
 }
 
+/* 放在「返回」那一行里时：站到右端，去掉分隔线 */
+.work-back--share {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.work-back--share .share-row {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  justify-content: flex-end;
+}
+
+@media (max-width: 700px) {
+  .work-back--share {
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .work-back--share .share-row { justify-content: flex-start; }
+}
+
 .share-row__label {
   font-family: var(--mono);
   font-size: 11px;

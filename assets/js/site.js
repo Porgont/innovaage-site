@@ -2137,8 +2137,8 @@
       }
     }
 
-    // 分享与结构化数据
-    addShareRow($('#work-intro') || host, work.name);
+    // 分享与结构化数据（分享放在页面右上角）
+    mountShare(work.name);
     injectJsonLd({
       '@context': 'https://schema.org',
       '@type': 'CreativeWork',
@@ -2685,7 +2685,7 @@
       host.appendChild(pager);
     }
 
-    addShareRow(host, work.name);
+    mountShare(work.name);
     injectJsonLd({
       '@context': 'https://schema.org',
       '@type': 'CreativeWork',
@@ -3125,6 +3125,19 @@
         done();
       }
     });
+  }
+
+  /* 详情页的分享放在「返回」那一行的右端（页面右上角）；
+     没有那一行时退回页面顶部的内容区。 */
+  function mountShare(title) {
+    var back = document.querySelector('.work-back');
+    if (back) {
+      back.classList.add('work-back--share');
+      addShareRow(back, title);
+      return;
+    }
+    var top = document.querySelector('.article-meta') || document.querySelector('.page-head') || document.querySelector('main .wrap');
+    if (top) addShareRow(top, title);
   }
 
   /* ---------- 结构化数据 ----------
