@@ -3228,6 +3228,22 @@
     if (top) addShareRow(top, title);
   }
 
+
+  /* 作品类页面兜底：只要带「返回」那一行又没有分享，就补一个。
+     覆盖梦海旅者、创想之都各页这类手写页面（work.html / work-rich.html 各自已经挂过了）。 */
+  function initDetailShare() {
+    if (document.querySelector('.share-row')) return;
+    if (document.body.getAttribute('data-page') !== 'works') return;
+    var back = document.querySelector('.work-back');
+    if (!back) return;
+
+    var h1 = document.querySelector('h1');
+    var title = (h1 && h1.textContent.trim()) || document.title.split('|')[0].trim();
+    if (!title) return;
+
+    mountShare(title);
+  }
+
   /* ---------- 结构化数据 ----------
      让搜索引擎知道这页是什么，而不是只看到一堆 HTML。 */
   function injectJsonLd(obj) {
@@ -3396,6 +3412,7 @@
     initShowcase();
     initWorkDetail();
     initRichWork();
+    initDetailShare();
     initZoomGallery();
     initAnchorToc();
     initAnalytics();
