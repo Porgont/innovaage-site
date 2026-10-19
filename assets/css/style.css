@@ -903,7 +903,7 @@ html[data-theme="dark"] .tag--diamond { color: var(--gold); }
   line-height: 1;
   padding: 6px 10px;
   border-radius: 2px;
-  background: #1b5fd0;
+  background: #3d87f0;
   color: #fff;
   white-space: nowrap;
 }
@@ -2373,7 +2373,7 @@ input[type="range"]::-webkit-slider-thumb {
   line-height: 1.5;
   letter-spacing: .02em;
   color: #fff;
-  background: #1b5fd0;
+  background: #3d87f0;
   border-radius: 3px;
   white-space: nowrap;
 }
@@ -2878,7 +2878,7 @@ h1 em,
 [data-theme="dark"] h1 em,
 [data-theme="dark"] .hero h1 em,
 [data-theme="dark"] .hero-title em {
-  background: linear-gradient(transparent 58%, #3d84f0 58%);
+  background: linear-gradient(transparent 58%, #6aa8fb 58%);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -2886,7 +2886,7 @@ h1 em,
   :root:not([data-theme="light"]) h1 em,
   :root:not([data-theme="light"]) .hero h1 em,
   :root:not([data-theme="light"]) .hero-title em {
-    background: linear-gradient(transparent 58%, #3d84f0 58%);
+    background: linear-gradient(transparent 58%, #6aa8fb 58%);
   }
 }
 
@@ -5616,7 +5616,7 @@ body.is-leaving::after {
   line-height: 1.5;
   letter-spacing: .02em;
   color: #fff;
-  background: #1b5fd0;
+  background: #3d87f0;
   border-radius: 3px;
   vertical-align: 1px;
   white-space: nowrap;

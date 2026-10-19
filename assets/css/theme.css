@@ -35,9 +35,9 @@
   /* 强调色：终末地是黑 + 黄 */
   --ink:       #1a1c20;   /* 实心黑：主按钮、标签底 */
   --ink-fg:    #ffffff;   /* 黑底上的字 */
-  --gold:      #2f7cf6;   /* 亮蓝：标记线、编号、当前态（工作室代表色） */
-  --gold-dk:   #1b5fd0;
-  --gold-soft: #eaf1ff;   /* 蓝底浅色块 */
+  --gold:      #61a5ff;   /* 浅蓝：标记线、编号、当前态（工作室代表色） */
+  --gold-dk:   #1f6fe0;
+  --gold-soft: #eef5ff;   /* 蓝底浅色块 */
 
   /* 功能色 */
   --green:     #1f7a45;
@@ -87,14 +87,14 @@
   --btn-ghost-bg:     #ffffff;
   --btn-ghost-fg:     #1a1c20;
   --btn-ghost-border: #1a1c20;
-  --btn-gold-bg:     #2f7cf6;
-  --btn-gold-fg:     #ffffff;
-  --btn-gold-border: #1b5fd0;
+  --btn-gold-bg:     #61a5ff;
+  --btn-gold-fg:     #10161f;
+  --btn-gold-border: #3d87f0;
 
   /* 输入框 */
   --input-bg:     #ffffff;
   --input-border: #c9ced6;
-  --focus-ring:   rgba(47, 124, 246, .45);
+  --focus-ring:   rgba(97, 165, 255, .45);
 
   /* 顶部导航 */
   --header-bg:     rgba(255, 255, 255, .92);
@@ -105,7 +105,7 @@
   --mark-border: #1a1c20;
 
   --hero-grid:  rgba(20, 22, 26, .05);
-  --hero-wash:  rgba(47, 124, 246, .07);
+  --hero-wash:  rgba(97, 165, 255, .07);
 }
 
 /* ============================================================
@@ -130,9 +130,9 @@
 
     --ink:       #f0f2f5;
     --ink-fg:    #0e1013;
-    --gold:      #5aa2ff;
-    --gold-dk:   #8ab8ff;
-    --gold-soft: #12233f;
+    --gold:      #7fb6ff;
+    --gold-dk:   #b3d2ff;
+    --gold-soft: #16283f;
 
     --green:     #4cb87a;
     --green-dk:  #2f8a55;
@@ -161,13 +161,13 @@
     --btn-ghost-bg:     transparent;
     --btn-ghost-fg:     #eef1f5;
     --btn-ghost-border: #3a414b;
-    --btn-gold-bg:     #3d84f0;
-    --btn-gold-fg:     #ffffff;
-    --btn-gold-border: #8ab8ff;
+    --btn-gold-bg:     #7fb6ff;
+    --btn-gold-fg:     #0b1220;
+    --btn-gold-border: #b3d2ff;
 
     --input-bg:     #16191e;
     --input-border: #3a414b;
-    --focus-ring:   rgba(90, 162, 255, .35);
+    --focus-ring:   rgba(127, 182, 255, .35);
 
     --header-bg:     rgba(14, 16, 19, .9);
     --header-border: #2a2f37;
@@ -176,7 +176,7 @@
     --mark-border: #f0f2f5;
 
     --hero-grid:  rgba(255, 255, 255, .05);
-    --hero-wash:  rgba(90, 162, 255, .06);
+    --hero-wash:  rgba(127, 182, 255, .06);
   }
 }
 
@@ -198,9 +198,9 @@ html[data-theme="light"] {
   --text-mute: #8b919b;
   --ink:       #1a1c20;
   --ink-fg:    #ffffff;
-  --gold:      #2f7cf6;
-  --gold-dk:   #1b5fd0;
-  --gold-soft: #eaf1ff;
+  --gold:      #61a5ff;
+  --gold-dk:   #1f6fe0;
+  --gold-soft: #eef5ff;
   --green:     #1f7a45;
   --green-dk:  #155c33;
   --redstone:  #c0392b;
@@ -225,18 +225,18 @@ html[data-theme="light"] {
   --btn-ghost-bg:     #ffffff;
   --btn-ghost-fg:     #1a1c20;
   --btn-ghost-border: #1a1c20;
-  --btn-gold-bg:     #2f7cf6;
-  --btn-gold-fg:     #ffffff;
-  --btn-gold-border: #1b5fd0;
+  --btn-gold-bg:     #61a5ff;
+  --btn-gold-fg:     #10161f;
+  --btn-gold-border: #3d87f0;
   --input-bg:     #ffffff;
   --input-border: #c9ced6;
-  --focus-ring:   rgba(47, 124, 246, .45);
+  --focus-ring:   rgba(97, 165, 255, .45);
   --header-bg:     rgba(255, 255, 255, .92);
   --header-border: #e4e6ea;
   --mark-bg:     #ffffff;
   --mark-border: #1a1c20;
   --hero-grid:  rgba(20, 22, 26, .05);
-  --hero-wash:  rgba(47, 124, 246, .07);
+  --hero-wash:  rgba(97, 165, 255, .07);
 }
 
 html[data-theme="dark"] {
@@ -254,9 +254,9 @@ html[data-theme="dark"] {
   --text-mute: #767e89;
   --ink:       #f0f2f5;
   --ink-fg:    #0e1013;
-  --gold:      #5aa2ff;
-  --gold-dk:   #8ab8ff;
-  --gold-soft: #12233f;
+  --gold:      #7fb6ff;
+  --gold-dk:   #b3d2ff;
+  --gold-soft: #16283f;
   --green:     #4cb87a;
   --green-dk:  #2f8a55;
   --redstone:  #e2685a;
@@ -281,18 +281,18 @@ html[data-theme="dark"] {
   --btn-ghost-bg:     transparent;
   --btn-ghost-fg:     #eef1f5;
   --btn-ghost-border: #3a414b;
-  --btn-gold-bg:     #3d84f0;
-  --btn-gold-fg:     #ffffff;
-  --btn-gold-border: #8ab8ff;
+  --btn-gold-bg:     #7fb6ff;
+  --btn-gold-fg:     #0b1220;
+  --btn-gold-border: #b3d2ff;
   --input-bg:     #16191e;
   --input-border: #3a414b;
-  --focus-ring:   rgba(90, 162, 255, .35);
+  --focus-ring:   rgba(127, 182, 255, .35);
   --header-bg:     rgba(14, 16, 19, .9);
   --header-border: #2a2f37;
   --mark-bg:     #15181d;
   --mark-border: #f0f2f5;
   --hero-grid:  rgba(255, 255, 255, .05);
-  --hero-wash:  rgba(90, 162, 255, .06);
+  --hero-wash:  rgba(127, 182, 255, .06);
 }
 
 /* 切换主题时：颜色瞬时切换（不走 transition —— 整页过渡在部分渲染环境下会停在
