@@ -5905,7 +5905,17 @@ body.is-leaving::after {
    右边一串「中文 英文」并排的细字导航，整体贴边不居中。 */
 .site-header .bar {
   max-width: none;
-  padding: 0 clamp(16px, 2.2vw, 44px);
+  padding: 0 clamp(16px, 2.2vw, 200px);
+}
+
+/* 超宽屏：页眉收窄到和正文同宽，logo 与正文左边缘对齐，右侧按钮对齐右边缘 */
+@media (min-width: 1600px) {
+  .site-header .bar {
+    max-width: calc(var(--maxw) + 48px);
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 24px;
+  }
 }
 
 .brand { gap: 10px; }
