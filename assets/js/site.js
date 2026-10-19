@@ -3082,20 +3082,30 @@
     });
   }
 
-  /* ---------- 分享 ---------- */
+  /* ---------- 分享 ----------
+     平时只露一个按钮，点开才展开三个选项，右上角那行才不占地方。 */
   function addShareRow(host, title) {
     if (!host) return;
     var url = location.href;
     var t = title || document.title;
+
     var row = document.createElement('div');
     row.className = 'share-row';
     row.innerHTML =
-      '<span class="share-row__label">分享</span>' +
-      '<button type="button" class="share-btn" data-share-copy>复制链接</button>' +
-      '<a class="share-btn" target="_blank" rel="noopener" href="https://connect.qq.com/widget/shareqq/index.html?url=' +
-        encodeURIComponent(url) + '&title=' + encodeURIComponent(t) + '">QQ</a>' +
-      '<a class="share-btn" target="_blank" rel="noopener" href="https://service.weibo.com/share/share.php?url=' +
-        encodeURIComponent(url) + '&title=' + encodeURIComponent(t) + '">微博</a>';
+      '<span class="share">' +
+        '<button type="button" class="share-btn share-trigger" aria-haspopup="true" aria-expanded="false">' +
+          '<span class="share-trigger__ico" aria-hidden="true">↗</span> 分享' +
+        '</button>' +
+        '<span class="share-menu" role="menu" hidden>' +
+          '<button type="button" class="share-menu__item" role="menuitem" data-share-copy>复制链接</button>' +
+          '<a class="share-menu__item" role="menuitem" target="_blank" rel="noopener" ' +
+            'href="https://connect.qq.com/widget/shareqq/index.html?url=' +
+            encodeURIComponent(url) + '&title=' + encodeURIComponent(t) + '">分享到 QQ</a>' +
+          '<a class="share-menu__item" role="menuitem" target="_blank" rel="noopener" ' +
+            'href="https://service.weibo.com/share/share.php?url=' +
+            encodeURIComponent(url) + '&title=' + encodeURIComponent(t) + '">分享到微博</a>' +
+        '</span>' +
+      '</span>';
     host.appendChild(row);
 
     var cfg = (SITE_CONFIG && SITE_CONFIG.analytics) || {};
@@ -3107,11 +3117,50 @@
       row.appendChild(seen);
     }
 
-    var btn = row.querySelector('[data-share-copy]');
-    btn.addEventListener('click', function () {
+    var wrap = row.querySelector('.share');
+    var trigger = row.querySelector('.share-trigger');
+    var menu = row.querySelector('.share-menu');
+
+    function shut() {
+      menu.hidden = true;
+      wrap.classList.remove('is-open');
+      trigger.setAttribute('aria-expanded', 'false');
+    }
+
+    function toggle() {
+      var open = menu.hidden;
+      if (!open) { shut(); return; }
+      menu.hidden = false;
+      wrap.classList.add('is-open');
+      trigger.setAttribute('aria-expanded', 'true');
+      var first = menu.querySelector('.share-menu__item');
+      if (first) first.focus();
+    }
+
+    trigger.addEventListener('click', function (e) {
+      e.stopPropagation();
+      toggle();
+    });
+
+    document.addEventListener('click', function (e) {
+      if (!menu.hidden && !wrap.contains(e.target)) shut();
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && !menu.hidden) {
+        shut();
+        trigger.focus();
+      }
+    });
+
+    var copyBtn = row.querySelector('[data-share-copy]');
+    copyBtn.addEventListener('click', function () {
       var done = function () {
-        btn.textContent = '已复制';
-        setTimeout(function () { btn.textContent = '复制链接'; }, 1600);
+        copyBtn.textContent = '已复制';
+        setTimeout(function () {
+          copyBtn.textContent = '复制链接';
+          shut();
+        }, 900);
       };
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(url).then(done, done);
@@ -3124,6 +3173,10 @@
         document.body.removeChild(ta);
         done();
       }
+    });
+
+    menu.querySelectorAll('a').forEach(function (a) {
+      a.addEventListener('click', function () { setTimeout(shut, 120); });
     });
   }
 
