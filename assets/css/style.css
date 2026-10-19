@@ -2519,7 +2519,7 @@ input[type="range"]::-webkit-slider-thumb {
 
 @media (prefers-reduced-motion: reduce) {
   .work-band,
-  .work-band__media img { transition: none; transform: none; }
+  .work-band__media img { transition: none; transform: none; filter: none; }
 
   .to-top { transition: opacity .15s ease, visibility .15s; transform: none; }
 }
@@ -2675,7 +2675,11 @@ input[type="range"]::-webkit-slider-thumb {
   box-shadow: inset 0 0 0 2px var(--gold), 0 8px 18px -6px rgba(12, 14, 18, .18);
 }
 
-.work-band:hover .work-band__media img { transform: scale(1.04); }
+/* 悬停：封面推近并轻微虚化，像镜头对上去 */
+.work-band:hover .work-band__media img {
+  transform: scale(1.08);
+  filter: blur(2px);
+}
 
 .work-band:hover .work-band__title { color: var(--text); }
 
@@ -2702,6 +2706,8 @@ input[type="range"]::-webkit-slider-thumb {
   height: auto;
   max-height: 188px;
   object-fit: contain;
+  transform-origin: center;
+  transition: transform .5s var(--ease-out, cubic-bezier(.16,1,.3,1)), filter .34s ease;
   border-radius: 2px;
   transition: transform .55s cubic-bezier(.16, 1, .3, 1);
 }
