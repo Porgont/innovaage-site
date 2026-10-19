@@ -3182,6 +3182,49 @@ html.is-searching { overflow: hidden; }
   outline: none;
 }
 
+/* 二维码面板：白底，深浅主题都能扫 */
+.share-qr {
+  padding: 10px 10px 8px;
+  text-align: center;
+  background: #fff;
+  border-radius: 2px;
+}
+
+.share-qr[hidden] { display: none; }
+
+.share-qr__img {
+  width: 156px;
+  height: 156px;
+  margin: 0 auto 6px;
+}
+
+.share-qr__img svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.share-qr__tip {
+  margin: 0;
+  font-size: 11.5px;
+  color: #4b4f56;
+}
+
+.share-qr__back {
+  margin-top: 6px;
+  padding: 5px 10px;
+  font-family: inherit;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #14161a;
+  background: #f2f2f2;
+  border: 1px solid #d8d8d8;
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+.share-qr__back:hover { background: #e9e9e9; }
+
 @media (prefers-reduced-motion: reduce) {
   .share-menu { animation: none; }
 }

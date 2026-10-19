@@ -3093,11 +3093,15 @@
     row.className = 'share-row';
     var canSystemShare = !!(navigator.share && navigator.canShare ? true : navigator.share);
     var items =
-      '<button type="button" class="share-menu__item" role="menuitem" data-share-copy>复制链接</button>' +
-      '<button type="button" class="share-menu__item" role="menuitem" data-share-text>复制标题和链接</button>' +
-      (canSystemShare
-        ? '<button type="button" class="share-menu__item" role="menuitem" data-share-sys>用其他应用分享…</button>'
-        : '');
+      '<span class="share-menu__items">' +
+        '<button type="button" class="share-menu__item" role="menuitem" data-share-copy>复制链接</button>' +
+        '<button type="button" class="share-menu__item" role="menuitem" data-share-text>复制标题和链接</button>' +
+        '<button type="button" class="share-menu__item" role="menuitem" data-share-qr>二维码</button>' +
+        (canSystemShare
+          ? '<button type="button" class="share-menu__item" role="menuitem" data-share-sys>用其他应用分享…</button>'
+          : '') +
+      '</span>' +
+      '<div class="share-qr" hidden></div>';
 
     row.innerHTML =
       '<span class="share">' +
@@ -3125,6 +3129,9 @@
       menu.hidden = true;
       wrap.classList.remove('is-open');
       trigger.setAttribute('aria-expanded', 'false');
+      var box = row.querySelector('.share-qr');
+      var list = row.querySelector('.share-menu__items');
+      if (box && list) { box.hidden = true; box.innerHTML = ''; list.hidden = false; }
     }
 
     function toggle() {
@@ -3152,6 +3159,51 @@
         trigger.focus();
       }
     });
+
+    /* 二维码：点了才去加载 assets/vendor/qrcode.js，平时不下载 */
+    var qrBtn = row.querySelector('[data-share-qr]');
+    var qrBox = row.querySelector('.share-qr');
+    var itemsWrap = row.querySelector('.share-menu__items');
+
+    function qrLoaded() { return typeof window.qrcode === 'function'; }
+
+    function showQr() {
+      if (!qrBox || !itemsWrap) return;
+      itemsWrap.hidden = true;
+      qrBox.hidden = false;
+      qrBox.innerHTML = '<p class="share-qr__tip">正在生成…</p>';
+
+      var draw = function () {
+        try {
+          var qr = window.qrcode(0, 'M');
+          qr.addData(url, 'Byte');
+          qr.make();
+          qrBox.innerHTML =
+            '<div class="share-qr__img">' + qr.createSvgTag({ scalable: true, margin: 2 }) + '</div>' +
+            '<p class="share-qr__tip">扫码打开本页</p>' +
+            '<button type="button" class="share-qr__back">返回</button>';
+          qrBox.querySelector('.share-qr__back').addEventListener('click', function (e) {
+            e.stopPropagation();
+            qrBox.hidden = true;
+            itemsWrap.hidden = false;
+          });
+        } catch (err) {
+          qrBox.innerHTML = '<p class="share-qr__tip">二维码生成失败，换个浏览器试试</p>';
+        }
+      };
+
+      if (qrLoaded()) { draw(); return; }
+
+      var s = document.createElement('script');
+      s.src = 'assets/vendor/qrcode.js';
+      s.onload = draw;
+      s.onerror = function () {
+        qrBox.innerHTML = '<p class="share-qr__tip">二维码脚本加载失败，检查网络后重试</p>';
+      };
+      document.head.appendChild(s);
+    }
+
+    if (qrBtn) qrBtn.addEventListener('click', function (e) { e.stopPropagation(); showQr(); });
 
     var copyTextBtn = row.querySelector('[data-share-text]');
     if (copyTextBtn) {
