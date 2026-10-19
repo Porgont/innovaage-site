@@ -787,15 +787,13 @@
         '<strong>二级域名的使用不限量且不收费。</strong>'
     },
     {
-      id: 'invest-and-audit-rules',
+      id: 'invest-open',
       date: '2026-10-17',
-      title: '开放代投业务，同步公布入室审核条例',
+      title: '开放代投业务',
       color: 'green',
       pin: true,
-      tags: ['招募', '代投', '里程碑'],
+      tags: ['招募', '代投'],
       body:
-        '两件事一起说。\n\n' +
-        '## 一、开放代投业务\n\n' +
         '依托我们庞大的粉丝群体与流量优势，你的作品上架资源中心，能够拿到更高曝光，获得更多玩家浏览下载。' +
         '接收地图、皮肤、材质、光影、功能玩法优质组件，免费 / 付费作品均可投递。\n\n' +
         '- <strong>优势：</strong>粉丝基数大，自带流量加持，助力你的作品被更多玩家看见。\n' +
@@ -803,8 +801,15 @@
         '- 所投组件必须遵守《创想时代开发组投稿条例》。\n' +
         '- 结算规则见群内公告的《创想时代开发组收益结算细则》。\n' +
         '- 以上文件均可在《创想时代开发组投稿问卷》中查阅，加入开发理事会即可详细了解并投递稿件。\n\n' +
-        '代投请加**创想时代开发理事会群：1018260006**。详见 [代投与投稿](join.html#panel-invest)。\n\n' +
-        '## 二、入室审核条例已公布\n\n' +
+        '代投请加**创想时代开发理事会群：1018260006**。详见 [代投与投稿](join.html#panel-invest)。'
+    },
+    {
+      id: 'audit-rules',
+      date: '2026-10-17',
+      title: '入室审核条例已公布',
+      color: 'green',
+      tags: ['招募'],
+      body:
         '如需审核加入我室，请按照 [《创想时代开发组入室审核条例》](https://docs.qq.com/doc/DUEhwRVVmaE1ESUts) ' +
         '中所述流程进行审核，条例中同时也有各部门的介绍。\n\n' +
         '> 注意：阅读理解能力也算做基本素质的一部分，因此需要您**自行阅读条例**；若有疑问请询问群内管理员。\n\n' +
@@ -1184,7 +1189,7 @@
   }
 
   /* ---------- 公告详情页 ----------
-     地址形如 article.html?id=invest-and-audit-rules
+     地址形如 article.html?id=invest-open
      正文、日期、标签都在 ANNOUNCEMENTS 里，这里只负责挑出对应那一条。 */
   function initArticle() {
     var host = $('#article-detail');
@@ -3403,7 +3408,7 @@
         { t: '全部公告', h: 'news.html' }
       ] },
       { title: '近期', links: [
-        { t: '代投业务与入室审核条例', h: 'article.html?id=invest-and-audit-rules' },
+        { t: '代投业务与入室审核条例', h: 'article.html?id=invest-open' },
         { t: '二级域名对全体成员开放', h: 'article.html?id=subdomain-open' },
         { t: '官网开放', h: 'article.html?id=site-launch' }
       ] },
