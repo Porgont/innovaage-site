@@ -3742,8 +3742,9 @@ html.is-searching { overflow: hidden; }
 .ms-toc {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 8px;
-  padding: 14px;
+  gap: 0;
+  padding: 0;
+  overflow: hidden;
   border: 1px solid var(--line);
   border-radius: var(--radius);
   background: var(--panel);
@@ -3753,18 +3754,24 @@ html.is-searching { overflow: hidden; }
   display: flex;
   align-items: baseline;
   gap: 10px;
-  padding: 10px 12px;
-  border: 1px solid transparent;
-  border-radius: 2px;
+  padding: 13px 16px;
   color: var(--text);
   text-decoration: none;
-  transition: background-color .15s ease, border-color .15s ease;
+  background-image: none !important;
+  transition: background-color .15s ease;
+}
+
+/* 分割线：每条（除第一条）左上各一条细线，拼成表格网格，
+   不会和容器的外边框叠成双线 */
+.ms-toc a + a {
+  box-shadow: inset 1px 0 0 var(--line), inset 0 1px 0 var(--line);
 }
 
 .ms-toc a:hover,
 .ms-toc a.is-active {
   background: var(--bg-2);
-  border-color: var(--line-2);
+  box-shadow: inset 1px 0 0 var(--line-2), inset 0 1px 0 var(--line-2);
+  color: var(--gold-dk);
 }
 
 .ms-toc i {
