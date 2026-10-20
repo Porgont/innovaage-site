@@ -814,6 +814,12 @@
   }
 
   /* 简介里允许画黄色下划线的 <span class="mark">，其余一律照旧转义 */
+  /* 正文里的「黄底重点」简写：==这几个字==
+     不写 HTML 也能用，渲染前统一换成站内的 <span class="mark">。 */
+  function markShortcut(s) {
+    return String(s == null ? '' : s).replace(/==([^=\n]+)==/g, '<span class="mark">$1</span>');
+  }
+
   function plain(s) {
     return String(s == null ? '' : s).replace(/<[^>]*>/g, '');
   }
@@ -1119,7 +1125,7 @@
      站外链接自动补 target/rel，保持新窗口打开。
      库没加载出来时退回「按空行分段 + 转义」，至少不会白屏。 */
   function renderMarkdown(src) {
-    var text = String(src == null ? '' : src);
+    var text = markShortcut(String(src == null ? '' : src));
     if (!text.trim()) return '';
 
     var html;
@@ -1891,7 +1897,7 @@
       if (!t) { flushList(); flushImgs(); flushPara(); return; }
 
       var li = /^-\s+(.+)$/.exec(t);
-      if (li) { flushImgs(); flushPara(); list.push(li[1]); return; }
+      if (li) { flushImgs(); flushPara(); list.push(markShortcut(li[1])); return; }
 
       var im = /^!\[([^\]]*)\]\(([^)]+)\)$/.exec(t);
       if (im) { flushList(); flushPara(); imgs.push({ img: im[2], alt: im[1] }); return; }
@@ -1900,7 +1906,7 @@
       if (q) { flushList(); flushImgs(); flushPara(); out.push({ blockquote: q[1] }); return; }
 
       flushList(); flushImgs();
-      para.push(t);
+      para.push(markShortcut(t));
     });
 
     flushList(); flushImgs(); flushPara();
@@ -2027,7 +2033,7 @@
   /* 作品正文里的行内格式：**加粗** 与 [文字](链接)。
      正文其余部分仍然按纯文本处理，避免把 Markdown 全盘解析后版式跑掉。 */
   function inlineWorkMd(s) {
-    var html = escMark(s);
+    var html = escMark(markShortcut(s));
     html = html.replace(/\*\*([^*\n]+)\*\*/g, '<strong>$1</strong>');
     html = html.replace(/\[([^\]\n]+)\]\(([^)\s]+)\)/g, function (m, text, href) {
       var target = /^https?:/i.test(href) ? ' target="_blank" rel="noopener"' : '';
@@ -2068,7 +2074,7 @@
       if (!t) { flushList(); flushImgs(); return; }
 
       var h = /^##\s+(.+)$/.exec(t);
-      if (h) { flushList(); flushImgs(); out.push('<h3 class="work-heading">' + escMark(h[1]) + '</h3>'); return; }
+      if (h) { flushList(); flushImgs(); out.push('<h3 class="work-heading">' + escMark(markShortcut(h[1])) + '</h3>'); return; }
 
       var li = /^-\s+(.+)$/.exec(t);
       if (li) { flushImgs(); list.push(li[1]); return; }
