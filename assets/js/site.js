@@ -2865,7 +2865,7 @@
       html += '<section class="section section--tight ms-section" id="' + anchor + '">' +
         '<div class="wrap">' +
           '<div class="ms-head">' +
-            '<span class="ms-head__no">— ' + String(idx).padStart(2, '0') + '</span>' +
+            '<span class="ms-head__no">' + String(idx).padStart(2, '0') + '</span>' +
             '<h2>' + esc(sec.title) + '</h2>' +
           '</div>' +
           '<div class="ms-section__body">' + sec.items.map(renderItem).join('') + '</div>' +

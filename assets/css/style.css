@@ -7540,3 +7540,265 @@ button:focus-visible,
   outline: 2px solid var(--gold);
   outline-offset: 3px;
 }
+
+
+/* ============================================================
+   区块标题：终末地式编号带（2026-10）
+   左边一块黑底大号数字，右边浅蓝横带里斜杠 + 标题，
+   底下一道虚线；不再用白卡片包一圈。
+   ============================================================ */
+.section-head {
+  display: grid;
+  grid-template-columns: 88px minmax(0, 1fr) auto;
+  grid-template-rows: auto auto;
+  column-gap: 0;
+  row-gap: 0;
+  align-items: stretch;
+  margin-bottom: 34px;
+  padding: 0;
+  background: none;
+  border: 0;
+  border-radius: 0;
+  overflow: visible;
+  counter-increment: sec;
+  clip-path: none;
+}
+
+.section-head::before {
+  content: counter(sec, decimal-leading-zero);
+  grid-row: 1;
+  grid-column: 1;
+  display: grid;
+  place-items: center;
+  min-height: 64px;
+  padding: 6px 0;
+  background: #14161a;
+  color: #fff;
+  font-family: var(--mono);
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: .04em;
+  line-height: 1;
+}
+
+/* 数字块右侧那截浅蓝带（标题与 kicker 共用，看起来连成一条） */
+.section-head h2,
+.section-head .kicker {
+  background: var(--gold-soft);
+  margin: 0;
+}
+
+.section-head h2 {
+  grid-row: 1;
+  grid-column: 2;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 18px;
+  font-size: 27px;
+  letter-spacing: -.01em;
+  line-height: 1.15;
+}
+
+.section-head h2::before {
+  content: "//";
+  flex: none;
+  font-family: var(--mono);
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  color: var(--gold-dk);
+  transform: translateY(-1px);
+}
+
+.section-head .kicker {
+  grid-row: 1;
+  grid-column: 3;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 16px;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--gold-dk);
+  white-space: nowrap;
+}
+
+/* 底下一道虚线，替代原来那条实心细线 */
+.section-head::after {
+  content: "";
+  display: block;
+  position: static;
+  grid-row: 2;
+  grid-column: 1 / -1;
+  height: 0;
+  margin: 0;
+  border-top: 1px dashed var(--line-2);
+  background: none;
+  transform: none;
+  animation: none;
+}
+
+/* kicker 右端再补一组斜纹，和分节标题上的那个呼应 */
+.section-head .kicker::after {
+  content: "";
+  width: 46px;
+  height: 10px;
+  margin-left: 10px;
+  background-image: repeating-linear-gradient(115deg, var(--gold-dk) 0 2px, transparent 2px 8px);
+  opacity: .38;
+}
+
+.section-head p {
+  grid-row: 3;
+  grid-column: 1 / -1;
+  margin: 12px 0 0;
+  padding: 0 2px;
+  font-size: 13.5px;
+  color: var(--text-dim);
+}
+
+.section-head:hover {
+  border-color: transparent;
+  box-shadow: none;
+}
+
+/* 深色主题：数字块反白，浅蓝带用主题里的深蓝 */
+[data-theme="dark"] .section-head::before {
+  background: #eef1f5;
+  color: #14161a;
+}
+
+/* 手机：数字块收窄，kicker 藏到标题下面一行 */
+@media (max-width: 700px) {
+  .section-head {
+    grid-template-columns: 56px minmax(0, 1fr);
+  }
+
+  .section-head::before {
+    min-height: 54px;
+    font-size: 21px;
+  }
+
+  .section-head h2 {
+    padding: 11px 12px;
+    font-size: 20px;
+  }
+
+  .section-head h2::before {
+    font-size: 15px;
+  }
+
+  .section-head .kicker {
+    grid-row: 2;
+    grid-column: 1 / -1;
+    justify-content: flex-start;
+    padding: 6px 12px;
+    font-size: 10px;
+  }
+
+  .section-head::after {
+    grid-row: 3;
+  }
+
+  .section-head p {
+    grid-row: 4;
+    margin-top: 10px;
+  }
+}
+
+/* ---------- 专题页分节标题：同一套编号带 ---------- */
+.ms-head {
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr);
+  align-items: stretch;
+  gap: 0;
+  padding: 0;
+  margin-bottom: 24px;
+  background: none;
+  border: 0;
+  border-radius: 0;
+  overflow: visible;
+}
+
+.ms-head:hover {
+  box-shadow: none;
+  border-color: transparent;
+}
+
+.ms-head__no {
+  display: grid;
+  place-items: center;
+  padding: 4px 0;
+  background: #14161a;
+  color: #fff;
+  font-family: var(--mono);
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: .02em;
+  white-space: nowrap;
+}
+
+[data-theme="dark"] .ms-head__no {
+  background: #eef1f5;
+  color: #14161a;
+}
+
+.ms-head h2 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  padding: 12px 18px;
+  background: var(--gold-soft);
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -.01em;
+}
+
+.ms-head h2::before {
+  content: "//";
+  flex: none;
+  font-family: var(--mono);
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--gold-dk);
+}
+
+.ms-head::after {
+  content: "";
+  grid-column: 1 / -1;
+  border-top: 1px dashed var(--line-2);
+}
+
+/* 分节标题右端一组斜纹装饰，模仿参考图那一排小箭头 */
+.ms-head h2::after {
+  content: "";
+  margin-left: auto;
+  flex: none;
+  width: 64px;
+  height: 14px;
+  background-image: repeating-linear-gradient(115deg, var(--gold) 0 2px, transparent 2px 9px);
+  opacity: .45;
+}
+
+@media (max-width: 700px) {
+  .ms-head h2::after { width: 40px; height: 10px; opacity: .35; }
+}
+
+@media (max-width: 700px) {
+  .ms-head {
+    grid-template-columns: 56px minmax(0, 1fr);
+  }
+
+  .ms-head__no {
+    font-size: 16px;
+  }
+
+  .ms-head h2 {
+    padding: 10px 12px;
+    font-size: 18px;
+  }
+}
