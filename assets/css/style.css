@@ -8663,6 +8663,7 @@ button:focus-visible,
   border-color: transparent;
   border-radius: 0;
   color: var(--text);
+  font-weight: 800;
   font-size: 19px;
   opacity: 1;
   transform: none;
@@ -8682,12 +8683,7 @@ button:focus-visible,
 }
 
 .tabs__ink {
-  background: var(--panel);
-  box-shadow: inset 0 3px 0 var(--gold);
-}
-
-[data-theme="dark"] .tabs__ink {
-  background: #161b21;
+  background: transparent;
   box-shadow: inset 0 3px 0 var(--gold);
 }
 
