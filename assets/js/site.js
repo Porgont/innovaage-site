@@ -3181,6 +3181,7 @@
     { t: '图片处理工具', u: 'tools-image.html', k: '工具 压缩 图片 分辨率 格式 转换' },
     { t: '视频处理工具', u: 'tools-video.html', k: '工具 视频 转码 投稿 规格 录屏' },
     { t: '格式转换工具', u: 'tools-convert.html', k: '工具 转换 mp3 wav pdf word json csv base64' },
+    { t: '投稿包检测', u: 'tools-pack.html', k: '工具 投稿 压缩包 zip 规范 命名 检测 打包' },
     { t: 'MCBE 打包器', u: 'tools-mcbe.html', k: '工具 打包 apk 安卓 mcbe' },
     { t: '材质对比工具 matoga', u: 'tools-matoga.html', k: '工具 材质 对比 matoga 芝世' },
     { t: '加入我们', u: 'join.html', k: '加入 招募 审核 部门 报名 问卷 联系' },
@@ -3728,7 +3729,8 @@
       { title: '常用工具', links: [
         { t: '图片处理', h: 'tools-image.html' },
         { t: '视频处理', h: 'tools-video.html' },
-        { t: '格式转换', h: 'tools-convert.html' }
+        { t: '格式转换', h: 'tools-convert.html' },
+        { t: '投稿包检测', h: 'tools-pack.html' }
       ] },
       { title: '组员作品', links: [
         { t: 'matoga 材质贴图对比', h: 'tools-matoga.html' },

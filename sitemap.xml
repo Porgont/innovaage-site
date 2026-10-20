@@ -96,6 +96,11 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://innovaage.cn/tools-pack.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://innovaage.cn/mengsea.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
