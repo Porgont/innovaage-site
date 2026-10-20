@@ -1,0 +1,282 @@
+{
+  "pages": [
+    {
+      "id": "uransch",
+      "name": "无人区跑酷",
+      "type": "地图 / Map",
+      "displayEn": "URANSCH PARKOUR",
+      "tagline": "箱庭式<span class=\"mark\">中高难度</span>跑酷地图，<span class=\"mark\">56 个关卡</span>，基岩版与 Java 版同玩法",
+      "author": "柑柠",
+      "cover": "assets/img/uransch-cover.jpg",
+      "coverAlt": "无人区跑酷海报：箱庭式跑酷地图的场景拼图",
+      "facts": [
+        {
+          "k": "作品名",
+          "v": "无人区跑酷"
+        },
+        {
+          "k": "作者",
+          "v": "柑柠"
+        },
+        {
+          "k": "技术指导",
+          "v": "脸盆SaMa、Ender_Elaina"
+        },
+        {
+          "k": "类型",
+          "v": "地图 / 跑酷"
+        },
+        {
+          "k": "平台",
+          "v": "Minecraft 基岩版 / Java 版 / 中国版"
+        },
+        {
+          "k": "版本",
+          "v": "基岩版 V14.FN（1.18.30+）／ Java 版 J2.0.1（1.18.2+）"
+        },
+        {
+          "k": "关卡数",
+          "v": "56 关（截至 V14）"
+        },
+        {
+          "k": "难度",
+          "v": "较难"
+        },
+        {
+          "k": "游玩时长",
+          "v": "2 小时以上，多人游玩最佳"
+        },
+        {
+          "k": "中国版名称",
+          "v": "【创想七周年】无人区跑酷V14"
+        }
+      ],
+      "lead": "欢迎游玩无人区跑酷！这里是一款做了七年结果一点也不长的箱庭式跑酷地图！\n\n本地图是一个又臭又长的箱庭式跑酷。箱庭式，顾名思义，便是一个个小盒子内的跑酷。箱庭里有许多以群系、人造建筑或自然建筑为主题的跑酷，你可以在地图中体验到在森林间穿行、于雪山中辗转、在大厦间穿梭等等等内容。\n\n截止到 V14 版本，无人区跑酷已经拥有 56 个关卡。本地图拥有计时器以及暂停界面关卡数显示，在主线关卡通关后会依据您的通关用时而划分等级。\n\n![无人区跑酷海报：第四章第十关 雪山](assets/img/uransch-poster-2.jpg)\n![无人区跑酷海报：关卡场景](assets/img/uransch-poster-3.jpg)",
+      "sections": [
+        {
+          "title": "前言",
+          "body": "本地图分为 BE 版（基岩版）与 JE 版（Java 版）。后者为前者的移植，其功能与玩法、场景等两者均相同。版本号为 V 开头的地图系基岩版，版本号为 J 开头的地图系 Java 版。\n\n- 游玩人数：多人游玩最佳\n- 地图版本号：V14.FN\n- 难度：较难\n- 游玩时间：2 小时+（可能是练过一点跑酷的水平？）\n\n本地图已在我的世界中国版、苦力怕论坛、我的世界中文论坛发布。本地图系列曾于多玩我的世界盒子多次被官方推荐同时广受好评，系列总下载量曾达到 15 万+。\n\n由于作者学业原因，本地图在两年内更新速度将会减缓。"
+        },
+        {
+          "title": "❗ 版本要求",
+          "body": "最新版地图（V14.FN）基岩版支持版本：1.18.30（及以上）。最新版地图（J2.0.1）Java 版版本：1.18.2（及以上）。\n\n注意：Java 版 1.20 及以上版本无法在蜂蜜块边缘起跳，第一章第七关蜂巢依赖该机制，请不要使用 1.20 及以上版本游玩 Java 版无人区跑酷。\n\n该地图同时已发布至我的世界中国版，作品名称为【创想七周年】无人区跑酷V14。"
+        },
+        {
+          "title": "关卡难度总览",
+          "body": "序章：★★☆☆☆☆\n\n第一章：森林 ★★★☆☆☆、沙漠 ★☆☆☆☆☆、冰山 ★★☆☆☆☆、诡异下界 ★★★★☆☆、蹦跳 ★★★★☆☆、山崖 ★★★☆☆☆、蜂巢 ★★★★☆☆\n\n第二章：海底 ★★☆☆☆☆、要塞 ★★★★☆☆、金库 ★★☆☆☆☆、书海 ★★★★☆☆、陶瓦山 ★★☆☆☆☆、羊毛 ★☆☆☆☆☆、沼泽 ★★☆☆☆☆、小城 ★★★☆☆☆、花园 ★★☆☆☆☆、神秘园 ★★☆☆☆☆、黑白 ★★☆☆☆☆、蘑菇 ★★☆☆☆☆\n\n第三章：末地 ★★☆☆☆☆、TNT ★★★☆☆☆、绯红下界 ★★★☆☆☆、陶瓦山二 ★★★★☆☆、矿脉 ★★☆☆☆☆、光 ★★★☆☆☆、小城废墟 ★★★★★★\n\n第四章：冰山二 ★★★☆☆☆、苔石要塞 ★★★☆☆☆、神庙 ★★★☆☆☆、石阵 ★★★★☆☆、镜像 ★★★☆☆☆、要塞二 ★★★★★☆、荒地下界 ★★★☆☆☆、末地二 ★★★☆☆☆、灵魂下界 ★★★☆☆☆、雪山 ★★★★★★、沙漠二 ★★★☆☆☆、海底二 ★★★☆☆☆、三角洲下界 ★★★★☆☆\n\n第五章：潮湿洞穴 ★★★☆☆☆、积雪针叶林 ★☆☆☆☆☆、水晶洞穴 ★★★☆☆☆、黑金矿洞 ★★★★☆☆、垂滴叶蹦蹦蹦 ★★★☆☆☆、工厂 ★★★★★★、活塞 ★★★★☆☆、大厦 ★★★★★★、黑石 ★★★★★★、沙滩 ★★★★★☆、密林 ★★★★★★、古堡 ★★★★★★\n\n节日关卡：中秋节 ★★★★☆☆、植树节 ★★★☆☆☆、春节 ★★★★★☆、圣诞节 ★★★★★☆"
+        },
+        {
+          "title": "通关等级",
+          "body": "主线关卡通关后，按通关用时划分等级：\n\n- 1–3000 秒：S\n- 3000–5400 秒：A\n- 5400–7200 秒：B\n- 7200–9000 秒：C\n- 9000–10800 秒：D\n- 10800 秒及以上：跑酷带尸"
+        },
+        {
+          "title": "历史",
+          "body": "本地图始于 2016 年 12 月，刚开始时是想做一个群系跑酷，群系中只有玩家一人，故取名「无人区」，且当时有配套剧情。此时发布于多玩我的世界盒子。\n\n后续在第二章制作完成后，断更了一段时间。\n\n2018 年，该地图 V3.1 版本被 UP 主「薄海纸鱼」游玩并发布视频，但此 UP 主 2018 年游玩粉丝投稿地图相关的视频目前已被删除，故目前已无法找到当时的视频。\n\n2019 年，地图仍然保留着自己五六年级时低劣制作水平的痕迹，故作者气愤地将第一、第二章进行翻新后并增加了第三章部分关卡。此时便有了 V4；后续又开始更新第四章，有了 V5。\n\n2019 年末，当时已跨入初中，作者认为自己无法继续更新无人区跑酷系列，便想要永久停更该系列地图，后续便于多玩我的世界盒子中发布了 Alpha、Beta、Gamma、MAX、Maxplus、Max2plus 六个版本。后续作者反悔，开始以 V7 的版本号继续更新。以上四个版本后来重新命名为 V6.0（Alpha、Beta）、V6.1、V6.2、V6.3、V6.4。\n\n2020 年 3 月，无人区跑酷 V6.4 正式上架我的世界中国版。\n\n2020 年 6 月，无人区跑酷系列地图多数均申请了官方推荐并通过，至此便迎来无人区跑酷系列最顶峰的时期，下载总量达到 20 万有余。但不久之后，多玩我的世界盒子停服，无人区跑酷只能转移至中国版为阵地。\n\n2021 年 2 月，认为应当找一个地方持续更新无人区跑酷系列的国际版地图，便在 MCBBS 上发布了帖子并持续更新到 2023 年。\n\n注意，本历史不全，仅为重点内容。"
+        },
+        {
+          "title": "更新日志（V 版）",
+          "body": "2024 年 3 月 1 日 V14.1：\n\n- 新增关卡 第五章第十关 沙滩 ★★★★★☆\n- 重置 第一章第一关森林，并将难度提升至 ★★★☆☆☆\n- 更改 第一章第四关诡异下界的路线与场景，难度提升至 ★★★★☆☆\n- 修复序章关卡告示牌错误的问题\n\n2024 年 3 月 9 日 V14.FN.0：新增关卡 第五章第十一关 密林 ★★★★★★；新增关卡 第五章第十二关 古堡 ★★★★★★。\n\n2024 年 3 月 9 日 V14.FN.1：修复了关卡结尾结算缺失的问题。\n\n2024 年 3 月 12 日 V14.FN.2：补上了沙滩、密林、古堡关卡的暂停界面关卡数显示；修复密林关卡藤蔓缺失无法通关的问题。"
+        },
+        {
+          "title": "更新日志（J 版）",
+          "body": "2024 年 3 月 15 日 J2.0.0：新增关卡 第五章第十关 沙滩、第五章第十一关 密林、第五章第十二关 古堡；重置 第一章第一关 森林、第一章第四关 诡异下界。\n\n2024 年 3 月 15 日 J2.0.0.1：修复第一章第一关缺少史莱姆块的问题。\n\n2024 年 3 月 15 日 J2.0.1：修复第一章第五关重生点缺失的问题。\n\n![无人区跑酷截图：游戏内视角](assets/img/uransch-shot-1.jpg)\n![无人区跑酷截图：游戏内视角](assets/img/uransch-shot-2.jpg)\n\n![无人区跑酷截图：游戏内视角](assets/img/uransch-shot-3.jpg)\n![无人区跑酷截图：游戏内视角](assets/img/uransch-shot-4.jpg)\n\n![无人区跑酷截图：游戏内视角](assets/img/uransch-shot-5.jpg)\n![无人区跑酷截图：游戏内视角](assets/img/uransch-shot-6.jpg)\n\n![无人区跑酷截图：游戏内视角](assets/img/uransch-shot-7.jpg)\n![无人区跑酷截图：Java 版游戏内视角](assets/img/uransch-shot-8.jpg)"
+        },
+        {
+          "title": "下载",
+          "body": "",
+          "links": [
+            {
+              "solid": true,
+              "items": [
+                {
+                  "label": "百度网盘（提取码 5645）",
+                  "href": "https://pan.baidu.com/s/1sPVCbdoZAKqKuszGdI15JQ?pwd=5645"
+                },
+                {
+                  "label": "蓝奏云（基岩版，密码 c9f0）",
+                  "href": "https://wwd.lanzoue.com/b03e0780d"
+                },
+                {
+                  "label": "蓝奏云（Java 版，密码 3mqb）",
+                  "href": "https://wwd.lanzoue.com/b03fhs2ef"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "links": [
+        {
+          "title": "发布与实况",
+          "solid": true,
+          "items": [
+            {
+              "label": "苦力怕论坛发布帖",
+              "href": "https://klpbbs.com/thread-131463-1-1.html"
+            },
+            {
+              "label": "B 站 53 分钟全通关",
+              "href": "https://www.bilibili.com/video/BV1124y1G7WR/"
+            }
+          ]
+        },
+        {
+          "title": "我的世界中国版",
+          "solid": true,
+          "items": [
+            {
+              "label": "资源中心：无人区跑酷V14",
+              "href": "https://resource-minecraft.h5.163.com/#/detail?id=4661952103696763810&channel=nearme_vivo"
+            }
+          ]
+        },
+        {
+          "title": "相关主页",
+          "solid": true,
+          "items": [
+            {
+              "label": "作者 B 站空间",
+              "href": "https://space.bilibili.com/308683128"
+            },
+            {
+              "label": "脸盆SaMa B 站空间",
+              "href": "https://space.bilibili.com/383902456"
+            },
+            {
+              "label": "Ender_Elaina B 站空间",
+              "href": "https://space.bilibili.com/361433461"
+            }
+          ]
+        }
+      ],
+      "linksTop": true
+    },
+    {
+      "id": "fangzhen-tech",
+      "name": "仿真工艺系列材质",
+      "type": "材质 / Texture",
+      "displayEn": "REALCRAFT TEXTURE",
+      "tagline": "<span class=\"mark\">风格化写实</span>、偏生存实用向的材质包，<span class=\"mark\">历时近四年</span>制作",
+      "author": "茫帛",
+      "cover": "assets/img/fangzhen-cover.jpg",
+      "coverAlt": "仿真工艺系列材质封面：REALCRAFT 标志与草方块地形",
+      "facts": [
+        {
+          "k": "作品名",
+          "v": "仿真工艺系列材质"
+        },
+        {
+          "k": "作者",
+          "v": "茫帛"
+        },
+        {
+          "k": "类型",
+          "v": "材质 / Texture"
+        },
+        {
+          "k": "平台",
+          "v": "Minecraft 基岩版（网易中国版）/ Java 版"
+        },
+        {
+          "k": "网易版规格",
+          "v": "128x / 256x / 永久更新版 / 远古怀旧版"
+        },
+        {
+          "k": "方块贴图完成度",
+          "v": "80%"
+        },
+        {
+          "k": "RVHD 网易版",
+          "v": "已下架"
+        },
+        {
+          "k": "联系 QQ",
+          "v": "112522280"
+        }
+      ],
+      "lead": "仿真工艺：一款<span class=\"mark\">风格化写实</span>、偏生存实用向的材质包，历时近四年的制作，不断的优化、改进，目前有多种版本可供选择。\n\n繁茂草地拓展包需要 1.21.11 以上版本才能生效；Java 版最佳游玩版本为 1.21.11。目前方块贴图完成度为 80%。",
+      "sections": [
+        {
+          "title": "基岩版（网易中国版）",
+          "body": "![基岩版效果图：浅色方块面板近景](assets/img/fangzhen-shot-4.jpg)\n![基岩版效果图：多种石材方块对照](assets/img/fangzhen-shot-5.jpg)\n![基岩版效果图：蓝色石材方块近景](assets/img/fangzhen-shot-6.jpg)\n![基岩版效果图：石材与矿石方块](assets/img/fangzhen-shot-7.jpg)",
+          "links": [
+            {
+              "items": [
+                {
+                  "label": "四合一",
+                  "href": "https://resource-minecraft.h5.163.com/#/detail?uid=3073187643&id=4689118647881567507&channel=netease"
+                },
+                {
+                  "label": "普通版 128x",
+                  "href": "https://resource-minecraft.h5.163.com/#/detail?uid=3073187643&id=4673766977794770501&channel=netease"
+                },
+                {
+                  "label": "普通版 256x",
+                  "href": "https://resource-minecraft.h5.163.com/#/detail?uid=3073187643&id=4673607031461400018&channel=netease"
+                },
+                {
+                  "label": "永久更新版",
+                  "href": "https://resource-minecraft.h5.163.com/#/detail?uid=3073187643&id=4659344896070953195&channel=netease"
+                }
+              ]
+            },
+            {
+              "title": "网易远古怀旧版（已停止维护）",
+              "items": [
+                {
+                  "label": "补丁包",
+                  "href": "https://resource-minecraft.h5.163.com/#/detail?uid=3073187643&id=4661394903323224801&channel=netease"
+                },
+                {
+                  "label": "256x 畅玩版",
+                  "href": "https://resource-minecraft.h5.163.com/#/detail?uid=3073187643&id=4659341914317305302&channel=netease"
+                },
+                {
+                  "label": "512x 测试版",
+                  "href": "https://resource-minecraft.h5.163.com/#/detail?uid=3073187643&id=4658767718024537686&channel=netease"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Java 版",
+          "body": "![Java 版效果图：室内场景，木地板与原木家具](assets/img/fangzhen-shot-1.jpg)\n![Java 版效果图：草方块与各类矿石块](assets/img/fangzhen-shot-2.jpg)\n![Java 版效果图：草方块地形的表面细节](assets/img/fangzhen-shot-3.jpg)",
+          "links": [
+            {
+              "items": [
+                {
+                  "label": "仿真工艺 JAVA 版（爱发电）",
+                  "href": "https://afdian.com/a/Mang2022823"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "仿真工艺衍生作品",
+          "body": "![RVHD 效果图：石材与发光方块的接缝细节](assets/img/fangzhen-rvhd-1.jpg)\n![RVHD 效果图：原木与树叶在日光下的表面质感](assets/img/fangzhen-rvhd-2.jpg)\n![RVHD 效果图：深色石材与木材的拼接纹理](assets/img/fangzhen-rvhd-3.jpg)\n\n仿真工艺衍生材质 RVHD —— 网易版已下架。",
+          "links": [
+            {
+              "items": [
+                {
+                  "label": "RVHD JAVA 版（MineGraph）",
+                  "href": "https://www.minegraph.cn/resourcepacks/47"
+                }
+              ]
+            },
+            {
+              "title": "作者主页",
+              "items": [
+                {
+                  "label": "B 站空间",
+                  "href": "https://b23.tv/Qedjm9p"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

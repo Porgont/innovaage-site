@@ -331,3 +331,156 @@ content:
                     - name: v
                       label: 内容
                       type: string
+
+  # ================= 专题页 =================
+  # work-rich.html 的正文。排版固定，作者只能改文字与图片、增删分节。
+  - name: topics
+    label: 专题页
+    type: file
+    path: content/topic-pages.json
+    fields:
+      - name: pages
+        label: 专题页列表（目前有：无人区跑酷、仿真工艺系列材质）
+        type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{name}"
+        fields:
+          - name: id
+            label: 标识（和作品页里的 id 一致，别改）
+            type: string
+            required: true
+            description: |
+              work-rich.html?id=你的标识。已上线的不要改，改了就进不去原来的页面。
+          - name: name
+            label: 作品名（页面大标题）
+            type: string
+            required: true
+          - name: type
+            label: 类型行（标题上方那行）
+            type: string
+            description: 格式「中文 / English」，例如：地图 / Map、材质 / Texture。
+          - name: displayEn
+            label: 英文装饰字（标题上方那两行大字）
+            type: string
+            description: 想分两行就在中间加一个竖线 |，例如 SEADREAM | VOYAGER；不加竖线就按空格断行。
+          - name: tagline
+            label: 副标题（大标题下面那句）
+            type: text
+            description: 一句话定位。不要写句号。
+          - name: author
+            label: 作者
+            type: string
+            description: 写真人名，格式：作者：某某。不写开发组。
+          - name: cover
+            label: 顶图（页面最上面那张大图）
+            type: image
+            description: 横图，宽 1600～1920 最稳；单张压到 600KB 以内，文件名英文小写加短横线。
+          - name: coverAlt
+            label: 顶图说明（不显示，只给读屏与搜索）
+            type: string
+          - name: facts
+            label: 作品信息（那几张数字卡片）
+            type: object
+            description: 一行一项：项目 + 内容。不确定的不要写。
+            list:
+              collapsible:
+                collapsed: true
+                summary: "{k}"
+              fields:
+                - name: k
+                  label: 项目
+                  type: string
+                - name: v
+                  label: 内容
+                  type: string
+                - name: bold
+                  label: 加粗显示
+                  type: boolean
+          - name: lead
+            label: 导语（正文第一段之前的内容）
+            type: rich-text
+            options:
+              format: markdown
+            description: |
+              这里放「作品信息」下面、第一个分节之前的那几段，以及开头那组截图。
+              写法和正文一样：空行分段、- 列表、![](图片) 插图。
+              连着写两行图片会自动并排成一组。
+          - name: sections
+            label: 分节（每一节会自动编号、自动进右上目录）
+            type: object
+            description: |
+              一节 = 一条目录 + 一个白底标题条 + 一节正文。
+              增、删、拖动调整顺序都可以，排版不会变。
+              标题会进右上「本页目录」，所以别写太长，四到八个字最好。
+            list:
+              collapsible:
+                collapsed: true
+                summary: "{title}"
+              fields:
+                - name: title
+                  label: 小节标题
+                  type: string
+                  required: true
+                - name: body
+                  label: 这一节的正文
+                  type: rich-text
+                  options:
+                    format: markdown
+                  description: |
+                    空行分段；- 开头是列表；![](图片) 插图，连着两张会并排。
+                    > 开头是引用块（左侧一条竖线）。
+                    加粗选中文字点 B。字号只有正文与标题两级，没有下划线。
+                - name: links
+                  label: 这一节底部的下载或外链按钮（可选）
+                  type: object
+                  description: 一组一个标题，组内一行一个按钮：显示文字 + 网址。站外链接自动新窗口打开。
+                  list:
+                    collapsible:
+                      collapsed: true
+                      summary: "{title}"
+                    fields:
+                      - name: title
+                        label: 分组标题（可留空）
+                        type: string
+                      - name: items
+                        label: 按钮
+                        type: object
+                        list:
+                          collapsible:
+                            collapsed: true
+                            summary: "{label}"
+                          fields:
+                            - name: label
+                              label: 按钮文字
+                              type: string
+                            - name: href
+                              label: 网址（https:// 开头）
+                              type: string
+          - name: links
+            label: 底部「下载与链接」那一节（可选）
+            type: object
+            description: 页面最下面那节按钮。留空就不会出现这一节。
+            list:
+              collapsible:
+                collapsed: true
+                summary: "{title}"
+              fields:
+                - name: title
+                  label: 分组标题（可留空）
+                  type: string
+                - name: items
+                  label: 按钮
+                  type: object
+                  list:
+                    collapsible:
+                      collapsed: true
+                      summary: "{label}"
+                    fields:
+                      - name: label
+                        label: 按钮文字
+                        type: string
+                      - name: href
+                        label: 网址（https:// 开头）
+                        type: string

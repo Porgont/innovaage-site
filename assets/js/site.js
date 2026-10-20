@@ -89,8 +89,13 @@
   var SHOWCASE = [];
 
   /* 代表作品的详情页数据（也是从 content/works.json 来）。
-     专题页、测试中作品没有进这份表，仍走代码里的 WORKS。 */
+     测试中作品没有进这份表，仍走代码里的 WORKS。 */
   var WORK_DETAILS = {};
+
+  /* 系列作品专题页（work-rich.html）的内容。
+     排版由代码固定，作者在网页后台只改文字与图片。 */
+  var TOPIC_PAGES = {};
+  var TOPIC_WORK = {};
 
   /* 系列作品专题页 —— 在官网上发布的作品，字段与 SHOWCASE 相同。
      作品页默认打开的就是这一栏。 */
@@ -733,7 +738,8 @@
 
     return Promise.all([
       read('content/announcements.json', 'announcements'),
-      read('content/works.json', 'works')
+      read('content/works.json', 'works'),
+      read('content/topic-pages.json', 'pages')
     ]).then(function (both) {
       // 标签在 CMS 里可能存成「招募,代投」这样的字符串，统一成数组
       function tagsOf(v) {
@@ -756,6 +762,14 @@
         });
 
       SHOWCASE = (both[1] || []).filter(function (w) { return w && w.title; });
+
+      TOPIC_PAGES = {};
+      TOPIC_WORK = {};
+      (both[2] || []).forEach(function (p) {
+        if (!p || !p.id || !p.name) return;
+        TOPIC_PAGES[p.id] = p;
+        TOPIC_WORK[p.id] = topicToWork(p);
+      });
 
       // 有 type 或 body 的条目才算写了详情页
       WORK_DETAILS = {};
@@ -1854,6 +1868,72 @@
     }).join('') + '</div>';
   }
 
+  /* 专题页正文：把 Markdown 折成原来那套块结构（段落 / 列表 / 单图 / 多图 / 引用），
+     这样渲染器一行都不用改，排版自然不会变。 */
+  function mdToRichBlocks(md) {
+    var text = String(md == null ? '' : md).replace(/\r\n?/g, '\n');
+    var out = [];
+    var para = [];
+    var list = [];
+    var imgs = [];
+
+    function flushPara() { if (para.length) { out.push(para.join('\n')); para = []; } }
+    function flushList() { if (list.length) { out.push({ list: list.slice() }); list = []; } }
+    function flushImgs() {
+      if (!imgs.length) return;
+      if (imgs.length > 1) out.push({ imgs: imgs.slice() });
+      else out.push({ img: imgs[0].img, alt: imgs[0].alt });
+      imgs = [];
+    }
+
+    text.split('\n').forEach(function (raw) {
+      var t = raw.trim();
+      if (!t) { flushList(); flushImgs(); flushPara(); return; }
+
+      var li = /^-\s+(.+)$/.exec(t);
+      if (li) { flushImgs(); flushPara(); list.push(li[1]); return; }
+
+      var im = /^!\[([^\]]*)\]\(([^)]+)\)$/.exec(t);
+      if (im) { flushList(); flushPara(); imgs.push({ img: im[2], alt: im[1] }); return; }
+
+      var q = /^>\s+(.+)$/.exec(t);
+      if (q) { flushList(); flushImgs(); flushPara(); out.push({ blockquote: q[1] }); return; }
+
+      flushList(); flushImgs();
+      para.push(t);
+    });
+
+    flushList(); flushImgs(); flushPara();
+    return out;
+  }
+
+  /* 专题页数据 → 老渲染器认识的形状 */
+  function topicToWork(p) {
+    var intro = [];
+    if (p.lead) intro = intro.concat(mdToRichBlocks(p.lead));
+
+    (p.sections || []).forEach(function (sec) {
+      if (!sec || !sec.title) return;
+      intro.push({ heading: sec.title });
+      if (sec.body) intro = intro.concat(mdToRichBlocks(sec.body));
+      if (Array.isArray(sec.links) && sec.links.length) intro.push({ links: sec.links });
+    });
+
+    return {
+      name: p.name,
+      type: p.type || '',
+      displayEn: p.displayEn || '',
+      tagline: p.tagline || '',
+      author: p.author || '',
+      cover: p.cover || '',
+      coverAlt: p.coverAlt || '',
+      facts: Array.isArray(p.facts) ? p.facts : [],
+      links: Array.isArray(p.links) ? p.links : [],
+      linksTop: !!p.linksTop,
+      intro: intro
+    };
+  }
+
   /* 把详情正文（Markdown）渲染成和原来同一套结构：
      段落 / 小标题 / 列表 / 单图 / 连续多图（图组）。 */
   /* 作品正文里的行内格式：**加粗** 与 [文字](链接)。
@@ -2560,10 +2640,10 @@
       id = m ? decodeURIComponent(m[1]) : '';
     }
 
-    var work = WORKS[id];
+    var work = TOPIC_WORK[id] || WORKS[id];
     if (!work) {
-      var first = Object.keys(WORKS)[0];
-      work = WORKS[first];
+      var first = Object.keys(TOPIC_WORK)[0] || Object.keys(WORKS)[0];
+      work = TOPIC_WORK[first] || WORKS[first];
       id = first;
     }
     if (!work) return;
