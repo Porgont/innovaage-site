@@ -408,16 +408,19 @@ content:
               写法和正文一样：空行分段、- 列表、![](图片) 插图。
               连着写两行图片会自动并排成一组。
           - name: sections
-            label: 分节（每一节会自动编号、自动进右上目录）
+            label: 分节（点下面的 ＋ Add an item 新增一节）
             type: object
             description: |
-              一节 = 一条目录 + 一个白底标题条 + 一节正文。
-              增、删、拖动调整顺序都可以，排版不会变。
-              标题会进右上「本页目录」，所以别写太长，四到八个字最好。
+              怎么加一节：
+              1. 点「＋ Add an item」，页面会多出一块，默认是展开的
+              2. 填「小节标题」（四到八个字，会进右上「本页目录」）
+              3. 在「这一节的正文」里写内容：空行分段、- 列表、![](图片) 插图
+              4. 这一节要放下载按钮的话，再点它下面那个小列表的「＋ Add an item」
+              一节 = 一条目录 + 一个白底标题条 + 一节正文。增、删、拖动调顺序都可以，排版不会变。
             list:
               collapsible:
-                collapsed: true
-                summary: "{title}"
+                collapsed: false
+                summary: "第 {index} 节 · {title}"
               fields:
                 - name: title
                   label: 小节标题
@@ -433,12 +436,17 @@ content:
                     > 开头是引用块（左侧一条竖线）。
                     加粗选中文字点 B。字号只有正文与标题两级，没有下划线。
                 - name: links
-                  label: 这一节底部的下载或外链按钮（可选）
+                  label: 这一节底部的下载或外链按钮（可选，不填就没有按钮）
                   type: object
-                  description: 一组一个标题，组内一行一个按钮：显示文字 + 网址。站外链接自动新窗口打开。
+                  description: |
+                    两层结构：
+                    · 第一层是「分组」，一组一个标题，例如「网易版（中国版）」
+                    · 第二层是组里的按钮，一行一个：按钮文字 + 网址
+                    先点这一栏的「＋ Add an item」加一个分组，再在分组里点「＋ Add an item」加按钮。
+                    站外链接会自动新窗口打开；没有按钮就整栏留空。
                   list:
                     collapsible:
-                      collapsed: true
+                      collapsed: false
                       summary: "{title}"
                     fields:
                       - name: title
@@ -459,12 +467,14 @@ content:
                               label: 网址（https:// 开头）
                               type: string
           - name: links
-            label: 底部「下载与链接」那一节（可选）
+            label: 底部「下载与链接」那一节（可选，留空就不出现）
             type: object
-            description: 页面最下面那节按钮。留空就不会出现这一节。
+            description: |
+              和「分节」里那套按钮一样：先加分组，再在分组里加按钮。
+              这里放整页通用的下载与相关链接；某一节专属的按钮写在那一节自己的 links 里。
             list:
               collapsible:
-                collapsed: true
+                collapsed: false
                 summary: "{title}"
               fields:
                 - name: title
