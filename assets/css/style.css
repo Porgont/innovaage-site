@@ -8711,3 +8711,29 @@ button:focus-visible,
   .tabs__ink { transition: none; }
   .tabs--boxed .tab { transition: color .25s ease; }
 }
+
+
+/* ============================================================
+   右栏卡片标题条改成蓝底（2026-10）
+   原来的黑底 + 等宽字：中文被等宽字距拉开，看着像换了字体；
+   现在用正文字体、收紧字距，底色换成实心蓝。
+   ============================================================ */
+.article-side .side-card__k {
+  padding: 9px 14px;
+  background: var(--accent-solid);
+  color: #fff;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: none;
+}
+
+[data-theme="dark"] .article-side .side-card__k {
+  background: var(--accent-solid);
+  color: #fff;
+}
+
+.article-side .side-card__k::after {
+  background-image: repeating-linear-gradient(115deg, rgba(255, 255, 255, .62) 0 1.5px, transparent 1.5px 7px);
+}
