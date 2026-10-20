@@ -188,10 +188,15 @@
     var s = String(seg).replace(/[^A-Za-z0-9_-]/g, '_').replace(/_+/g, '_').replace(/^_+|_+$/g, '');
     return s || 'file';
   }
-  /* 文件名保留点号（可多段） */
+  /* 文件名保留点号（可多段），主名洗不出东西时兜底成 file，扩展名保留 */
   function sanitizeFileSeg(seg) {
-    var s = String(seg).replace(/[^A-Za-z0-9_.-]/g, '_').replace(/_+/g, '_').replace(/\.{2,}/g, '.').replace(/^_+|_+$/g, '');
-    return s || 'file';
+    var str = String(seg);
+    var dot = str.lastIndexOf('.');
+    var stem = dot > 0 ? str.slice(0, dot) : str;
+    var ext = dot > 0 ? str.slice(dot) : '';
+    stem = stem.replace(/[^A-Za-z0-9_.-]/g, '_').replace(/_+/g, '_').replace(/\.{2,}/g, '.').replace(/^[._]+|[._]+$/g, '');
+    ext = ext.replace(/[^A-Za-z0-9_.-]/g, '_').replace(/\.{2,}/g, '.');
+    return (stem || 'file') + ext;
   }
 
   function sanitizeName(name, isDir) {
@@ -526,6 +531,102 @@
       checks: checks, checksOk: checksOk, archive: '7z' };
   }
 
+  /* ---------- 7z 生成 ---------- */
+  var SEVEN_ZIP_MAX = 120 * 1024 * 1024;   /* 超过 120MB 不试，避免把浏览器内存撑爆 */
+
+  function mkdirP(sz, path) {
+    var parts = path.split('/').filter(Boolean);
+    var cur = '';
+    parts.forEach(function (part) {
+      cur += '/' + part;
+      try { sz.FS.mkdir(cur); } catch (e) { /* 已存在 */ }
+    });
+  }
+
+  function build7z(rows, top, wrap) {
+    var a = state.audit;
+    if (state.file.size > SEVEN_ZIP_MAX) {
+      el.result.textContent = '这个 7z 有 ' + sizeText(state.file.size) + ' ' + sizeUnit(state.file.size) +
+        '，超过 120 MB，浏览器里解包重压容易崩。请按上面的建议名用 7-Zip 手动改。';
+      el.result.classList.add('is-warn');
+      return;
+    }
+
+    var plan = [];
+    var bad = [];
+    rows.forEach(function (r) {
+      if (r.junk) return;
+      var name = (wrap ? top + '/' : '') + r.inner;
+      if (r.isDir && !/\/$/.test(name)) name += '/';
+      if (!isValidPath(name.replace(/\/$/, ''), r.isDir)) { bad.push(r.original); return; }
+      plan.push({ from: '/work/' + r.entry.name, to: '/out/' + name, isDir: r.isDir, name: name });
+    });
+    if (bad.length) {
+      el.result.textContent = '还有不合规的名字：' + bad.slice(0, 3).join('、') + (bad.length > 3 ? ' 等' : '');
+      el.result.classList.add('is-warn');
+      return;
+    }
+
+    var note = el.note;
+    note.textContent = '7z：正在解包…';
+    el.build.disabled = true;
+
+    setTimeout(function () {
+      loadSevenZipFactory().then(function (Factory) {
+        var logs = '';
+        return Factory({
+          locateFile: function (f) { return 'assets/vendor/7z-wasm/' + f; },
+          print: function (t) { logs += t + '\n'; },
+          printErr: function (t) { logs += t + '\n'; }
+        });
+      }).then(function (sz) {
+        sz.FS.writeFile('/in.7z', new Uint8Array(state.buffer));
+        sz.FS.mkdir('/work');
+        note.textContent = '7z：正在解包…';
+        sz.callMain(['x', '/in.7z', '-o/work', '-y']);
+
+        note.textContent = '7z：正在按新名字重建…';
+        sz.FS.mkdir('/out');
+        plan.sort(function (x, y) { return x.from.split('/').length - y.from.split('/').length; });
+        plan.forEach(function (item) {
+          if (item.isDir) { mkdirP(sz, item.to.replace(/\/$/, '')); return; }
+          mkdirP(sz, item.to.slice(0, item.to.lastIndexOf('/')));
+          try {
+            sz.FS.writeFile(item.to, sz.FS.readFile(item.from));
+          } catch (e) {
+            logs += '复制失败 ' + item.from + '：' + e.message + '\n';
+          }
+        });
+
+        note.textContent = '7z：正在重新打包…';
+        sz.FS.chdir('/out');
+        var names = sz.FS.readdir('/out').filter(function (n) { return n !== '.' && n !== '..'; });
+        sz.callMain(['a', '/out.7z'].concat(names));
+        var data = sz.FS.readFile('/out.7z');
+        return data;
+      }).then(function (data) {
+        var blob = new Blob([data], { type: 'application/x-7z-compressed' });
+        var base = state.file.name.replace(/\.(7z|zip|png)$/i, '');
+        var fileName = sanitizeSeg(base) + '_packed.7z';
+        var url = URL.createObjectURL(blob);
+        var link = document.createElement('a');
+        link.href = url; link.download = fileName;
+        document.body.appendChild(link); link.click(); link.remove();
+        setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
+        state.file = state.file;   /* 保留原文件以便再次生成 */
+        el.build.disabled = false;
+        el.result.classList.remove('is-warn');
+        el.result.textContent = '已生成 ' + fileName + '（' + plan.filter(function (x) { return !x.isDir; }).length +
+          ' 个文件）· 7z 是重新压缩的，内容不变，时间戳与压缩参数会变';
+        note.textContent = state.file.name + ' · ' + sizeText(state.file.size) + ' ' + sizeUnit(state.file.size) + ' · 7z';
+      }).catch(function (err) {
+        el.build.disabled = false;
+        el.result.classList.add('is-warn');
+        el.result.textContent = '7z 生成失败：' + err.message;
+      });
+    }, 30);
+  }
+
   /* ---------- 界面 ---------- */
   function bind() {
     el.input = $('#pack-file');
@@ -765,13 +866,15 @@
 
     var dup = findDuplicates(rows, top, a.spec.wrapTop);
     var why = [];
-    if (a.archive === '7z') why.push('7z 包目前只做检测，改名请用 7-Zip 手动操作');
     if (!topOk) why.push('顶层文件夹名不合规');
     if (badNames.length) why.push(badNames.length + ' 处名字仍不合规');
     if (dup.length) why.push('有重名：' + dup.slice(0, 3).join('、'));
     if (!a.structureOk) why.push('包体结构待修：' + a.structureProblem);
     if (a.checks.length && !a.checksOk) why.push('必备文件缺失');
     if (!files.length) why.push('没有文件');
+    if (a.archive === '7z' && state.file && state.file.size > SEVEN_ZIP_MAX) {
+      why.push('7z 超过 120 MB，请用 7-Zip 手动处理');
+    }
 
     el.build.disabled = why.length > 0;
     el.result.textContent = why.length ? '还不能生成：' + why.join('；') + '。' : '';
@@ -802,12 +905,8 @@
   function build() {
     var a = state.audit;
     if (!a) return;
-    if (a.archive === '7z') {
-      el.result.textContent = '7z 包目前只做检测：按上面的名字改好后，用 7-Zip 重新打包再上传。';
-      el.result.classList.add('is-warn');
-      return;
-    }
     var rows = visibleRows();
+    if (a.archive === '7z') { build7z(rows, topValue(), a.spec.wrapTop); return; }
     var top = topValue();
     var wrap = a.spec.wrapTop;
     var out = [], missing = [];
