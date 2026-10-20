@@ -744,6 +744,10 @@
         .map(function (n) {
           n.tags = tagsOf(n.tags);
           n.pin = n.pin === true || n.pin === 'true';
+          // 有些编辑器会把日期写成带时间的完整格式，这里统一裁成 年-月-日
+          var d = String(n.date || '');
+          var m = /^(\d{4})-(\d{2})-(\d{2})/.exec(d);
+          n.date = m ? m[1] + '-' + m[2] + '-' + m[3] : d;
           return n;
         });
 
