@@ -2802,12 +2802,12 @@ input[type="range"]::-webkit-slider-thumb {
 /* 横条里面积大，记号做成细下划线，整块高亮看着像选中文字 */
 .work-band__title .mark,
 .work-band__desc .mark {
-  background-image: linear-gradient(transparent 80%, rgba(47, 124, 246, .40) 80%);
+  background-image: linear-gradient(transparent 80%, rgba(47, 124, 246, .26) 80%);
 }
 
 .work-band:hover .work-band__title .mark,
 .work-band:hover .work-band__desc .mark {
-  background-image: linear-gradient(transparent 80%, rgba(47, 124, 246, .85) 80%);
+  background-image: linear-gradient(transparent 80%, rgba(47, 124, 246, .55) 80%);
 }
 
 [data-theme="dark"] .work-band__title .mark,
@@ -2910,14 +2910,15 @@ h1 em,
 .hero-title em {
   font-style: normal;
   padding: 0 .08em;
-  background: linear-gradient(transparent 58%, var(--gold) 58%);
+  background: linear-gradient(transparent 64%, rgba(97, 165, 255, .34) 64%);
+  background: linear-gradient(transparent 64%, color-mix(in srgb, var(--gold) 34%, transparent) 64%);
 }
 
 [data-theme="dark"] .mark,
 [data-theme="dark"] h1 em,
 [data-theme="dark"] .hero h1 em,
 [data-theme="dark"] .hero-title em {
-  background: linear-gradient(transparent 58%, #6aa8fb 58%);
+  background: linear-gradient(transparent 64%, rgba(127, 182, 255, .40) 64%);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -2925,7 +2926,7 @@ h1 em,
   :root:not([data-theme="light"]) h1 em,
   :root:not([data-theme="light"]) .hero h1 em,
   :root:not([data-theme="light"]) .hero-title em {
-    background: linear-gradient(transparent 58%, #6aa8fb 58%);
+    background: linear-gradient(transparent 64%, rgba(127, 182, 255, .40) 64%);
   }
 }
 
