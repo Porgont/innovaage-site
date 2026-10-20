@@ -7802,15 +7802,12 @@ button:focus-visible,
     font-size: 18px;
   }
 }
-
-
 /* ============================================================
    编号带的悬停（2026-10）
-   数字块变宽一点、数字放大，// 与斜纹往右挪，虚线跑起来。
-   只对能悬停的设备生效，且尊重「减少动效」。
+   和作品专题页那张横幅同一套：上浮 4px + 两级投影，别的都不动。
    ============================================================ */
 
-/* 虚线改成可动的点阵背景（原来 border 没法动） */
+/* 底部虚线用点阵背景画，静态，不做动画 */
 .section-head::after,
 .ms-head::after {
   height: 1px;
@@ -7820,106 +7817,30 @@ button:focus-visible,
   background-repeat: repeat-x;
 }
 
-.section-head::before,
-.section-head h2::before,
-.section-head .kicker::after,
-.ms-head__no,
-.ms-head h2::before,
-.ms-head h2::after {
+.section-head,
+.ms-head {
   transition:
     transform .3s var(--ease-out, cubic-bezier(.16, 1, .3, 1)),
-    font-size .25s var(--ease-out, cubic-bezier(.16, 1, .3, 1)),
-    background-color .25s ease,
-    color .25s ease,
-    letter-spacing .25s var(--ease-out, cubic-bezier(.16, 1, .3, 1));
-}
-
-.section-head {
-  transition: grid-template-columns .3s var(--ease-out, cubic-bezier(.16, 1, .3, 1));
-}
-
-.ms-head {
-  transition: grid-template-columns .3s var(--ease-out, cubic-bezier(.16, 1, .3, 1));
+    box-shadow .3s var(--ease-out, cubic-bezier(.16, 1, .3, 1));
 }
 
 @media (hover: hover) {
-  /* 数字块从 88 撑到 100，数字跟着变大、字距拉开 */
-  .section-head:hover {
-    grid-template-columns: 100px minmax(0, 1fr) auto;
-  }
-
-  .section-head:hover::before {
-    font-size: 34px;
-    letter-spacing: .08em;
-  }
-
-  /* 标题前的 // 往右让一点，斜纹跟着走 */
-  .section-head:hover h2::before {
-    transform: translateX(4px);
-  }
-
-  .section-head:hover .kicker::after {
-    transform: translateX(6px);
-  }
-
-  /* 横带略微加深，做出「被选中」的感觉 */
-  .section-head:hover h2,
-  .section-head:hover .kicker {
-    background: color-mix(in srgb, var(--gold) 12%, var(--panel));
-  }
-
-  /* 虚线跑起来 */
-  .section-head:hover::after,
-  .ms-head:hover::after {
-    animation: dash-run .8s linear infinite;
-  }
-
-  /* 专题页分节：同一套，幅度小一点 */
-  .ms-head:hover {
-    grid-template-columns: 84px minmax(0, 1fr);
-  }
-
-  .ms-head:hover .ms-head__no {
-    font-size: 26px;
-    letter-spacing: .06em;
-  }
-
-  .ms-head:hover h2::before {
-    transform: translateX(4px);
-  }
-
-  .ms-head:hover h2::after {
-    transform: translateX(6px);
+  .section-head.section-head:hover,
+  .ms-head.ms-head:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lift);
   }
 }
 
-@keyframes dash-run {
-  to { background-position: 12px 0; }
-}
-
-/* 减少动效：所有过渡与动画关掉，虚线回到静止 */
 @media (prefers-reduced-motion: reduce) {
   .section-head,
-  .ms-head,
-  .section-head::before,
-  .section-head h2::before,
-  .section-head .kicker::after,
-  .ms-head__no,
-  .ms-head h2::before,
-  .ms-head h2::after {
+  .ms-head {
     transition: none;
   }
 
-  .section-head:hover::after,
-  .ms-head:hover::after {
-    animation: none;
-  }
-
-  .section-head:hover {
-    grid-template-columns: 88px minmax(0, 1fr) auto;
-  }
-
-  .ms-head:hover {
-    grid-template-columns: 72px minmax(0, 1fr);
+  .section-head.section-head:hover,
+  .ms-head.ms-head:hover {
+    transform: none;
+    box-shadow: none;
   }
 }
