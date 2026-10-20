@@ -9042,12 +9042,16 @@ button:focus-visible,
 .pack-verdict { margin: 6px 0 14px; }
 
 #pack-use-suggest {
-  padding: 10px 20px;
+  padding: 9px 18px;
   font-size: 14px;
   font-weight: 700;
   border-color: var(--gold-dk);
   color: var(--gold-dk);
+  background: var(--panel);
 }
+
+.pack-actions .btn { margin: 0; }
+.pack-actions { gap: 10px; align-items: center; }
 
 #pack-use-suggest:hover {
   border-color: var(--gold-dk);
@@ -9055,25 +9059,53 @@ button:focus-visible,
   color: var(--gold-dk);
 }
 
+.pack-actions { flex-wrap: wrap; }
+
 .pack-flash {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 8px;
-  margin: 10px 0 0;
-  font-size: 13.5px;
+  margin: 0 8px 0 0;
+  padding: 8px 14px 8px 10px;
+  border: 1px solid var(--gold-dk);
+  border-radius: var(--radius);
+  background: var(--gold-soft);
+  font-size: 14px;
   font-weight: 700;
   color: var(--gold-dk);
   opacity: 0;
-  transform: translateY(-4px) scale(.98);
-  transition: opacity .22s ease, transform .3s cubic-bezier(.16, 1, .3, 1);
+  transform: translateX(14px) scale(.94);
+  transition: opacity .24s ease, transform .34s cubic-bezier(.16, 1, .3, 1);
 }
 
-.pack-flash::before { content: "✓"; font-size: 15px; }
+.pack-flash.is-hidden { display: none; }
 
 .pack-flash.is-show { opacity: 1; transform: none; }
 
-[data-theme="dark"] .pack-flash { color: #9cc7ff; }
+.pack-flash__tick {
+  display: inline-grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--gold-dk);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+@keyframes pack-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(47, 124, 246, 0); }
+  35% { box-shadow: 0 0 0 6px rgba(47, 124, 246, .28); }
+  70% { box-shadow: 0 0 0 3px rgba(47, 124, 246, .16); }
+}
+
+#pack-build.is-pulse { animation: pack-pulse .95s ease-out 2; }
+
+[data-theme="dark"] .pack-flash { background: rgba(61, 132, 240, .18); color: #9cc7ff; border-color: #4f8fe8; }
+[data-theme="dark"] .pack-flash__tick { background: #4f8fe8; color: #0c1220; }
 
 @media (prefers-reduced-motion: reduce) {
   .pack-flash { transition: opacity .2s ease; transform: none; }
+  #pack-build.is-pulse { animation: none; }
 }

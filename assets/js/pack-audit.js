@@ -694,7 +694,7 @@
       paint();
       /* 只要点完之后没有残留的不合规名字，就给一个“已更改”的反馈 */
       var stillBad = state.rows.some(function (r) { return !r.junk && r.innerIssues.length; });
-      if (!stillBad) flashSuggestDone();
+      if (!stillBad && !el.build.disabled) flashSuggestDone();
     });
 
     el.toggleTable.addEventListener('click', function () {
@@ -721,7 +721,7 @@
       state.file = file;
       state.top = '';
       state.tableCollapsed = null;
-      if (el.suggestDone) { el.suggestDone.hidden = true; el.suggestDone.classList.remove('is-show'); }
+      if (el.suggestDone) { el.suggestDone.classList.add('is-hidden'); el.suggestDone.classList.remove('is-show'); }
       el.report.hidden = false;
       el.result.textContent = '';
       reload();
@@ -782,15 +782,22 @@
   function flashSuggestDone() {
     var box = el.suggestDone;
     if (!box) return;
-    box.hidden = false;
+    box.classList.remove('is-hidden');
     box.classList.remove('is-show');
+    /* 同时让「生成合规压缩包」闪一下，眼睛能跟过去 */
+    if (el.build) {
+      el.build.classList.remove('is-pulse');
+      void el.build.offsetWidth;
+      el.build.classList.add('is-pulse');
+    }
     void box.offsetWidth;
     box.classList.add('is-show');
     clearTimeout(suggestTimer);
     suggestTimer = setTimeout(function () {
       box.classList.remove('is-show');
-      setTimeout(function () { box.hidden = true; }, 240);
-    }, 2600);
+      if (el.build) el.build.classList.remove('is-pulse');
+      setTimeout(function () { box.classList.add('is-hidden'); }, 260);
+    }, 3000);
   }
 
   function checkLine(label, ok) {
