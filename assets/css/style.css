@@ -8608,11 +8608,11 @@ button:focus-visible,
   height: 76px;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 12px;
   margin: 0;
-  padding: 0 20px;
-  text-align: center;
+  padding: 0 22px;
+  text-align: left;
   border: 0;
   border-left: 1px solid var(--line);
   border-radius: 0;
@@ -8658,22 +8658,22 @@ button:focus-visible,
 
 .tabs--boxed .tab.is-active {
   z-index: 2;
-  flex-grow: 1.18;
+  flex-grow: 1;
   background: transparent;
   border-color: transparent;
   border-radius: 0;
-  color: var(--text);
+  color: var(--ink-fg);
   font-weight: 800;
-  font-size: 19px;
+  font-size: 18px;
   opacity: 1;
   transform: none;
   box-shadow: none;
 }
 
 .tabs--boxed .tab.is-active::before {
-  color: var(--gold-dk);
+  color: var(--gold);
   opacity: 1;
-  font-size: 13px;
+  font-size: 12px;
 }
 
 
@@ -8683,8 +8683,11 @@ button:focus-visible,
 }
 
 .tabs__ink {
-  background: transparent;
-  box-shadow: inset 0 3px 0 var(--gold);
+  background: var(--ink);
+}
+
+[data-theme="dark"] .tabs__ink {
+  background: var(--text);
 }
 
 /* 手机上保持可横向滚动，格子不压缩 */
