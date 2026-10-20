@@ -865,7 +865,13 @@
     if (!files.length) hardProblems.push('没有文件');
     var pendingRename = renamed.length > 0 && !state.renameApplied;
     if (pendingRename) hardProblems.push(renamed.length + ' 处原名要改名');
-    renderVerdict(hardProblems, renamed.length, fixableStructure);
+    renderVerdict({
+      hard: hardProblems,
+      structureProblem: a.structureOk ? '' : a.structureProblem,
+      fixable: fixableStructure,
+      pendingRename: pendingRename,
+      renamed: renamed.length
+    });
 
     var problems = [];
     if (!a.structureOk) {
@@ -1019,23 +1025,36 @@
     }).join('');
   }
 
-  function renderVerdict(problems, renamed, fixableStructure) {
+  function renderVerdict(v) {
     if (!el.verdict) return;
-    if (!problems.length && !renamed) {
-      el.verdict.className = 'pack-verdict is-ok';
-      el.verdict.innerHTML = '<b>✓ 合规</b><span>结构和名字都过，可以直接投稿</span>';
+
+    /* 缺文件等硬问题：不合规，且说明无法自动修复 */
+    if (v.hard.length) {
+      el.verdict.className = 'pack-verdict is-bad';
+      el.verdict.innerHTML = '<b>✗ 不合规</b><span>还差：' + v.hard.join(' · ') + '</span>';
       return;
     }
-    if (!problems.length && (renamed || fixableStructure)) {
-      var bits = [];
-      if (renamed) bits.push('原名有 ' + renamed + ' 处不合规，已换成合规名');
-      if (fixableStructure) bits.push('结构会在生成时自动收进一个顶层文件夹');
-      el.verdict.className = 'pack-verdict is-ok';
-      el.verdict.innerHTML = '<b>✓ 可生成</b><span>' + bits.join('；') + '；生成后就是合规压缩包</span>';
+
+    var bits = [];
+    if (v.fixable) {
+      bits.push('结构会自动改好：' + v.structureProblem + '，生成时收进一个顶层文件夹');
+    }
+    if (v.pendingRename) {
+      bits.push(v.renamed + ' 处原名要改名，点「一键更名为建议名」');
+    } else if (v.renamed) {
+      bits.push('原名 ' + v.renamed + ' 处已按建议名改好');
+    }
+
+    /* 原始包仍有问题：一律写不合规，并说明能自动改的部分 */
+    if (bits.length) {
+      el.verdict.className = 'pack-verdict is-bad';
+      el.verdict.innerHTML = '<b>✗ 不合规</b><span>' + bits.join('；') +
+        '；点「生成合规压缩包」得到合规版本</span>';
       return;
     }
-    el.verdict.className = 'pack-verdict is-bad';
-    el.verdict.innerHTML = '<b>✗ 不合规</b><span>还差：' + problems.join(' · ') + '</span>';
+
+    el.verdict.className = 'pack-verdict is-ok';
+    el.verdict.innerHTML = '<b>✓ 合规</b><span>结构和名字都过，可以直接投稿</span>';
   }
 
   function stat(v, label, sub) {
