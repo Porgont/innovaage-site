@@ -647,6 +647,7 @@
     el.dropJunk = $('#pack-drop-junk');
     el.useSuggest = $('#pack-use-suggest');
     el.toggleTable = $('#pack-toggle-table');
+    el.suggestDone = $('#pack-suggest-done');
 
     el.type.addEventListener('change', function () {
       if (state.buffer) reload();
@@ -681,13 +682,19 @@
 
     el.useSuggest.addEventListener('click', function () {
       state.top = '';
+      var changedCount = 0;
       state.rows.forEach(function (r) {
         if (r.junk) return;
+        var before = r.inner;
         r.inner = r.suggestion;
         r.innerIssues = issuesOfPath(r.inner, r.isDir);
         r.changed = r.inner !== r.origInner;
+        if (r.inner !== before) changedCount++;
       });
       paint();
+      /* 只要点完之后没有残留的不合规名字，就给一个“已更改”的反馈 */
+      var stillBad = state.rows.some(function (r) { return !r.junk && r.innerIssues.length; });
+      if (!stillBad) flashSuggestDone();
     });
 
     el.toggleTable.addEventListener('click', function () {
@@ -714,6 +721,7 @@
       state.file = file;
       state.top = '';
       state.tableCollapsed = null;
+      if (el.suggestDone) { el.suggestDone.hidden = true; el.suggestDone.classList.remove('is-show'); }
       el.report.hidden = false;
       el.result.textContent = '';
       reload();
@@ -770,6 +778,21 @@
     el.note.classList.add('is-bad');
   }
 
+  var suggestTimer = null;
+  function flashSuggestDone() {
+    var box = el.suggestDone;
+    if (!box) return;
+    box.hidden = false;
+    box.classList.remove('is-show');
+    void box.offsetWidth;
+    box.classList.add('is-show');
+    clearTimeout(suggestTimer);
+    suggestTimer = setTimeout(function () {
+      box.classList.remove('is-show');
+      setTimeout(function () { box.hidden = true; }, 240);
+    }, 2600);
+  }
+
   function checkLine(label, ok) {
     return '<div class="pack-check-line ' + (ok ? 'is-ok' : 'is-bad') + '">' +
       '<span class="pack-check-dot" aria-hidden="true">' + (ok ? '✓' : '×') + '</span>' + esc(label) + '</div>';
@@ -819,6 +842,9 @@
     var badNames = rows.filter(function (r) { return !r.junk && r.innerIssues.length; });
     var renamed = rows.filter(function (r) { return !r.junk && !r.innerIssues.length && r.changed; });
     var junk = state.rows.filter(function (r) { return r.junk; });
+    var fixableStructure = !!a.spec.wrapTop &&
+      (!a.structureOk) &&
+      (/^根目录直接有/.test(a.structureProblem) || /^顶层有 \d+ 个文件夹/.test(a.structureProblem));
     var top = topValue();
     var topOk = !a.spec.wrapTop || ALLOWED_SEG.test(top);
 
@@ -827,7 +853,8 @@
       stat(files.length, '个文件', '含目录共 ' + rows.length + ' 项') +
       stat(sizeText(state.file.size), sizeUnit(state.file.size), '包体大小') +
       stat((badNames.length + renamed.length) || '0', '处名字要改', badNames.length ? '还有 ' + badNames.length + ' 处没改好' : (renamed.length ? '已自动给出建议名' : '名字都合规')) +
-      stat(a.structureOk ? '通过' : '待修', '包体结构', a.structureOk ? '符合这个类型' : a.structureProblem) +
+      stat(a.structureOk ? '通过' : (fixableStructure ? '可修' : '待修'), '包体结构',
+        a.structureOk ? '符合这个类型' : (fixableStructure ? '生成时自动收进一个顶层文件夹' : a.structureProblem)) +
       (a.checks.length ? stat(a.checksOk ? '通过' : '待修', '必备文件', a.checksOk ? '该有的都有' : '看下面清单') : '') +
       stat(junk.length, '个系统垃圾文件', el.dropJunk.checked && junk.length ? '生成时会去掉' : '来自 macOS / Windows');
 
@@ -835,12 +862,11 @@
     el.checks.innerHTML = a.checks.map(function (c) { return checkLine(c.label, c.ok); }).join('');
 
     var problems = [];
-    if (!a.structureOk) problems.push('包体结构');
+    if (!a.structureOk && !fixableStructure) problems.push('包体结构');
     if (a.checks.length && !a.checksOk) problems.push('必备文件');
     if (badNames.length) problems.push(badNames.length + ' 处名字');
-    if (renamed.length) problems.push('原名有 ' + renamed.length + ' 处要改名');
     if (!files.length) problems.push('没有文件');
-    renderVerdict(problems, renamed.length);
+    renderVerdict(problems, renamed.length, fixableStructure);
 
     if (a.spec.wrapTop) {
       el.topWrap.innerHTML =
@@ -900,7 +926,10 @@
     if (!topOk) why.push('顶层文件夹名不合规');
     if (badNames.length) why.push(badNames.length + ' 处名字仍不合规');
     if (dup.length) why.push('有重名：' + dup.slice(0, 3).join('、'));
-    if (!a.structureOk) why.push('包体结构待修：' + a.structureProblem);
+    var fixableStructure2 = !!a.spec.wrapTop &&
+      (!a.structureOk) &&
+      (/^根目录直接有/.test(a.structureProblem) || /^顶层有 \d+ 个文件夹/.test(a.structureProblem));
+    if (!a.structureOk && !fixableStructure2) why.push('包体结构待修：' + a.structureProblem);
     if (a.checks.length && !a.checksOk) why.push('必备文件缺失');
     if (!files.length) why.push('没有文件');
     if (a.archive === '7z' && state.file && state.file.size > SEVEN_ZIP_MAX) {
@@ -912,17 +941,23 @@
     el.result.classList.toggle('is-warn', why.length > 0);
   }
 
-  function renderVerdict(problems, renamed) {
+  function renderVerdict(problems, renamed, fixableStructure) {
     if (!el.verdict) return;
-    if (!problems.length) {
+    if (!problems.length && !renamed) {
       el.verdict.className = 'pack-verdict is-ok';
       el.verdict.innerHTML = '<b>✓ 合规</b><span>结构和名字都过，可以直接投稿</span>';
       return;
     }
+    if (!problems.length && (renamed || fixableStructure)) {
+      var bits = [];
+      if (renamed) bits.push('原名有 ' + renamed + ' 处不合规，已换成合规名');
+      if (fixableStructure) bits.push('结构会在生成时自动收进一个顶层文件夹');
+      el.verdict.className = 'pack-verdict is-ok';
+      el.verdict.innerHTML = '<b>✓ 已改好</b><span>' + bits.join('；') + '；生成后就是合规压缩包</span>';
+      return;
+    }
     el.verdict.className = 'pack-verdict is-bad';
-    el.verdict.innerHTML = '<b>✗ 不合规</b><span>' +
-      (problems.length ? '还差：' + problems.join(' · ') : '') +
-      (renamed ? '；点「生成」会输出合规版' : '') + '</span>';
+    el.verdict.innerHTML = '<b>✗ 不合规</b><span>还差：' + problems.join(' · ') + '</span>';
   }
 
   function stat(v, label, sub) {

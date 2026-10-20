@@ -35,9 +35,9 @@
 })();
 </script>
 <link rel="preload" href="assets/fonts/noto-sans-sc.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/fonts.css?v=20261254">
-<link rel="stylesheet" href="assets/css/theme.css?v=20261254">
-<link rel="stylesheet" href="assets/css/style.css?v=20261254">
+<link rel="stylesheet" href="assets/css/fonts.css?v=20261259">
+<link rel="stylesheet" href="assets/css/theme.css?v=20261259">
+<link rel="stylesheet" href="assets/css/style.css?v=20261259">
   <link rel="alternate" type="application/rss+xml" title="创想时代开发组 · 公告" href="feed.xml">
 </head>
 
@@ -156,8 +156,8 @@
         <p class="note" id="pack-file-note">还没有选择文件</p>
 
         <div id="pack-report" hidden>
-          <div class="pack-verdict" id="pack-verdict"></div>
           <div class="pack-summary" id="pack-summary"></div>
+          <div class="pack-verdict" id="pack-verdict"></div>
           <div class="pack-checks" id="pack-checks" hidden></div>
           <div class="pack-top" id="pack-top"></div>
 
@@ -166,6 +166,8 @@
             <button class="btn btn--ghost btn--sm" type="button" id="pack-use-suggest">一键更改为合规名</button>
             <button class="btn btn--ghost btn--sm" type="button" id="pack-toggle-table" aria-expanded="true">收起路径</button>
           </div>
+
+          <p class="pack-flash" id="pack-suggest-done" hidden aria-live="polite">已更改！可直接生成合规压缩包</p>
 
           <div class="pack-table-wrap" id="pack-table-wrap">
             <table class="pack-table">
@@ -290,7 +292,7 @@
     </div>
   </div>
 </footer>
-<script src="assets/js/site.js?v=20261254"></script>
+<script src="assets/js/site.js?v=20261259"></script>
 <script src="assets/js/pack-audit.js"></script>
 </body>
 </html>
