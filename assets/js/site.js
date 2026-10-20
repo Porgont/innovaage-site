@@ -786,14 +786,14 @@
           tagline: d.tagline || w.desc || '',
           cover: d.cover || w.img || '',
           coverAlt: d.coverAlt || w.title || '',
-          facts: Array.isArray(d.facts) ? d.facts : [],
+          facts: d.factsText ? parsePairLines(d.factsText) : (Array.isArray(d.facts) ? d.facts : []),
           poster: d.poster || '',
           posterAlt: d.posterAlt || '',
           notice: d.notice || '',
-          thanks: Array.isArray(d.thanks) ? d.thanks : [],
+          thanks: d.thanksText ? parsePairLines(d.thanksText) : (Array.isArray(d.thanks) ? d.thanks : []),
           links: Array.isArray(d.links) ? d.links : [],
           linksTop: !!(d.linksTop || w.linksTop),
-          shots: Array.isArray(d.shots) ? d.shots : [],
+          shots: d.shotsText ? parseShotLines(d.shotsText) : (Array.isArray(d.shots) ? d.shots : []),
           body: typeof d.body === 'string' ? d.body : ''
         };
       });
@@ -1872,6 +1872,18 @@
       return '<div class="work-links__group">' + title +
         '<div class="work-links__row">' + row + '</div></div>';
     }).join('') + '</div>';
+  }
+
+  /* 截图：一行一条「图片路径 | 说明 | 分组名」，后两段可留空。 */
+  function parseShotLines(text) {
+    return String(text || '').split(/\r?\n/).map(function (line) {
+      var t = line.trim();
+      if (!t) return null;
+      var parts = t.split(/\s*[|｜]\s*/);
+      var img = (parts[0] || '').trim();
+      if (!img) return null;
+      return { img: img, alt: (parts[1] || '').trim(), group: (parts[2] || '').trim() };
+    }).filter(Boolean);
   }
 
   /* 专题页正文：把 Markdown 折成原来那套块结构（段落 / 列表 / 单图 / 多图 / 引用），

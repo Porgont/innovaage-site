@@ -226,18 +226,17 @@ content:
                 label: 大图说明
                 type: string
                 description: 不显示在页面上，只给读屏和搜索用。写「图里画了什么」，例如：晴天樱花树下的草地与花簇。
-              - name: facts
-                label: 右栏信息栏
-                type: object
+              - name: factsText
+                label: 右栏信息栏（一行一项）
+                type: text
                 description: |
-                  详情页右侧那张小表，一行一项：项目 + 内容。
-                  常用项目：作品名 / 作者 / 类型 / 平台 / 价格 / 下载渠道。
-                  不确定的信息不要写，宁可少一行；写错比写少更麻烦。
-                list:
-                  collapsible:
-                    collapsed: true
-                    summary: "{k}"
-                  fields:
+                  一行一项，写成「项目 | 内容」，例如：
+
+                  作品名 | 企业·灰色幽灵
+                  作者 | 创想时代 Log_坤
+                  类型 | 皮肤 / Skin
+
+                  竖线中英文都行。不确定的不要写，宁可少一行。
                     - name: k
                       label: 项目
                       type: string
@@ -285,27 +284,19 @@ content:
                   - 问题一，以及临时绕过的办法
 
                   后续更新会写在这里。
-              - name: shots
-                label: 截图（页面底部可点开放大的那一组）
-                type: object
+              - name: shotsText
+                label: 截图（一行一张）
+                type: text
                 description: |
-                  按顺序排，第一张就是第一张图。
-                  同一批图加同样的「分组名」，页面上会插一条小标题分开（例如 基岩版 / Java 版）。
-                  「说明」不显示在页面上，只给读屏用，写清这张图展示了什么。
-                list:
-                  collapsible:
-                    collapsed: true
-                    summary: "{group}"
-                  fields:
-                    - name: img
-                      label: 图
-                      type: image
-                    - name: alt
-                      label: 说明（不显示，只给读屏）
-                      type: string
-                    - name: group
-                      label: 分组名（留空就接着上一组）
-                      type: string
+                  一行一张图，写成「图片路径 | 说明 | 分组」：
+
+                  assets/img/wuming-shot-1.jpg | 主界面 | 基岩版
+                  assets/img/wuming-shot-2.jpg | 材质细节 | 基岩版
+                  assets/img/wuming-shot-3.jpg | 光影效果 | Java 版
+
+                  · 路径从 assets/img/ 开始写
+                  · 说明不显示在页面上，只给读屏用；写清这张图展示了什么
+                  · 分组名留空，或者删掉最后一段，就接着上一组
               - name: poster
                 label: 海报（可选）
                 type: image
@@ -318,21 +309,16 @@ content:
                 label: 使用须知（可选）
                 type: text
                 description: 会渲染成一条提示条，适合写「不要在整合包里二次分发」这类注意事项；没有就留空。
-              - name: thanks
-                label: 鸣谢（可选）
-                type: object
-                description: 详情页底部的鸣谢表，一行一项：项目 + 内容。例如：测试 → 某某、素材 → 某某。
-                list:
-                  collapsible:
-                    collapsed: true
-                    summary: "{k}"
-                  fields:
-                    - name: k
-                      label: 项目
-                      type: string
-                    - name: v
-                      label: 内容
-                      type: string
+              - name: thanksText
+                label: 鸣谢（一行一项）
+                type: text
+                description: |
+                  一行一项，写成「项目 | 内容」，例如：
+
+                  测试 | 某某
+                  素材 | 某某
+
+                  没有就整栏留空。
 
   # ================= 专题页 =================
   # work-rich.html 的正文。排版固定，作者只改文字与图片。
@@ -440,3 +426,4 @@ content:
               · 第二段是分组标题，可以留空
               · 按钮顺序＝这里的行顺序
               · 网址必须以 http 或 https 开头；站外链接自动新窗口打开
+
