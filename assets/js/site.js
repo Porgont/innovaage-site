@@ -1459,6 +1459,24 @@
         return $('#' + t.getAttribute('aria-controls'));
       }).filter(Boolean);
 
+      /* 连成一整条的标签（作品页那排）：底下垫一块黑色滑块，
+         切到哪个就滑到哪个，滑块边缘把 1px 分割线「推」过去。 */
+      var boxed = group.classList.contains('tabs--boxed');
+      var ink = null;
+
+      if (boxed) {
+        ink = document.createElement('span');
+        ink.className = 'tabs__ink';
+        ink.setAttribute('aria-hidden', 'true');
+        group.insertBefore(ink, group.firstChild);
+      }
+
+      function placeInk(tab) {
+        if (!ink || !tab) return;
+        ink.style.width = tab.offsetWidth + 'px';
+        ink.style.transform = 'translateX(' + tab.offsetLeft + 'px)';
+      }
+
       function activate(tab, scroll) {
         var id = tab.getAttribute('aria-controls');
 
@@ -1471,6 +1489,13 @@
         panels.forEach(function (p) {
           p.hidden = p.id !== id;
         });
+
+        placeInk(tab);
+
+        // 手机端标签条会横向滚动：切到看不全的那一项时，把它带进可视区
+        if (ink && group.scrollWidth > group.clientWidth + 4 && tab.scrollIntoView) {
+          tab.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' });
+        }
 
         // 内层标签：把外层包着它的面板也打开，否则点进来还是空的
         var node = panels.filter(function (p) { return p.id === id; })[0];
@@ -1508,6 +1533,13 @@
 
       tabs.forEach(function (tab) {
         tab.addEventListener('click', function () { activate(tab, true); });
+      });
+
+      // 首次：滑块先落到当前选中的标签上
+      placeInk(tabs.filter(function (t) { return t.classList.contains('is-active'); })[0] || tabs[0]);
+
+      window.addEventListener('resize', function () {
+        placeInk(tabs.filter(function (t) { return t.classList.contains('is-active'); })[0]);
       });
 
       var hash = (location.hash || '').replace('#', '');
