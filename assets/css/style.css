@@ -26,12 +26,15 @@ body {
   line-height: 1.8;
   color: var(--text);
   background-color: var(--bg);
-  /* 极淡的工程网格 + 右上角一抹黄，构成终末地的“图纸”底子 */
+  /* 纸感底：细点阵 + 极淡斜纹 + 两处柔光 + 边缘压暗。
+     不用方格网，近看是纸纹，远看是一整片干净底。 */
   background-image:
-    linear-gradient(var(--grid-line) 1px, transparent 1px),
-    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px),
-    radial-gradient(760px 420px at 92% -6%, var(--hero-wash), transparent 62%);
-  background-size: 64px 64px, 64px 64px, auto;
+    radial-gradient(1200px 680px at 88% -10%, var(--hero-wash), transparent 62%),
+    radial-gradient(900px 520px at 2% 104%, color-mix(in srgb, var(--gold) 6%, transparent), transparent 60%),
+    radial-gradient(circle at 1px 1px, var(--bg-dot) 1px, transparent 1.7px),
+    repeating-linear-gradient(135deg, var(--bg-hatch) 0 1px, transparent 1px 11px),
+    radial-gradient(135% 115% at 50% 0%, transparent 56%, var(--bg-vignette) 100%);
+  background-size: auto, auto, 30px 30px, auto, auto;
   background-attachment: fixed;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
