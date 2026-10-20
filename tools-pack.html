@@ -35,9 +35,9 @@
 })();
 </script>
 <link rel="preload" href="assets/fonts/noto-sans-sc.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/fonts.css?v=20261248">
-<link rel="stylesheet" href="assets/css/theme.css?v=20261248">
-<link rel="stylesheet" href="assets/css/style.css?v=20261248">
+<link rel="stylesheet" href="assets/css/fonts.css?v=20261250">
+<link rel="stylesheet" href="assets/css/theme.css?v=20261250">
+<link rel="stylesheet" href="assets/css/style.css?v=20261250">
   <link rel="alternate" type="application/rss+xml" title="创想时代开发组 · 公告" href="feed.xml">
 </head>
 
@@ -139,6 +139,9 @@
             <option value="pe_addon">PE Add-on（zip）</option>
             <option value="pe_tex">PE 材质光影（zip）</option>
             <option value="pe_skin">PE 皮肤（PNG）</option>
+            <option value="pc_map">PC 地图 / 玩法（7z）</option>
+            <option value="pc_mod">PC MOD（7z）</option>
+            <option value="pc_tex">PC 材质 / 光影（7z）</option>
             <option value="site">站内投稿通用（zip）</option>
           </select>
           <span class="note" style="margin:0">不确定就留「自动识别」</span>
@@ -146,10 +149,10 @@
 
         <label class="dropzone" id="pack-drop" for="pack-file" tabindex="0">
           <span class="dropzone-icon" aria-hidden="true">📦</span>
-          <b>选择或拖入 .zip / .png</b>
+          <b>选择或拖入 .zip / .7z / .png</b>
           <span>只在浏览器里读，不会上传</span>
         </label>
-        <input type="file" id="pack-file" accept=".zip,.png,application/zip,image/png" hidden>
+        <input type="file" id="pack-file" accept=".zip,.7z,.png,application/zip,application/x-7z-compressed,image/png" hidden>
         <p class="note" id="pack-file-note">还没有选择文件</p>
 
         <div id="pack-report" hidden>
@@ -193,8 +196,8 @@
         <h3 class="pack-rules__h">站内命名规范（所有类型都查）</h3>
         <ol>
           <li>
-            <b>名字只用字母、数字、下划线、连字符</b>
-            <span>路径和文件名都不能有中文、空格或其它特殊符号；允许 <code>-</code> 与 <code>_</code>，文件名允许一个扩展名点号，例如 <code>block-01.png</code>。</span>
+            <b>文件夹名只用字母、数字、下划线、连字符；文件名还可以带点号</b>
+            <span>路径和文件名都不能有中文、空格或其它特殊符号；允许 <code>-</code> 与 <code>_</code>，文件名里的点号可以有多段，例如 <code>pack.1.0.0.zip</code>；文件夹名里不能带点号。</span>
           </li>
           <li>
             <b>压缩包是 ZIP</b>
@@ -220,9 +223,9 @@
               <tr><td>PE Add-on</td><td>zip</td><td>直接框选 behavior_packs 与 resource_packs 压缩，顶层就是这两个文件夹；两个包里都要有 manifest.json</td></tr>
               <tr><td>PE 材质光影</td><td>zip</td><td>材质文件夹外再套一个新文件夹（顶层一个）；材质包里必须有 textures</td></tr>
               <tr><td>PE 皮肤</td><td>PNG</td><td>直接上传带透明通道的 PNG，不打包</td></tr>
-              <tr><td>PC 地图 / 玩法</td><td>7z</td><td>地图文件夹直接压成 7z（工具暂不支持 7z 检测）</td></tr>
-              <tr><td>PC MOD</td><td>7z</td><td>jar 套进新文件夹后压成 7z（工具暂不支持 7z 检测）</td></tr>
-              <tr><td>PC 材质 / 光影</td><td>7z</td><td>内容先压 zip，再把 zip 放进一个文件夹，最后整个文件夹压 7z（工具暂不支持 7z 检测）</td></tr>
+              <tr><td>PC 地图 / 玩法</td><td>7z</td><td>有且仅有一个顶层文件夹，地图文件夹在里面</td></tr>
+              <tr><td>PC MOD</td><td>7z</td><td>有且仅有一个顶层文件夹，jar 放在里面</td></tr>
+              <tr><td>PC 材质 / 光影</td><td>7z</td><td>有且仅有一个顶层文件夹，里面放一个 zip</td></tr>
               <tr><td>PC 皮肤</td><td>PNG</td><td>直接上传带透明通道的 PNG</td></tr>
             </tbody>
           </table>
@@ -231,7 +234,10 @@
 
       <div class="callout" style="margin-top:22px">
         <span class="icon" aria-hidden="true">🛈</span>
-        <div>工具只读 ZIP 目录、不改文件内容；生成的压缩包里原文件字节不变。7z 需要专门的解压库，浏览器里暂时只做格式提示。</div>
+        <div>
+          ZIP 只读目录、不改文件内容，生成的压缩包里原文件字节不变；7z 由本地打包的 7-Zip WASM 引擎读取（仅在选中 .7z 时才加载，约 1.7 MB），
+          7z 目前只做检测，改名请用 7-Zip 操作。引擎许可：<a href="assets/vendor/7z-wasm/License.txt" target="_blank" rel="noopener">LGPL + unRAR 限制</a>。
+        </div>
       </div>
     </div>
   </section>
@@ -283,7 +289,7 @@
     </div>
   </div>
 </footer>
-<script src="assets/js/site.js?v=20261248"></script>
+<script src="assets/js/site.js?v=20261250"></script>
 <script src="assets/js/pack-audit.js"></script>
 </body>
 </html>

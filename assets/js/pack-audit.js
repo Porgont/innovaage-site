@@ -16,7 +16,7 @@
   'use strict';
 
   var ALLOWED_SEG = /^[A-Za-z0-9_-]+$/;
-  var ALLOWED_FILE = /^[A-Za-z0-9_-]+(\.[A-Za-z0-9_-]+)?$/;
+  var ALLOWED_FILE = /^[A-Za-z0-9_.-]+$/;
   var JUNK_NAMES = ['.ds_store', 'thumbs.db', 'desktop.ini'];
   var utf8 = new TextEncoder();
 
@@ -40,6 +40,9 @@
     { id: 'pe_addon', name: 'PE Add-on', kind: 'zip', wrapTop: false },
     { id: 'pe_tex', name: 'PE 材质光影', kind: 'zip', wrapTop: true },
     { id: 'pe_skin', name: 'PE 皮肤', kind: 'png', wrapTop: false },
+    { id: 'pc_map', name: 'PC 地图 / 玩法', kind: '7z', wrapTop: true },
+    { id: 'pc_mod', name: 'PC MOD', kind: '7z', wrapTop: true },
+    { id: 'pc_tex', name: 'PC 材质 / 光影', kind: '7z', wrapTop: true },
     { id: 'site', name: '站内投稿通用', kind: 'zip', wrapTop: true }
   ];
 
@@ -185,6 +188,12 @@
     var s = String(seg).replace(/[^A-Za-z0-9_-]/g, '_').replace(/_+/g, '_').replace(/^_+|_+$/g, '');
     return s || 'file';
   }
+  /* 文件名保留点号（可多段） */
+  function sanitizeFileSeg(seg) {
+    var s = String(seg).replace(/[^A-Za-z0-9_.-]/g, '_').replace(/_+/g, '_').replace(/\.{2,}/g, '.').replace(/^_+|_+$/g, '');
+    return s || 'file';
+  }
+
   function sanitizeName(name, isDir) {
     var segs = String(name).split('/');
     var last = -1;
@@ -192,11 +201,7 @@
     return segs.map(function (seg, i) {
       if (seg === '') return '';
       if (i !== last || isDir) return sanitizeSeg(seg);
-      var dot = seg.lastIndexOf('.');
-      if (dot > 0 && dot < seg.length - 1) {
-        return sanitizeSeg(seg.slice(0, dot)) + '.' + sanitizeSeg(seg.slice(dot + 1));
-      }
-      return sanitizeSeg(seg);
+      return sanitizeFileSeg(seg);
     }).filter(function (s) { return s !== ''; }).join('/');
   }
   function descChar(ch) {
@@ -212,12 +217,11 @@
     if (!segs.length) return ['路径为空'];
     segs.forEach(function (seg, i) {
       var isFileSeg = i === segs.length - 1 && !isDir;
-      var dotIndex = isFileSeg ? seg.lastIndexOf('.') : -1;
       var bad = [];
       for (var c = 0; c < seg.length; c++) {
-        if (c === dotIndex) continue;
         var ch = seg.charAt(c);
-        if (!/[A-Za-z0-9_-]/.test(ch) && bad.indexOf(ch) < 0) bad.push(ch);
+        var ok = isFileSeg ? /[A-Za-z0-9_.-]/.test(ch) : /[A-Za-z0-9_-]/.test(ch);
+        if (!ok && bad.indexOf(ch) < 0) bad.push(ch);
       }
       if (bad.length) list.push('第 ' + (i + 1) + ' 段含' + bad.map(descChar).join('、'));
     });
@@ -395,6 +399,133 @@
     return { width: width, height: height, bitDepth: bitDepth, colorType: colorType, hasAlpha: hasAlpha };
   }
 
+  /* ---------- 7z（延迟加载 wasm） ---------- */
+  var sevenZipFactory = null;
+
+  function loadSevenZipFactory() {
+    if (sevenZipFactory) return sevenZipFactory;
+    sevenZipFactory = new Promise(function (resolve, reject) {
+      if (typeof window.SevenZip === 'function') { resolve(window.SevenZip); return; }
+      var script = document.createElement('script');
+      script.src = 'assets/vendor/7z-wasm/7zz.umd.js';
+      script.onload = function () {
+        if (typeof window.SevenZip === 'function') resolve(window.SevenZip);
+        else reject(new Error('7z 引擎没有注册（脚本不完整）'));
+      };
+      script.onerror = function () { reject(new Error('7z 引擎加载失败（assets/vendor/7z-wasm/）')); };
+      document.head.appendChild(script);
+    });
+    return sevenZipFactory;
+  }
+
+  function parse7zList(text) {
+    var entries = [];
+    var cur = null;
+    var started = false;
+    text.split(/\r?\n/).forEach(function (line) {
+      if (/^-{6,}$/.test(line.trim())) { started = true; return; }
+      if (!started) return;
+      var t = line.trim();
+      if (t.indexOf('Path = ') === 0) {
+        cur = { name: t.slice(7).replace(/\\/g, '/'), isDir: false, size: 0 };
+        if (cur.name && cur.name !== '/in.7z') entries.push(cur); else cur = null;
+      } else if (cur && t.indexOf('Folder = ') === 0) {
+        if (t.slice(9).trim() === '+') cur.isDir = true;
+      } else if (cur && t.indexOf('Attributes = ') === 0) {
+        if (/^D/.test(t.slice(13).trim())) cur.isDir = true;
+      } else if (cur && t.indexOf('Size = ') === 0) {
+        var n = parseInt(t.slice(7).trim(), 10);
+        if (!isNaN(n)) cur.size = n;
+      }
+    });
+    return entries;
+  }
+
+  function list7z(buffer) {
+    return loadSevenZipFactory().then(function (Factory) {
+      return new Promise(function (resolve, reject) {
+        var out = '';
+        var err = '';
+        Factory({
+          locateFile: function (f) { return 'assets/vendor/7z-wasm/' + f; },
+          print: function (t) { out += t + '\n'; },
+          printErr: function (t) { err += t + '\n'; }
+        }).then(function (sz) {
+          try {
+            sz.FS.writeFile('/in.7z', new Uint8Array(buffer));
+            sz.callMain(['l', '-slt', '/in.7z']);
+            resolve(parse7zList(out));
+          } catch (e) {
+            reject(new Error('7z 解析失败：' + (err.trim() || e.message)));
+          }
+        }, reject);
+      });
+    });
+  }
+
+  function detect7zType(index) {
+    var anyFile = function (re) { return Object.keys(index.files).some(function (p) { return re.test(p); }); };
+    if (anyFile(/\.zip$/i)) return 'pc_tex';
+    if (anyFile(/\.jar$/i)) return 'pc_mod';
+    return 'pc_map';
+  }
+
+  function audit7z(list, typeSel, fileName) {
+    var entries = list.map(function (e) {
+      return { name: e.name, isDir: e.isDir, method: 0, time: 0, date: 0, crc: 0,
+        csize: 0, usize: e.size || 0, extAttr: 0, dataStart: 0, dataEnd: 0 };
+    });
+    var index = buildIndex(entries);
+    var type = typeSel === 'auto' ? detect7zType(index) : typeSel;
+    var spec = typeById(type);
+
+    var tops = Object.keys(index.tops);
+    var rootFiles = entries.filter(function (e) {
+      return !isJunk(e.name) && segments(e.name).length === 1 && !e.isDir;
+    }).map(function (e) { return e.name; });
+
+    var structureOk = true, structureProblem = '';
+    if (rootFiles.length) { structureOk = false; structureProblem = '根目录直接有 ' + rootFiles.length + ' 个文件'; }
+    else if (tops.length === 0) { structureOk = false; structureProblem = '压缩包里没有文件夹'; }
+    else if (tops.length > 1) { structureOk = false; structureProblem = '顶层有 ' + tops.length + ' 个文件夹：' + tops.slice(0, 4).join('、'); }
+
+    var checks = [];
+    var anyFile = function (re) { return Object.keys(index.files).some(function (p) { return re.test(p); }); };
+    var zipFiles = Object.keys(index.files).filter(function (p) { return /\.zip$/i.test(p); });
+    if (type === 'pc_mod') {
+      checks.push({ label: '包里有一个 .jar', ok: anyFile(/\.jar$/i) });
+    } else if (type === 'pc_tex') {
+      checks.push({ label: '包里有一个 .zip', ok: zipFiles.length > 0 });
+      checks.push({ label: '顶层只有一个 .zip', ok: zipFiles.length === 1 });
+    }
+    var checksOk = checks.every(function (c) { return c.ok; });
+
+    var topName = tops.length === 1 && ALLOWED_SEG.test(tops[0]) ? tops[0] : suggestTopName();
+
+    var rows = [];
+    entries.forEach(function (e) {
+      if (isJunk(e.name)) {
+        rows.push({ entry: e, original: e.name, isDir: e.isDir, junk: true, inner: '', origInner: '', origIssues: [], suggestion: '', innerIssues: [], changed: false });
+        return;
+      }
+      var segs = segments(e.name);
+      if (tops.length === 1 && segs.length === 1 && e.isDir && segs[0] === tops[0]) return;
+      var inner = tops.length === 1 ? segs.slice(1).join('/') : segs.join('/');
+      var suggestion = sanitizeName(inner, e.isDir);
+      rows.push({
+        entry: e, original: e.name, origInner: inner, origIssues: issuesOfPath(inner, e.isDir),
+        suggestion: suggestion, isDir: e.isDir, junk: false,
+        inner: suggestion, innerIssues: issuesOfPath(suggestion, e.isDir),
+        changed: suggestion !== inner
+      });
+    });
+    dedupeSuggestions(rows);
+
+    return { entries: entries, index: index, type: type, spec: spec, rows: rows, tops: tops,
+      rootFiles: rootFiles, topName: topName, structureOk: structureOk, structureProblem: structureProblem,
+      checks: checks, checksOk: checksOk, archive: '7z' };
+  }
+
   /* ---------- 界面 ---------- */
   function bind() {
     el.input = $('#pack-file');
@@ -463,9 +594,10 @@
   function load(file) {
     pendingBase = file.name;
     var isPng = /\.png$/i.test(file.name);
+    var is7z = /\.7z$/i.test(file.name);
     if (el.type.value === 'pe_skin' && !isPng) { fail('皮肤类型要选一个 .png 文件，不是压缩包'); return; }
-    if (!isPng && !/\.zip$/i.test(file.name)) {
-      fail('「' + file.name + '」不是 .zip 文件 —— 投稿只收 ZIP（皮肤是 PNG）');
+    if (!isPng && !/\.zip$/i.test(file.name) && !is7z) {
+      fail('「' + file.name + '」不是 .zip / .7z / .png 文件');
       return;
     }
     var reader = new FileReader();
@@ -484,6 +616,21 @@
   function reload() {
     try {
       var typeSel = el.type.value;
+      if (/\.7z$/i.test(state.file.name) || typeSel.indexOf('pc_') === 0) {
+        state.kind = '7z';
+        el.note.textContent = '正在用 7z 引擎读取 ' + state.file.name + ' …';
+        el.note.classList.remove('is-bad');
+        state.autoType = typeSel === 'auto';
+        list7z(state.buffer).then(function (list) {
+          state.audit = audit7z(list, typeSel, state.file.name);
+          state.rows = state.audit.rows;
+          if (typeSel === 'auto') el.type.value = state.audit.type;
+          el.note.textContent = state.file.name + ' · ' + sizeText(state.file.size) + ' ' + sizeUnit(state.file.size) + ' · 7z';
+          el.note.classList.remove('is-bad');
+          paint();
+        }).catch(function (err) { fail('读不了这个 7z：' + err.message); });
+        return;
+      }
       if (/\.png$/i.test(state.file.name) || typeSel === 'pe_skin') {
         state.kind = 'png';
         state.audit = null;
@@ -618,6 +765,7 @@
 
     var dup = findDuplicates(rows, top, a.spec.wrapTop);
     var why = [];
+    if (a.archive === '7z') why.push('7z 包目前只做检测，改名请用 7-Zip 手动操作');
     if (!topOk) why.push('顶层文件夹名不合规');
     if (badNames.length) why.push(badNames.length + ' 处名字仍不合规');
     if (dup.length) why.push('有重名：' + dup.slice(0, 3).join('、'));
@@ -654,6 +802,11 @@
   function build() {
     var a = state.audit;
     if (!a) return;
+    if (a.archive === '7z') {
+      el.result.textContent = '7z 包目前只做检测：按上面的名字改好后，用 7-Zip 重新打包再上传。';
+      el.result.classList.add('is-warn');
+      return;
+    }
     var rows = visibleRows();
     var top = topValue();
     var wrap = a.spec.wrapTop;
