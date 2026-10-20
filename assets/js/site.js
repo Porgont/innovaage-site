@@ -1934,7 +1934,8 @@
       if (parts.length < 2) {
         var m = /^([^：:]+)[：:]\s*(.+)$/.exec(t);
         if (m) return { k: m[1].trim(), v: m[2].trim() };
-        return null;
+        // 实在看不出「项目 | 内容」就把整行当项目名，别让作者写的东西凭空消失
+        return { k: t, v: '' };
       }
       return { k: parts[0].trim(), v: parts.slice(1).join(' | ').trim() };
     }).filter(Boolean);
@@ -1948,11 +1949,18 @@
       var t = line.trim();
       if (!t) return;
       var parts = t.split(/\s*[|｜]\s*/);
-      if (parts.length < 2) return;
+      var urlMatch = /https?:\/\/[^\s|｜]+/.exec(t);
+      if (parts.length < 2) {
+        // 只写了一行「文字 https://…」也收下，不整行丢掉
+        if (!urlMatch) return;
+        var only = t.replace(urlMatch[0], '').replace(/[|｜]/g, '').trim();
+        parts = ['', '', only || urlMatch[0], urlMatch[0]];
+      }
       var section = '', group = '', label = '', href = '';
       if (parts.length >= 4) { section = parts[0].trim(); group = parts[1].trim(); label = parts[2].trim(); href = parts[3].trim(); }
       else if (parts.length === 3) { group = parts[0].trim(); label = parts[1].trim(); href = parts[2].trim(); }
       else { label = parts[0].trim(); href = parts[1].trim(); }
+      if (!/^https?:\/\//.test(href) && urlMatch) href = urlMatch[0];
       if (!href) return;
       var key = section;
       if (!bySection[key]) bySection[key] = [];
