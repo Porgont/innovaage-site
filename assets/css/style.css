@@ -7222,6 +7222,14 @@ p, li,
   contain-intrinsic-size: auto 440px;
 }
 
+/* 上面这条的 440px 是两轴的预估尺寸，屏幕外的卡片会被当成 440px 宽，
+   手机上古格子的 min-width:auto 就撑到 480，页面能横向滑动。
+   把最小宽度归零，卡片跟着格子收缩。 */
+.work,
+.notice {
+  min-width: 0;
+}
+
 /* ① 命名过渡分组统一时长与缓动（名字按作品 id 动态生成，这里统一收口） */
 ::view-transition-group(*) {
   animation-duration: .44s;
