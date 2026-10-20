@@ -109,3 +109,82 @@ content:
           - name: desc
             label: 一句话简介（不写句号）
             type: text
+
+          # —— 以下是详情页（点「查看详情」看到的那一页）——
+          - name: author
+            label: 详情页作者（例如 创想时代 Log_坤）
+            type: string
+          - name: type
+            label: 详情页类型行（例如 光影 / Shader）
+            type: string
+          - name: tagline
+            label: 详情页副标题（标题下面那句）
+            type: text
+          - name: cover
+            label: 详情页大图（不填就用上面的封面图）
+            type: image
+          - name: coverAlt
+            label: 大图说明（给读屏和搜索用，一句话）
+            type: string
+          - name: facts
+            label: 右栏信息栏（每行一项，例如 作者 / 类型 / 平台）
+            type: object
+            list:
+              collapsible:
+                collapsed: true
+                summary: "{k}"
+              fields:
+                - name: k
+                  label: 项目
+                  type: string
+                - name: v
+                  label: 内容
+                  type: string
+                - name: bold
+                  label: 加粗显示
+                  type: boolean
+          - name: body
+            label: 正文（Markdown：空行分段、## 小标题、- 列表、![](图片) 插图）
+            type: rich-text
+            options:
+              format: markdown
+          - name: shots
+            label: 截图（页面底部那一组，可点开放大）
+            type: object
+            list:
+              collapsible:
+                collapsed: true
+                summary: "{group}"
+              fields:
+                - name: img
+                  label: 图
+                  type: image
+                - name: alt
+                  label: 说明（不显示，只给读屏用）
+                  type: string
+                - name: group
+                  label: 分组名（留空就接着上一组）
+                  type: string
+          - name: poster
+            label: 海报（可选，正文最前面的大图）
+            type: image
+          - name: posterAlt
+            label: 海报说明
+            type: string
+          - name: notice
+            label: 使用须知（可选，红色提示条）
+            type: text
+          - name: thanks
+            label: 鸣谢（可选）
+            type: object
+            list:
+              collapsible:
+                collapsed: true
+                summary: "{k}"
+              fields:
+                - name: k
+                  label: 项目
+                  type: string
+                - name: v
+                  label: 内容
+                  type: string

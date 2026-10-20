@@ -88,6 +88,10 @@
      它们各有各的排版，不做模板化。 */
   var SHOWCASE = [];
 
+  /* 代表作品的详情页数据（也是从 content/works.json 来）。
+     专题页、测试中作品没有进这份表，仍走代码里的 WORKS。 */
+  var WORK_DETAILS = {};
+
   /* 系列作品专题页 —— 在官网上发布的作品，字段与 SHOWCASE 相同。
      作品页默认打开的就是这一栏。 */
   var SHOWCASE_HOME = [
@@ -752,6 +756,31 @@
         });
 
       SHOWCASE = (both[1] || []).filter(function (w) { return w && w.title; });
+
+      // 有 type 或 body 的条目才算写了详情页
+      WORK_DETAILS = {};
+      SHOWCASE.forEach(function (w) {
+        if (!w || !w.id) return;
+        if (!w.type && !w.body) return;
+        WORK_DETAILS[w.id] = {
+          id: w.id,
+          name: w.title,
+          author: w.author || '',
+          type: w.type || '',
+          tagline: w.tagline || w.desc || '',
+          cover: w.cover || w.img || '',
+          coverAlt: w.coverAlt || w.title || '',
+          facts: Array.isArray(w.facts) ? w.facts : [],
+          poster: w.poster || '',
+          posterAlt: w.posterAlt || '',
+          notice: w.notice || '',
+          thanks: Array.isArray(w.thanks) ? w.thanks : [],
+          links: Array.isArray(w.links) ? w.links : [],
+          linksTop: !!w.linksTop,
+          shots: Array.isArray(w.shots) ? w.shots : [],
+          body: typeof w.body === 'string' ? w.body : ''
+        };
+      });
     }).catch(function (err) {
       // 读不到就保持空列表，页面其余部分照常工作
       if (window.console && console.warn) console.warn('内容数据加载失败', err);
@@ -1823,6 +1852,56 @@
     }).join('') + '</div>';
   }
 
+  /* 把详情正文（Markdown）渲染成和原来同一套结构：
+     段落 / 小标题 / 列表 / 单图 / 连续多图（图组）。 */
+  function renderWorkBody(md) {
+    var text = String(md == null ? '' : md).replace(/\r\n?/g, '\n');
+    if (!text.trim()) return '';
+
+    var out = [];
+    var list = [];
+    var imgs = [];
+
+    function flushList() {
+      if (!list.length) return;
+      out.push('<ul class="work-list">' + list.map(function (it) {
+        return '<li>' + escMark(it) + '</li>';
+      }).join('') + '</ul>');
+      list = [];
+    }
+
+    function flushImgs() {
+      if (!imgs.length) return;
+      var figs = imgs.map(function (im) {
+        return '<figure class="work-figure">' +
+          '<img src="' + esc(im.src) + '" alt="' + esc(im.alt || '') + '" loading="lazy" decoding="async">' +
+        '</figure>';
+      });
+      out.push(imgs.length > 1 ? '<div class="work-figure-grid">' + figs.join('') + '</div>' : figs[0]);
+      imgs = [];
+    }
+
+    text.split('\n').forEach(function (raw) {
+      var t = raw.trim();
+      if (!t) { flushList(); flushImgs(); return; }
+
+      var h = /^##\s+(.+)$/.exec(t);
+      if (h) { flushList(); flushImgs(); out.push('<h3 class="work-heading">' + escMark(h[1]) + '</h3>'); return; }
+
+      var li = /^-\s+(.+)$/.exec(t);
+      if (li) { flushImgs(); list.push(li[1]); return; }
+
+      var im = /^!\[([^\]]*)\]\(([^)]+)\)$/.exec(t);
+      if (im) { flushList(); imgs.push({ alt: im[1], src: im[2] }); return; }
+
+      flushList(); flushImgs();
+      out.push('<p>' + escMark(t) + '</p>');
+    });
+
+    flushList(); flushImgs();
+    return out.join('');
+  }
+
   function initWorkDetail() {
     var host = $('#work-detail');
     if (!host) return;
@@ -1836,7 +1915,7 @@
       id = m ? decodeURIComponent(m[1]) : '';
     }
 
-    var work = WORKS[id];
+    var work = WORK_DETAILS[id] || WORKS[id];
     if (!work) {
       // 没带 id 或 id 不存在：保留 HTML 里的默认代表作，并提示一句
       if (id) {
@@ -1940,7 +2019,9 @@
           '</figure>'
         );
       }
-      if (work.intro && work.intro.length) {
+      if (work.body && work.body.trim()) {
+        parts.push(renderWorkBody(work.body));
+      } else if (work.intro && work.intro.length) {
         parts.push(work.intro.map(function (p) {
           // 纯字符串 = 一段正文（正文里允许 <span class="mark"> 画下划线）
           if (typeof p === 'string') return '<p>' + escMark(p) + '</p>';
@@ -2022,7 +2103,8 @@
 
     // 系列作品专题页（SHOWCASE_HOME）里的作品一律不列截图 —— 图片都直接插在正文对应位置。
     // 这条是硬规则，写在代码里，不靠数据里记得清空 shots。
-    var isSiteWork = SHOWCASE_HOME.some(function (it) { return it.id === work.id; });
+    var selfId = work.id || id;
+    var isSiteWork = SHOWCASE_HOME.some(function (it) { return it.id === selfId; });
     var shotList = isSiteWork ? [] : (work.shots || []);
 
     if (shotsSection && !shotList.length) {
@@ -2059,17 +2141,22 @@
     }
 
     // 上一件 / 下一件
-    var ids = Object.keys(WORKS);
+    var ids = Object.keys(WORK_DETAILS).concat(
+      Object.keys(WORKS).filter(function (k) { return !WORK_DETAILS[k]; })
+    );
     if (ids.length > 1) {
       var idx = ids.indexOf(id);
-      var prev = WORKS[ids[(idx - 1 + ids.length) % ids.length]];
-      var next = WORKS[ids[(idx + 1) % ids.length]];
+      if (idx < 0) idx = 0;
+      var prevId = ids[(idx - 1 + ids.length) % ids.length];
+      var nextId = ids[(idx + 1) % ids.length];
+      var prev = WORK_DETAILS[prevId] || WORKS[prevId];
+      var next = WORK_DETAILS[nextId] || WORKS[nextId];
       var nav = $('#work-nav');
       if (nav) {
         nav.hidden = false;
         nav.innerHTML =
-          '<a class="btn btn--ghost btn--sm" href="work.html?id=' + esc(ids[(idx - 1 + ids.length) % ids.length]) + '">← ' + esc(prev.name) + '</a>' +
-          '<a class="btn btn--ghost btn--sm" href="work.html?id=' + esc(ids[(idx + 1) % ids.length]) + '">' + esc(next.name) + ' →</a>';
+          '<a class="btn btn--ghost btn--sm" href="work.html?id=' + esc(prevId) + '">← ' + esc(prev.name) + '</a>' +
+          '<a class="btn btn--ghost btn--sm" href="work.html?id=' + esc(nextId) + '">' + esc(next.name) + ' →</a>';
       }
     }
 
