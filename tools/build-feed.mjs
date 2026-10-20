@@ -26,34 +26,10 @@ const DAY = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 /* ---------- 取公告数据 ---------- */
 function loadAnnouncements() {
-  const src = readFileSync(resolve(ROOT, 'assets/js/site.js'), 'utf8');
-  const start = src.indexOf('var ANNOUNCEMENTS = [');
-  if (start < 0) throw new Error('在 site.js 里找不到 ANNOUNCEMENTS');
-
-  // 从 '[' 开始按括号配对，字符串里的括号不算
-  const begin = src.indexOf('[', start);
-  let depth = 0;
-  let inStr = null;
-  let end = -1;
-  for (let i = begin; i < src.length; i++) {
-    const ch = src[i];
-    if (inStr) {
-      if (ch === '\\') { i++; continue; }
-      if (ch === inStr) inStr = null;
-      continue;
-    }
-    if (ch === "'" || ch === '"' || ch === '`') { inStr = ch; continue; }
-    if (ch === '[') depth++;
-    else if (ch === ']') {
-      depth--;
-      if (depth === 0) { end = i + 1; break; }
-    }
-  }
-  if (end < 0) throw new Error('ANNOUNCEMENTS 数组没有闭合');
-
-  const literal = src.slice(begin, end);
-  // 这块数组是纯数据（只有字符串、数字、布尔），可以直接求值
-  return new Function('return ' + literal)();
+  // 公告已经不在 site.js 里了，改读 content/announcements.json
+  const data = JSON.parse(readFileSync(resolve(ROOT, 'content/announcements.json'), 'utf8'));
+  const list = Array.isArray(data) ? data : (data.announcements || []);
+  return list.filter(function (a) { return a && a.id && a.title; });
 }
 
 /* ---------- 小工具 ---------- */

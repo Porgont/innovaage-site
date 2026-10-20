@@ -82,72 +82,11 @@
     { img: 'assets/img/hero-works.jpg', alt: '雪原与松林俯瞰' }
   ];
 
-  var SHOWCASE = [
-    {
-      id: 'enterprise-gray-ghost',
-      img: 'assets/img/enterprise-gray-ghost.jpg',
-      title: '企业-灰色幽灵',
-      meta: '作者：创想时代 Mingxiang｜渲染：创想时代 柑柠',
-      category: 'skin',
-      desc: '付费皮肤，参考并较高水平地还原了游戏《碧蓝航线》的角色企业'
-    },
-    {
-      id: 'log7-birch',
-      img: 'assets/img/log7-1.jpg',
-      title: 'Log7桦木 · 完整版',
-      meta: '作者：创想时代 Log_坤',
-      category: 'shader',
-      desc: '付费光影：可触碰的体积云、体积光与丁达尔效应、水面实时反射'
-    },
-    {
-      id: 'log-shader-sa',
-      img: 'assets/img/shader-2.jpg',
-      title: 'Log橡木SA',
-      meta: '作者：Log坤',
-      category: 'shader',
-      desc: '基岩版光影，主打水面镜面反射与自然光过渡'
-    },
-    {
-      id: 'qiushui-sanchi',
-      img: 'assets/img/qiushui-1.jpg',
-      title: '秋水三尺',
-      meta: '作者：余末YuuMo',
-      category: 'map',
-      desc: '祈水，祈的是秋水三尺！'
-    },
-    {
-      id: 'lingling-v5000-oak7',
-      img: 'assets/img/lingling-1.jpg',
-      title: '零雾构想V5000 · 橡木7画质提升包',
-      meta: '作者：Log坤',
-      category: 'addon',
-      desc: '把零雾构想V5000 内置光影换成 Log 橡木7'
-    },
-    {
-      id: 'lingling-universal',
-      img: 'assets/img/lingling-u-1.jpg',
-      title: '零雾构想通用版',
-      meta: '作者：零雾〇5Fogg05、Windows、Log_坤',
-      category: 'tex',
-      desc: '零雾构想与 Log 白桦木再次联动，内置 V5003 与 Log 白桦木灵动视效包'
-    },
-    {
-      id: 'bilibili-pvp-textures',
-      img: 'assets/img/qingju-bilibili-pvp.jpg',
-      title: 'Bilibili PVP Textures',
-      meta: '作者：青橘',
-      category: 'tex',
-      desc: '取自作者早期作品 Bilibili UI 衍生而成的 PVP 材质，贴图与天空皆为原创'
-    },
-    {
-      id: 'deer-pvp-textures',
-      img: 'assets/img/qingju-deer-pvp.jpg',
-      title: 'Deer PVP 材质',
-      meta: '作者：青橘',
-      category: 'tex',
-      desc: '100% 原创的 PVP 材质，从方块到物品全部手绘，天空另外做了处理'
-    }
-  ];
+  /* 代表作品卡片数据不写在代码里：放在 content/works.json，
+     用 Pages CMS 就能以表单形式增删改（字段见 .pages.yml）。
+     专题页（SHOWCASE_HOME）与测试中作品（SHOWCASE_TEST）仍然写在下面，
+     它们各有各的排版，不做模板化。 */
+  var SHOWCASE = [];
 
   /* 系列作品专题页 —— 在官网上发布的作品，字段与 SHOWCASE 相同。
      作品页默认打开的就是这一栏。 */
@@ -770,78 +709,50 @@
      列表只显示标题和一小段摘要，点进 article.html?id=xxx 才看全文。
      ★ 新增公告记得给 id，且要唯一。
      ========================================================== */
-  var ANNOUNCEMENTS = [
-    {
-      id: 'subdomain-open',
-      date: '2023-07-05',
-      title: '关于innovaage.cn二级域名开放使用的公告',
-      color: 'diamond',
-      tags: ['站点'],
-      body:
-        '目前创想时代开发组全新官网innovaage.cn正在持续准备中，具体完工可访问时间未确定。\n\n' +
-        '为了扩大域名的使用范围，决定对创想时代全体成员免费开放使用该域名，二级域名由申请人自行决定。\n\n' +
-        '<strong>你必须想一个心仪的二级域名</strong>，比如说weilian，simao，只能用字母，因为不带二级域名的innovaage.cn是以后用作官网的域名。\n\n' +
-        '需要申请使用该域名的创想时代成员，请在首席开发官处进行申请，需要说明具体用途。\n\n' +
-        '注解：例如小明需要开一个我的世界服务器，但是这个服务器只有一个公网ip：xx.xxx.xx.xxx，那么小明可以申请使用创想时代的innovaage.cn域名，然后使用二级域名xiaoming，那么就可以将xiaoming.innovaage.cn作为他的服务器ip地址。\n\n' +
-        '如果您需要申请，需要想好一个二级域名，即xxx.innovaage.cn中的xxx，以及提供用途，还有需要解析到的地方（解析，简单来说就是把这个域名用在哪个地方，比如说可像上面举的例子一样，就是把xiaoming.innovaage.cn解析到了他的服务器公网ip xx.xxx.xx.xxx）\n\n' +
-        '<strong>二级域名的使用不限量且不收费。</strong>'
-    },
-    {
-      id: 'invest-open',
-      date: '2026-10-17',
-      title: '开放代投业务',
-      color: 'green',
-      pin: true,
-      tags: ['招募', '代投'],
-      body:
-        '依托我们庞大的粉丝群体与流量优势，你的作品上架资源中心，能够拿到更高曝光，获得更多玩家浏览下载。' +
-        '接收地图、皮肤、材质、光影、功能玩法优质组件，免费 / 付费作品均可投递。\n\n' +
-        '- <strong>优势：</strong>粉丝基数大，自带流量加持，助力你的作品被更多玩家看见。\n' +
-        '- **转载非原创作品需原作者授权**，否则无法代投（例如从网站上随意下载的皮肤）。\n' +
-        '- 所投组件必须遵守《创想时代开发组投稿条例》。\n' +
-        '- 结算规则见群内公告的《创想时代开发组收益结算细则》。\n' +
-        '- 以上文件均可在《创想时代开发组投稿问卷》中查阅，加入开发理事会即可详细了解并投递稿件。\n\n' +
-        '代投请加**创想时代开发理事会群：1018260006**。详见 [代投与投稿](join.html#panel-invest)。'
-    },
-    {
-      id: 'audit-rules',
-      date: '2026-10-17',
-      title: '入室审核条例已公布',
-      color: 'green',
-      tags: ['招募'],
-      body:
-        '如需审核加入我室，请按照 [《创想时代开发组入室审核条例》](https://docs.qq.com/doc/DUEhwRVVmaE1ESUts) ' +
-        '中所述流程进行审核，条例中同时也有各部门的介绍。\n\n' +
-        '> 注意：阅读理解能力也算做基本素质的一部分，因此需要您**自行阅读条例**；若有疑问请询问群内管理员。\n\n' +
-        '流程概要：**初审 → 一审 → 二审**。其中**初审在对外审核群（1045216325）内进行**，' +
-        '初审通过后再到官网填写 [一审问卷](join.html#panel-rules)。'
-    },
-    {
-      id: 'site-launch',
-      date: '2026-10-16',
-      title: '里程碑：创想时代开发组官网开放！',
-      color: 'gold',
-      tags: ['站点', '里程碑'],
-      body:
-        '<strong>创想时代开发组新官网（innovaage.cn）正式启用啦！</strong>\n\n' +
-        '网站采用丝滑的动效和简洁但高级的UI；网站内有各种关于我们的信息，各种作品信息以及发布于官网的作品！\n\n' +
-        '其中重点介绍“工具箱”，目前含有图片处理，视频处理，格式转换，以及由创想时代的成员开发的材质对比工具，基岩版打包器，全部免费提供！\n\n' +
-        '另外，创想时代成员现在可以选择将自己的作品发布到创想时代的官网，亦可将自己的作品作为代表作品放在创想时代官网进行展示，也可将自己想要对外公测的作品放在官网！\n\n' +
-        '同时，官网内现在还有创想之都一期的专题页，可以观赏图片或免费下载地图进行游玩体验！\n\n' +
-        '目前创想时代官网还在持续优化中，可以提出建议或问题反馈！'
-    },
-    {
-      id: 'module-50m-milestone',
-      date: '2026-07-27',
-      title: '模组总销量突破 5000 万',
-      color: 'redstone',
-      tags: ['里程碑'],
-      body:
-        '![数据海报：创想时代开发组旗下《我的世界》中国版模组总销量突破 5000 万](assets/img/milestone-50m.jpg)\n\n' +
-        '2026 年 7 月 27 日，创想时代开发组旗下《我的世界》中国版主开发者账号发布的模组总销量' +
-        '（即总下载量）突破 **5000 万次**，标志着创想一个新的里程碑。'
+  /* 公告数据不写在代码里：放在 content/announcements.json，
+     用 Pages CMS 打开仓库就能以表单形式增删改（字段见 .pages.yml）。
+     页面启动时读一次，读到之前列表是骨架屏。 */
+  var ANNOUNCEMENTS = [];
+
+  function loadContent() {
+    if (!window.fetch) return Promise.resolve();
+
+    function read(path, key) {
+      return fetch(path, { cache: 'no-cache' })
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (data) {
+          if (!data) return;
+          var list = data[key] || data;
+          return Array.isArray(list) ? list : null;
+        });
     }
-  ];
+
+    return Promise.all([
+      read('content/announcements.json', 'announcements'),
+      read('content/works.json', 'works')
+    ]).then(function (both) {
+      // 标签在 CMS 里可能存成「招募,代投」这样的字符串，统一成数组
+      function tagsOf(v) {
+        if (Array.isArray(v)) return v.filter(Boolean);
+        if (typeof v === 'string') {
+          return v.split(/[,，、]/).map(function (s) { return s.trim(); }).filter(Boolean);
+        }
+        return [];
+      }
+
+      ANNOUNCEMENTS = (both[0] || []).filter(function (n) { return n && n.id && n.title; })
+        .map(function (n) {
+          n.tags = tagsOf(n.tags);
+          n.pin = n.pin === true || n.pin === 'true';
+          return n;
+        });
+
+      SHOWCASE = (both[1] || []).filter(function (w) { return w && w.title; });
+    }).catch(function (err) {
+      // 读不到就保持空列表，页面其余部分照常工作
+      if (window.console && console.warn) console.warn('内容数据加载失败', err);
+    });
+  }
 
   /* ---------- 小工具 ---------- */
   function $(sel, root) { return (root || document).querySelector(sel); }
@@ -3776,6 +3687,11 @@
 
   /* ---------- 启动 ---------- */
   function boot() {
+    // 公告是外部数据，先读完再渲染，避免列表空一帧
+    loadContent().then(start, start);
+  }
+
+  function start() {
     markActiveNav();
     fillYear();
     applyConfigToDom();

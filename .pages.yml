@@ -1,0 +1,112 @@
+# Pages CMS 配置（https://pagescms.org）
+# 这个文件决定编辑器里有哪些栏目、每个栏目的表单长什么样。
+# 访客访问官网时不会读它，也不会因此产生任何外部请求。
+#
+# 用法：打开 https://app.pagescms.org → 选本仓库 → 左侧出现「公告」「代表作品」两个栏目。
+
+media:
+  input: assets/img
+  output: assets/img
+  categories: [image]
+
+content:
+  # ---------------- 公告 ----------------
+  - name: announcements
+    label: 公告
+    type: file
+    path: content/announcements.json
+    fields:
+      - name: announcements
+        label: 公告列表
+        type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{title} · {date}"
+        fields:
+          - name: id
+            label: 标识（英文小写，全站唯一，链接会用到；例如 new-year-2027）
+            type: string
+            required: true
+          - name: date
+            label: 日期
+            type: date
+            options:
+              format: yyyy-MM-dd
+          - name: title
+            label: 标题
+            type: string
+            required: true
+          - name: color
+            label: 卡片颜色
+            type: select
+            options:
+              values:
+                - name: gold
+                  label: 金（站点动态）
+                - name: diamond
+                  label: 钻（制度、规则）
+                - name: green
+                  label: 绿（招募、活动）
+                - name: redstone
+                  label: 红石（里程碑）
+          - name: tags
+            label: 标签（多个用逗号隔开；筛选用，例如 招募,代投）
+            type: string
+          - name: pin
+            label: 置顶
+            type: boolean
+          - name: body
+            label: 正文
+            type: rich-text
+            options:
+              format: markdown
+              path: assets/img
+
+  # ---------------- 代表作品 ----------------
+  # 只覆盖「代表作品」这一栏。专题页与测试中作品各有各的排版，不在这里。
+  - name: works
+    label: 代表作品
+    type: file
+    path: content/works.json
+    fields:
+      - name: works
+        label: 作品列表（顺序就是首页与作品页上的顺序）
+        type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{title}"
+        fields:
+          - name: id
+            label: 标识（英文小写，全站唯一；有详情页时必须和详情页 id 一致）
+            type: string
+            required: true
+          - name: title
+            label: 作品名
+            type: string
+            required: true
+          - name: img
+            label: 封面图（横图，宽度别超过 1400，大小控制在 300KB 以内）
+            type: image
+          - name: category
+            label: 类型
+            type: select
+            options:
+              values:
+                - name: shader
+                  label: 光影
+                - name: map
+                  label: 地图
+                - name: skin
+                  label: 皮肤
+                - name: tex
+                  label: 材质
+                - name: addon
+                  label: Addon
+          - name: meta
+            label: 作者与署名（例如 作者：创想时代 Log_坤）
+            type: string
+          - name: desc
+            label: 一句话简介（不写句号）
+            type: text

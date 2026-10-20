@@ -6,24 +6,23 @@
     <atom:link href="https://innovaage.cn/feed.xml" rel="self" type="application/rss+xml"/>
     <description>创想时代开发组的公告：招募、版本发布、合作与站点动态。</description>
     <language>zh-CN</language>
-    <lastBuildDate>Sun, 18 Oct 2026 13:49:42 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 20 Oct 2026 13:53:23 +0000</lastBuildDate>
     <item>
-      <title>开放代投业务，同步公布入室审核条例</title>
-      <link>https://innovaage.cn/article.html?id=invest-and-audit-rules</link>
-      <guid isPermaLink="true">https://innovaage.cn/article.html?id=invest-and-audit-rules</guid>
+      <title>开放代投业务</title>
+      <link>https://innovaage.cn/article.html?id=invest-open</link>
+      <guid isPermaLink="true">https://innovaage.cn/article.html?id=invest-open</guid>
       <pubDate>Sat, 17 Oct 2026 00:00:00 +0800</pubDate>
       <category>招募</category>
       <category>代投</category>
-      <category>里程碑</category>
-      <description>两件事一起说。 一、开放代投业务 依托我们庞大的粉丝群体与流量优势，你的作品上架资源中心，能够拿到更高曝光，获得更多玩家浏览下载。接收地图、皮肤、材质、光影、功能玩法优质组件，免费 / 付费作品均可投递。 优势：粉丝基数大，自带流量加持，助力你的作品被更多玩家看见。 转载非原创作…</description>
+      <description>依托我们庞大的粉丝群体与流量优势，你的作品上架资源中心，能够拿到更高曝光，获得更多玩家浏览下载。接收地图、皮肤、材质、光影、功能玩法优质组件，免费 / 付费作品均可投递。 &lt;strong&gt;优势：&lt;/strong&gt;粉丝基数大，自带流量加持，助力你的作品被更多玩家看见。 转载非原创作…</description>
     </item>
     <item>
-      <title>innovaage.cn 二级域名对全体成员开放</title>
-      <link>https://innovaage.cn/article.html?id=subdomain-open</link>
-      <guid isPermaLink="true">https://innovaage.cn/article.html?id=subdomain-open</guid>
+      <title>入室审核条例已公布</title>
+      <link>https://innovaage.cn/article.html?id=audit-rules</link>
+      <guid isPermaLink="true">https://innovaage.cn/article.html?id=audit-rules</guid>
       <pubDate>Sat, 17 Oct 2026 00:00:00 +0800</pubDate>
-      <category>站点</category>
-      <description>全新官网 innovaage.cn 正在持续准备中，具体完工可访问时间未确定。 为扩大域名的使用范围，现对创想时代全体成员免费开放二级域名。二级域名由申请人自行决定，只能用字母；不带二级域名的 innovaage.cn 保留给官网使用。 申请方式：到首席开发官处申请，需要说明三件…</description>
+      <category>招募</category>
+      <description>如需审核加入我室，请按照 《创想时代开发组入室审核条例》 中所述流程进行审核，条例中同时也有各部门的介绍。 注意：阅读理解能力也算做基本素质的一部分，因此需要您自行阅读条例；若有疑问请询问群内管理员。 流程概要：初审 → 一审 → 二审。其中初审在对外审核群（1045216325…</description>
     </item>
     <item>
       <title>里程碑：创想时代开发组官网开放！</title>
@@ -32,7 +31,7 @@
       <pubDate>Fri, 16 Oct 2026 00:00:00 +0800</pubDate>
       <category>站点</category>
       <category>里程碑</category>
-      <description>创想时代官网现已启用！ 各位可以在官网访问： 系列作品的发布页 代表作品的介绍页 测试中组件的参与页 官网内置的「工具箱」 在「工具箱」里可以使用本地运行的图片压缩、图片格式转换、各种格式的文件转换、视频鉴定并转换为符合投稿标准的视频，以及由创想时代成员制作的工具。 官网内容目前…</description>
+      <description>&lt;strong&gt;创想时代开发组新官网（innovaage.cn）正式启用啦！&lt;/strong&gt; 网站采用丝滑的动效和简洁但高级的UI；网站内有各种关于我们的信息，各种作品信息以及发布于官网的作品！ 其中重点介绍“工具箱”，目前含有图片处理，视频处理，格式转换，以及由创想时代的成员…</description>
     </item>
     <item>
       <title>模组总销量突破 5000 万</title>
@@ -41,6 +40,14 @@
       <pubDate>Mon, 27 Jul 2026 00:00:00 +0800</pubDate>
       <category>里程碑</category>
       <description>2026 年 7 月 27 日，创想时代开发组旗下《我的世界》中国版主开发者账号发布的模组总销量（即总下载量）突破 5000 万次，标志着创想一个新的里程碑。</description>
+    </item>
+    <item>
+      <title>关于innovaage.cn二级域名开放使用的公告</title>
+      <link>https://innovaage.cn/article.html?id=subdomain-open</link>
+      <guid isPermaLink="true">https://innovaage.cn/article.html?id=subdomain-open</guid>
+      <pubDate>Wed, 05 Jul 2023 00:00:00 +0800</pubDate>
+      <category>站点</category>
+      <description>目前创想时代开发组全新官网innovaage.cn正在持续准备中，具体完工可访问时间未确定。 为了扩大域名的使用范围，决定对创想时代全体成员免费开放使用该域名，二级域名由申请人自行决定。 &lt;strong&gt;你必须想一个心仪的二级域名&lt;/strong&gt;，比如说weilian，sima…</description>
     </item>
   </channel>
 </rss>
