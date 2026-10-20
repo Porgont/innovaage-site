@@ -645,6 +645,7 @@
     el.reset = $('#pack-reset');
     el.dropJunk = $('#pack-drop-junk');
     el.useSuggest = $('#pack-use-suggest');
+    el.toggleTable = $('#pack-toggle-table');
 
     el.type.addEventListener('change', function () {
       if (state.buffer) reload();
@@ -688,6 +689,11 @@
       paint();
     });
 
+    el.toggleTable.addEventListener('click', function () {
+      state.tableCollapsed = !state.tableCollapsed;
+      paint();
+    });
+
     el.build.addEventListener('click', build);
     el.dropJunk.addEventListener('change', paint);
   }
@@ -706,6 +712,7 @@
       state.buffer = reader.result;
       state.file = file;
       state.top = '';
+      state.tableCollapsed = null;
       el.report.hidden = false;
       el.result.textContent = '';
       reload();
@@ -834,7 +841,15 @@
       el.topWrap.innerHTML = '<p class="note" style="margin:4px 0 12px">这个类型不套外层文件夹，直接用 behavior_packs / resource_packs 当顶层目录。</p>';
     }
 
-    el.tableWrap.hidden = false;
+    /* 行太多就默认收起来，让按钮负责展开 */
+    if (state.tableCollapsed === null || state.tableCollapsed === undefined) {
+      state.tableCollapsed = rows.length > 40;
+    }
+    el.tableWrap.hidden = state.tableCollapsed;
+    el.toggleTable.textContent = state.tableCollapsed ? '展开路径（' + rows.length + ' 行）' : '收起路径';
+    el.toggleTable.setAttribute('aria-expanded', state.tableCollapsed ? 'false' : 'true');
+    el.toggleTable.hidden = rows.length === 0;
+
     el.rows.innerHTML = rows.map(function (r) {
       var isBad = !r.junk && r.innerIssues.length > 0;
       var isChanged = !isBad && !r.junk && r.changed;
