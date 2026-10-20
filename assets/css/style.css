@@ -8995,3 +8995,44 @@ button:focus-visible,
 .pack-table--rules td:first-child { white-space: nowrap; font-weight: 700; color: var(--text); }
 .pack-table--rules td:nth-child(2) { white-space: nowrap; font-family: var(--mono); font-size: 11.5px; color: var(--text-mute); }
 .pack-table--rules td:last-child { color: var(--text-dim); line-height: 1.6; }
+
+
+/* 投稿包检测：大号合规结论 */
+.pack-verdict {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin: 18px 0 14px;
+  padding: 16px 18px;
+  border: 1px solid var(--line);
+  border-left: 4px solid #d2402f;
+  border-radius: var(--radius);
+  background: rgba(210, 64, 47, .06);
+}
+
+.pack-verdict b {
+  font-size: 30px;
+  line-height: 1.1;
+  letter-spacing: -.01em;
+  color: #b3261e;
+}
+
+.pack-verdict span { font-size: 13px; color: var(--text-dim); }
+
+.pack-verdict.is-ok {
+  border-left-color: var(--gold-dk);
+  background: var(--gold-soft);
+}
+
+.pack-verdict.is-ok b { color: var(--gold-dk); }
+
+[data-theme="dark"] .pack-verdict { background: rgba(210, 64, 47, .14); }
+[data-theme="dark"] .pack-verdict b { color: #ff9d94; }
+[data-theme="dark"] .pack-verdict.is-ok { background: rgba(61, 132, 240, .16); }
+[data-theme="dark"] .pack-verdict.is-ok b { color: #9cc7ff; }
+
+@media (max-width: 640px) {
+  .pack-verdict { padding: 13px 14px; gap: 8px; }
+  .pack-verdict b { font-size: 24px; }
+}

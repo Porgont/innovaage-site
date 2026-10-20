@@ -635,6 +635,7 @@
     el.note = $('#pack-file-note');
     el.report = $('#pack-report');
     el.summary = $('#pack-summary');
+    el.verdict = $('#pack-verdict');
     el.type = $('#pack-type');
     el.topWrap = $('#pack-top');
     el.checks = $('#pack-checks');
@@ -778,6 +779,13 @@
     var type = el.type.value === 'auto' ? 'pe_skin' : el.type.value;
     var spec = typeById(type);
 
+    if (el.verdict) {
+      el.verdict.className = 'pack-verdict ' + (info.hasAlpha ? 'is-ok' : 'is-bad');
+      el.verdict.innerHTML = info.hasAlpha
+        ? '<b>✓ 合规</b><span>带透明通道的 PNG，直接上传即可</span>'
+        : '<b>✗ 不合规</b><span>没有透明通道，换一张带透明通道的 PNG</span>';
+    }
+
     el.summary.innerHTML =
       stat(info.width + '×' + info.height, '像素', '皮肤图尺寸') +
       stat(info.bitDepth, '位深', 'PNG 头信息') +
@@ -825,6 +833,14 @@
 
     el.checks.hidden = !a.checks.length;
     el.checks.innerHTML = a.checks.map(function (c) { return checkLine(c.label, c.ok); }).join('');
+
+    var problems = [];
+    if (!a.structureOk) problems.push('包体结构');
+    if (a.checks.length && !a.checksOk) problems.push('必备文件');
+    if (badNames.length) problems.push(badNames.length + ' 处名字');
+    if (renamed.length) problems.push('原名有 ' + renamed.length + ' 处要改名');
+    if (!files.length) problems.push('没有文件');
+    renderVerdict(problems, renamed.length);
 
     if (a.spec.wrapTop) {
       el.topWrap.innerHTML =
@@ -894,6 +910,19 @@
     el.build.disabled = why.length > 0;
     el.result.textContent = why.length ? '还不能生成：' + why.join('；') + '。' : '';
     el.result.classList.toggle('is-warn', why.length > 0);
+  }
+
+  function renderVerdict(problems, renamed) {
+    if (!el.verdict) return;
+    if (!problems.length) {
+      el.verdict.className = 'pack-verdict is-ok';
+      el.verdict.innerHTML = '<b>✓ 合规</b><span>结构和名字都过，可以直接投稿</span>';
+      return;
+    }
+    el.verdict.className = 'pack-verdict is-bad';
+    el.verdict.innerHTML = '<b>✗ 不合规</b><span>' +
+      (problems.length ? '还差：' + problems.join(' · ') : '') +
+      (renamed ? '；点「生成」会输出合规版' : '') + '</span>';
   }
 
   function stat(v, label, sub) {
