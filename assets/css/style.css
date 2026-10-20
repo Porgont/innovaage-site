@@ -1655,7 +1655,7 @@ input[type="range"]::-webkit-slider-thumb {
    外链后面跟一个 ↗ 表示会跳走。
    注意必须把导航（.nav / .mnav-links）排除掉 ——
    导航本来就有自己的一套样式，套上这块会变成一排黄杠，很难看。 */
-.wrap a:not(.btn):not(.brand):not(.work-more):not(.skip-link):not(.module-card):not(.nav a):not(.mnav-links a):not(.footer-grid a):not(.city-card):not(.city-nav__links a):not(.tab--jump):not(.ms-toc a):not(.work-toc a):not(.officer-cat):not(.more-extra a):not(.work-band):not(.topic-band):not(.work-hit):not(.work):not(.notice-hit):not(.officer-hit):not(.work-pager__link):not(.work-link):not(.page-head__home),
+.wrap a:not(.btn):not(.brand):not(.work-more):not(.skip-link):not(.module-card):not(.nav a):not(.mnav-links a):not(.footer-grid a):not(.city-card):not(.city-nav__links a):not(.tab--jump):not(.ms-toc a):not(.work-toc a):not(.officer-cat):not(.more-extra a):not(.work-band):not(.topic-band):not(.work-hit):not(.work):not(.notice-hit):not(.officer-hit):not(.work-pager__link):not(.article-nav__item):not(.work-link):not(.page-head__home),
 .callout a,
 .notice-body a,
 .stat-list a {
@@ -1698,7 +1698,7 @@ input[type="range"]::-webkit-slider-thumb {
 
 /* 悬停变黄底的规则也必须排除导航 —— 上面那条非悬停的排了，这条以前漏了，
    结果鼠标一划过导航就整块变成黄底。 */
-.wrap a:not(.btn):not(.brand):not(.work-more):not(.skip-link):not(.module-card):not(.nav a):not(.mnav-links a):not(.footer-grid a):not(.city-card):not(.city-nav__links a):not(.tab--jump):not(.ms-toc a):not(.work-toc a):not(.officer-cat):not(.more-extra a):not(.work-band):not(.topic-band):not(.work-hit):not(.work):not(.notice-hit):not(.officer-hit):not(.work-pager__link):not(.work-link):not(.page-head__home):hover,
+.wrap a:not(.btn):not(.brand):not(.work-more):not(.skip-link):not(.module-card):not(.nav a):not(.mnav-links a):not(.footer-grid a):not(.city-card):not(.city-nav__links a):not(.tab--jump):not(.ms-toc a):not(.work-toc a):not(.officer-cat):not(.more-extra a):not(.work-band):not(.topic-band):not(.work-hit):not(.work):not(.notice-hit):not(.officer-hit):not(.work-pager__link):not(.article-nav__item):not(.work-link):not(.page-head__home):hover,
 .callout a:hover,
 .notice-body a:hover,
 .stat-list a:hover {
@@ -6192,9 +6192,7 @@ main.overlap-hero {
 }
 
 .article-nav__item.is-empty {
-  border: 0;
-  background: transparent;
-  pointer-events: none;
+  display: none;
 }
 
 .article-nav__dir {
@@ -7964,14 +7962,57 @@ button:focus-visible,
 .side-facts dt { color: var(--text-mute); }
 .side-facts dd { margin: 0; color: var(--text); }
 
-/* 右栏链接不套正文那套下划线 + 黄底，保持卡片里的干净排版 */
-.article-side a,
-.article-side a b,
-.article-side a span {
+/* 正文链接那套「下划线 + 黄底 + 内边距」是按 .wrap a:not(...) 写的，
+   级数很高，会把右栏的卡片链接一起改掉。这里按组件单独压回来。 */
+.article-side .side-list a {
+  padding: 11px 14px !important;
   text-decoration: none !important;
   background: none !important;
   background-image: none !important;
   border-bottom: 0 !important;
+  border-radius: 0 !important;
+  color: inherit !important;
+  font-weight: inherit !important;
+}
+
+.article-side .side-list a b,
+.article-side .side-list a span,
+.article-side .side-list a i {
+  text-decoration: none !important;
+  background: none !important;
+  background-image: none !important;
+}
+
+.article-side .side-all {
+  padding: 12px 16px !important;
+  text-decoration: none !important;
+  background-image: none !important;
+  border-bottom: 0 !important;
+  font-weight: 700 !important;
+  background: #14161a !important;
+  color: #fff !important;
+  border-radius: var(--radius) !important;
+}
+
+[data-theme="dark"] .article-side .side-all {
+  background: #eef1f5 !important;
+  color: #14161a !important;
+}
+
+@media (hover: hover) {
+  .article-side .side-list a:hover {
+    background: var(--gold-soft) !important;
+  }
+
+  .article-side .side-all:hover {
+    background: var(--gold-dk) !important;
+    color: #fff !important;
+  }
+
+  [data-theme="dark"] .article-side .side-all:hover {
+    background: var(--gold-dk) !important;
+    color: #14161a !important;
+  }
 }
 
 .side-list {
@@ -8038,4 +8079,260 @@ button:focus-visible,
 @media (max-width: 640px) {
   .article-side { grid-template-columns: 1fr; }
   .article-sheet { padding: 20px 16px; border-left-width: 2px; }
+}
+
+
+/* ============================================================
+   右栏资料卡：终末地式标题条 + 编号列表（2026-10）
+   ============================================================ */
+.article-side .side-card {
+  position: relative;
+  padding: 0;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.article-side .side-card__k {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 8px 14px;
+  background: #14161a;
+  color: #fff;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+}
+
+.article-side .side-card__k::after {
+  content: "";
+  margin-left: auto;
+  width: 34px;
+  height: 8px;
+  background-image: repeating-linear-gradient(115deg, rgba(255,255,255,.55) 0 1.5px, transparent 1.5px 7px);
+}
+
+[data-theme="dark"] .article-side .side-card__k {
+  background: #eef1f5;
+  color: #14161a;
+}
+
+[data-theme="dark"] .article-side .side-card__k::after {
+  background-image: repeating-linear-gradient(115deg, rgba(20,22,26,.45) 0 1.5px, transparent 1.5px 7px);
+}
+
+.article-side .side-facts {
+  padding: 14px 16px 16px;
+  gap: 0;
+}
+
+.article-side .side-facts > div {
+  grid-template-columns: 68px minmax(0, 1fr);
+  padding: 7px 0;
+  border-top: 1px dashed var(--line);
+}
+
+.article-side .side-facts > div:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.article-side .side-facts dt {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .08em;
+  color: var(--text-mute);
+}
+
+.article-side .side-facts dd {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.article-side .side-list {
+  padding: 4px 0;
+}
+
+.article-side .side-list li + li {
+  border-top: 1px solid var(--line);
+}
+
+.article-side .side-list a {
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr) 16px;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 14px;
+  position: relative;
+}
+
+.article-side .side-no {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 700;
+  letter-spacing: .04em;
+  color: var(--text-mute);
+}
+
+.article-side .side-body { min-width: 0; }
+
+.article-side .side-date {
+  display: block;
+  margin-bottom: 3px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .08em;
+  color: var(--text-mute);
+}
+
+.article-side .side-list a b {
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.article-side .side-arrow {
+  font-size: 13px;
+  color: var(--gold-dk);
+  opacity: 0;
+  transform: translateX(-4px);
+  transition: opacity .2s ease, transform .2s var(--ease-out, ease);
+}
+
+@media (hover: hover) {
+  .article-side .side-list a::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--gold);
+    transform: scaleY(0);
+    transform-origin: center;
+    transition: transform .2s var(--ease-out, ease);
+  }
+
+  .article-side .side-list a:hover {
+    background: var(--gold-soft);
+  }
+
+  .article-side .side-list a:hover::before { transform: scaleY(1); }
+  .article-side .side-list a:hover b { color: var(--gold-dk); }
+  .article-side .side-list a:hover .side-arrow { opacity: 1; transform: translateX(0); }
+  .article-side .side-list a:hover .side-no { color: var(--gold-dk); }
+}
+
+/* 全部公告：黑条入口 */
+.article-side .side-card--flat { border: 0; background: none; box-shadow: none; }
+
+.article-side .side-all {
+  display: grid;
+  grid-template-columns: 1fr auto 16px;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  background: #14161a;
+  color: #fff;
+  border: 0;
+  border-radius: var(--radius);
+  transition: transform .25s var(--ease-out, ease), box-shadow .25s ease, background-color .2s ease;
+}
+
+[data-theme="dark"] .article-side .side-all {
+  background: #eef1f5;
+  color: #14161a;
+}
+
+.article-side .side-all__label {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: .04em;
+}
+
+.article-side .side-all__count {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .06em;
+  opacity: .7;
+}
+
+.article-side .side-all__go {
+  justify-self: end;
+  transition: transform .2s var(--ease-out, ease);
+}
+
+@media (hover: hover) {
+  .article-side .side-all:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lift);
+  }
+
+  .article-side .side-all:hover .side-all__go { transform: translateX(4px); }
+}
+
+/* ---------- 上一条 / 下一条：铺满正文栏，卡片化 ---------- */
+.article-nav {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  max-width: none;
+  margin-top: 34px;
+  padding-top: 0;
+  border-top: 0;
+}
+
+.article-nav__item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 16px 20px;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--line-2);
+  border-radius: var(--radius);
+  background: var(--panel);
+  text-decoration: none !important;
+  background-image: none !important;
+  box-shadow: var(--shadow-sm);
+  transition:
+    transform .3s var(--ease-out, ease),
+    box-shadow .3s var(--ease-out, ease),
+    border-color .2s ease;
+}
+
+.article-nav__item--next {
+  grid-column: 1;
+  text-align: left;
+  border-left: 3px solid var(--line-2);
+  border-right: 1px solid var(--line);
+}
+
+@media (hover: hover) {
+  .article-nav__item:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lift);
+    border-color: var(--line-strong);
+    background: var(--panel);
+  }
+
+  .article-nav__item:hover { border-left-color: var(--gold); }
+}
+
+.article-nav__dir {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--text-mute);
+}
+
+.article-nav__item b {
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.5;
 }

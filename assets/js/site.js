@@ -1296,15 +1296,21 @@
       '</div>' +
       '<div class="side-card">' +
         '<p class="side-card__k">相关公告</p>' +
-        '<ul class="side-list">' + related.map(function (x) {
+        '<ul class="side-list">' + related.map(function (x, i) {
           return '<li><a href="article.html?id=' + esc(encodeURIComponent(x.id)) + '">' +
-            '<span class="side-date">' + esc(x.date || '') + '</span>' +
-            '<b>' + esc(x.title) + '</b></a></li>';
+            '<i class="side-no">' + String(i + 1).padStart(2, '0') + '</i>' +
+            '<span class="side-body">' +
+              '<span class="side-date">' + esc(x.date || '') + '</span>' +
+              '<b>' + esc(x.title) + '</b>' +
+            '</span>' +
+            '<span class="side-arrow" aria-hidden="true">→</span></a></li>';
         }).join('') + '</ul>' +
       '</div>' +
       '<div class="side-card side-card--flat">' +
-        '<a class="side-all" href="news.html"><span>全部公告</span><span>' +
-          ANNOUNCEMENTS.length + ' 篇 →</span></a>' +
+        '<a class="side-all" href="news.html">' +
+          '<span class="side-all__label">全部公告</span>' +
+          '<span class="side-all__count">' + ANNOUNCEMENTS.length + ' 篇</span>' +
+          '<span class="side-all__go" aria-hidden="true">→</span></a>' +
       '</div>';
   }
 
