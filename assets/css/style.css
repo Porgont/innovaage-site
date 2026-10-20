@@ -8475,3 +8475,25 @@ button:focus-visible,
     margin-left: 0;
   }
 }
+
+
+/* ============================================================
+   作品页：三个区块纵向堆叠（2026-10）
+   顶部那排从标签页改成锚点跳转，三个区块同时可见。
+   ============================================================ */
+.tabs--boxed .tab[href] { cursor: pointer; }
+
+.tab-panel { scroll-margin-top: 96px; }
+
+.tab-panel + .tab-panel {
+  margin-top: 64px;
+  padding-top: 44px;
+  border-top: 1px dashed var(--line-2);
+}
+
+@media (max-width: 640px) {
+  .tab-panel + .tab-panel {
+    margin-top: 44px;
+    padding-top: 32px;
+  }
+}
