@@ -184,9 +184,9 @@
     var last = segs.length ? segs[segs.length - 1] : '';
     return JUNK_NAMES.indexOf(last) >= 0;
   }
-  function sanitizeSeg(seg) {
+  function sanitizeSeg(seg, fallback) {
     var s = String(seg).replace(/[^A-Za-z0-9_-]/g, '_').replace(/_+/g, '_').replace(/^_+|_+$/g, '');
-    return s || 'file';
+    return s || fallback || 'file';
   }
   /* 文件名保留点号（可多段），主名洗不出东西时兜底成 file，扩展名保留 */
   function sanitizeFileSeg(seg) {
@@ -205,30 +205,31 @@
     for (var i = segs.length - 1; i >= 0; i--) { if (segs[i] !== '') { last = i; break; } }
     return segs.map(function (seg, i) {
       if (seg === '') return '';
-      if (i !== last || isDir) return sanitizeSeg(seg);
+      if (i !== last || isDir) return sanitizeSeg(seg, 'folder');
       return sanitizeFileSeg(seg);
     }).filter(function (s) { return s !== ''; }).join('/');
   }
-  function descChar(ch) {
-    if (/[\u4e00-\u9fa5]/.test(ch)) return '中文「' + ch + '」';
-    var names = { ' ': '空格', '.': '点号', '(': '括号', ')': '括号', '（': '全角括号', '）': '全角括号',
-      '，': '全角逗号', '。': '句号', '、': '顿号', '+': '加号', '#': '井号', '&': '与号',
-      "'": '单引号', '!': '感叹号', ',': '逗号', '~': '波浪号', '@': '艾特号', '$': '美元号', '%': '百分号' };
-    return (names[ch] || '') + '「' + ch + '」';
-  }
+
   function issuesOfPath(path, isDir) {
     var list = [];
     var segs = segments(path);
     if (!segs.length) return ['路径为空'];
     segs.forEach(function (seg, i) {
       var isFileSeg = i === segs.length - 1 && !isDir;
-      var bad = [];
+      var spaces = 0, cn = [], sym = [];
       for (var c = 0; c < seg.length; c++) {
         var ch = seg.charAt(c);
         var ok = isFileSeg ? /[A-Za-z0-9_.-]/.test(ch) : /[A-Za-z0-9_-]/.test(ch);
-        if (!ok && bad.indexOf(ch) < 0) bad.push(ch);
+        if (ok) continue;
+        if (ch === ' ') { spaces++; continue; }
+        if (/[\u4e00-\u9fa5]/.test(ch)) { if (cn.indexOf(ch) < 0) cn.push(ch); continue; }
+        if (sym.indexOf(ch) < 0) sym.push(ch);
       }
-      if (bad.length) list.push('第 ' + (i + 1) + ' 段含' + bad.map(descChar).join('、'));
+      var bits = [];
+      if (spaces) bits.push('空格');
+      if (cn.length) bits.push('中文「' + cn.join('') + '」');
+      if (sym.length) bits.push('符号「' + sym.join('') + '」');
+      if (bits.length) list.push('第 ' + (i + 1) + ' 段含' + bits.join('、'));
     });
     return list;
   }
@@ -329,10 +330,10 @@
       else {
         var extra = tops.filter(function (t) { return t !== 'behavior_packs' && t !== 'resource_packs'; });
         if (extra.length) { structureOk = false; structureProblem = '顶层多了：' + extra.slice(0, 3).join('、'); }
-        else if (rootFiles.length) { structureOk = false; structureProblem = '根目录直接有 ' + rootFiles.length + ' 个文件'; }
+        else if (rootFiles.length) { structureOk = false; structureProblem = '根目录直接有 ' + rootFiles.length + ' 个文件：' + rootFiles.slice(0, 4).join('、') + (rootFiles.length > 4 ? ' 等' : ''); }
       }
     } else {
-      if (rootFiles.length) { structureOk = false; structureProblem = '根目录直接有 ' + rootFiles.length + ' 个文件'; }
+      if (rootFiles.length) { structureOk = false; structureProblem = '根目录直接有 ' + rootFiles.length + ' 个文件：' + rootFiles.slice(0, 4).join('、') + (rootFiles.length > 4 ? ' 等' : ''); }
       else if (tops.length === 0) { structureOk = false; structureProblem = '压缩包里没有文件夹'; }
       else if (tops.length > 1) { structureOk = false; structureProblem = '顶层有 ' + tops.length + ' 个文件夹：' + tops.slice(0, 4).join('、'); }
     }
@@ -374,7 +375,7 @@
 
   function suggestTopName() {
     var base = String(pendingBase || 'pack').replace(/\.[^.]+$/, '');
-    return sanitizeSeg(base);
+    return sanitizeSeg(base, 'pack');
   }
   function topValue() {
     return (state.top || (state.audit && state.audit.topName) || '').trim();
@@ -490,7 +491,7 @@
     }).map(function (e) { return e.name; });
 
     var structureOk = true, structureProblem = '';
-    if (rootFiles.length) { structureOk = false; structureProblem = '根目录直接有 ' + rootFiles.length + ' 个文件'; }
+    if (rootFiles.length) { structureOk = false; structureProblem = '根目录直接有 ' + rootFiles.length + ' 个文件：' + rootFiles.slice(0, 4).join('、') + (rootFiles.length > 4 ? ' 等' : ''); }
     else if (tops.length === 0) { structureOk = false; structureProblem = '压缩包里没有文件夹'; }
     else if (tops.length > 1) { structureOk = false; structureProblem = '顶层有 ' + tops.length + ' 个文件夹：' + tops.slice(0, 4).join('、'); }
 
@@ -874,16 +875,25 @@
     a.checks.forEach(function (c) {
       if (!c.ok) problems.push({ cls: 'is-bad', k: '必备文件', d: '缺少 ' + c.label });
     });
-    if (badNames.length) {
-      problems.push({ cls: 'is-bad', k: '文件名',
-        d: badNames.length + ' 处仍不合规：' + badNames.slice(0, 3).map(function (r) { return r.original; }).join('、') + (badNames.length > 3 ? ' 等' : '') });
+    if (a.spec.wrapTop && !topOk) {
+      problems.push({ cls: 'is-bad', k: '顶层文件夹', path: top,
+        why: issuesOfPath(top, true).join('；'), fix: sanitizeSeg(top) });
     }
-    if (pendingRename) {
-      problems.push({ cls: 'is-bad', k: '文件名',
-        d: renamed.length + ' 处原名不合规：' + renamed.slice(0, 3).map(function (r) { return r.original; }).join('、') +
-          (renamed.length > 3 ? ' 等' : '') + '，已给出建议名，点「一键更名为建议名」替换' });
-    } else if (renamed.length) {
+
+    if (state.renameApplied && renamed.length) {
       problems.push({ cls: 'is-ok', k: '文件名', d: renamed.length + ' 处原名已替换为合规名' });
+    } else {
+      var nameRows = rows.filter(function (r) { return !r.junk && (r.innerIssues.length || r.changed); });
+      nameRows.slice(0, 8).forEach(function (r) {
+        var why = issuesOfPath(r.original, r.isDir);
+        if (!why.length) why = issuesOfPath(r.origInner, r.isDir);
+        problems.push({ cls: r.innerIssues.length ? 'is-bad' : 'is-warn', k: '文件名',
+          path: r.original, why: why.join('；'),
+          fix: (a.spec.wrapTop ? (topOk ? top : sanitizeSeg(top)) + '/' : '') + r.inner });
+      });
+      if (nameRows.length > 8) {
+        problems.push({ cls: 'is-warn', k: '文件名', d: '还有 ' + (nameRows.length - 8) + ' 处，见下方路径表' });
+      }
     }
     if (junk.length) {
       problems.push({ cls: 'is-ok', k: '系统文件', d: junk.length + ' 个（__MACOSX / .DS_Store 等），生成时会去掉' });
@@ -981,7 +991,17 @@
       return;
     }
     el.problems.innerHTML = list.map(function (item) {
-      return '<p class="pack-problem ' + item.cls + '"><b>' + esc(item.k) + '</b><span>' + esc(item.d) + '</span></p>';
+      var body;
+      if (item.path) {
+        body = '<span class="pack-problem__body">' +
+          '<code class="pack-problem__path">' + esc(item.path) + '</code>' +
+          '<em class="pack-problem__why">' + esc(item.why) + '</em>' +
+          '<span class="pack-problem__fix">建议更名为 <code>' + esc(item.fix) + '</code></span>' +
+          '</span>';
+      } else {
+        body = '<span>' + esc(item.d) + '</span>';
+      }
+      return '<p class="pack-problem ' + item.cls + '"><b>' + esc(item.k) + '</b>' + body + '</p>';
     }).join('');
   }
 

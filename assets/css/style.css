@@ -9042,6 +9042,43 @@ button:focus-visible,
 
 .pack-problem span { color: var(--text); }
 
+.pack-problem__body {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 12px;
+}
+
+.pack-problem__path {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: var(--bg-3, var(--bg-2));
+  color: var(--text);
+  word-break: break-all;
+}
+
+.pack-problem__why { font-style: normal; font-size: 13px; color: #b3261e; }
+
+.pack-problem.is-warn .pack-problem__why { color: var(--gold-dk); }
+
+.pack-problem__fix { font-size: 13px; color: var(--text-dim); }
+
+.pack-problem__fix code {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: var(--gold-soft);
+  color: var(--gold-dk);
+  word-break: break-all;
+}
+
+[data-theme="dark"] .pack-problem__why { color: #ff9d94; }
+[data-theme="dark"] .pack-problem.is-warn .pack-problem__why { color: #9cc7ff; }
+[data-theme="dark"] .pack-problem__fix code { background: rgba(61, 132, 240, .18); color: #9cc7ff; }
+
 .pack-problem.is-bad { border-left-color: #d2402f; }
 .pack-problem.is-bad b { color: #b3261e; }
 .pack-problem.is-warn { border-left-color: var(--gold-dk); }
