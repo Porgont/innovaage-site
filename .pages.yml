@@ -61,7 +61,6 @@ content:
             type: rich-text
             options:
               format: markdown
-              path: assets/img
 
   # ---------------- 代表作品 ----------------
   # 只覆盖「代表作品」这一栏。专题页与测试中作品各有各的排版，不在这里。
