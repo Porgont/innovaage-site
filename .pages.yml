@@ -333,14 +333,15 @@ content:
                       type: string
 
   # ================= 专题页 =================
-  # work-rich.html 的正文。排版固定，作者只能改文字与图片、增删分节。
+  # work-rich.html 的正文。排版固定，作者只改文字与图片。
+  # 字段刻意做成「平的」：没有任何嵌套列表，输入框都能直接打字。
   - name: topics
     label: 专题页
     type: file
     path: content/topic-pages.json
     fields:
       - name: pages
-        label: 专题页列表（目前有：无人区跑酷、仿真工艺系列材质）
+        label: 专题页列表（点名字展开填内容）
         type: object
         list:
           collapsible:
@@ -348,11 +349,10 @@ content:
             summary: "{name}"
         fields:
           - name: id
-            label: 标识（和作品页里的 id 一致，别改）
+            label: 标识（和旧链接对应，别改）
             type: string
             required: true
-            description: |
-              work-rich.html?id=你的标识。已上线的不要改，改了就进不去原来的页面。
+            description: work-rich.html?id=你的标识。已上线的不要改，改了旧链接会失效。
           - name: name
             label: 作品名（页面大标题）
             type: string
@@ -364,11 +364,11 @@ content:
           - name: displayEn
             label: 英文装饰字（标题上方那两行大字）
             type: string
-            description: 想分两行就在中间加一个竖线 |，例如 SEADREAM | VOYAGER；不加竖线就按空格断行。
+            description: 想分两行就在中间加一个竖线 |，例如 SEADREAM | VOYAGER；不加就按空格断行。
           - name: tagline
             label: 副标题（大标题下面那句）
             type: text
-            description: 一句话定位。不要写句号。
+            description: 一句话定位，不写句号。
           - name: author
             label: 作者
             type: string
@@ -380,118 +380,60 @@ content:
           - name: coverAlt
             label: 顶图说明（不显示，只给读屏与搜索）
             type: string
-          - name: facts
-            label: 作品信息（那几张数字卡片）
-            type: object
-            description: 一行一项：项目 + 内容。不确定的不要写。
-            list:
-              collapsible:
-                collapsed: true
-                summary: "{k}"
-              fields:
-                - name: k
-                  label: 项目
-                  type: string
-                - name: v
-                  label: 内容
-                  type: string
-                - name: bold
-                  label: 加粗显示
-                  type: boolean
-          - name: lead
-            label: 导语（正文第一段之前的内容）
+          - name: factsText
+            label: 作品信息（页面上那几张数字卡片）
+            type: text
+            description: |
+              一行一项，写成「项目 | 内容」，例如：
+
+              版本 | V14.FN
+              关卡数 | 56
+              平台 | 基岩版 / Java 版
+
+              竖线是中文输入法里的 |，或者英文的 | 都行。
+              不确定的不要写，宁可少一行。
+          - name: body
+            label: 正文（用 ## 分节，每节自动编号并进右上目录）
             type: rich-text
             options:
               format: markdown
             description: |
-              这里放「作品信息」下面、第一个分节之前的那几段，以及开头那组截图。
-              写法和正文一样：空行分段、- 列表、![](图片) 插图。
-              连着写两行图片会自动并排成一组。
-          - name: sections
-            label: 分节（点下面的 ＋ Add an item 新增一节）
-            type: object
+              一整个正文写在这一栏里，用 ## 开头就是新的一节。写法：
+
+              开头这几段是导语，会显示在第一个分节之前。
+
+              ## 前言
+
+              这一节的内容。空行分段；- 开头是列表；![](图片) 插图（连着两张会并排）。
+
+              ## 版本要求
+
+              再一节的内容。
+
+              ## 下载
+
+              这一节只放按钮的话，正文可以留空，按钮用下面「按钮」那栏写。
+
+              规矩：
+              · 一节只讲一件事，标题四到八个字
+              · 字号只有正文与小标题两级，没有下划线，强调用加粗
+              · 图片宽 1200 左右、单张 500KB 以内、文件名英文小写加短横线
+              · 想删掉哪一节，把它的 ## 标题连同内容一起删掉即可
+          - name: linksText
+            label: 按钮（一行一个）
+            type: text
             description: |
-              怎么加一节：
-              1. 点「＋ Add an item」，页面会多出一块，默认是展开的
-              2. 填「小节标题」（四到八个字，会进右上「本页目录」）
-              3. 在「这一节的正文」里写内容：空行分段、- 列表、![](图片) 插图
-              4. 这一节要放下载按钮的话，再点它下面那个小列表的「＋ Add an item」
-              一节 = 一条目录 + 一个白底标题条 + 一节正文。增、删、拖动调顺序都可以，排版不会变。
-            list:
-              collapsible:
-                collapsed: false
-                summary: "第 {index} 节 · {title}"
-              fields:
-                - name: title
-                  label: 小节标题
-                  type: string
-                  required: true
-                - name: body
-                  label: 这一节的正文
-                  type: rich-text
-                  options:
-                    format: markdown
-                  description: |
-                    空行分段；- 开头是列表；![](图片) 插图，连着两张会并排。
-                    > 开头是引用块（左侧一条竖线）。
-                    加粗选中文字点 B。字号只有正文与标题两级，没有下划线。
-                - name: links
-                  label: 这一节底部的下载或外链按钮（可选，不填就没有按钮）
-                  type: object
-                  description: |
-                    两层结构：
-                    · 第一层是「分组」，一组一个标题，例如「网易版（中国版）」
-                    · 第二层是组里的按钮，一行一个：按钮文字 + 网址
-                    先点这一栏的「＋ Add an item」加一个分组，再在分组里点「＋ Add an item」加按钮。
-                    站外链接会自动新窗口打开；没有按钮就整栏留空。
-                  list:
-                    collapsible:
-                      collapsed: false
-                      summary: "{title}"
-                    fields:
-                      - name: title
-                        label: 分组标题（可留空）
-                        type: string
-                      - name: items
-                        label: 按钮
-                        type: object
-                        list:
-                          collapsible:
-                            collapsed: true
-                            summary: "{label}"
-                          fields:
-                            - name: label
-                              label: 按钮文字
-                              type: string
-                            - name: href
-                              label: 网址（https:// 开头）
-                              type: string
-          - name: links
-            label: 底部「下载与链接」那一节（可选，留空就不出现）
-            type: object
-            description: |
-              和「分节」里那套按钮一样：先加分组，再在分组里加按钮。
-              这里放整页通用的下载与相关链接；某一节专属的按钮写在那一节自己的 links 里。
-            list:
-              collapsible:
-                collapsed: false
-                summary: "{title}"
-              fields:
-                - name: title
-                  label: 分组标题（可留空）
-                  type: string
-                - name: items
-                  label: 按钮
-                  type: object
-                  list:
-                    collapsible:
-                      collapsed: true
-                      summary: "{label}"
-                    fields:
-                      - name: label
-                        label: 按钮文字
-                        type: string
-                      - name: href
-                        label: 网址（https:// 开头）
-                        type: string
-# 2026-10-21 专题页上线
+              一行一个按钮，四段用竖线隔开：
+
+              挂在哪一节 | 分组标题 | 按钮文字 | 网址
+
+              例子：
+              下载 |  | 百度网盘 | https://pan.baidu.com/xxxx
+              下载 | 作者主页 | B 站 | https://space.bilibili.com/xxxx
+               | 网易版（中国版） | 四合一 | https://resource-minecraft.h5.163.com/xxxx
+
+              说明：
+              · 第一段写「哪一节」，要和正文里的 ## 标题一字不差；留空就放到页面最底部的「下载与链接」
+              · 第二段是分组标题，可以留空
+              · 按钮顺序＝这里的行顺序
+              · 网址必须以 http 或 https 开头；站外链接自动新窗口打开

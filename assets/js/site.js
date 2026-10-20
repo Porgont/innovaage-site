@@ -1907,17 +1907,105 @@
     return out;
   }
 
+  /* 一行一条的文字表 → [{k, v}]。支持「项目 | 内容」或「项目：内容」。 */
+  function parsePairLines(text) {
+    return String(text || '').split(/\r?\n/).map(function (line) {
+      var t = line.trim();
+      if (!t) return null;
+      var parts = t.split(/\s*[|｜]\s*/);
+      if (parts.length < 2) {
+        var m = /^([^：:]+)[：:]\s*(.+)$/.exec(t);
+        if (m) return { k: m[1].trim(), v: m[2].trim() };
+        return null;
+      }
+      return { k: parts[0].trim(), v: parts.slice(1).join(' | ').trim() };
+    }).filter(Boolean);
+  }
+
+  /* 按钮：一行一条「挂在哪一节 | 分组 | 按钮文字 | 网址」。
+     第一节可以留空（表示放页面最底部），分组留空就用「下载」。 */
+  function parseLinkLines(text) {
+    var bySection = { '': [] };   // key 是小节标题，'' 表示页面底部
+    String(text || '').split(/\r?\n/).forEach(function (line) {
+      var t = line.trim();
+      if (!t) return;
+      var parts = t.split(/\s*[|｜]\s*/);
+      if (parts.length < 2) return;
+      var section = '', group = '', label = '', href = '';
+      if (parts.length >= 4) { section = parts[0].trim(); group = parts[1].trim(); label = parts[2].trim(); href = parts[3].trim(); }
+      else if (parts.length === 3) { group = parts[0].trim(); label = parts[1].trim(); href = parts[2].trim(); }
+      else { label = parts[0].trim(); href = parts[1].trim(); }
+      if (!href) return;
+      var key = section;
+      if (!bySection[key]) bySection[key] = [];
+      var bucket = bySection[key];
+      var g = bucket.filter(function (x) { return x.title === group; })[0];
+      if (!g) { g = { title: group, items: [] }; bucket.push(g); }
+      g.items.push({ label: label || href, href: href });
+    });
+    return bySection;
+  }
+
+  /* 正文按「## 标题」切节；第一个标题之前的部分算导语。 */
+  function splitSections(md) {
+    var text = String(md == null ? '' : md).replace(/\r\n?/g, '\n');
+    var lead = [];
+    var sections = [];
+    var cur = null;
+
+    text.split('\n').forEach(function (line) {
+      var m = /^##\s+(.+)$/.exec(line.trim());
+      if (m) {
+        cur = { title: m[1].trim(), lines: [] };
+        sections.push(cur);
+        return;
+      }
+      if (cur) cur.lines.push(line);
+      else lead.push(line);
+    });
+
+    return {
+      lead: lead.join('\n'),
+      sections: sections.map(function (s) { return { title: s.title, body: s.lines.join('\n') }; })
+    };
+  }
+
   /* 专题页数据 → 老渲染器认识的形状 */
   function topicToWork(p) {
     var intro = [];
-    if (p.lead) intro = intro.concat(mdToRichBlocks(p.lead));
+    var facts = [];
+    var topLinks = [];
+    var bottomLinks = [];
 
-    (p.sections || []).forEach(function (sec) {
-      if (!sec || !sec.title) return;
-      intro.push({ heading: sec.title });
-      if (sec.body) intro = intro.concat(mdToRichBlocks(sec.body));
-      if (Array.isArray(sec.links) && sec.links.length) intro.push({ links: sec.links });
-    });
+    function pushLinks(html) { if (html) intro.push({ links: html }); }
+
+    if (typeof p.body === 'string' && p.body.trim()) {
+      /* 扁平格式：一段 Markdown 正文，## 分节，按钮写在一行一条的 linksText 里 */
+      var split = splitSections(p.body);
+      if (split.lead.trim()) intro = intro.concat(mdToRichBlocks(split.lead));
+      facts = parsePairLines(p.factsText);
+
+      var bySection = parseLinkLines(p.linksText);
+      bottomLinks = bySection[''] || [];
+
+      split.sections.forEach(function (sec) {
+        intro.push({ heading: sec.title });
+        if (sec.body.trim()) intro = intro.concat(mdToRichBlocks(sec.body));
+        var groups = bySection[sec.title];
+        if (groups && groups.length) intro.push({ links: groups });
+      });
+    } else {
+      /* 旧格式（嵌套)：仍然兼容，方便回退 */
+      if (p.lead) intro = intro.concat(mdToRichBlocks(p.lead));
+      (p.sections || []).forEach(function (sec) {
+        if (!sec || !sec.title) return;
+        intro.push({ heading: sec.title });
+        if (sec.body) intro = intro.concat(mdToRichBlocks(sec.body));
+        if (Array.isArray(sec.links) && sec.links.length) intro.push({ links: sec.links });
+      });
+      facts = Array.isArray(p.facts) ? p.facts : [];
+      bottomLinks = Array.isArray(p.links) ? p.links : [];
+    }
 
     return {
       name: p.name,
@@ -1927,8 +2015,8 @@
       author: p.author || '',
       cover: p.cover || '',
       coverAlt: p.coverAlt || '',
-      facts: Array.isArray(p.facts) ? p.facts : [],
-      links: Array.isArray(p.links) ? p.links : [],
+      facts: facts,
+      links: bottomLinks,
       linksTop: !!p.linksTop,
       intro: intro
     };
