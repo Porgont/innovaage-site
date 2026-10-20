@@ -4,65 +4,73 @@
       "id": "enterprise-gray-ghost",
       "title": "企业-灰色幽灵",
       "img": "assets/img/enterprise-gray-ghost.jpg",
-      "meta": "作者：创想时代 Mingxiang｜渲染：创想时代 柑柠",
       "category": "skin",
+      "meta": "作者：创想时代 Mingxiang｜渲染：创想时代 柑柠",
       "desc": "付费皮肤，参考并较高水平地还原了游戏《碧蓝航线》的角色企业"
     },
     {
       "id": "log7-birch",
       "title": "Log7桦木 · 完整版",
       "img": "assets/img/log7-1.jpg",
-      "meta": "作者：创想时代 Log_坤",
       "category": "shader",
+      "meta": "作者：创想时代 Log_坤",
       "desc": "付费光影：可触碰的体积云、体积光与丁达尔效应、水面实时反射"
     },
     {
       "id": "log-shader-sa",
       "title": "Log橡木SA",
       "img": "assets/img/shader-2.jpg",
-      "meta": "作者：Log坤",
       "category": "shader",
+      "meta": "作者：Log坤",
       "desc": "基岩版光影，主打水面镜面反射与自然光过渡"
     },
     {
       "id": "qiushui-sanchi",
       "title": "秋水三尺",
       "img": "assets/img/qiushui-1.jpg",
-      "meta": "作者：余末YuuMo",
       "category": "map",
+      "meta": "作者：余末YuuMo",
       "desc": "祈水，祈的是秋水三尺！"
     },
     {
       "id": "lingling-v5000-oak7",
       "title": "零雾构想V5000 · 橡木7画质提升包",
       "img": "assets/img/lingling-1.jpg",
-      "meta": "作者：Log坤",
       "category": "addon",
+      "meta": "作者：Log坤",
       "desc": "把零雾构想V5000 内置光影换成 Log 橡木7"
     },
     {
       "id": "lingling-universal",
       "title": "零雾构想通用版",
       "img": "assets/img/lingling-u-1.jpg",
-      "meta": "作者：零雾〇5Fogg05、Windows、Log_坤",
       "category": "tex",
+      "meta": "作者：零雾〇5Fogg05、Windows、Log_坤",
       "desc": "零雾构想与 Log 白桦木再次联动，内置 V5003 与 Log 白桦木灵动视效包"
     },
     {
       "id": "bilibili-pvp-textures",
       "title": "Bilibili PVP Textures",
       "img": "assets/img/qingju-bilibili-pvp.jpg",
-      "meta": "作者：青橘",
       "category": "tex",
+      "meta": "作者：青橘",
       "desc": "取自作者早期作品 Bilibili UI 衍生而成的 PVP 材质，贴图与天空皆为原创"
     },
     {
       "id": "deer-pvp-textures",
       "title": "Deer PVP 材质",
       "img": "assets/img/qingju-deer-pvp.jpg",
-      "meta": "作者：青橘",
       "category": "tex",
+      "meta": "作者：青橘",
       "desc": "100% 原创的 PVP 材质，从方块到物品全部手绘，天空另外做了处理"
+    },
+    {
+      "id": "test",
+      "title": "威廉蔡徐坤冲冲冲",
+      "img": "assets/img/QQ图片20261017003857(15).jpeg",
+      "category": "shader",
+      "meta": "作者：创想时代喵喵喵",
+      "desc": "威廉蔡徐坤冲冲冲"
     }
   ]
 }
