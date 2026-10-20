@@ -34,9 +34,9 @@
 })();
 </script>
 <link rel="preload" href="assets/fonts/noto-sans-sc.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/fonts.css?v=20261217">
-<link rel="stylesheet" href="assets/css/theme.css?v=20261217">
-<link rel="stylesheet" href="assets/css/style.css?v=20261217">
+<link rel="stylesheet" href="assets/css/fonts.css?v=20261216">
+<link rel="stylesheet" href="assets/css/theme.css?v=20261216">
+<link rel="stylesheet" href="assets/css/style.css?v=20261216">
   <link rel="alternate" type="application/rss+xml" title="创想时代开发组 · 公告" href="feed.xml">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"CollectionPage","name":"作品展示 | 创想时代开发组","url":"https://innovaage.cn/works.html","inLanguage":"zh-CN","isPartOf":{"@type":"WebSite","name":"创想时代开发组 · 官网","url":"https://innovaage.cn/"}}</script>
 </head>
@@ -126,14 +126,17 @@
   <section class="section section--tight">
     <div class="wrap">
 
-      <nav class="tabs tabs--boxed" aria-label="作品分类（跳到对应区块）">
-        <a class="tab tab--jump" href="#panel-home">系列作品专题页</a>
-        <a class="tab tab--jump" href="#panel-works">代表作品</a>
-        <a class="tab tab--jump" href="#panel-tests">尚未正式发布的测试组件<span class="tab-badge">！新内容</span></a>
+      <div class="tabs tabs--boxed" role="tablist" aria-label="作品分类">
+        <button class="tab is-active" type="button" role="tab" id="tab-home"
+                aria-controls="panel-home" aria-selected="true">系列作品专题页</button>
+        <button class="tab" type="button" role="tab" id="tab-works"
+                aria-controls="panel-works" aria-selected="false">代表作品</button>
+        <button class="tab" type="button" role="tab" id="tab-tests"
+                aria-controls="panel-tests" aria-selected="false">尚未正式发布的测试组件<span class="tab-badge">！新内容</span></button>
         <a class="tab tab--jump" href="city.html">专题页：创想之都<span class="tab-jump">专题</span></a>
-      </nav>
+      </div>
 
-      <div class="tab-panel" id="panel-home">
+      <div class="tab-panel" id="panel-home" role="tabpanel" aria-labelledby="tab-home">
 
         <div class="section-head">
           <span class="kicker">On Site</span>
@@ -145,7 +148,7 @@
 
       </div>
 
-      <div class="tab-panel" id="panel-works">
+      <div class="tab-panel" id="panel-works" role="tabpanel" aria-labelledby="tab-works" hidden>
 
         <div class="section-head">
           <span class="kicker">Works</span>
@@ -180,7 +183,7 @@
 
       </div>
 
-      <div class="tab-panel" id="panel-tests">
+      <div class="tab-panel" id="panel-tests" role="tabpanel" aria-labelledby="tab-tests" hidden>
 
         <div class="section-head">
           <span class="kicker">Testing</span>
@@ -243,6 +246,6 @@
   </div>
 </footer>
 
-<script src="assets/js/site.js?v=20261217"></script>
+<script src="assets/js/site.js?v=20261216"></script>
 </body>
 </html>
