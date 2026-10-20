@@ -8955,35 +8955,6 @@ button:focus-visible,
 
 .pack-type select:focus { outline: 2px solid var(--gold); outline-offset: 1px; }
 
-.pack-checks {
-  display: grid;
-  gap: 6px;
-  margin: 4px 0 14px;
-  padding: 12px 14px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  background: var(--bg-2);
-}
-
-.pack-check-line { display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--text-dim); }
-.pack-check-line.is-bad { color: #b3261e; }
-[data-theme="dark"] .pack-check-line.is-bad { color: #ff9d94; }
-
-.pack-check-dot {
-  display: inline-grid;
-  place-items: center;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  font-size: 10.5px;
-  font-weight: 700;
-  color: #fff;
-  background: var(--gold-dk);
-  flex-shrink: 0;
-}
-
-.pack-check-line.is-bad .pack-check-dot { background: #d2402f; }
-
 .pack-rules__h { margin: 0 0 10px; font-size: 15px; }
 
 .pack-type-rules { margin-top: 26px; }
@@ -9038,10 +9009,54 @@ button:focus-visible,
 }
 
 
-/* 投稿包检测：结论条位置 + 改名按钮 + 改名成功提示 */
-.pack-verdict { margin: 6px 0 14px; }
+/* 投稿包检测：结论 → 问题 → 按钮 → 路径表 → 统计 */
+.pack-verdict { margin: 0 0 14px; }
+
+.pack-problems {
+  display: grid;
+  gap: 8px;
+  margin: 0 0 16px;
+}
+
+.pack-problem {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin: 0;
+  padding: 11px 14px;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--line-strong);
+  border-radius: var(--radius);
+  background: var(--bg-2);
+  font-size: 13.5px;
+  line-height: 1.55;
+}
+
+.pack-problem b {
+  flex: none;
+  min-width: 62px;
+  font-size: 12px;
+  letter-spacing: .03em;
+  color: var(--text-dim);
+}
+
+.pack-problem span { color: var(--text); }
+
+.pack-problem.is-bad { border-left-color: #d2402f; }
+.pack-problem.is-bad b { color: #b3261e; }
+.pack-problem.is-warn { border-left-color: var(--gold-dk); }
+.pack-problem.is-warn b { color: var(--gold-dk); }
+.pack-problem.is-ok { border-left-color: var(--line-strong); }
+.pack-problem.is-ok b { color: var(--text-dim); }
+
+[data-theme="dark"] .pack-problem.is-bad b { color: #ff9d94; }
+
+.pack-actions { gap: 10px; align-items: center; flex-wrap: wrap; }
+.pack-actions .btn { margin: 0; }
 
 #pack-use-suggest {
+  min-width: 186px;
+  justify-content: center;
   padding: 9px 18px;
   font-size: 14px;
   font-weight: 700;
@@ -9050,48 +9065,23 @@ button:focus-visible,
   background: var(--panel);
 }
 
-.pack-actions .btn { margin: 0; }
-.pack-actions { gap: 10px; align-items: center; }
-
 #pack-use-suggest:hover {
   border-color: var(--gold-dk);
   background: var(--gold-soft);
   color: var(--gold-dk);
 }
 
-.pack-actions { flex-wrap: wrap; }
-
-.pack-flash {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  margin: 0 8px 0 0;
-  padding: 8px 14px 8px 10px;
-  border: 1px solid var(--gold-dk);
-  border-radius: var(--radius);
-  background: var(--gold-soft);
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--gold-dk);
-  opacity: 0;
-  transform: translateX(14px) scale(.94);
-  transition: opacity .24s ease, transform .34s cubic-bezier(.16, 1, .3, 1);
+#pack-use-suggest.is-done {
+  border-color: var(--accent-solid);
+  background: var(--accent-solid);
+  color: #fff;
+  animation: rename-pop .34s cubic-bezier(.16, 1, .3, 1);
 }
 
-.pack-flash.is-hidden { display: none; }
-
-.pack-flash.is-show { opacity: 1; transform: none; }
-
-.pack-flash__tick {
-  display: inline-grid;
-  place-items: center;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: var(--gold-dk);
-  color: #fff;
-  font-size: 12px;
-  font-weight: 800;
+@keyframes rename-pop {
+  0% { transform: scale(.95); }
+  55% { transform: scale(1.05); }
+  100% { transform: scale(1); }
 }
 
 @keyframes pack-pulse {
@@ -9102,10 +9092,7 @@ button:focus-visible,
 
 #pack-build.is-pulse { animation: pack-pulse .95s ease-out 2; }
 
-[data-theme="dark"] .pack-flash { background: rgba(61, 132, 240, .18); color: #9cc7ff; border-color: #4f8fe8; }
-[data-theme="dark"] .pack-flash__tick { background: #4f8fe8; color: #0c1220; }
-
 @media (prefers-reduced-motion: reduce) {
-  .pack-flash { transition: opacity .2s ease; transform: none; }
+  #pack-use-suggest.is-done { animation: none; }
   #pack-build.is-pulse { animation: none; }
 }

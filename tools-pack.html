@@ -35,9 +35,9 @@
 })();
 </script>
 <link rel="preload" href="assets/fonts/noto-sans-sc.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/fonts.css?v=20261262">
-<link rel="stylesheet" href="assets/css/theme.css?v=20261262">
-<link rel="stylesheet" href="assets/css/style.css?v=20261262">
+<link rel="stylesheet" href="assets/css/fonts.css?v=20261265">
+<link rel="stylesheet" href="assets/css/theme.css?v=20261265">
+<link rel="stylesheet" href="assets/css/style.css?v=20261265">
   <link rel="alternate" type="application/rss+xml" title="创想时代开发组 · 公告" href="feed.xml">
 </head>
 
@@ -156,16 +156,21 @@
         <p class="note" id="pack-file-note">还没有选择文件</p>
 
         <div id="pack-report" hidden>
-          <div class="pack-summary" id="pack-summary"></div>
           <div class="pack-verdict" id="pack-verdict"></div>
-          <div class="pack-checks" id="pack-checks" hidden></div>
+          <div class="pack-problems" id="pack-problems"></div>
+
+          <div class="btn-row pack-actions" style="margin-top:16px">
+            <button class="btn btn--ghost" type="button" id="pack-use-suggest">一键更名为建议名</button>
+            <button class="btn btn--sm" type="button" id="pack-build">生成合规压缩包</button>
+            <button class="btn btn--ghost btn--sm" type="button" id="pack-reset">换一个文件</button>
+          </div>
+
           <div class="pack-top" id="pack-top"></div>
 
           <div class="pack-toolbar">
             <label class="pack-check"><input type="checkbox" id="pack-drop-junk" checked> 生成时去掉系统垃圾文件（__MACOSX、.DS_Store 等）</label>
             <button class="btn btn--ghost btn--sm" type="button" id="pack-toggle-table" aria-expanded="true">收起路径</button>
           </div>
-
 
           <div class="pack-table-wrap" id="pack-table-wrap">
             <table class="pack-table">
@@ -176,12 +181,7 @@
             </table>
           </div>
 
-          <div class="btn-row pack-actions" style="margin-top:18px">
-            <button class="btn btn--ghost" type="button" id="pack-use-suggest">一键更改为合规名</button>
-            <p class="pack-flash is-hidden" id="pack-suggest-done" aria-live="polite"><span class="pack-flash__tick" aria-hidden="true">✓</span>已更改！可直接生成合规压缩包</p>
-            <button class="btn btn--sm" type="button" id="pack-build">生成合规压缩包</button>
-            <button class="btn btn--ghost btn--sm" type="button" id="pack-reset">换一个文件</button>
-          </div>
+          <div class="pack-summary" id="pack-summary"></div>
           <p class="note" id="pack-result"></p>
         </div>
       </div>
@@ -292,7 +292,7 @@
     </div>
   </div>
 </footer>
-<script src="assets/js/site.js?v=20261262"></script>
+<script src="assets/js/site.js?v=20261265"></script>
 <script src="assets/js/pack-audit.js"></script>
 </body>
 </html>
