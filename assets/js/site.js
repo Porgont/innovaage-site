@@ -761,24 +761,26 @@
       WORK_DETAILS = {};
       SHOWCASE.forEach(function (w) {
         if (!w || !w.id) return;
-        if (!w.type && !w.body) return;
+        // 后台表单把详情字段收进了 detail 组；旧数据是平铺的，两种都认
+        var d = w.detail || w;
+        if (!d.type && !d.body) return;
         WORK_DETAILS[w.id] = {
           id: w.id,
           name: w.title,
-          author: w.author || '',
-          type: w.type || '',
-          tagline: w.tagline || w.desc || '',
-          cover: w.cover || w.img || '',
-          coverAlt: w.coverAlt || w.title || '',
-          facts: Array.isArray(w.facts) ? w.facts : [],
-          poster: w.poster || '',
-          posterAlt: w.posterAlt || '',
-          notice: w.notice || '',
-          thanks: Array.isArray(w.thanks) ? w.thanks : [],
-          links: Array.isArray(w.links) ? w.links : [],
-          linksTop: !!w.linksTop,
-          shots: Array.isArray(w.shots) ? w.shots : [],
-          body: typeof w.body === 'string' ? w.body : ''
+          author: d.author || '',
+          type: d.type || '',
+          tagline: d.tagline || w.desc || '',
+          cover: d.cover || w.img || '',
+          coverAlt: d.coverAlt || w.title || '',
+          facts: Array.isArray(d.facts) ? d.facts : [],
+          poster: d.poster || '',
+          posterAlt: d.posterAlt || '',
+          notice: d.notice || '',
+          thanks: Array.isArray(d.thanks) ? d.thanks : [],
+          links: Array.isArray(d.links) ? d.links : [],
+          linksTop: !!(d.linksTop || w.linksTop),
+          shots: Array.isArray(d.shots) ? d.shots : [],
+          body: typeof d.body === 'string' ? d.body : ''
         };
       });
     }).catch(function (err) {
@@ -1854,6 +1856,18 @@
 
   /* 把详情正文（Markdown）渲染成和原来同一套结构：
      段落 / 小标题 / 列表 / 单图 / 连续多图（图组）。 */
+  /* 作品正文里的行内格式：**加粗** 与 [文字](链接)。
+     正文其余部分仍然按纯文本处理，避免把 Markdown 全盘解析后版式跑掉。 */
+  function inlineWorkMd(s) {
+    var html = escMark(s);
+    html = html.replace(/\*\*([^*\n]+)\*\*/g, '<strong>$1</strong>');
+    html = html.replace(/\[([^\]\n]+)\]\(([^)\s]+)\)/g, function (m, text, href) {
+      var target = /^https?:/i.test(href) ? ' target="_blank" rel="noopener"' : '';
+      return '<a href="' + href + '"' + target + '>' + text + '</a>';
+    });
+    return html;
+  }
+
   function renderWorkBody(md) {
     var text = String(md == null ? '' : md).replace(/\r\n?/g, '\n');
     if (!text.trim()) return '';
@@ -1865,7 +1879,7 @@
     function flushList() {
       if (!list.length) return;
       out.push('<ul class="work-list">' + list.map(function (it) {
-        return '<li>' + escMark(it) + '</li>';
+        return '<li>' + inlineWorkMd(it) + '</li>';
       }).join('') + '</ul>');
       list = [];
     }
@@ -1895,7 +1909,7 @@
       if (im) { flushList(); imgs.push({ alt: im[1], src: im[2] }); return; }
 
       flushList(); flushImgs();
-      out.push('<p>' + escMark(t) + '</p>');
+      out.push('<p>' + inlineWorkMd(t) + '</p>');
     });
 
     flushList(); flushImgs();

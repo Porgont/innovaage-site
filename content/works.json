@@ -7,35 +7,37 @@
       "category": "skin",
       "meta": "作者：创想时代 Mingxiang｜渲染：创想时代 柑柠",
       "desc": "付费皮肤，参考并较高水平地还原了游戏《碧蓝航线》的角色企业",
-      "author": "创想时代 Mingxiang",
-      "type": "皮肤 / Skin",
-      "tagline": "付费皮肤，参考并较高水平地还原了游戏《碧蓝航线》的角色企业",
-      "cover": "assets/img/enterprise-gray-ghost.jpg",
-      "coverAlt": "企业-灰色幽灵皮肤渲染：白发兽耳、黑色制服与红色腰带，浅黄色背景",
-      "facts": [
-        {
-          "k": "作品名",
-          "v": "企业-灰色幽灵"
-        },
-        {
-          "k": "作者",
-          "v": "创想时代 Mingxiang"
-        },
-        {
-          "k": "渲染",
-          "v": "创想时代 柑柠"
-        },
-        {
-          "k": "类型",
-          "v": "皮肤 / Skin"
-        },
-        {
-          "k": "价格",
-          "v": "付费皮肤"
-        }
-      ],
-      "body": "付费皮肤，参考并较高水平地还原了游戏《碧蓝航线》的角色企业。",
-      "shots": []
+      "detail": {
+        "author": "创想时代 Mingxiang",
+        "type": "皮肤 / Skin",
+        "tagline": "付费皮肤，参考并较高水平地还原了游戏《碧蓝航线》的角色企业",
+        "cover": "assets/img/enterprise-gray-ghost.jpg",
+        "coverAlt": "企业-灰色幽灵皮肤渲染：白发兽耳、黑色制服与红色腰带，浅黄色背景",
+        "facts": [
+          {
+            "k": "作品名",
+            "v": "企业-灰色幽灵"
+          },
+          {
+            "k": "作者",
+            "v": "创想时代 Mingxiang"
+          },
+          {
+            "k": "渲染",
+            "v": "创想时代 柑柠"
+          },
+          {
+            "k": "类型",
+            "v": "皮肤 / Skin"
+          },
+          {
+            "k": "价格",
+            "v": "付费皮肤"
+          }
+        ],
+        "body": "付费皮肤，参考并较高水平地还原了游戏《碧蓝航线》的角色企业。",
+        "shots": []
+      }
     },
     {
       "id": "log7-birch",
@@ -44,64 +46,66 @@
       "category": "shader",
       "meta": "作者：创想时代 Log_坤",
       "desc": "付费光影：可触碰的体积云、体积光与丁达尔效应、水面实时反射",
-      "author": "创想时代 Log_坤",
-      "type": "光影 / Shader",
-      "tagline": "付费光影：可触碰的体积云、体积光与丁达尔效应、水面实时反射周围景物",
-      "cover": "assets/img/log7-1.jpg",
-      "coverAlt": "紫色花海与村庄：木栅栏、远处建筑与花丛的体积光",
-      "facts": [
-        {
-          "k": "作品名",
-          "v": "Log7桦木 · 完整版"
-        },
-        {
-          "k": "光影作者",
-          "v": "创想时代 Log_坤"
-        },
-        {
-          "k": "美术顾问",
-          "v": "犹疑月落"
-        },
-        {
-          "k": "类型",
-          "v": "光影 / Shader"
-        },
-        {
-          "k": "平台",
-          "v": "Minecraft 基岩版"
-        },
-        {
-          "k": "价格",
-          "v": "300 钻石（付费作品）"
-        },
-        {
-          "k": "推荐配置",
-          "v": "骁龙 8 Gen1 / 天玑 9000 / A16，运行内存 6GB 以上"
-        },
-        {
-          "k": "性能",
-          "v": "12 区块、1080p 分辨率下可 60 帧"
-        },
-        {
-          "k": "反馈群",
-          "v": "1017068586"
-        }
-      ],
-      "body": "## 特性\n\n- 可以触碰的体积云\n- 体积光与丁达尔效应\n- 水面实时反射周围景物\n- 屏幕空间阴影\n- 全分辨率\n\n## 推荐配置\n\n高通：骁龙 8 Gen1\n\n联发科：天玑 9000\n\n苹果：A16\n\n运行内存 6GB 以上（12 区块、1080p 分辨率可以 60 帧）",
-      "shots": [
-        {
-          "img": "assets/img/log7-1.jpg",
-          "alt": "紫色花海与村庄：木栅栏、远处建筑与花丛的体积光"
-        },
-        {
-          "img": "assets/img/log7-2.jpg",
-          "alt": "浮岛树林：体积云与穿林光束、水面倒影"
-        },
-        {
-          "img": "assets/img/log7-3.jpg",
-          "alt": "水面与树林：丁达尔光束穿过云层投下"
-        }
-      ]
+      "detail": {
+        "author": "创想时代 Log_坤",
+        "type": "光影 / Shader",
+        "tagline": "付费光影：可触碰的体积云、体积光与丁达尔效应、水面实时反射周围景物",
+        "cover": "assets/img/log7-1.jpg",
+        "coverAlt": "紫色花海与村庄：木栅栏、远处建筑与花丛的体积光",
+        "facts": [
+          {
+            "k": "作品名",
+            "v": "Log7桦木 · 完整版"
+          },
+          {
+            "k": "光影作者",
+            "v": "创想时代 Log_坤"
+          },
+          {
+            "k": "美术顾问",
+            "v": "犹疑月落"
+          },
+          {
+            "k": "类型",
+            "v": "光影 / Shader"
+          },
+          {
+            "k": "平台",
+            "v": "Minecraft 基岩版"
+          },
+          {
+            "k": "价格",
+            "v": "300 钻石（付费作品）"
+          },
+          {
+            "k": "推荐配置",
+            "v": "骁龙 8 Gen1 / 天玑 9000 / A16，运行内存 6GB 以上"
+          },
+          {
+            "k": "性能",
+            "v": "12 区块、1080p 分辨率下可 60 帧"
+          },
+          {
+            "k": "反馈群",
+            "v": "1017068586"
+          }
+        ],
+        "body": "## 特性\n\n- 可以触碰的体积云\n- 体积光与丁达尔效应\n- 水面实时反射周围景物\n- 屏幕空间阴影\n- 全分辨率\n\n## 推荐配置\n\n高通：骁龙 8 Gen1\n\n联发科：天玑 9000\n\n苹果：A16\n\n运行内存 6GB 以上（12 区块、1080p 分辨率可以 60 帧）",
+        "shots": [
+          {
+            "img": "assets/img/log7-1.jpg",
+            "alt": "紫色花海与村庄：木栅栏、远处建筑与花丛的体积光"
+          },
+          {
+            "img": "assets/img/log7-2.jpg",
+            "alt": "浮岛树林：体积云与穿林光束、水面倒影"
+          },
+          {
+            "img": "assets/img/log7-3.jpg",
+            "alt": "水面与树林：丁达尔光束穿过云层投下"
+          }
+        ]
+      }
     },
     {
       "id": "log-shader-sa",
@@ -110,81 +114,83 @@
       "category": "shader",
       "meta": "作者：Log坤",
       "desc": "基岩版光影，主打水面镜面反射与自然光过渡",
-      "author": "创想时代 Log坤",
-      "type": "光影 / Shader",
-      "tagline": "Log 光影两周年特别版：方块卷云、氛围雨天、流动星辰、特调 ACES 色调映射",
-      "cover": "assets/img/shader-rain.jpg",
-      "coverAlt": "雨天场景：石板路积水倒影、暖色窗光与雨幕",
-      "facts": [
-        {
-          "k": "作品名",
-          "v": "LogSA（Log Second Anniversary）"
-        },
-        {
-          "k": "作者",
-          "v": "创想时代 Log坤"
-        },
-        {
-          "k": "类型",
-          "v": "光影 / Shader"
-        },
-        {
-          "k": "平台",
-          "v": "Minecraft 基岩版"
-        },
-        {
-          "k": "前置",
-          "v": "SRC 光影（组件码 0559302）"
-        },
-        {
-          "k": "反馈群",
-          "v": "1017068586"
-        },
-        {
-          "k": "Log 光影外群",
-          "v": "822955272"
-        },
-        {
-          "k": "Log 光影内群",
-          "v": "980037287"
-        }
-      ],
-      "body": "",
-      "shots": [
-        {
-          "img": "assets/img/shader-rain.jpg",
-          "alt": "雨天场景：石板路面积水倒影、雨幕与暖色窗光"
-        },
-        {
-          "img": "assets/img/shader-1.jpg",
-          "alt": "晴天场景：雪山与松林，天空过曝与积雪明暗过渡"
-        },
-        {
-          "img": "assets/img/shader-3.jpg",
-          "alt": "水面场景：峡谷水道的镜面反射"
-        },
-        {
-          "img": "assets/img/shader-2.jpg",
-          "alt": "林地场景：樱花树冠与草地花簇"
-        }
-      ],
-      "poster": "assets/img/logsa-poster.jpg",
-      "posterAlt": "LogSA 组件介绍海报：总介绍、雨天 / 晴天 / 水面实机效果、开发作者与鸣谢",
-      "notice": "开发作者：创想时代 Log坤。鸣谢：冷夜、被遗忘的青色剑士、关于本人、只问为何、老楚、范帛、柑柠、linlin 等人的支持和帮助，同时也感谢各位玩家一直以来的陪伴与支持（排名不分先后）。",
-      "thanks": [
-        {
-          "k": "开发作者",
-          "v": "创想时代 Log坤"
-        },
-        {
-          "k": "鸣谢",
-          "v": "冷夜、被遗忘的青色剑士、关于本人、只问为何、老楚、范帛、柑柠、linlin"
-        },
-        {
-          "k": "反馈途径",
-          "v": "创想时代反馈群 1017068586"
-        }
-      ]
+      "detail": {
+        "author": "创想时代 Log坤",
+        "type": "光影 / Shader",
+        "tagline": "Log 光影两周年特别版：方块卷云、氛围雨天、流动星辰、特调 ACES 色调映射",
+        "cover": "assets/img/shader-rain.jpg",
+        "coverAlt": "雨天场景：石板路积水倒影、暖色窗光与雨幕",
+        "facts": [
+          {
+            "k": "作品名",
+            "v": "LogSA（Log Second Anniversary）"
+          },
+          {
+            "k": "作者",
+            "v": "创想时代 Log坤"
+          },
+          {
+            "k": "类型",
+            "v": "光影 / Shader"
+          },
+          {
+            "k": "平台",
+            "v": "Minecraft 基岩版"
+          },
+          {
+            "k": "前置",
+            "v": "SRC 光影（组件码 0559302）"
+          },
+          {
+            "k": "反馈群",
+            "v": "1017068586"
+          },
+          {
+            "k": "Log 光影外群",
+            "v": "822955272"
+          },
+          {
+            "k": "Log 光影内群",
+            "v": "980037287"
+          }
+        ],
+        "body": "",
+        "shots": [
+          {
+            "img": "assets/img/shader-rain.jpg",
+            "alt": "雨天场景：石板路面积水倒影、雨幕与暖色窗光"
+          },
+          {
+            "img": "assets/img/shader-1.jpg",
+            "alt": "晴天场景：雪山与松林，天空过曝与积雪明暗过渡"
+          },
+          {
+            "img": "assets/img/shader-3.jpg",
+            "alt": "水面场景：峡谷水道的镜面反射"
+          },
+          {
+            "img": "assets/img/shader-2.jpg",
+            "alt": "林地场景：樱花树冠与草地花簇"
+          }
+        ],
+        "poster": "assets/img/logsa-poster.jpg",
+        "posterAlt": "LogSA 组件介绍海报：总介绍、雨天 / 晴天 / 水面实机效果、开发作者与鸣谢",
+        "notice": "开发作者：创想时代 Log坤。鸣谢：冷夜、被遗忘的青色剑士、关于本人、只问为何、老楚、范帛、柑柠、linlin 等人的支持和帮助，同时也感谢各位玩家一直以来的陪伴与支持（排名不分先后）。",
+        "thanks": [
+          {
+            "k": "开发作者",
+            "v": "创想时代 Log坤"
+          },
+          {
+            "k": "鸣谢",
+            "v": "冷夜、被遗忘的青色剑士、关于本人、只问为何、老楚、范帛、柑柠、linlin"
+          },
+          {
+            "k": "反馈途径",
+            "v": "创想时代反馈群 1017068586"
+          }
+        ]
+      }
     },
     {
       "id": "qiushui-sanchi",
@@ -193,44 +199,46 @@
       "category": "map",
       "meta": "作者：余末YuuMo",
       "desc": "祈水，祈的是秋水三尺！",
-      "author": "创想时代 余末YuuMo",
-      "type": "地图 / Map",
-      "tagline": "祈水，祈的是秋水三尺！",
-      "cover": "assets/img/qiushui-1.jpg",
-      "coverAlt": "秋水三尺：夜色下的悬空宫殿正面全景",
-      "facts": [
-        {
-          "k": "作品名",
-          "v": "秋水三尺"
-        },
-        {
-          "k": "作者",
-          "v": "创想时代 余末YuuMo"
-        },
-        {
-          "k": "类型",
-          "v": "地图 / Map"
-        },
-        {
-          "k": "平台",
-          "v": "Minecraft 基岩版"
-        }
-      ],
-      "body": "祈水，祈的是秋水三尺！",
-      "shots": [
-        {
-          "img": "assets/img/qiushui-1.jpg",
-          "alt": "夜色下的悬空宫殿正面全景，金饰与发光题字"
-        },
-        {
-          "img": "assets/img/qiushui-2.jpg",
-          "alt": "白天的悬空宫殿正面全景，蓝天与海面"
-        },
-        {
-          "img": "assets/img/qiushui-3.jpg",
-          "alt": "侧面视角的悬空宫殿与金色环形结构，右上方竖排题字"
-        }
-      ]
+      "detail": {
+        "author": "创想时代 余末YuuMo",
+        "type": "地图 / Map",
+        "tagline": "祈水，祈的是秋水三尺！",
+        "cover": "assets/img/qiushui-1.jpg",
+        "coverAlt": "秋水三尺：夜色下的悬空宫殿正面全景",
+        "facts": [
+          {
+            "k": "作品名",
+            "v": "秋水三尺"
+          },
+          {
+            "k": "作者",
+            "v": "创想时代 余末YuuMo"
+          },
+          {
+            "k": "类型",
+            "v": "地图 / Map"
+          },
+          {
+            "k": "平台",
+            "v": "Minecraft 基岩版"
+          }
+        ],
+        "body": "祈水，祈的是秋水三尺！",
+        "shots": [
+          {
+            "img": "assets/img/qiushui-1.jpg",
+            "alt": "夜色下的悬空宫殿正面全景，金饰与发光题字"
+          },
+          {
+            "img": "assets/img/qiushui-2.jpg",
+            "alt": "白天的悬空宫殿正面全景，蓝天与海面"
+          },
+          {
+            "img": "assets/img/qiushui-3.jpg",
+            "alt": "侧面视角的悬空宫殿与金色环形结构，右上方竖排题字"
+          }
+        ]
+      }
     },
     {
       "id": "lingling-v5000-oak7",
@@ -239,62 +247,64 @@
       "category": "addon",
       "meta": "作者：Log坤",
       "desc": "把零雾构想V5000 内置光影换成 Log 橡木7",
-      "author": "Log坤",
-      "type": "Addon / 画质提升包",
-      "tagline": "把零雾构想V5000 内置光影由「Log6 桦木」更换为 Log 橡木7",
-      "cover": "assets/img/lingling-1.jpg",
-      "coverAlt": "画质提升包效果：光泽方块地面的日光反射",
-      "facts": [
-        {
-          "k": "作品名",
-          "v": "零雾构想V5000-橡木7画质提升包"
-        },
-        {
-          "k": "作者",
-          "v": "Log坤"
-        },
-        {
-          "k": "版本",
-          "v": "V1.0（2026-10-13）"
-        },
-        {
-          "k": "类型",
-          "v": "Addon / 画质提升包"
-        },
-        {
-          "k": "平台",
-          "v": "Minecraft 基岩版"
-        },
-        {
-          "k": "需先购买",
-          "v": "零雾构想V5000 材质（组件码 8144171，付费四合一版本）"
-        },
-        {
-          "k": "同时加载",
-          "v": "SRC 实时阴影（组件码 0559302）"
-        },
-        {
-          "k": "海报",
-          "v": "柑柠"
-        }
-      ],
-      "body": "",
-      "shots": [
-        {
-          "img": "assets/img/lingling-1.jpg",
-          "alt": "效果图：光泽方块地面在日光下的反射与阴影"
-        },
-        {
-          "img": "assets/img/lingling-2.jpg",
-          "alt": "效果图：方块方块堆叠场景的光照层次"
-        },
-        {
-          "img": "assets/img/lingling-3.jpg",
-          "alt": "效果图：室内场景下的光照与材质表现"
-        }
-      ],
-      "poster": "assets/img/lingling-poster.webp",
-      "posterAlt": "零雾构想V5000-橡木7画质提升包 组件介绍海报"
+      "detail": {
+        "author": "Log坤",
+        "type": "Addon / 画质提升包",
+        "tagline": "把零雾构想V5000 内置光影由「Log6 桦木」更换为 Log 橡木7",
+        "cover": "assets/img/lingling-1.jpg",
+        "coverAlt": "画质提升包效果：光泽方块地面的日光反射",
+        "facts": [
+          {
+            "k": "作品名",
+            "v": "零雾构想V5000-橡木7画质提升包"
+          },
+          {
+            "k": "作者",
+            "v": "Log坤"
+          },
+          {
+            "k": "版本",
+            "v": "V1.0（2026-10-13）"
+          },
+          {
+            "k": "类型",
+            "v": "Addon / 画质提升包"
+          },
+          {
+            "k": "平台",
+            "v": "Minecraft 基岩版"
+          },
+          {
+            "k": "需先购买",
+            "v": "零雾构想V5000 材质（组件码 8144171，付费四合一版本）"
+          },
+          {
+            "k": "同时加载",
+            "v": "SRC 实时阴影（组件码 0559302）"
+          },
+          {
+            "k": "海报",
+            "v": "柑柠"
+          }
+        ],
+        "body": "",
+        "shots": [
+          {
+            "img": "assets/img/lingling-1.jpg",
+            "alt": "效果图：光泽方块地面在日光下的反射与阴影"
+          },
+          {
+            "img": "assets/img/lingling-2.jpg",
+            "alt": "效果图：方块方块堆叠场景的光照层次"
+          },
+          {
+            "img": "assets/img/lingling-3.jpg",
+            "alt": "效果图：室内场景下的光照与材质表现"
+          }
+        ],
+        "poster": "assets/img/lingling-poster.webp",
+        "posterAlt": "零雾构想V5000-橡木7画质提升包 组件介绍海报"
+      }
     },
     {
       "id": "lingling-universal",
@@ -303,62 +313,64 @@
       "category": "tex",
       "meta": "作者：零雾〇5Fogg05、Windows、Log_坤",
       "desc": "零雾构想与 Log 白桦木再次联动，内置 V5003 与 Log 白桦木灵动视效包",
-      "author": "零雾〇5Fogg05、Windows、Log_坤",
-      "type": "材质 / Texture",
-      "tagline": "零雾构想与 Log 白桦木再次联动：零雾构想V5003 中内置了 Log 白桦木灵动视效图形包",
-      "cover": "assets/img/lingling-u-1.jpg",
-      "coverAlt": "通用版效果：深色石墙在窗口日光下的 PBR 反射",
-      "facts": [
-        {
-          "k": "作品名",
-          "v": "零雾构想通用版"
-        },
-        {
-          "k": "作者",
-          "v": "零雾〇5Fogg05、Windows、Log_坤"
-        },
-        {
-          "k": "版本",
-          "v": "V2.3（2026-10-14）"
-        },
-        {
-          "k": "类型",
-          "v": "材质 / Texture"
-        },
-        {
-          "k": "平台",
-          "v": "Minecraft 基岩版"
-        },
-        {
-          "k": "移植与维护",
-          "v": "创想时代开发组 Log坤团队（家属授权）"
-        },
-        {
-          "k": "内置",
-          "v": "零雾构想V5003 + Log 白桦木灵动视效"
-        },
-        {
-          "k": "获取",
-          "v": "中国版【创想时代开发组】账号免费发布"
-        }
-      ],
-      "body": "",
-      "shots": [
-        {
-          "img": "assets/img/lingling-u-1.jpg",
-          "alt": "效果图：深色石墙与窗口日光，PBR 材质反射"
-        },
-        {
-          "img": "assets/img/lingling-u-2.jpg",
-          "alt": "效果图：木质建筑与积雪场景的材质表现"
-        },
-        {
-          "img": "assets/img/lingling-u-3.jpg",
-          "alt": "效果图：樱花林地，树冠与草地材质层次"
-        }
-      ],
-      "poster": "assets/img/lingling-universal-poster.webp",
-      "posterAlt": "零雾构想通用版 V2.3 组件介绍海报"
+      "detail": {
+        "author": "零雾〇5Fogg05、Windows、Log_坤",
+        "type": "材质 / Texture",
+        "tagline": "零雾构想与 Log 白桦木再次联动：零雾构想V5003 中内置了 Log 白桦木灵动视效图形包",
+        "cover": "assets/img/lingling-u-1.jpg",
+        "coverAlt": "通用版效果：深色石墙在窗口日光下的 PBR 反射",
+        "facts": [
+          {
+            "k": "作品名",
+            "v": "零雾构想通用版"
+          },
+          {
+            "k": "作者",
+            "v": "零雾〇5Fogg05、Windows、Log_坤"
+          },
+          {
+            "k": "版本",
+            "v": "V2.3（2026-10-14）"
+          },
+          {
+            "k": "类型",
+            "v": "材质 / Texture"
+          },
+          {
+            "k": "平台",
+            "v": "Minecraft 基岩版"
+          },
+          {
+            "k": "移植与维护",
+            "v": "创想时代开发组 Log坤团队（家属授权）"
+          },
+          {
+            "k": "内置",
+            "v": "零雾构想V5003 + Log 白桦木灵动视效"
+          },
+          {
+            "k": "获取",
+            "v": "中国版【创想时代开发组】账号免费发布"
+          }
+        ],
+        "body": "",
+        "shots": [
+          {
+            "img": "assets/img/lingling-u-1.jpg",
+            "alt": "效果图：深色石墙与窗口日光，PBR 材质反射"
+          },
+          {
+            "img": "assets/img/lingling-u-2.jpg",
+            "alt": "效果图：木质建筑与积雪场景的材质表现"
+          },
+          {
+            "img": "assets/img/lingling-u-3.jpg",
+            "alt": "效果图：樱花林地，树冠与草地材质层次"
+          }
+        ],
+        "poster": "assets/img/lingling-universal-poster.webp",
+        "posterAlt": "零雾构想通用版 V2.3 组件介绍海报"
+      }
     },
     {
       "id": "bilibili-pvp-textures",
@@ -367,32 +379,34 @@
       "category": "tex",
       "meta": "作者：青橘",
       "desc": "取自作者早期作品 Bilibili UI 衍生而成的 PVP 材质，贴图与天空皆为原创",
-      "author": "青橘",
-      "type": "材质 / Texture（PVP）",
-      "tagline": "取自作者早期作品 Bilibili UI 衍生而成的 PVP 材质",
-      "cover": "assets/img/qingju-bilibili-pvp.jpg",
-      "coverAlt": "Bilibili PVP Textures：粉色主题的角色、武器与物品栏",
-      "facts": [
-        {
-          "k": "作品名",
-          "v": "Bilibili PVP Textures"
-        },
-        {
-          "k": "作者",
-          "v": "青橘"
-        },
-        {
-          "k": "类型",
-          "v": "材质 / Texture（PVP）"
-        }
-      ],
-      "body": "贴图与天空皆为原创。",
-      "shots": [
-        {
-          "img": "assets/img/qingju-bilibili-pvp.jpg",
-          "alt": "Bilibili PVP Textures：粉色主题的角色、武器、血条与物品栏"
-        }
-      ]
+      "detail": {
+        "author": "青橘",
+        "type": "材质 / Texture（PVP）",
+        "tagline": "取自作者早期作品 Bilibili UI 衍生而成的 PVP 材质",
+        "cover": "assets/img/qingju-bilibili-pvp.jpg",
+        "coverAlt": "Bilibili PVP Textures：粉色主题的角色、武器与物品栏",
+        "facts": [
+          {
+            "k": "作品名",
+            "v": "Bilibili PVP Textures"
+          },
+          {
+            "k": "作者",
+            "v": "青橘"
+          },
+          {
+            "k": "类型",
+            "v": "材质 / Texture（PVP）"
+          }
+        ],
+        "body": "贴图与天空皆为原创。",
+        "shots": [
+          {
+            "img": "assets/img/qingju-bilibili-pvp.jpg",
+            "alt": "Bilibili PVP Textures：粉色主题的角色、武器、血条与物品栏"
+          }
+        ]
+      }
     },
     {
       "id": "deer-pvp-textures",
@@ -401,32 +415,34 @@
       "category": "tex",
       "meta": "作者：青橘",
       "desc": "100% 原创的 PVP 材质，从方块到物品全部手绘，天空另外做了处理",
-      "author": "青橘",
-      "type": "材质 / Texture（PVP）",
-      "tagline": "100% 原创的 PVP 材质，从方块到物品全部手绘",
-      "cover": "assets/img/qingju-deer-pvp.jpg",
-      "coverAlt": "Deer PVP 材质：青绿色主题的角色与武器",
-      "facts": [
-        {
-          "k": "作品名",
-          "v": "Deer PVP 材质"
-        },
-        {
-          "k": "作者",
-          "v": "青橘"
-        },
-        {
-          "k": "类型",
-          "v": "材质 / Texture（PVP）"
-        }
-      ],
-      "body": "从方块到物品全部手绘而成，天空部分另外做了处理。\n\n材质绘制以 PVP 使用为主，不太建议日常使用，用不惯者慎用。",
-      "shots": [
-        {
-          "img": "assets/img/qingju-deer-pvp.jpg",
-          "alt": "Deer PVP 材质：青绿色主题的角色、武器与物品"
-        }
-      ]
+      "detail": {
+        "author": "青橘",
+        "type": "材质 / Texture（PVP）",
+        "tagline": "100% 原创的 PVP 材质，从方块到物品全部手绘",
+        "cover": "assets/img/qingju-deer-pvp.jpg",
+        "coverAlt": "Deer PVP 材质：青绿色主题的角色与武器",
+        "facts": [
+          {
+            "k": "作品名",
+            "v": "Deer PVP 材质"
+          },
+          {
+            "k": "作者",
+            "v": "青橘"
+          },
+          {
+            "k": "类型",
+            "v": "材质 / Texture（PVP）"
+          }
+        ],
+        "body": "从方块到物品全部手绘而成，天空部分另外做了处理。\n\n材质绘制以 PVP 使用为主，不太建议日常使用，用不惯者慎用。",
+        "shots": [
+          {
+            "img": "assets/img/qingju-deer-pvp.jpg",
+            "alt": "Deer PVP 材质：青绿色主题的角色、武器与物品"
+          }
+        ]
+      }
     },
     {
       "id": "test",
