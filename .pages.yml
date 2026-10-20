@@ -188,3 +188,4 @@ content:
                 - name: v
                   label: 内容
                   type: string
+                  # 2026-10-20 更新
