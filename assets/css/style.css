@@ -7894,3 +7894,148 @@ button:focus-visible,
     backdrop-filter: none;
   }
 }
+
+
+/* ============================================================
+   公告详情：左正文右资料栏（2026-10）
+   原来正文直接铺在页面上，两边空一大片；现在正文进白纸面，
+   右栏放本条信息与相关公告，手机上落回单列。
+   ============================================================ */
+.article-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: 28px;
+  align-items: start;
+}
+
+.article-sheet {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--gold);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 34px 38px;
+}
+
+.article-sheet .article-body {
+  max-width: none;
+}
+
+.article-sheet .article-body > :first-child { margin-top: 0; }
+.article-sheet .article-body > :last-child { margin-bottom: 0; }
+
+.article-side {
+  position: sticky;
+  top: 92px;
+  display: grid;
+  gap: 14px;
+}
+
+.side-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+}
+
+.side-card__k {
+  margin: 0 0 10px;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--text-mute);
+}
+
+.side-facts {
+  margin: 0;
+  display: grid;
+  gap: 9px;
+}
+
+.side-facts > div {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr);
+  gap: 8px;
+  font-size: 12.5px;
+  line-height: 1.6;
+}
+
+.side-facts dt { color: var(--text-mute); }
+.side-facts dd { margin: 0; color: var(--text); }
+
+/* 右栏链接不套正文那套下划线 + 黄底，保持卡片里的干净排版 */
+.article-side a,
+.article-side a b,
+.article-side a span {
+  text-decoration: none !important;
+  background: none !important;
+  background-image: none !important;
+  border-bottom: 0 !important;
+}
+
+.side-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.side-list li + li { border-top: 1px solid var(--line); }
+
+.side-list a {
+  display: block;
+  padding: 9px 0;
+  border-bottom: 0;
+  transition: color .16s ease;
+}
+
+.side-list a b {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.side-list a .side-date {
+  display: block;
+  margin-bottom: 2px;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .06em;
+  color: var(--text-mute);
+}
+
+@media (hover: hover) {
+  .side-list a:hover { color: var(--gold-dk); }
+  .side-list a:hover b { color: var(--gold-dk); }
+}
+
+.side-card--flat { padding: 0; }
+
+.side-all {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 18px;
+  font-size: 13px;
+  border-bottom: 0;
+}
+
+@media (hover: hover) {
+  .side-all:hover { color: var(--gold-dk); }
+}
+
+@media (max-width: 1000px) {
+  .article-layout { grid-template-columns: 1fr; }
+  .article-side {
+    position: static;
+    grid-template-columns: 1fr 1fr;
+  }
+  .article-sheet { padding: 24px 20px; }
+}
+
+@media (max-width: 640px) {
+  .article-side { grid-template-columns: 1fr; }
+  .article-sheet { padding: 20px 16px; border-left-width: 2px; }
+}

@@ -33,9 +33,9 @@
 })();
 </script>
 <link rel="preload" href="assets/fonts/noto-sans-sc.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/fonts.css?v=20261206">
-<link rel="stylesheet" href="assets/css/theme.css?v=20261206">
-<link rel="stylesheet" href="assets/css/style.css?v=20261206">
+<link rel="stylesheet" href="assets/css/fonts.css?v=20261208">
+<link rel="stylesheet" href="assets/css/theme.css?v=20261208">
+<link rel="stylesheet" href="assets/css/style.css?v=20261208">
   <link rel="alternate" type="application/rss+xml" title="创想时代开发组 · 公告" href="feed.xml">
 </head>
 
@@ -118,14 +118,20 @@
 
   <section class="section section--tight">
     <div class="wrap">
-      <div id="article-detail">
-        <div class="panel">
-          <p style="margin:0;color:var(--text-dim)">正在读取公告…</p>
-        </div>
-      </div>
+      <div class="article-layout">
+        <div class="article-main">
+          <div id="article-detail">
+            <div class="panel">
+              <p style="margin:0;color:var(--text-dim)">正在读取公告…</p>
+            </div>
+          </div>
 
-      <div class="btn-row" style="margin-top:30px">
-        <a class="btn btn--ghost btn--sm" href="news.html">← 回公告列表</a>
+          <div class="btn-row" style="margin-top:26px">
+            <a class="btn btn--ghost btn--sm" href="news.html">← 回公告列表</a>
+          </div>
+        </div>
+
+        <aside class="article-side" id="article-side" aria-label="本条信息与相关公告"></aside>
       </div>
     </div>
   </section>
@@ -180,6 +186,6 @@
 
 <script src="assets/vendor/marked/marked.umd.js"></script>
 <script src="assets/vendor/dompurify/purify.min.js"></script>
-<script src="assets/js/site.js?v=20261206"></script>
+<script src="assets/js/site.js?v=20261208"></script>
 </body>
 </html>

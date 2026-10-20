@@ -1125,7 +1125,10 @@
      站外链接自动补 target/rel，保持新窗口打开。
      库没加载出来时退回「按空行分段 + 转义」，至少不会白屏。 */
   function renderMarkdown(src) {
-    var text = markShortcut(String(src == null ? '' : src));
+    var text = markShortcut(String(src == null ? '' : src))
+      // 加粗的收尾星号前如果是标点、后面紧跟文字，CommonMark 不认这条加粗。
+      // 把标点挪到星号外面，字一个不改，只是加粗范围少了一个标点。
+      .replace(/\*\*([^*\n]+?)([：:，。、；！？])\*\*/g, '**$1**$2');
     if (!text.trim()) return '';
 
     var html;
@@ -1244,7 +1247,65 @@
         '</nav>';
     }
 
-    host.innerHTML = '<div class="article-body">' + renderMarkdown(n.body) + '</div>' + navHtml;
+    host.innerHTML =
+      '<article class="article-sheet">' +
+        '<div class="article-body">' + renderMarkdown(n.body) + '</div>' +
+      '</article>' + navHtml;
+
+    paintArticleSide(n);
+  }
+
+  /* 公告右栏：本条信息 + 相关公告 + 全部公告入口 */
+  function paintArticleSide(n) {
+    var side = $('#article-side');
+    if (!side) return;
+
+    var all = sortedNotices();
+    var tags = n.tags || [];
+
+    /* 先找同标签的，不够再用最新几条补齐 */
+    var related = all.filter(function (x) {
+      if (x.id === n.id) return false;
+      return (x.tags || []).some(function (t) { return tags.indexOf(t) >= 0; });
+    });
+    if (related.length < 4) {
+      all.forEach(function (x) {
+        if (related.length >= 4 || x.id === n.id) return;
+        if (related.indexOf(x) < 0) related.push(x);
+      });
+    }
+    related = related.slice(0, 4);
+
+    var d = String(n.date || '').split('-');
+    var dateText = (d.length === 3 && d[0] && d[1] && d[2])
+      ? (Number(d[0]) + ' 年 ' + Number(d[1]) + ' 月 ' + Number(d[2]) + ' 日')
+      : (n.date || '');
+
+    var facts = '<div><dt>发布日期</dt><dd>' + esc(dateText) + '</dd></div>';
+    if (n.pin) facts += '<div><dt>状态</dt><dd>置顶</dd></div>';
+    if (tags.length) {
+      facts += '<div><dt>标签</dt><dd>' + tags.map(function (t) {
+        return '<span class="tag">' + esc(t) + '</span>';
+      }).join(' ') + '</dd></div>';
+    }
+
+    side.innerHTML =
+      '<div class="side-card">' +
+        '<p class="side-card__k">本条信息</p>' +
+        '<dl class="side-facts">' + facts + '</dl>' +
+      '</div>' +
+      '<div class="side-card">' +
+        '<p class="side-card__k">相关公告</p>' +
+        '<ul class="side-list">' + related.map(function (x) {
+          return '<li><a href="article.html?id=' + esc(encodeURIComponent(x.id)) + '">' +
+            '<span class="side-date">' + esc(x.date || '') + '</span>' +
+            '<b>' + esc(x.title) + '</b></a></li>';
+        }).join('') + '</ul>' +
+      '</div>' +
+      '<div class="side-card side-card--flat">' +
+        '<a class="side-all" href="news.html"><span>全部公告</span><span>' +
+          ANNOUNCEMENTS.length + ' 篇 →</span></a>' +
+      '</div>';
   }
 
   /* 公告的统一排序：置顶优先，其余按日期从新到旧。
