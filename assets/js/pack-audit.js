@@ -12,8 +12,8 @@
 (function () {
   'use strict';
 
-  var ALLOWED_SEG = /^[A-Za-z0-9_]+$/;
-  var ALLOWED_FILE = /^[A-Za-z0-9_]+(\.[A-Za-z0-9_]+)?$/;
+  var ALLOWED_SEG = /^[A-Za-z0-9_-]+$/;
+  var ALLOWED_FILE = /^[A-Za-z0-9_-]+(\.[A-Za-z0-9_-]+)?$/;
   var JUNK_NAMES = ['.ds_store', 'thumbs.db', 'desktop.ini'];
   var utf8 = new TextEncoder();
 
@@ -184,7 +184,7 @@
   }
 
   function sanitizeSeg(seg) {
-    var s = String(seg).replace(/[^A-Za-z0-9_]/g, '_').replace(/_+/g, '_').replace(/^_+|_+$/g, '');
+    var s = String(seg).replace(/[^A-Za-z0-9_-]/g, '_').replace(/-+/g, '-').replace(/_+/g, '_').replace(/^_+|_+$/g, '');
     return s || 'file';
   }
 
