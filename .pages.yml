@@ -144,7 +144,7 @@ content:
                   label: 加粗显示
                   type: boolean
           - name: body
-            label: 正文（Markdown：空行分段、## 小标题、- 列表、![](图片) 插图）
+            label: '正文（Markdown：空行分段、## 小标题、- 列表、![](图片) 插图）'
             type: rich-text
             options:
               format: markdown
