@@ -860,7 +860,7 @@
 
     var hardProblems = [];
     if (!a.structureOk && !fixableStructure) hardProblems.push('包体结构');
-    if (a.checks.length && !a.checksOk) hardProblems.push('必备文件');
+    if (a.checks.length && !a.checksOk) hardProblems.push('必备文件缺失（无法自动修复）');
     if (badNames.length) hardProblems.push(badNames.length + ' 处名字');
     if (!files.length) hardProblems.push('没有文件');
     var pendingRename = renamed.length > 0 && !state.renameApplied;
@@ -872,9 +872,23 @@
       problems.push({ cls: fixableStructure ? 'is-warn' : 'is-bad', k: '包体结构',
         d: a.structureProblem + (fixableStructure ? '，生成时会自动收进一个顶层文件夹' : '') });
     }
-    a.checks.forEach(function (c) {
-      if (!c.ok) problems.push({ cls: 'is-bad', k: '必备文件', d: '缺少 ' + c.label });
-    });
+    var missing = a.checks.filter(function (c) { return !c.ok; });
+    if (missing.length) {
+      var named = { '顶层有 behavior_packs 文件夹': 'behavior_packs 文件夹',
+        '顶层有 resource_packs 文件夹': 'resource_packs 文件夹',
+        'behavior_packs 里有 manifest.json': 'behavior_packs 里的 manifest.json',
+        'resource_packs 里有 manifest.json': 'resource_packs 里的 manifest.json',
+        '包里有 textures 文件夹': 'textures 文件夹',
+        '包里有 manifest.json': 'manifest.json',
+        '带 Add-on 时需要 world_behavior_packs.json': 'world_behavior_packs.json',
+        '带 Add-on 时需要 world_resource_packs.json': 'world_resource_packs.json',
+        '包里有一个 .jar': '.jar 文件',
+        '包里有一个 .zip': '.zip 文件',
+        '顶层只有一个 .zip': '顶层的 .zip' };
+      problems.push({ cls: 'is-bad', k: '必备文件',
+        d: '缺少 ' + missing.map(function (c) { return named[c.label] || c.label; }).join('、') +
+          '。当前缺少特定文件，无法自动修复，需要自行修改' });
+    }
     if (a.spec.wrapTop && !topOk) {
       problems.push({ cls: 'is-bad', k: '顶层文件夹', path: top,
         why: issuesOfPath(top, true).join('；'), fix: sanitizeSeg(top) });
@@ -973,7 +987,7 @@
       (!a.structureOk) &&
       (/^根目录直接有/.test(a.structureProblem) || /^顶层有 \d+ 个文件夹/.test(a.structureProblem));
     if (!a.structureOk && !fixableStructure2) why.push('包体结构待修：' + a.structureProblem);
-    if (a.checks.length && !a.checksOk) why.push('必备文件缺失');
+    if (a.checks.length && !a.checksOk) why.push('必备文件缺失，无法自动修复，需要自行修改');
     if (!files.length) why.push('没有文件');
     if (a.archive === '7z' && state.file && state.file.size > SEVEN_ZIP_MAX) {
       why.push('7z 超过 120 MB，请用 7-Zip 手动处理');
