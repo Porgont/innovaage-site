@@ -7844,3 +7844,10 @@ button:focus-visible,
     box-shadow: none;
   }
 }
+
+
+/* 区块标题下的那句说明不要了：整块随悬停上浮时它跟着动，而且编号带本身已经够清楚。
+   文字仍留在 HTML 里，只是不显示，想恢复把这条删掉即可。 */
+.section-head > p {
+  display: none;
+}
