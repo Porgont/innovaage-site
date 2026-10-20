@@ -8487,7 +8487,7 @@ button:focus-visible,
   display: inline-flex;
   flex-wrap: nowrap;
   gap: 0;
-  padding: 0;
+  padding: 5px;
   margin-bottom: 30px;
   max-width: 100%;
   border: 1px solid var(--line-2);
@@ -8507,10 +8507,18 @@ button:focus-visible,
   border-radius: 0;
   background: transparent;
   color: var(--text);
+  opacity: .62;
+  transform: scale(.94);
   transition:
     transform .3s var(--ease-out, cubic-bezier(.16, 1, .3, 1)),
+    opacity .25s ease,
     color .25s ease,
     background-color .22s ease;
+}
+
+.tabs--boxed .tab:hover {
+  opacity: .9;
+  transform: scale(.98);
 }
 
 .tabs--boxed .tab:first-of-type { border-left: 0; }
@@ -8527,7 +8535,8 @@ button:focus-visible,
   border-color: var(--ink);
   border-radius: 1px;
   color: var(--ink-fg);
-  transform: scale(1.06);
+  opacity: 1;
+  transform: scale(1.1);
   box-shadow: 0 8px 20px rgba(12, 14, 18, .18);
 }
 
@@ -8559,6 +8568,7 @@ button:focus-visible,
     gap: 0;
   }
 
+  .tabs--boxed .tab { opacity: 1; transform: none; }
   .tabs--boxed .tab.is-active { transform: none; }
 
   .tabs--boxed .tab {
@@ -8569,6 +8579,6 @@ button:focus-visible,
 
 @media (prefers-reduced-motion: reduce) {
   .tabs__ink { transition: none; }
-  .tabs--boxed .tab { transition: color .25s ease, background-color .22s ease; }
+  .tabs--boxed .tab { transition: color .25s ease, background-color .22s ease; opacity: 1; transform: none; }
   .tabs--boxed .tab.is-active { transform: none; }
 }
