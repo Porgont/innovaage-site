@@ -101,6 +101,17 @@
      作品页默认打开的就是这一栏。 */
   var SHOWCASE_HOME = [
     {
+      id: 'mengsea',
+      href: 'mengsea.html',
+      img: 'assets/img/mengsea/cover.jpg',
+      title: '梦海旅者',
+      en: 'SEADREAM VOYAGER',
+      meta: '作者：暴走苏打',
+      category: 'map',
+      plat: '仅BE',
+      desc: '幻境与现实交织的<span class="mark">大型剧情向解密</span>地图，《幻世编年史》系列第一部'
+    },
+    {
       id: 'uransch',
       href: 'work-rich.html?id=uransch',
       img: 'assets/img/uransch-cover.jpg',
@@ -123,17 +134,6 @@
       desc: '<span class="mark">风格化写实</span>、偏生存实用向的材质包，<span class="mark">历时近四年</span>制作，现有多种版本可选'
     },
     {
-      id: 'mengsea',
-      href: 'mengsea.html',
-      img: 'assets/img/mengsea/cover.jpg',
-      title: '梦海旅者',
-      en: 'SEADREAM VOYAGER',
-      meta: '作者：暴走苏打',
-      category: 'map',
-      plat: '仅BE',
-      desc: '幻境与现实交织的<span class="mark">大型剧情向解密</span>地图，《幻世编年史》系列第一部'
-    },
-    {
       id: 'city',
       href: 'city.html',
       img: 'assets/img/city/cover.jpg',
@@ -144,7 +144,7 @@
       plat: 'BE/JE',
       desc: '由创想时代开发组苏打与柑柠发起的一个建设 MC 城市地图的<span class="mark">大型项目</span>，正式开始建设于 2022 年 8 月'
     }
-  ];
+    ];
 
   /* 尚未正式发布的测试组件 —— 单独一栏，字段与 SHOWCASE 相同。
      ★ 测试组件不放 SHOWCASE，否则会混进首页与作品页的代表作品里。
