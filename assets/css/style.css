@@ -9486,6 +9486,11 @@ a.pack-link * {
   background-image: none !important;
 }
 
+a.pack-link,
+a.pack-link:hover {
+  background-color: var(--panel) !important;
+}
+
 a.pack-link::after {
   content: none !important;
   display: none !important;
