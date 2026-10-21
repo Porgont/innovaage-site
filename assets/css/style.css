@@ -9429,15 +9429,6 @@ body.page-tools {
   box-shadow: 0 14px 30px rgba(0, 0, 0, .46);
 }
 
-/* 顶部窄条统一一个色值 */
-.module-card--img,
-.module-card--video,
-.module-card--ext,
-.module-card--pack,
-.module-card--convert {
-  border-top-color: var(--gold);
-}
-
 /* 主次文字对比拉开，描述再淡一点 */
 .module-name { font-size: 19px; line-height: 1.4; }
 
@@ -9495,4 +9486,20 @@ body.page-tools {
 .page-index__row.is-active .page-index__go {
   opacity: 1;
   color: var(--gold-dk);
+}
+
+
+/* 辅助资源卡：去掉全站 a 的下划线与外链箭头 */
+.pack-link,
+a.pack-link,
+a.pack-link:hover,
+a.pack-link * {
+  border-bottom: 0;
+  text-decoration: none !important;
+  background-image: none !important;
+}
+
+a.pack-link::after {
+  content: none !important;
+  display: none !important;
 }
