@@ -35,9 +35,9 @@
 })();
 </script>
 <link rel="preload" href="assets/fonts/noto-sans-sc.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/fonts.css?v=20261288">
-<link rel="stylesheet" href="assets/css/theme.css?v=20261288">
-<link rel="stylesheet" href="assets/css/style.css?v=20261288">
+<link rel="stylesheet" href="assets/css/fonts.css?v=20261290">
+<link rel="stylesheet" href="assets/css/theme.css?v=20261290">
+<link rel="stylesheet" href="assets/css/style.css?v=20261290">
   <link rel="alternate" type="application/rss+xml" title="创想时代开发组 · 公告" href="feed.xml">
 </head>
 
@@ -200,11 +200,11 @@
         <ol>
           <li>
             <b>文件夹名只用字母、数字、下划线、连字符；文件名还可以带点号</b>
-            <span>路径和文件名都不能有中文、空格或其它特殊符号；允许 <code>-</code> 与 <code>_</code>，文件名里的点号可以有多段，例如 <code>pack.1.0.0.zip</code>；文件夹名里不能带点号。</span>
+            <span>路径和文件名都不能有中文、空格或其它特殊符号；允许 <code>-</code> 与 <code>_</code>，文件名里的点号可以有多段，例如 <code>pack.1.0.0.zip</code>；文件夹名里不能带点号</span>
           </li>
           <li>
             <b>压缩包是 ZIP</b>
-            <span>PE 资源走 zip；皮肤是直接上传的 PNG，不打包。PC 资源按平台要求是 7z。</span>
+            <span>PE 资源走 zip；皮肤是直接上传的 PNG，不打包，PC 资源按平台要求是 7z</span>
           </li>
         </ol>
       </div>
@@ -238,7 +238,7 @@
       <div class="callout" style="margin-top:22px">
         <span class="icon" aria-hidden="true">🛈</span>
         <div>
-          ZIP 只读目录、不改文件内容，生成的压缩包里原文件字节不变。7z 由本地打包的 7-Zip WASM 引擎读写（仅在选中 .7z 时才加载，约 1.7 MB）：生成时会先解到内存、按新名字重建再重新压缩，文件内容不变，时间戳与压缩参数会变；超过 120 MB 请用 7-Zip 手动处理。引擎许可：<a href="assets/vendor/7z-wasm/License.txt" target="_blank" rel="noopener">LGPL + unRAR 限制</a>。
+          ZIP 只读目录、不改文件内容，生成的压缩包里原文件字节不变，7z 由本地打包的 7-Zip WASM 引擎读写（仅在选中 .7z 时才加载，约 1.7 MB）：生成时会先解到内存、按新名字重建再重新压缩，文件内容不变，时间戳与压缩参数会变；超过 120 MB 请用 7-Zip 手动处理，引擎许可：<a href="assets/vendor/7z-wasm/License.txt" target="_blank" rel="noopener">LGPL + unRAR 限制</a>
         </div>
       </div>
     </div>
@@ -254,7 +254,7 @@
 
       <div class="pack-hist">
         <div class="pack-hist__head">
-          <p class="pack-hist__note">所有校验记录仅保存在浏览器本地，清除缓存会丢失，不会上传服务器。</p>
+          <p class="pack-hist__note">所有校验记录仅保存在浏览器本地，清除缓存会丢失，不会上传服务器</p>
           <button class="btn btn--ghost btn--sm" type="button" id="history-clear" disabled>清空全部记录</button>
         </div>
         <div class="pack-hist__list" id="history-list" aria-live="polite"></div>
@@ -273,19 +273,19 @@
       <div class="pack-faq">
         <details class="faq">
           <summary>校验工具会上传我的压缩包文件吗？</summary>
-          <p>不会。文件只在浏览器里读取，解析在这台设备上完成，没有数据发到服务器。关掉页面、清除浏览器数据之后，本地也查不到。</p>
+          <p>不会，文件只在浏览器里读取，解析在这台设备上完成，没有数据发到服务器，关掉页面、清除浏览器数据之后，本地也查不到</p>
         </details>
         <details class="faq">
           <summary>提示文件名不合法要怎么修改？</summary>
-          <p>看问题清单里的说明，它会指出第几段含空格、中文还是符号，并给出建议名。点「一键更名为建议名」可以全部替换，也可以直接在路径表的输入框里改。规则是只用字母、数字、下划线、连字符，文件名可以带点号。</p>
+          <p>看问题清单里的说明，它会指出第几段含空格、中文还是符号，并给出建议名，点「一键更名为建议名」可以全部替换，也可以直接在路径表的输入框里改，规则是只用字母、数字、下划线、连字符，文件名可以带点号</p>
         </details>
         <details class="faq">
           <summary>7z 和 zip 格式分别什么时候使用？</summary>
-          <p>PE 资源用 zip，皮肤直接给 PNG；PC 的地图、玩法、MOD、材质光影用 7z。工具两种都能读，按你投稿的资源类型选就行。</p>
+          <p>PE 资源用 zip，皮肤直接给 PNG；PC 的地图、玩法、MOD、材质光影用 7z，工具两种都能读，按你投稿的资源类型选就行</p>
         </details>
         <details class="faq">
           <summary>校验通过就代表一定可以投稿吗？</summary>
-          <p>不是。这里只检查包体结构和文件命名，审核还会看内容、授权、清单和平台的其他要求。</p>
+          <p>不是，这里只检查包体结构和文件命名，审核还会看内容、授权、清单和平台的其他要求</p>
         </details>
       </div>
     </div>
@@ -363,7 +363,7 @@
     </div>
   </div>
 </footer>
-<script src="assets/js/site.js?v=20261288"></script>
+<script src="assets/js/site.js?v=20261290"></script>
 <script src="assets/js/pack-audit.js"></script>
 </body>
 </html>
