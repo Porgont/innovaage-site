@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -35,9 +35,9 @@
 })();
 </script>
 <link rel="preload" href="assets/fonts/noto-sans-sc.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/fonts.css?v=20261290">
-<link rel="stylesheet" href="assets/css/theme.css?v=20261290">
-<link rel="stylesheet" href="assets/css/style.css?v=20261290">
+<link rel="stylesheet" href="assets/css/fonts.css?v=20261292">
+<link rel="stylesheet" href="assets/css/theme.css?v=20261292">
+<link rel="stylesheet" href="assets/css/style.css?v=20261292">
   <link rel="alternate" type="application/rss+xml" title="创想时代开发组 · 公告" href="feed.xml">
 </head>
 
@@ -134,16 +134,16 @@
       </div>
 
       <p>
-        本软件不仅能处理常规的贴图，还能自动生成复杂的法线、PBR 材质，并支持将 Java 版（JE）的 3D 模型无缝转换为网易版格式。
+        本软件不仅能处理常规的贴图，还能自动生成复杂的法线、PBR 材质，并支持将 Java 版（JE）的 3D 模型无缝转换为网易版格式
       </p>
 
       <p style="margin-top:22px"><b>核心亮点功能：</b></p>
       <ul class="feature-list">
-        <li><b>一键模型移植</b>：支持直接导入 JE 的 JSON 模型或包含大量模型的 ZIP 包，自动转换为网易版标准的方块模型或实体模型。</li>
-        <li><b>智能 AABB 碰撞箱</b>：根据导入的模型体积，自动计算并生成完美贴合的 collision 和 clip 碰撞箱。</li>
-        <li><b>自适应视差法线</b>：根据贴图色彩极差自动调整视差深度，配合硬边缘算法，轻松制作出锐利的像素风法线。</li>
-        <li><b>四合一自动拼装</b>：自动将颜色、PBR、法线、检测图拼装为标准四合一材质，并生成 texture_set.json。</li>
-        <li><b>完整资源包结构构建</b>：自动补全 manifest.json、blocks.json、terrain_texture.json 等底层配置文件。</li>
+        <li><b>一键模型移植</b>：支持直接导入 JE 的 JSON 模型或包含大量模型的 ZIP 包，自动转换为网易版标准的方块模型或实体模型</li>
+        <li><b>智能 AABB 碰撞箱</b>：根据导入的模型体积，自动计算并生成完美贴合的 collision 和 clip 碰撞箱</li>
+        <li><b>自适应视差法线</b>：根据贴图色彩极差自动调整视差深度，配合硬边缘算法，轻松制作出锐利的像素风法线</li>
+        <li><b>四合一自动拼装</b>：自动将颜色、PBR、法线、检测图拼装为标准四合一材质，并生成 texture_set.json</li>
+        <li><b>完整资源包结构构建</b>：自动补全 manifest.json、blocks.json、terrain_texture.json 等底层配置文件</li>
       </ul>
     </div>
   </section>
@@ -160,15 +160,15 @@
       <div class="tool-feature-grid">
         <div class="tool-feature">
           <b>1. 左侧导航栏</b>
-          <p>包含“输入、布局、法线、PBR、补齐、转换”六个主要功能面板，点击即可切换。</p>
+          <p>包含“输入、布局、法线、PBR、补齐、转换”六个主要功能面板，点击即可切换</p>
         </div>
         <div class="tool-feature">
           <b>2. 右侧工作区</b>
-          <p>根据左侧导航展示具体的参数设置项。</p>
+          <p>根据左侧导航展示具体的参数设置项</p>
         </div>
         <div class="tool-feature">
           <b>3. 底部日志区</b>
-          <p>实时显示打包进度和报错信息（点击可展开查看完整日志）。最下方是醒目的“开始打包”按钮。</p>
+          <p>实时显示打包进度和报错信息（点击可展开查看完整日志），最下方是醒目的“开始打包”按钮</p>
         </div>
       </div>
     </div>
@@ -187,11 +187,11 @@
           <div class="panel">
             <h3 style="margin-top:0">场景一：常规材质包（仅替换贴图与法线）</h3>
             <ol class="step-list">
-              <li>在“输入”面板点击 “选择 ZIP”，导入包含你制作好的贴图（如 stone.png、stone_n.png）的压缩包。</li>
-              <li>输入“包名”（如 My_Texture_Pack）。</li>
-              <li>设置“导出贴图分辨率上限”（填 0 代表保持原图尺寸，建议填 16 或 32 保持原版像素感）。</li>
-              <li>按需开启“自动生成 manifest.json”等开关。</li>
-              <li>点击底部的 “开始打包”，打包完成的 ZIP 会保存在手机的 Download/tsms/ 目录下。</li>
+              <li>在“输入”面板点击 “选择 ZIP”，导入包含你制作好的贴图（如 stone.png、stone_n.png）的压缩包</li>
+              <li>输入“包名”（如 My_Texture_Pack）</li>
+              <li>设置“导出贴图分辨率上限”（填 0 代表保持原图尺寸，建议填 16 或 32 保持原版像素感）</li>
+              <li>按需开启“自动生成 manifest.json”等开关</li>
+              <li>点击底部的 “开始打包”，打包完成的 ZIP 会保存在手机的 Download/tsms/ 目录下</li>
             </ol>
           </div>
         </div>
@@ -200,11 +200,11 @@
           <div class="panel">
             <h3 style="margin-top:0">场景二：JE 模型移植（将 Java 版家具/植物搬进基岩版）</h3>
             <ol class="step-list">
-              <li>第一步（导入模型）：在“输入”面板点击 “批量导入 JE 模型”。你可以选择单个或多个 JSON 文件，也可以直接选择一个包含多个 JSON 的 ZIP 包。导入成功后，按钮会变绿并显示数量。</li>
-              <li>第二步（选择模型类型）：在“模型转换类型”中，根据需求选择“普通方块”或“实体模型”。</li>
-              <li>第三步（配置碰撞箱）：开启“启用贴合模型碰撞箱 (AABB)”。软件会自动扫描你模型的最大边界，生成能完美踩踏和点击的碰撞箱，避免“穿模”或“悬空”。</li>
-              <li>第四步（准备贴图）：模型必须有贴图才能显示。请确保用于“选择 ZIP”的压缩包内，有 textures/blocks/模型名.png（普通模型）或 textures/entity/模型名.png（实体模型）的同名贴图。</li>
-              <li>点击 “开始打包”。</li>
+              <li>第一步（导入模型）：在“输入”面板点击 “批量导入 JE 模型”，你可以选择单个或多个 JSON 文件，也可以直接选择一个包含多个 JSON 的 ZIP 包，导入成功后，按钮会变绿并显示数量</li>
+              <li>第二步（选择模型类型）：在“模型转换类型”中，根据需求选择“普通方块”或“实体模型”</li>
+              <li>第三步（配置碰撞箱）：开启“启用贴合模型碰撞箱 (AABB)”，软件会自动扫描你模型的最大边界，生成能完美踩踏和点击的碰撞箱，避免“穿模”或“悬空”</li>
+              <li>第四步（准备贴图）：模型必须有贴图才能显示，请确保用于“选择 ZIP”的压缩包内，有 textures/blocks/模型名.png（普通模型）或 textures/entity/模型名.png（实体模型）的同名贴图</li>
+              <li>点击 “开始打包”</li>
             </ol>
           </div>
         </div>
@@ -224,37 +224,37 @@
         <div class="tool-feature">
           <b>1. 输入面板</b>
           <ul>
-            <li><b>自动生成 manifest.json</b>：强烈建议开启，软件会为你写好标准的资源包配置。如果勾选“覆盖用户已有的 manifest.json”，会强制删除并重写。</li>
-            <li><b>非四合一</b>：开启后，软件会将法线和 PBR 作为独立的 PNG 输出（如 _normal.png），而不是塞进一张四合一图里。适合配合某些特定光影使用。</li>
-            <li><b>自动生成行为包</b>：如果是实体模型或需要 AABB 碰撞箱，必须开启此项。软件会单独生成一个 behavior_pack 文件夹，里面存放方块的属性定义。</li>
+            <li><b>自动生成 manifest.json</b>：强烈建议开启，软件会为你写好标准的资源包配置，如果勾选“覆盖用户已有的 manifest.json”，会强制删除并重写</li>
+            <li><b>非四合一</b>：开启后，软件会将法线和 PBR 作为独立的 PNG 输出（如 _normal.png），而不是塞进一张四合一图里，适合配合某些特定光影使用</li>
+            <li><b>自动生成行为包</b>：如果是实体模型或需要 AABB 碰撞箱，必须开启此项，软件会单独生成一个 behavior_pack 文件夹，里面存放方块的属性定义</li>
           </ul>
         </div>
 
         <div class="tool-feature">
           <b>2. 法线面板（核心画质设置）</b>
           <ul>
-            <li><b>视差比</b>：控制方块表面的凹凸程度。数值越大，立体感越强。</li>
-            <li><b>全局高度图对比度</b>：如果高度图很平，拉高此值可强行切出硬边缘，让像素风法线更锐利。</li>
-            <li><b>视差斜面平滑</b>：用于处理倾斜方块的碰撞与光影过渡。普通像素方块建议关闭。</li>
-            <li><b>复合法线库</b>：如果你有特殊图案的法线（比如一块砖墙），可以上传到库中，然后在此面板给特定方块指定复合法线。</li>
+            <li><b>视差比</b>：控制方块表面的凹凸程度，数值越大，立体感越强</li>
+            <li><b>全局高度图对比度</b>：如果高度图很平，拉高此值可强行切出硬边缘，让像素风法线更锐利</li>
+            <li><b>视差斜面平滑</b>：用于处理倾斜方块的碰撞与光影过渡，普通像素方块建议关闭</li>
+            <li><b>复合法线库</b>：如果你有特殊图案的法线（比如一块砖墙），可以上传到库中，然后在此面板给特定方块指定复合法线</li>
           </ul>
         </div>
 
         <div class="tool-feature">
           <b>3. PBR 面板</b>
           <ul>
-            <li><b>PBR 转换开关</b>：开启后，软件会把你提供的金属度、自发光、粗糙度贴图，转换为基岩版标准的 RGB 通道格式（R=金属，G=自发光，B=粗糙）。</li>
-            <li><b>非四合一输出目标</b>：如果关闭了四合一，你可以选择将贴图输出为 Java Edition 格式（法线+单独 PBR）还是 灵动视效格式。</li>
-            <li><b>强制后缀</b>：设定软件识别法线和 PBR 文件的标志（默认是 _n 和 _s）。</li>
+            <li><b>PBR 转换开关</b>：开启后，软件会把你提供的金属度、自发光、粗糙度贴图，转换为基岩版标准的 RGB 通道格式（R=金属，G=自发光，B=粗糙）</li>
+            <li><b>非四合一输出目标</b>：如果关闭了四合一，你可以选择将贴图输出为 Java Edition 格式（法线+单独 PBR）还是 灵动视效格式</li>
+            <li><b>强制后缀</b>：设定软件识别法线和 PBR 文件的标志（默认是 _n 和 _s）</li>
           </ul>
         </div>
 
         <div class="tool-feature">
           <b>4. 布局面板（文件树与分组）</b>
           <ul>
-            <li>导入 ZIP 后，该面板会显示完整的文件目录。</li>
-            <li>长按文件或文件夹，可以设置专属视差、专属高度图对比度，或者将其加入特定分组。这能让你对不同的方块（如石头和羊毛）赋予截然不同的材质属性。</li>
-            <li>还可以将文件加入“四合一白名单”，让特定方块强制走四合一通道。</li>
+            <li>导入 ZIP 后，该面板会显示完整的文件目录</li>
+            <li>长按文件或文件夹，可以设置专属视差、专属高度图对比度，或者将其加入特定分组，这能让你对不同的方块（如石头和羊毛）赋予截然不同的材质属性</li>
+            <li>还可以将文件加入“四合一白名单”，让特定方块强制走四合一通道</li>
           </ul>
         </div>
       </div>
@@ -273,29 +273,29 @@
         <details class="faq" open>
           <summary>1. 模型进去了，但是变成紫黑方块？</summary>
           <ul>
-            <li>检查名字是否完全一致。模型叫 chair.json，贴图就必须叫 chair.png。基岩版的标识符极度严格，大小写必须完全一样。</li>
-            <li>检查模型类型。如果是实体模型，贴图应该在 textures/entity/ 下；如果是普通方块，贴图应在 textures/blocks/ 下。</li>
+            <li>检查名字是否完全一致，模型叫 chair.json，贴图就必须叫 chair.png，基岩版的标识符极度严格，大小写必须完全一样</li>
+            <li>检查模型类型，如果是实体模型，贴图应该在 textures/entity/ 下；如果是普通方块，贴图应在 textures/blocks/ 下</li>
           </ul>
         </details>
 
         <details class="faq">
           <summary>2. 打包失败提示 duplicate entry？</summary>
-          <p>这是因为你 ZIP 包里有重名文件，或者软件生成的贴图与你原本包里的贴图撞名了。请确保清理原包中的冗余文件。</p>
+          <p>这是因为你 ZIP 包里有重名文件，或者软件生成的贴图与你原本包里的贴图撞名了，请确保清理原包中的冗余文件</p>
         </details>
 
         <details class="faq">
           <summary>3. 为什么会生成奇怪的斜杠 textures\/blocks？</summary>
-          <p>这是由于 Android 底层 JSON 库的转义机制。目前的软件版本已经通过强制字符替换修复了此问题，如果你在生成的 terrain_texture.json 中看到 /，这是完全合法的，基岩版可以正常读取。</p>
+          <p>这是由于 Android 底层 JSON 库的转义机制，目前的软件版本已经通过强制字符替换修复了此问题，如果你在生成的 terrain_texture.json 中看到 /，这是完全合法的，基岩版可以正常读取</p>
         </details>
 
         <details class="faq">
           <summary>4. 模型看不见 / 变成隐形方块？</summary>
-          <p>通常是因为坐标偏移错误。普通方块模型的原点与实体模型的原点不同。软件会在转换时根据你选的模式自动处理坐标。请勿在 Blockbench 中把模型放到过远的奇怪位置。</p>
+          <p>通常是因为坐标偏移错误，普通方块模型的原点与实体模型的原点不同，软件会在转换时根据你选的模式自动处理坐标，请勿在 Blockbench 中把模型放到过远的奇怪位置</p>
         </details>
 
         <details class="faq">
           <summary>5. 压缩包里有 __MACOSX 等隐藏文件夹？</summary>
-          <p>如果你是用苹果电脑压缩的，会有这些垃圾文件。软件在读取时会自动过滤，但如果依然报错，建议在电脑上删除这些文件夹后重新压缩。</p>
+          <p>如果你是用苹果电脑压缩的，会有这些垃圾文件，软件在读取时会自动过滤，但如果依然报错，建议在电脑上删除这些文件夹后重新压缩</p>
         </details>
       </div>
     </div>
@@ -329,8 +329,8 @@
         <h4>创想时代开发组</h4>
         <p style="margin:0">
           Innova Age Development Team<br>
-          专注 Minecraft 基岩版（MCBE）资源创作。<br>
-          成立于 2016 年 3 月 10 日。
+          专注 Minecraft 基岩版（MCBE）资源创作，<br>
+          成立于 2016 年 3 月 10 日
         </p>
       </div>
 
@@ -367,6 +367,6 @@
     </div>
   </div>
 </footer>
-<script src="assets/js/site.js?v=20261290"></script>
+<script src="assets/js/site.js?v=20261292"></script>
 </body>
 </html>
