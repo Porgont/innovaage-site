@@ -9460,19 +9460,6 @@ body.page-tools {
   .module-card.module-card:hover .module-go { transform: none; }
 }
 
-/* 归档空态 */
-.module-empty {
-  display: grid;
-  gap: 6px;
-  padding: 26px 24px;
-  border: 1px dashed var(--line-2);
-  border-radius: var(--radius);
-  background: color-mix(in srgb, var(--panel) 70%, transparent);
-}
-
-.module-empty b { font-size: 15px; }
-.module-empty span { font-size: 13px; color: var(--text-mute); line-height: 1.7; }
-
 /* INDEX 当前区块高亮 */
 .page-index__row.is-active {
   background: var(--gold-soft);
