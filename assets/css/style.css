@@ -5384,22 +5384,22 @@ body.is-leaving::after {
 
   .btn { --cut: 7px; }
 
-  /* 整幅 hero 在手机上改成「上面一条图 + 下面正文」，文字不压在照片上 */
+  /* 整幅 hero 在手机上也把正文压在图上 */
   .hero--banner {
     display: block;
     min-height: 0;
   }
 
-  .hero--banner .hero-figure { inset: 0 0 auto 0; height: 46vh; }
+  .hero--banner .hero-figure { inset: 0 0 auto 0; height: 64vh; }
 
   .hero--banner .hero-veil {
     inset: 0 0 auto 0;
-    height: 46vh;
-    background: linear-gradient(to bottom, transparent 30%, var(--bg) 100%);
+    height: 64vh;
+    background: linear-gradient(to bottom, transparent 14%, var(--bg) 92%);
   }
 
   .hero--banner .wrap {
-    padding-top: calc(46vh + 18px);
+    padding-top: calc(64vh - 150px);
     padding-bottom: 34px;
   }
 
