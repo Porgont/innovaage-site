@@ -2797,29 +2797,45 @@
       '<div class="page-index__head"><span>Index :// 本页内容</span>' +
       '<span>共 ' + heads.length + ' 项</span></div>' + rows;
 
-    // 目标在隐藏的标签页里时：先点对应的 tab 让它显示，再滚过去
+    // 所有索引入口都平滑滚动；目标在隐藏的标签页里时先切过去
     document.addEventListener('click', function (e) {
       var a = e.target && e.target.closest ? e.target.closest('.page-index__row') : null;
       if (!a) return;
 
       var panelId = a.getAttribute('data-tab');
-      if (!panelId) return;
-
-      var panel = document.getElementById(panelId);
-      if (!panel) return;
+      var panel = panelId ? document.getElementById(panelId) : null;
+      var target = document.querySelector(a.getAttribute('href'));
+      if (!target) return;
 
       e.preventDefault();
 
-      if (panel.hidden) {
+      if (panel && panel.hidden) {
         var tab = document.querySelector('.tabs .tab[aria-controls="' + panelId + '"]');
         if (tab) tab.click();
       }
 
-      var target = document.querySelector(a.getAttribute('href'));
-      if (!target) return;
       var y = target.getBoundingClientRect().top + window.pageYOffset - 90;
       window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
     });
+
+    // 当前所在区块高亮
+    var links = Array.prototype.slice.call(host.querySelectorAll('.page-index__row'));
+    var sections = links.map(function (a) { return document.querySelector(a.getAttribute('href')); });
+    function spy() {
+      var line = window.pageYOffset + 160;
+      var active = 0;
+      sections.forEach(function (sec, i) {
+        if (!sec) return;
+        var top = sec.getBoundingClientRect().top + window.pageYOffset;
+        if (top <= line) active = i;
+      });
+      links.forEach(function (a, i) { a.classList.toggle('is-active', i === active); });
+    }
+
+    window.addEventListener('scroll', spy, { passive: true });
+    window.addEventListener('resize', spy, { passive: true });
+    if ('onscrollend' in window) window.addEventListener('scrollend', spy);
+    spy();
   }
 
   /* ---------- 子页面整幅头图 ----------

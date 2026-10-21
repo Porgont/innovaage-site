@@ -628,6 +628,202 @@
     }, 30);
   }
 
+  /* ---------- 03 本地校验记录（localStorage） ---------- */
+  var HISTORY_KEY = 'innovaage.packAudit.history.v1';
+  var HISTORY_MAX = 20;
+
+  function historyRead() {
+    try {
+      var raw = localStorage.getItem(HISTORY_KEY);
+      var arr = raw ? JSON.parse(raw) : [];
+      return Array.isArray(arr) ? arr : [];
+    } catch (e) { return []; }
+  }
+
+  function historyWrite(list) {
+    try { localStorage.setItem(HISTORY_KEY, JSON.stringify(list)); } catch (e) { /* 隐私模式忽略 */ }
+  }
+
+  function historySummary(audit, kind) {
+    var problems = [];
+    var rows = audit.rows.filter(function (r) { return !r.junk; });
+    var files = rows.filter(function (r) { return !r.isDir; });
+
+    if (kind === 'png') {
+      if (!audit.info.hasAlpha) problems.push('没有透明通道');
+      return { ok: audit.info.hasAlpha, problems: problems };
+    }
+
+    if (!audit.structureOk) problems.push('包体结构：' + audit.structureProblem);
+    audit.checks.forEach(function (c) { if (!c.ok) problems.push('缺少 ' + c.label); });
+    var bad = rows.filter(function (r) { return issuesOfPath(r.origInner, r.isDir).length; });
+    if (bad.length) problems.push(bad.length + ' 处文件名不合规');
+    if (!files.length) problems.push('压缩包里没有文件');
+    return { ok: problems.length === 0, problems: problems };
+  }
+
+  function historyAdd(name, typeName, kind, audit) {
+    var sum = historySummary(audit, kind);
+    var list = historyRead();
+    var now = Date.now();
+    if (list[0] && list[0].n === name && list[0].t === typeName && now - list[0].at < 3000) return;
+    list.unshift({ n: name, t: typeName, k: kind, at: now, ok: sum.ok, probs: sum.problems });
+    historyWrite(list.slice(0, HISTORY_MAX));
+    renderHistory();
+  }
+
+  function fmtTime(ts) {
+    var d = new Date(ts);
+    function two(n) { return n < 10 ? '0' + n : '' + n; }
+    return d.getFullYear() + '-' + two(d.getMonth() + 1) + '-' + two(d.getDate()) +
+      ' ' + two(d.getHours()) + ':' + two(d.getMinutes());
+  }
+
+  function renderHistory() {
+    if (!el.historyList) return;
+    var list = historyRead();
+    el.historyClear.disabled = list.length === 0;
+
+    if (!list.length) {
+      el.historyList.innerHTML = '<p class="pack-hist-empty">还没有校验记录。上传一个文件，结果会自动留在这里。</p>';
+      return;
+    }
+
+    el.historyList.innerHTML = list.map(function (rec, i) {
+      var detail = rec.probs && rec.probs.length
+        ? '<div class="pack-hist-detail" hidden>' + rec.probs.map(function (t) {
+            return '<p>' + esc(t) + '</p>';
+          }).join('') + '</div>'
+        : '';
+      var more = rec.probs && rec.probs.length
+        ? '<button class="pack-hist-more" type="button" data-hist="' + i + '" aria-expanded="false">查看报告</button>'
+        : '';
+      return '<div class="pack-hist-item">' +
+        '<div>' +
+          '<p class="pack-hist-item__name">' + esc(rec.n) + '</p>' +
+          '<p class="pack-hist-item__meta"><span>' + esc(rec.t) + '</span><span>' + fmtTime(rec.at) + '</span></p>' +
+        '</div>' +
+        '<div class="pack-hist-item__side">' +
+          '<span class="pack-hist-badge ' + (rec.ok ? 'is-ok' : 'is-bad') + '">' + (rec.ok ? '通过' : '不通过') + '</span>' +
+          more +
+        '</div>' +
+        detail +
+      '</div>';
+    }).join('');
+  }
+
+  /* ---------- 包体模板：本地生成空目录 zip ---------- */
+  var CRC_TABLE = (function () {
+    var t = new Uint32Array(256);
+    for (var n = 0; n < 256; n++) {
+      var c = n;
+      for (var k = 0; k < 8; k++) c = (c & 1) ? (0xedb88320 ^ (c >>> 1)) : (c >>> 1);
+      t[n] = c >>> 0;
+    }
+    return t;
+  })();
+
+  function crc32(u8) {
+    var c = 0xffffffff;
+    for (var i = 0; i < u8.length; i++) c = CRC_TABLE[(c ^ u8[i]) & 0xff] ^ (c >>> 8);
+    return (c ^ 0xffffffff) >>> 0;
+  }
+
+  function dosTime(d) {
+    return ((d.getHours() << 11) | (d.getMinutes() << 5) | (d.getSeconds() >> 1)) & 0xffff;
+  }
+  function dosDate(d) {
+    return (((d.getFullYear() - 1980) << 9) | ((d.getMonth() + 1) << 5) | d.getDate()) & 0xffff;
+  }
+
+  function makeStoredZip(entries) {
+    var enc = new TextEncoder();
+    var chunks = [];
+    var central = [];
+    var offset = 0;
+    var now = new Date();
+    var tm = dosTime(now), dt = dosDate(now);
+
+    entries.forEach(function (e) {
+      var nameBytes = enc.encode(e.name);
+      var data = e.data || new Uint8Array(0);
+      var crc = crc32(data);
+
+      var local = new DataView(new ArrayBuffer(30));
+      local.setUint32(0, 0x04034b50, true);
+      local.setUint16(4, 20, true);
+      local.setUint16(6, 0x0800, true);
+      local.setUint16(8, 0, true);
+      local.setUint16(10, tm, true);
+      local.setUint16(12, dt, true);
+      local.setUint32(14, crc, true);
+      local.setUint32(18, data.length, true);
+      local.setUint32(22, data.length, true);
+      local.setUint16(26, nameBytes.length, true);
+      local.setUint16(28, 0, true);
+
+      chunks.push(new Uint8Array(local.buffer), nameBytes, data);
+
+      var cd = new DataView(new ArrayBuffer(46));
+      cd.setUint32(0, 0x02014b50, true);
+      cd.setUint16(4, 20, true);
+      cd.setUint16(6, 20, true);
+      cd.setUint16(8, 0x0800, true);
+      cd.setUint16(10, 0, true);
+      cd.setUint16(12, tm, true);
+      cd.setUint16(14, dt, true);
+      cd.setUint32(16, crc, true);
+      cd.setUint32(20, data.length, true);
+      cd.setUint32(24, data.length, true);
+      cd.setUint16(28, nameBytes.length, true);
+      cd.setUint16(30, 0, true);
+      cd.setUint16(32, 0, true);
+      cd.setUint16(34, 0, true);
+      cd.setUint16(36, 0, true);
+      cd.setUint32(38, e.name.slice(-1) === '/' ? 0x10 : 0, true);
+      cd.setUint32(42, offset, true);
+      central.push(new Uint8Array(cd.buffer), nameBytes);
+
+      offset += 30 + nameBytes.length + data.length;
+    });
+
+    var centralSize = central.reduce(function (n, u8) { return n + u8.length; }, 0);
+    var eocd = new DataView(new ArrayBuffer(22));
+    eocd.setUint32(0, 0x06054b50, true);
+    eocd.setUint16(8, entries.length, true);
+    eocd.setUint16(10, entries.length, true);
+    eocd.setUint32(12, centralSize, true);
+    eocd.setUint32(16, offset, true);
+
+    var all = chunks.concat(central, [new Uint8Array(eocd.buffer)]);
+    var total = all.reduce(function (n, u8) { return n + u8.length; }, 0);
+    var out = new Uint8Array(total);
+    var pos = 0;
+    all.forEach(function (u8) { out.set(u8, pos); pos += u8.length; });
+    return out;
+  }
+
+  function templateFolders(typeId, top) {
+    var t = (top || 'pack').replace(/[^A-Za-z0-9_-]/g, '_') || 'pack';
+    if (typeId === 'pe_addon') return ['behavior_packs/', 'resource_packs/'];
+    if (typeId === 'pe_tex' || typeId === 'pc_tex') return [t + '/', t + '/textures/'];
+    return [t + '/'];
+  }
+
+  function downloadTemplate() {
+    var typeId = el.type.value !== 'auto' ? el.type.value : (state.audit ? state.audit.type : 'pe_map');
+    var spec = typeById(typeId);
+    var top = state.audit && state.audit.topName ? state.audit.topName : (state.file ? state.file.name.replace(/\.[^.]+$/, '') : 'pack');
+    var folders = templateFolders(spec.id, top);
+    var bytes = makeStoredZip(folders.map(function (name) { return { name: name, data: new Uint8Array(0) }; }));
+    var blob = new Blob([bytes], { type: 'application/zip' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = folders[0].replace(/\/$/, '') + '_template.zip';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
+  }
+
   /* ---------- 界面 ---------- */
   function bind() {
     el.input = $('#pack-file');
@@ -648,10 +844,43 @@
     el.dropJunk = $('#pack-drop-junk');
     el.useSuggest = $('#pack-use-suggest');
     el.toggleTable = $('#pack-toggle-table');
+    el.historyList = $('#history-list');
+    el.historyClear = $('#history-clear');
+    el.tplDownload = $('#tpl-download');
 
     el.type.addEventListener('change', function () {
       if (state.buffer) reload();
     });
+
+    if (el.historyClear) {
+      el.historyClear.addEventListener('click', function () {
+        if (!historyRead().length) return;
+        if (window.confirm('清空全部本地校验记录？')) {
+          historyWrite([]);
+          renderHistory();
+        }
+      });
+    }
+
+    if (el.historyList) {
+      el.historyList.addEventListener('click', function (ev) {
+        var btn = ev.target.closest('.pack-hist-more');
+        if (!btn) return;
+        var item = btn.closest('.pack-hist-item');
+        var detail = item && item.querySelector('.pack-hist-detail');
+        if (!detail) return;
+        var open = detail.hidden;
+        detail.hidden = !open;
+        btn.textContent = open ? '收起报告' : '查看报告';
+        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      });
+    }
+
+    if (el.tplDownload) {
+      el.tplDownload.addEventListener('click', downloadTemplate);
+    }
+
+    renderHistory();
 
     el.input.addEventListener('change', function () {
       if (el.input.files && el.input.files[0]) load(el.input.files[0]);
@@ -746,6 +975,7 @@
         list7z(state.buffer).then(function (list) {
           state.audit = audit7z(list, typeSel, state.file.name);
           state.rows = state.audit.rows;
+          historyAdd(state.file.name, state.audit.spec.name, '7z', state.audit);
           if (typeSel === 'auto') el.type.value = state.audit.type;
           el.note.textContent = state.file.name + ' · ' + sizeText(state.file.size) + ' ' + sizeUnit(state.file.size) + ' · 7z';
           el.note.classList.remove('is-bad');
@@ -759,6 +989,7 @@
         state.rows = [];
         var info = auditPng(state.buffer);
         state.png = info;
+        historyAdd(state.file.name, 'PE 皮肤', 'png', { info: info });
         el.note.textContent = state.file.name + ' · ' + info.width + '×' + info.height + ' · PNG';
         el.note.classList.remove('is-bad');
         paintPng(info);
@@ -769,6 +1000,7 @@
       state.audit = audit(state.buffer, typeSel, state.file.name);
       state.rows = state.audit.rows;
       if (typeSel === 'auto') el.type.value = state.audit.type;
+      historyAdd(state.file.name, state.audit.spec.name, 'zip', state.audit);
       el.note.textContent = state.file.name + ' · ' + sizeText(state.file.size) + ' ' + sizeUnit(state.file.size);
       el.note.classList.remove('is-bad');
       paint();
