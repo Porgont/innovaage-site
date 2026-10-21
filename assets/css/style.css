@@ -5390,16 +5390,19 @@ body.is-leaving::after {
     min-height: 0;
   }
 
-  .hero--banner .hero-figure { inset: 0 0 auto 0; height: 64vh; }
+  .hero--banner .hero-figure { inset: 0 0 auto 0; height: 72vh; }
 
   .hero--banner .hero-veil {
     inset: 0 0 auto 0;
-    height: 64vh;
-    background: linear-gradient(to bottom, transparent 14%, var(--bg) 92%);
+    height: 72vh;
+    background: linear-gradient(to bottom,
+      transparent 8%,
+      color-mix(in srgb, var(--bg) 70%, transparent) 46%,
+      var(--bg) 96%);
   }
 
   .hero--banner .wrap {
-    padding-top: calc(64vh - 150px);
+    padding-top: calc(72vh - 320px);
     padding-bottom: 34px;
   }
 
