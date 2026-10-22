@@ -54,7 +54,7 @@
     // 源文件本身的码率是天然上限：重编码一般不会比原文件更大
     var srcMbps = state.file && dur > 0 ? state.file.size * 8 / dur / 1000000 : Infinity;
     var used = Math.min(bitrateMbps, srcMbps);
-    return { mb: used * dur / 8, sec: dur };
+    return { mb: used * dur / 8, sec: dur, used: used, capped: used < bitrateMbps - 1e-9 };
   }
 
   /** 体积文案：小于 0.1 MB 用 KB 显示，避免出现「约 0.0 MB」 */
@@ -437,7 +437,8 @@
     var estBr = state.spec.bitrate > 0 ? state.spec.bitrate : autoMbps();
     var est = estimateMb(estBr);
     html += diagRow('预计导出体积', '约 ' + fmtVolume(est.mb) + '（' +
-      (state.spec.bitrate > 0 ? state.spec.bitrate + ' Mbps' : '自动按 ' + estBr + ' Mbps 估') +
+      (est.capped ? '按源文件码率上限' :
+        (state.spec.bitrate > 0 ? state.spec.bitrate + ' Mbps' : '自动按 ' + estBr + ' Mbps 估')) +
       '，实际随画面复杂度浮动）', null);
 
     if (d.codecInfo.available) {
@@ -1027,11 +1028,13 @@
         brNote.textContent = '选好视频后按实际时长估算导出体积';
       } else if (s.bitrate > 0) {
         var est = estimateMb(s.bitrate);
-        brNote.textContent = '按 ' + s.bitrate + ' Mbps、' + est.sec.toFixed(1) + ' 秒估算，导出约 ' + fmtVolume(est.mb);
+        brNote.textContent = (est.capped ? '按源文件码率估算' : '按 ' + s.bitrate + ' Mbps 估算') +
+          '，' + est.sec.toFixed(1) + ' 秒导出约 ' + fmtVolume(est.mb);
       } else {
         var autoBr = autoMbps();
         var autoEst = estimateMb(autoBr);
-        brNote.textContent = '自动：按 ' + autoBr + ' Mbps 估算，' + autoEst.sec.toFixed(1) + ' 秒导出约 ' + fmtVolume(autoEst.mb);
+        brNote.textContent = '自动：' + (autoEst.capped ? '按源文件码率估算' : '按 ' + autoBr + ' Mbps 估算') +
+          '，' + autoEst.sec.toFixed(1) + ' 秒导出约 ' + fmtVolume(autoEst.mb);
       }
     }
 
@@ -1045,11 +1048,13 @@
         var volText;
         if (s.bitrate > 0) {
           var se = estimateMb(s.bitrate);
-          volText = '约 ' + fmtVolume(se.mb) + '（' + s.bitrate + ' Mbps）';
+          volText = '约 ' + fmtVolume(se.mb) +
+            (se.capped ? '（源文件码率上限）' : '（' + s.bitrate + ' Mbps）');
         } else {
           var sAutoBr = autoMbps();
           var sAuto = estimateMb(sAutoBr);
-          volText = '约 ' + fmtVolume(sAuto.mb) + '（自动约 ' + sAutoBr + ' Mbps）';
+          volText = '约 ' + fmtVolume(sAuto.mb) +
+            (sAuto.capped ? '（源文件码率上限）' : '（自动约 ' + sAutoBr + ' Mbps）');
         }
         summary.innerHTML =
           '<div class="spec-line"><span>输出</span><b>' + t.w + ' × ' + t.h +
