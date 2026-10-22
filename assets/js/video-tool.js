@@ -334,8 +334,8 @@
       };
       setTimeout(function () {
         finish(new Error('读取视频信息超时（' + describeState() +
-          '）。文件可能损坏，或格式不被浏览器支持'));
-      }, 20000);
+          '）。文件可能损坏、编码不受支持（如 HEVC / AV1），或容器是 MKV 改名成 MP4；先转成标准 MP4 / H.264 再试'));
+      }, 15000);
 
       v.load();
     });
@@ -344,8 +344,15 @@
   /* ---------- 第二步：读编码（只对 MP4 容器有效） ---------- */
   function probeCodec(file) {
     return new Promise(function (resolve) {
+      var settledOuter = false;
+      function fail(reason) {
+        if (settledOuter) return;
+        settledOuter = true;
+        resolve({ available: false, reason: reason });
+      }
+      setTimeout(function () { fail('读取编码信息超时（容器可能损坏或不是标准 MP4）'); }, 6000);
       if (typeof MP4Box === 'undefined') {
-        resolve({ available: false, reason: 'mp4box.js 没加载上' });
+        fail('mp4box.js 没加载上');
         return;
       }
       var HEAD = Math.min(file.size, 4 * 1024 * 1024);
@@ -811,16 +818,27 @@
     var diag = $('#v-diag');
     if (diag) diag.innerHTML = '<div><dt>状态</dt><dd>正在读取…</dd></div>';
 
+    var slowTimer = setTimeout(function () {
+      if (diag) diag.innerHTML = '<div><dt>状态</dt><dd>还在读取…（文件较大或编码特殊时会久一点，20 秒内读不出会提示原因）</dd></div>';
+    }, 3500);
+
     var basics;
     try {
       basics = await probeBasic(file);
     } catch (e) {
+      clearTimeout(slowTimer);
       if (diag) diag.innerHTML = '<div><dt>状态</dt><dd class="t-danger">' + escapeHtml(e.message) + '</dd></div>';
       setStatus('err', escapeHtml(e.message));
       return;
     }
+    clearTimeout(slowTimer);
 
-    var codecInfo = await probeCodec(file);
+    var codecInfo;
+    try {
+      codecInfo = await probeCodec(file);
+    } catch (e) {
+      codecInfo = { available: false, reason: '读取编码信息失败：' + (e.message || '未知原因') };
+    }
     state.info = basics.data;
     state.info.codecInfo = codecInfo;
     var d = buildDiagnosis(state.info, codecInfo);
