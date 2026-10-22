@@ -9499,30 +9499,3 @@ a.pack-link::after {
   display: none !important;
 }
 
-/* ---------- 工具箱页：2048 小游戏 ---------- */
-#games { scroll-margin-top: 88px; }
-
-.game-embed {
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  background: var(--panel);
-  overflow: hidden;
-}
-
-.game-embed iframe {
-  display: block;
-  width: 100%;
-  height: 720px;
-  border: 0;
-}
-
-.game-credit {
-  margin: 12px 0 0;
-  font-size: 12.5px;
-  color: var(--text-mute);
-  line-height: 1.7;
-}
-
-@media (max-width: 800px) {
-  .game-embed iframe { height: 640px; }
-}
