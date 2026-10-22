@@ -297,8 +297,10 @@
       bar.appendChild(tip);
 
       var src = audio.file.size;
-      audioNote('转换完成：' + fmtBytes(src) + ' → ' + fmtBytes(blob.size) +
-        (src > 0 ? '（' + Math.round(blob.size / src * 100) + '%）' : '') + '。', false);
+      audioNote('转换完成' +
+        '\n源文件 ' + fmtBytes(src) +
+        '\n输出 ' + fmtBytes(blob.size) +
+        (src > 0 ? '（原体积的 ' + Math.round(blob.size / src * 100) + '%）' : ''), false);
     } catch (e) {
       audioNote('转换失败：' + (e && e.message ? e.message : '未知原因'), true);
     } finally {

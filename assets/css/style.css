@@ -9546,3 +9546,44 @@ a.pack-link::after {
   .spec-line b { font-size: 14px; }
   .spec-line--volume b { font-size: 17px; }
 }
+
+/* ---------- 视频工具：将要执行 / 结论列表 ---------- */
+.plan-list {
+  margin-top: 18px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--bg-2);
+  display: grid;
+  gap: 6px;
+  font-size: 13px;
+}
+
+.plan-title {
+  font-size: 11.5px;
+  letter-spacing: .12em;
+  color: var(--text-mute);
+  text-transform: uppercase;
+}
+
+.plan-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.plan-row i { font-style: normal; color: var(--text-mute); }
+.plan-row b { font-weight: 700; color: var(--text); }
+
+.diag-list {
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 4px;
+}
+
+.diag-list li { line-height: 1.6; }
+
+/* 音频转换结果：多行 */
+#audio-note { white-space: pre-line; line-height: 1.7; }

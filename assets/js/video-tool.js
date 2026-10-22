@@ -472,21 +472,26 @@
     if (d.codecOk === false) issues.push('编码要转成 ' + CODECS[state.spec.codec].name);
     if (!d.sizeOk) issues.push('体积超过 ' + state.spec.maxMb + ' MB');
     if (!issues.length) issues.push('源文件已符合当前目标规格，可以按需压缩或直接导出');
-    html += '<div><dt>结论</dt><dd>' + escapeHtml(issues.join('；')) + '</dd></div>';
+    var verdict = issues.length > 1
+      ? '<ul class="diag-list">' + issues.map(function (x) { return '<li>' + escapeHtml(x) + '</li>'; }).join('') + '</ul>'
+      : escapeHtml(issues[0]);
+    html += '<div><dt>结论</dt><dd>' + verdict + '</dd></div>';
 
     box.innerHTML = html;
 
     var plan = $('#v-plan');
     if (plan) {
-      var steps = [
-        '输出 ' + d.target.w + ' × ' + d.target.h,
-        state.spec.fit === 'pad' ? '画面完整、补黑边' : '画面裁切填满',
-        state.spec.maxDur > 0
-          ? '时长取前 ' + Math.min(state.spec.maxDur, Math.ceil(d.duration || state.spec.maxDur)) + ' 秒'
-          : '完整保留（不限时长）',
-        CODECS[state.spec.codec].name + ' / MP4'
+      var planRows = [
+        ['输出', d.target.w + ' × ' + d.target.h],
+        ['画面', state.spec.fit === 'pad' ? '完整显示，补黑边' : '裁切填满'],
+        ['时长', state.spec.maxDur > 0
+          ? '取前 ' + Math.min(state.spec.maxDur, Math.ceil(d.duration || state.spec.maxDur)) + ' 秒'
+          : '完整保留'],
+        ['编码', CODECS[state.spec.codec].name + ' / MP4']
       ];
-      plan.innerHTML = '将要执行：' + escapeHtml(steps.join(' · ')) + '。';
+      plan.innerHTML = '<b class="plan-title">将要执行</b>' + planRows.map(function (r) {
+        return '<span class="plan-row"><i>' + r[0] + '</i><b>' + escapeHtml(r[1]) + '</b></span>';
+      }).join('');
     }
   }
 
@@ -805,6 +810,7 @@
     rows += diagRow('容器', r.verify.isMp4 ? 'MP4' : '未知（复检未能解析）', r.verify.isMp4);
     rows += diagRow('编码', r.verify.codec || '未知',
       CODECS[state.spec.codec].isMatch(r.verify.codec) ? true : null);
+    if (r.bitrate) rows += diagRow('码率', (r.bitrate / 1000000).toFixed(1) + ' Mbps');
     rows += diagRow('音频', r.hadAudio ? '已保留' : '无（原视频没有可用的音轨）');
 
     var host = $('#v-result-stats');
@@ -923,9 +929,7 @@
           ? '<br><span style="opacity:.8">提示：同一次打开里连续转换较多次之后，' +
             '浏览器可能暂时无法再编码，届时按 F5 刷新页面即可继续。</span>'
           : '';
-        setStatus('ok', '转换完成，复检全部通过 ✓（可播放、时长 ' + fmtTime(verify.duration) +
-          '、' + target.w + '×' + target.h + '、MP4、' + CODECS[state.spec.codec].name +
-          '，码率 ' + (converted.bitrate / 1000000).toFixed(1) + ' Mbps）' + hint);
+        setStatus('ok', '转换完成，复检全部通过 ✓' + hint);
       } else {
         setStatus('err', '转换产出了文件，但复检没有全部通过' +
           (verify.playable ? '' : '（文件无法播放）') +
@@ -1116,7 +1120,7 @@
     // 画面比例
     $$('.chip[data-ratio]').forEach(function (chip) {
       chip.addEventListener('click', function () {
-        if (state.spec.locked) applyPreset('custom');
+        if (state.spec.locked || state.spec.preset === 'original') applyPreset('custom');
         state.spec.ratio = chip.getAttribute('data-ratio');
         // 选具体比例时，短边固定 720，长边按比例算，保证比例和数值对得上
         var r = RATIOS[state.spec.ratio];
@@ -1138,6 +1142,7 @@
     // 画面处理
     $$('.chip[data-fit]').forEach(function (chip) {
       chip.addEventListener('click', function () {
+        if (state.spec.locked || state.spec.preset === 'original') applyPreset('custom');
         state.spec.fit = chip.getAttribute('data-fit');
         syncSpecUi();
         refreshDiagnosis();
@@ -1147,7 +1152,7 @@
     // 分辨率输入
     var wEl = $('#v-out-w'), hEl = $('#v-out-h');
     function onDimInput(which) {
-      if (state.spec.locked) applyPreset('custom');
+      if (state.spec.locked || state.spec.preset === 'original') applyPreset('custom');
       var raw = Number(which === 'w' ? wEl.value : hEl.value) || 0;
       var val = Math.max(16, Math.min(7680, raw));
       if (which === 'w') { state.spec.w = val; wEl.value = val; }
@@ -1164,7 +1169,7 @@
     // 编码
     if (codecEl) {
       codecEl.addEventListener('change', function () {
-        if (state.spec.locked) applyPreset('custom');
+        if (state.spec.locked || state.spec.preset === 'original') applyPreset('custom');
         state.spec.codec = codecEl.value;
         syncSpecUi();
         refreshDiagnosis();
@@ -1175,7 +1180,7 @@
     var durEl = $('#v-max-dur');
     if (durEl) {
       durEl.addEventListener('change', function () {
-        if (state.spec.locked) applyPreset('custom');
+        if (state.spec.locked || state.spec.preset === 'original') applyPreset('custom');
         state.spec.maxDur = Math.max(0, Math.min(86400, Number(durEl.value) || 0));
         syncSpecUi();
         refreshDiagnosis();
