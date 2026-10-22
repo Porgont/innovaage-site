@@ -49,8 +49,8 @@
   function estimateMb(bitrateMbps) {
     var dur = state.info && isFinite(state.info.duration) && state.info.duration > 0
       ? state.info.duration
-      : state.spec.maxDur;
-    dur = Math.min(dur, state.spec.maxDur);
+      : (state.spec.maxDur > 0 ? state.spec.maxDur : 600);
+    if (state.spec.maxDur > 0) dur = Math.min(dur, state.spec.maxDur);
     // 源文件本身的码率是天然上限：重编码一般不会比原文件更大
     var srcMbps = state.file && dur > 0 ? state.file.size * 8 / dur / 1000000 : Infinity;
     var used = Math.min(bitrateMbps, srcMbps);
@@ -169,7 +169,7 @@
       ratio: 'source',
       fit: 'pad',
       codec: 'h264',
-      maxDur: 600,
+      maxDur: 0,
       maxMb: 0,
       bitrate: 0,
       locked: false
@@ -286,7 +286,7 @@
         h: alignDim(sh * scale)
       };
     }
-    return { w: alignDim(s.w), h: alignDim(s.h) };
+    return { w: Math.max(2, Math.round(s.w / 2) * 2), h: Math.max(2, Math.round(s.h / 2) * 2) };
   }
 
   /* ---------- 第一步：探测基础信息 ----------
@@ -406,7 +406,7 @@
       target: target
     };
 
-    d.durationOk = isFinite(d.duration) && d.duration <= state.spec.maxDur;
+    d.durationOk = isFinite(d.duration) && (state.spec.maxDur <= 0 || d.duration <= state.spec.maxDur);
     d.sizeOk = state.spec.maxMb > 0 ? (state.file.size <= state.spec.maxMb * 1024 * 1024) : true;
     d.resolutionOk = basic.width === target.w && basic.height === target.h;
     d.ratioOk = basic.width && basic.height
@@ -430,7 +430,8 @@
 
     var html = '';
     html += diagRow('文件', state.file.name + '（' + fmtBytes(state.file.size) + '）');
-    html += diagRow('时长', fmtTime(d.duration) + '（上限 ' + state.spec.maxDur + ' 秒）', d.durationOk);
+    html += diagRow('时长', fmtTime(d.duration) + '（' +
+      (state.spec.maxDur > 0 ? '上限 ' + state.spec.maxDur + ' 秒' : '不限') + '）', d.durationOk);
     html += diagRow('源分辨率', d.width + ' × ' + d.height, null);
     html += diagRow('源比例', ratioLabel(d.width, d.height), null);
 
@@ -464,7 +465,7 @@
     html += diagRow('体积', fmtBytes(state.file.size), d.sizeOk);
 
     var issues = [];
-    if (!d.durationOk) issues.push('时长超出 ' + state.spec.maxDur + ' 秒，会截断');
+    if (!d.durationOk && state.spec.maxDur > 0) issues.push('时长超出 ' + state.spec.maxDur + ' 秒，会截断');
     if (!d.resolutionOk) issues.push('分辨率与目标不同');
     if (!d.ratioOk) issues.push('比例与目标不同，需要' + (state.spec.fit === 'pad' ? '加黑边' : '裁切'));
     if (!d.containerOk) issues.push('不是 MP4 容器');
@@ -480,7 +481,9 @@
       var steps = [
         '输出 ' + d.target.w + ' × ' + d.target.h,
         state.spec.fit === 'pad' ? '画面完整、补黑边' : '画面裁切填满',
-        '时长取前 ' + Math.min(state.spec.maxDur, Math.ceil(d.duration || state.spec.maxDur)) + ' 秒',
+        state.spec.maxDur > 0
+          ? '时长取前 ' + Math.min(state.spec.maxDur, Math.ceil(d.duration || state.spec.maxDur)) + ' 秒'
+          : '完整保留（不限时长）',
         CODECS[state.spec.codec].name + ' / MP4'
       ];
       plan.innerHTML = '将要执行：' + escapeHtml(steps.join(' · ')) + '。';
@@ -542,7 +545,9 @@
       var rec = null;
       var chunks = [];
       var stopped = false;
-      var limit = Math.min(state.spec.maxDur, d.duration > 0 ? d.duration : state.spec.maxDur);
+      var limit = state.spec.maxDur > 0
+        ? Math.min(state.spec.maxDur, d.duration > 0 ? d.duration : state.spec.maxDur)
+        : (d.duration > 0 && isFinite(d.duration) ? d.duration : 600);
 
       /* 这两个流必须提到外层，cleanup 才拿得到。
          否则每转换一次就漏一条媒体管线：转第二个视频时 MediaRecorder
@@ -793,7 +798,8 @@
     rows += diagRow('文件名', r.name);
     rows += diagRow('体积', fmtBytes(r.blob.size) +
       (r.estimatedMb ? '（导出前预估约 ' + fmtVolume(r.estimatedMb) + '）' : ''));
-    rows += diagRow('时长', fmtTime(r.verify.duration), r.verify.duration <= state.spec.maxDur + 0.5);
+    rows += diagRow('时长', fmtTime(r.verify.duration),
+      state.spec.maxDur <= 0 ? null : r.verify.duration <= state.spec.maxDur + 0.5);
     rows += diagRow('分辨率', dw + ' × ' + dh, dw === r.target.w && dh === r.target.h);
     rows += diagRow('比例', ratioLabel(dw, dh));
     rows += diagRow('容器', r.verify.isMp4 ? 'MP4' : '未知（复检未能解析）', r.verify.isMp4);
@@ -907,7 +913,7 @@
       renderResult(state.result);
 
       var allOk = verify.playable &&
-        verify.duration <= state.spec.maxDur + 0.5 &&
+        (state.spec.maxDur <= 0 || verify.duration <= state.spec.maxDur + 0.5) &&
         verify.width === target.w && verify.height === target.h &&
         verify.isMp4 && CODECS[state.spec.codec].isMatch(verify.codec);
 
@@ -949,9 +955,9 @@
 
   /* ---------- 规格面板 ---------- */
   var PRESETS = {
-    original: { w: 1280, h: 720, ratio: 'source', codec: 'h264', maxDur: 600, locked: false },
-    p1080:    { w: 1920, h: 1080, ratio: '16:9', codec: 'h264', maxDur: 600, locked: false },
-    p720:     { w: 1280, h: 720, ratio: '16:9', codec: 'h264', maxDur: 600, locked: false },
+    original: { w: 1280, h: 720, ratio: 'source', codec: 'h264', maxDur: 0, locked: false },
+    p1080:    { w: 1920, h: 1080, ratio: '16:9', codec: 'h264', maxDur: 0, locked: false },
+    p720:     { w: 1280, h: 720, ratio: '16:9', codec: 'h264', maxDur: 0, locked: false },
     submit:   { w: 1280, h: 720, ratio: '16:9', codec: 'h264', maxDur: 90, locked: true },
     custom:   { locked: false }
   };
@@ -994,8 +1000,10 @@
 
     // 分辨率输入：锁定预设下不可改
     var wEl = $('#v-out-w'), hEl = $('#v-out-h');
-    if (wEl) { wEl.value = s.w; wEl.disabled = s.ratio === 'source'; }
-    if (hEl) { hEl.value = s.h; hEl.disabled = s.ratio === 'source'; }
+    var disp = resolveTarget();
+    // 正在输入的那个框不要被同步覆盖
+    if (wEl && document.activeElement !== wEl) { wEl.value = disp.w; wEl.disabled = false; }
+    if (hEl && document.activeElement !== hEl) { hEl.value = disp.h; hEl.disabled = false; }
 
     // 编码
     var codecEl = $('#v-codec');
@@ -1061,7 +1069,7 @@
             '（' + ratioLabel(t.w, t.h) + '）</b></div>' +
           '<div class="spec-line"><span>编码</span><b>' + CODECS[s.codec].name + ' / MP4</b></div>' +
           '<div class="spec-line spec-line--volume"><span>预估体积</span><b>' + volText + '</b></div>' +
-          '<div class="spec-line"><span>最长时长</span><b>' + s.maxDur + ' 秒</b></div>';
+          '<div class="spec-line"><span>最长时长</span><b>' + (s.maxDur > 0 ? s.maxDur + ' 秒' : '不限') + '</b></div>';
       }
     }
   }
@@ -1140,11 +1148,12 @@
     var wEl = $('#v-out-w'), hEl = $('#v-out-h');
     function onDimInput(which) {
       if (state.spec.locked) applyPreset('custom');
-      var val = alignDim(which === 'w' ? wEl.value : hEl.value);
+      var raw = Number(which === 'w' ? wEl.value : hEl.value) || 0;
+      var val = Math.max(16, Math.min(7680, raw));
       if (which === 'w') { state.spec.w = val; wEl.value = val; }
       else { state.spec.h = val; hEl.value = val; }
       // 手动改尺寸后，比例不再是固定档位
-      state.spec.ratio = 'source' === state.spec.ratio ? 'source' : 'custom';
+      state.spec.ratio = 'custom';
       state.spec.preset = 'custom';
       syncSpecUi();
       refreshDiagnosis();
@@ -1167,7 +1176,7 @@
     if (durEl) {
       durEl.addEventListener('change', function () {
         if (state.spec.locked) applyPreset('custom');
-        state.spec.maxDur = Math.max(1, Math.min(600, Number(durEl.value) || 90));
+        state.spec.maxDur = Math.max(0, Math.min(86400, Number(durEl.value) || 0));
         syncSpecUi();
         refreshDiagnosis();
       });
