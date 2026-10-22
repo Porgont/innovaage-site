@@ -45,6 +45,16 @@
   /* 码率降级档位：高码率在部分机器上会产出放不了的文件，必须能退回 */
   var BITRATE_TIERS = [4000000, 2500000, 1500000];
 
+  /** 用户指定了目标码率就用它，失败时按 72% 和 50% 依次降级 */
+  function bitrateTiers() {
+    var want = Number(state.spec.bitrate) || 0;
+    if (want > 0) {
+      var base = Math.round(Math.min(50, Math.max(0.3, want)) * 1000000);
+      return [base, Math.round(base * 0.72), Math.round(base * 0.5)];
+    }
+    return BITRATE_TIERS;
+  }
+
   var RATIOS = {
     source: '原样',
     '16:9': [16, 9],
@@ -132,6 +142,7 @@
       codec: 'h264',
       maxDur: 90,
       maxMb: 0,
+      bitrate: 0,
       locked: true
     },
     info: null,
@@ -679,8 +690,9 @@
     var lastResult = null;
     state.attempts = [];
 
-    for (var i = 0; i < BITRATE_TIERS.length; i++) {
-      var bitrate = BITRATE_TIERS[i];
+    var tiers = bitrateTiers();
+    for (var i = 0; i < tiers.length; i++) {
+      var bitrate = tiers[i];
       setProgress(0, '准备中…（第 ' + (i + 1) + ' 次尝试，码率 ' + (bitrate / 1000000).toFixed(1) + ' Mbps）');
 
       var out;
@@ -904,10 +916,9 @@
       c.classList.toggle('is-active', c.getAttribute('data-preset') === s.preset);
     });
 
-    // 比例
+    // 比例：始终可点，点了会自动切到「自定义」
     $$('.chip[data-ratio]').forEach(function (c) {
       c.classList.toggle('is-active', c.getAttribute('data-ratio') === s.ratio);
-      c.disabled = s.locked;
     });
 
     // 画面处理
@@ -917,14 +928,13 @@
 
     // 分辨率输入：锁定预设下不可改
     var wEl = $('#v-out-w'), hEl = $('#v-out-h');
-    if (wEl) { wEl.value = s.w; wEl.disabled = s.locked || s.ratio === 'source'; }
-    if (hEl) { hEl.value = s.h; hEl.disabled = s.locked || s.ratio === 'source'; }
+    if (wEl) { wEl.value = s.w; wEl.disabled = s.ratio === 'source'; }
+    if (hEl) { hEl.value = s.h; hEl.disabled = s.ratio === 'source'; }
 
     // 编码
     var codecEl = $('#v-codec');
     if (codecEl) {
       codecEl.value = s.codec;
-      codecEl.disabled = s.locked;
       $$('option', codecEl).forEach(function (o) {
         if (o.value === 'h265' && !codecAvailable('h265')) o.disabled = true;
       });
@@ -932,7 +942,7 @@
 
     // 时长
     var durEl = $('#v-max-dur');
-    if (durEl) { durEl.value = s.maxDur; durEl.disabled = s.locked; }
+    if (durEl) { durEl.value = s.maxDur; }
 
     // 锁定提示
     var lockNote = $('#v-lock-note');
@@ -942,12 +952,27 @@
     var h265Note = $('#v-h265-note');
     if (h265Note) h265Note.hidden = codecAvailable('h265');
 
+    // 目标码率
+    var brEl = $('#v-bitrate');
+    if (brEl) brEl.value = s.bitrate;
+
+    var brNote = $('#v-bitrate-est');
+    if (brNote) {
+      if (s.bitrate > 0) {
+        var estMb = s.bitrate * s.maxDur / 8;
+        brNote.textContent = '按 ' + s.bitrate + ' Mbps、最长 ' + s.maxDur + ' 秒估算，体积约 ' + estMb.toFixed(1) + ' MB';
+      } else {
+        brNote.textContent = '自动：依次尝试 4 / 2.5 / 1.5 Mbps，能正常播放就用最高的';
+      }
+    }
+
     // 目标规格摘要
     var summary = $('#v-spec-summary');
     if (summary) {
       var t = resolveTarget();
+      var brText = s.bitrate > 0 ? (s.bitrate + ' Mbps（约 ' + (s.bitrate * s.maxDur / 8).toFixed(1) + ' MB）') : '自动码率';
       summary.textContent = '输出将是 ' + t.w + ' × ' + t.h + '（' +
-        ratioLabel(t.w, t.h) + '），' + CODECS[s.codec].name + ' / MP4，最长 ' + s.maxDur + ' 秒';
+        ratioLabel(t.w, t.h) + '），' + CODECS[s.codec].name + ' / MP4，最长 ' + s.maxDur + ' 秒，' + brText;
     }
   }
 
@@ -993,13 +1018,19 @@
     // 画面比例
     $$('.chip[data-ratio]').forEach(function (chip) {
       chip.addEventListener('click', function () {
-        if (state.spec.locked) return;
+        if (state.spec.locked) applyPreset('custom');
         state.spec.ratio = chip.getAttribute('data-ratio');
-        // 选具体比例时，按当前宽度换算出高度，避免尺寸和比例对不上
+        // 选具体比例时，短边固定 720，长边按比例算，保证比例和数值对得上
         var r = RATIOS[state.spec.ratio];
         if (r) {
-          state.spec.w = alignDim(state.spec.w);
-          state.spec.h = alignDim(state.spec.w * r[1] / r[0]);
+          var base = 720;
+          if (r[0] >= r[1]) {
+            state.spec.h = base;
+            state.spec.w = alignDim(base * r[0] / r[1]);
+          } else {
+            state.spec.w = base;
+            state.spec.h = alignDim(base * r[1] / r[0]);
+          }
         }
         syncSpecUi();
         refreshDiagnosis();
@@ -1018,7 +1049,7 @@
     // 分辨率输入
     var wEl = $('#v-out-w'), hEl = $('#v-out-h');
     function onDimInput(which) {
-      if (state.spec.locked) return;
+      if (state.spec.locked) applyPreset('custom');
       var val = alignDim(which === 'w' ? wEl.value : hEl.value);
       if (which === 'w') { state.spec.w = val; wEl.value = val; }
       else { state.spec.h = val; hEl.value = val; }
@@ -1034,6 +1065,7 @@
     // 编码
     if (codecEl) {
       codecEl.addEventListener('change', function () {
+        if (state.spec.locked) applyPreset('custom');
         state.spec.codec = codecEl.value;
         syncSpecUi();
         refreshDiagnosis();
@@ -1044,6 +1076,7 @@
     var durEl = $('#v-max-dur');
     if (durEl) {
       durEl.addEventListener('change', function () {
+        if (state.spec.locked) applyPreset('custom');
         state.spec.maxDur = Math.max(1, Math.min(600, Number(durEl.value) || 90));
         syncSpecUi();
         refreshDiagnosis();
@@ -1055,6 +1088,16 @@
     if (mbEl) {
       mbEl.addEventListener('change', function () {
         state.spec.maxMb = Math.max(0, Number(mbEl.value) || 0);
+        refreshDiagnosis();
+      });
+    }
+
+    // 目标码率
+    var brEl = $('#v-bitrate');
+    if (brEl) {
+      brEl.addEventListener('change', function () {
+        state.spec.bitrate = Math.max(0, Math.min(50, Number(brEl.value) || 0));
+        syncSpecUi();
         refreshDiagnosis();
       });
     }

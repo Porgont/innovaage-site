@@ -35,9 +35,9 @@
 })();
 </script>
 <link rel="preload" href="assets/fonts/noto-sans-sc.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/fonts.css?v=20261295">
-<link rel="stylesheet" href="assets/css/theme.css?v=20261295">
-<link rel="stylesheet" href="assets/css/style.css?v=20261295">
+<link rel="stylesheet" href="assets/css/fonts.css?v=20261298">
+<link rel="stylesheet" href="assets/css/theme.css?v=20261298">
+<link rel="stylesheet" href="assets/css/style.css?v=20261298">
   <link rel="alternate" type="application/rss+xml" title="创想时代开发组 · 公告" href="feed.xml">
 </head>
 
@@ -155,7 +155,7 @@
             </div>
 
             <p class="note" id="v-lock-note">
-              「符合投稿规范」= 1280×720 · 16:9 · H.264 · MP4 · 最长 90 秒，数值固定
+              「符合投稿规范」= 1280×720 · 16:9 · H.264 · MP4 · 最长 90 秒；改动下面的比例、尺寸、编码或时长会自动切到「自定义」
             </p>
 
             <div class="field" style="margin-top:18px">
@@ -207,6 +207,12 @@
             <div class="field" style="margin-top:16px">
               <label for="v-max-mb">最大体积（MB）<span class="hint">0 = 不限，仅用于检查</span></label>
               <input type="number" id="v-max-mb" value="0" min="0" max="2000" step="1">
+            </div>
+
+            <div class="field" style="margin-top:16px">
+              <label for="v-bitrate">目标码率（Mbps）<span class="hint">0 = 自动，填数字按该码率压</span></label>
+              <input type="number" id="v-bitrate" value="0" min="0" max="50" step="0.5">
+              <p class="note" id="v-bitrate-est" style="margin:8px 0 0"></p>
             </div>
 
             <p class="note" id="v-h265-note" hidden>
@@ -330,7 +336,7 @@
     </div>
   </div>
 </footer>
-<script src="assets/js/site.js?v=20261295"></script>
+<script src="assets/js/site.js?v=20261298"></script>
 <script src="assets/vendor/mp4box.all.min.js"></script>
 <script src="assets/js/video-tool.js"></script>
 </body>
