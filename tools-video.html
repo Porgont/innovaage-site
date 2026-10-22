@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>视频处理 | 工具箱 | 创想时代开发组</title>
-<meta name="description" content="诊断视频时长、分辨率、比例与编码，按投稿规范一键转成 H.264 / MP4 / 16:9，也可自定义比例与分辨率。">
-<meta name="keywords" content="视频转换,H.264,MP4,16比9,投稿视频规格,改分辨率,改比例">
+<meta name="description" content="诊断视频时长、分辨率、比例与编码，按需转换分辨率、比例、编码与码率，默认保持原尺寸，文件在本地处理。">
+<meta name="keywords" content="视频转换,H.264,MP4,改分辨率,改比例,压缩码率,视频压缩">
 <link rel="canonical" href="https://innovaage.cn/tools-video.html">
 <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0e1013" media="(prefers-color-scheme: dark)">
@@ -13,7 +13,7 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="创想时代开发组">
 <meta property="og:title" content="视频处理 | 工具箱 | 创想时代开发组">
-<meta property="og:description" content="诊断视频时长、分辨率、比例与编码，按投稿规范一键转成 H.264 / MP4 / 16:9，也可自定义比例与分辨率。">
+<meta property="og:description" content="诊断视频时长、分辨率、比例与编码，按需转换分辨率、比例、编码与码率，默认保持原尺寸，文件在本地处理。">
 <meta property="og:url" content="https://innovaage.cn/tools-video.html">
 <meta property="og:image" content="https://innovaage.cn/assets/img/og-image.jpg">
 <meta property="og:image:width" content="1200">
@@ -35,9 +35,9 @@
 })();
 </script>
 <link rel="preload" href="assets/fonts/noto-sans-sc.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/fonts.css?v=20261307">
-<link rel="stylesheet" href="assets/css/theme.css?v=20261307">
-<link rel="stylesheet" href="assets/css/style.css?v=20261307">
+<link rel="stylesheet" href="assets/css/fonts.css?v=20261311">
+<link rel="stylesheet" href="assets/css/theme.css?v=20261311">
+<link rel="stylesheet" href="assets/css/style.css?v=20261311">
   <link rel="alternate" type="application/rss+xml" title="创想时代开发组 · 公告" href="feed.xml">
 </head>
 
@@ -114,8 +114,8 @@
       <p class="page-head__num" aria-hidden="true">04</p>
       <h1 style="font-size:clamp(24px,3.6vw,34px)">视频诊断与转换</h1>
       <div class="page-note">
-        <p>投稿视频先在这里做一次诊断，再决定要不要转</p>
-        <p>诊断列出时长、分辨率、画面比例、编码和体积，和投稿要求对不上的地方会标出来，转换可以套用「符合投稿规范」，也可以自己定比例、分辨率、编码、最长时长和体积上限，文件在本地处理，不上传</p>
+        <p>把视频转成需要的格式、尺寸或体积</p>
+        <p>读时长、分辨率、画面比例、编码和体积，默认按原尺寸导出，需要时再改比例、分辨率、编码、码率和体积上限；「投稿规范」只是其中一个预设，文件在本地处理，不上传</p>
       </div>
 
       <div class="page-index" id="page-index" hidden></div>
@@ -147,15 +147,16 @@
             <div class="field">
               <label>预设</label>
               <div class="preset-row">
-                <button class="chip is-active" type="button" data-preset="submit">符合投稿规范</button>
+                <button class="chip is-active" type="button" data-preset="original">原尺寸</button>
                 <button class="chip" type="button" data-preset="p1080">1080P</button>
                 <button class="chip" type="button" data-preset="p720">720P</button>
+                <button class="chip" type="button" data-preset="submit">投稿规范</button>
                 <button class="chip" type="button" data-preset="custom">自定义</button>
               </div>
             </div>
 
             <p class="note" id="v-lock-note">
-              「符合投稿规范」= 1280×720 · 16:9 · H.264 · MP4 · 最长 90 秒；改动下面的比例、尺寸、编码或时长会自动切到「自定义」
+              「投稿规范」= 1280×720 · 16:9 · H.264 · MP4 · 最长 90 秒；选中后按这组值导出，改动下面任一项会自动切到「自定义」
             </p>
 
             <div class="field" style="margin-top:18px">
@@ -216,7 +217,7 @@
             </div>
 
             <p class="note" id="v-h265-note" hidden>
-              当前浏览器不支持 H.265 编码，该项已禁用，投稿要求为 H.264，一般不需要 H.265
+              当前浏览器不支持 H.265 编码，该项已禁用；多数场景用 H.264 兼容性最好
             </p>
 
             <p class="note" id="v-spec-summary" style="font-family:var(--mono)"></p>
@@ -336,7 +337,7 @@
     </div>
   </div>
 </footer>
-<script src="assets/js/site.js?v=20261307"></script>
+<script src="assets/js/site.js?v=20261311"></script>
 <script src="assets/vendor/mp4box.all.min.js"></script>
 <script src="assets/js/video-tool.js"></script>
 </body>

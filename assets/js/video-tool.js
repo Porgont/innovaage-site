@@ -51,7 +51,10 @@
       ? state.info.duration
       : state.spec.maxDur;
     dur = Math.min(dur, state.spec.maxDur);
-    return { mb: bitrateMbps * dur / 8, sec: dur };
+    // 源文件本身的码率是天然上限：重编码一般不会比原文件更大
+    var srcMbps = state.file && dur > 0 ? state.file.size * 8 / dur / 1000000 : Infinity;
+    var used = Math.min(bitrateMbps, srcMbps);
+    return { mb: used * dur / 8, sec: dur };
   }
 
   /** 自动码率时按目标分辨率取一个经验档位 */
@@ -152,16 +155,16 @@
   var state = {
     file: null,
     spec: {
-      preset: 'submit',
+      preset: 'original',
       w: 1280,
       h: 720,
-      ratio: '16:9',
+      ratio: 'source',
       fit: 'pad',
       codec: 'h264',
-      maxDur: 90,
+      maxDur: 600,
       maxMb: 0,
       bitrate: 0,
-      locked: true
+      locked: false
     },
     info: null,
     result: null,
@@ -255,6 +258,14 @@
   /** 把当前选择换算成实际输出宽高 */
   function resolveTarget() {
     var s = state.spec;
+
+    // 「原尺寸」：直接沿用源分辨率，不做缩放
+    if (s.preset === 'original' && state.info && state.info.width) {
+      return {
+        w: Math.max(2, Math.round(state.info.width / 2) * 2),
+        h: Math.max(2, Math.round(state.info.height / 2) * 2)
+      };
+    }
 
     // 「原样」：跟着源视频走，超过目标框就等比缩下来
     if (s.ratio === 'source' && state.info && state.info.width) {
@@ -443,7 +454,7 @@
     if (!d.containerOk) issues.push('不是 MP4 容器');
     if (d.codecOk === false) issues.push('编码要转成 ' + CODECS[state.spec.codec].name);
     if (!d.sizeOk) issues.push('体积超过 ' + state.spec.maxMb + ' MB');
-    if (!issues.length) issues.push('源文件已符合目标规格，转换只是为了放宽或收紧参数');
+    if (!issues.length) issues.push('源文件已符合当前目标规格，可以按需压缩或直接导出');
     html += '<div><dt>结论</dt><dd>' + escapeHtml(issues.join('；')) + '</dd></div>';
 
     box.innerHTML = html;
@@ -911,10 +922,11 @@
 
   /* ---------- 规格面板 ---------- */
   var PRESETS = {
-    submit: { w: 1280, h: 720, ratio: '16:9', codec: 'h264', maxDur: 90, locked: true },
-    p1080:  { w: 1920, h: 1080, ratio: '16:9', codec: 'h264', maxDur: 600, locked: false },
-    p720:   { w: 1280, h: 720, ratio: '16:9', codec: 'h264', maxDur: 600, locked: false },
-    custom: { locked: false }
+    original: { w: 1280, h: 720, ratio: 'source', codec: 'h264', maxDur: 600, locked: false },
+    p1080:    { w: 1920, h: 1080, ratio: '16:9', codec: 'h264', maxDur: 600, locked: false },
+    p720:     { w: 1280, h: 720, ratio: '16:9', codec: 'h264', maxDur: 600, locked: false },
+    submit:   { w: 1280, h: 720, ratio: '16:9', codec: 'h264', maxDur: 90, locked: true },
+    custom:   { locked: false }
   };
 
   function applyPreset(name) {
@@ -928,7 +940,7 @@
       state.spec.h = p.h;
       state.spec.ratio = p.ratio;
       state.spec.maxDur = p.maxDur;
-      // 「符合投稿规范」强制 H.264（投稿要求），其余预设保留用户已选的编码
+      // 只有「投稿规范」强制 H.264；其余预设保留用户已选的编码
       if (p.locked) state.spec.codec = p.codec;
     }
     syncSpecUi();
@@ -985,7 +997,9 @@
 
     var brNote = $('#v-bitrate-est');
     if (brNote) {
-      if (s.bitrate > 0) {
+      if (!state.info) {
+        brNote.textContent = '选好视频后按实际时长估算导出体积';
+      } else if (s.bitrate > 0) {
         var est = estimateMb(s.bitrate);
         brNote.textContent = '按 ' + s.bitrate + ' Mbps、' + est.sec.toFixed(1) + ' 秒估算，导出约 ' + est.mb.toFixed(1) + ' MB';
       } else {
@@ -1000,7 +1014,9 @@
     if (summary) {
       var t = resolveTarget();
       var brText;
-      if (s.bitrate > 0) {
+      if (!state.info) {
+        brText = '选好视频后显示预计体积';
+      } else if (s.bitrate > 0) {
         var se = estimateMb(s.bitrate);
         brText = s.bitrate + ' Mbps，导出约 ' + se.mb.toFixed(1) + ' MB';
       } else {
