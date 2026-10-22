@@ -57,6 +57,14 @@
     return { mb: used * dur / 8, sec: dur };
   }
 
+  /** 体积文案：小于 0.1 MB 用 KB 显示，避免出现「约 0.0 MB」 */
+  function fmtVolume(mb) {
+    if (!isFinite(mb) || mb <= 0) return '0 KB';
+    if (mb < 0.1) return Math.max(1, Math.round(mb * 1024)) + ' KB';
+    if (mb < 10) return mb.toFixed(1) + ' MB';
+    return Math.round(mb) + ' MB';
+  }
+
   /** 自动码率时按目标分辨率取一个经验档位 */
   function autoMbps() {
     var t = resolveTarget();
@@ -428,7 +436,7 @@
 
     var estBr = state.spec.bitrate > 0 ? state.spec.bitrate : autoMbps();
     var est = estimateMb(estBr);
-    html += diagRow('预计导出体积', '约 ' + est.mb.toFixed(1) + ' MB（' +
+    html += diagRow('预计导出体积', '约 ' + fmtVolume(est.mb) + '（' +
       (state.spec.bitrate > 0 ? state.spec.bitrate + ' Mbps' : '自动按 ' + estBr + ' Mbps 估') +
       '，实际随画面复杂度浮动）', null);
 
@@ -783,7 +791,7 @@
     var rows = '';
     rows += diagRow('文件名', r.name);
     rows += diagRow('体积', fmtBytes(r.blob.size) +
-      (r.estimatedMb ? '（导出前预估约 ' + r.estimatedMb.toFixed(1) + ' MB）' : ''));
+      (r.estimatedMb ? '（导出前预估约 ' + fmtVolume(r.estimatedMb) + '）' : ''));
     rows += diagRow('时长', fmtTime(r.verify.duration), r.verify.duration <= state.spec.maxDur + 0.5);
     rows += diagRow('分辨率', dw + ' × ' + dh, dw === r.target.w && dh === r.target.h);
     rows += diagRow('比例', ratioLabel(dw, dh));
@@ -1019,11 +1027,11 @@
         brNote.textContent = '选好视频后按实际时长估算导出体积';
       } else if (s.bitrate > 0) {
         var est = estimateMb(s.bitrate);
-        brNote.textContent = '按 ' + s.bitrate + ' Mbps、' + est.sec.toFixed(1) + ' 秒估算，导出约 ' + est.mb.toFixed(1) + ' MB';
+        brNote.textContent = '按 ' + s.bitrate + ' Mbps、' + est.sec.toFixed(1) + ' 秒估算，导出约 ' + fmtVolume(est.mb);
       } else {
         var autoBr = autoMbps();
         var autoEst = estimateMb(autoBr);
-        brNote.textContent = '自动：按 ' + autoBr + ' Mbps 估算，' + autoEst.sec.toFixed(1) + ' 秒导出约 ' + autoEst.mb.toFixed(1) + ' MB';
+        brNote.textContent = '自动：按 ' + autoBr + ' Mbps 估算，' + autoEst.sec.toFixed(1) + ' 秒导出约 ' + fmtVolume(autoEst.mb);
       }
     }
 
@@ -1037,18 +1045,18 @@
         var volText;
         if (s.bitrate > 0) {
           var se = estimateMb(s.bitrate);
-          volText = '约 ' + se.mb.toFixed(1) + ' MB（' + s.bitrate + ' Mbps）';
+          volText = '约 ' + fmtVolume(se.mb) + '（' + s.bitrate + ' Mbps）';
         } else {
           var sAutoBr = autoMbps();
           var sAuto = estimateMb(sAutoBr);
-          volText = '约 ' + sAuto.mb.toFixed(1) + ' MB（自动约 ' + sAutoBr + ' Mbps）';
+          volText = '约 ' + fmtVolume(sAuto.mb) + '（自动约 ' + sAutoBr + ' Mbps）';
         }
         summary.innerHTML =
-          '<div class="spec-line"><span>输出分辨率</span><b>' + t.w + ' × ' + t.h +
+          '<div class="spec-line"><span>输出</span><b>' + t.w + ' × ' + t.h +
             '（' + ratioLabel(t.w, t.h) + '）</b></div>' +
-          '<div class="spec-line"><span>编码与容器</span><b>' + CODECS[s.codec].name + ' / MP4</b></div>' +
-          '<div class="spec-line"><span>最长时长</span><b>' + s.maxDur + ' 秒</b></div>' +
-          '<div class="spec-line spec-line--volume"><span>预计导出体积</span><b>' + volText + '</b></div>';
+          '<div class="spec-line"><span>编码</span><b>' + CODECS[s.codec].name + ' / MP4</b></div>' +
+          '<div class="spec-line spec-line--volume"><span>预估体积</span><b>' + volText + '</b></div>' +
+          '<div class="spec-line"><span>最长时长</span><b>' + s.maxDur + ' 秒</b></div>';
       }
     }
   }
