@@ -54,6 +54,15 @@
     return { mb: bitrateMbps * dur / 8, sec: dur };
   }
 
+  /** 自动码率时按目标分辨率取一个经验档位 */
+  function autoMbps() {
+    var t = resolveTarget();
+    var px = t.w * t.h;
+    if (px >= 1920 * 1080) return 4;
+    if (px >= 1280 * 720) return 2.5;
+    return 1.5;
+  }
+
   /** 用户指定了目标码率就用它，失败时按 72% 和 50% 依次降级 */
   function bitrateTiers() {
     var want = Number(state.spec.bitrate) || 0;
@@ -399,10 +408,11 @@
     html += diagRow('源分辨率', d.width + ' × ' + d.height, null);
     html += diagRow('源比例', ratioLabel(d.width, d.height), null);
 
-    var estBr = state.spec.bitrate > 0 ? state.spec.bitrate : 2.5;
+    var estBr = state.spec.bitrate > 0 ? state.spec.bitrate : autoMbps();
     var est = estimateMb(estBr);
-    html += diagRow('预计输出', '最多约 ' + est.mb.toFixed(1) + ' MB（'
-      (state.spec.bitrate > 0 ? state.spec.bitrate + ' Mbps' : '自动码率按 2.5 Mbps 估') + '）', null);
+    html += diagRow('预计导出体积', '约 ' + est.mb.toFixed(1) + ' MB（' +
+      (state.spec.bitrate > 0 ? state.spec.bitrate + ' Mbps' : '自动按 ' + estBr + ' Mbps 估') +
+      '，实际随画面复杂度浮动）', null);
 
     if (d.codecInfo.available) {
       if (d.containerOk) {
@@ -754,7 +764,8 @@
 
     var rows = '';
     rows += diagRow('文件名', r.name);
-    rows += diagRow('体积', fmtBytes(r.blob.size));
+    rows += diagRow('体积', fmtBytes(r.blob.size) +
+      (r.estimatedMb ? '（导出前预估约 ' + r.estimatedMb.toFixed(1) + ' MB）' : ''));
     rows += diagRow('时长', fmtTime(r.verify.duration), r.verify.duration <= state.spec.maxDur + 0.5);
     rows += diagRow('分辨率', dw + ' × ' + dh, dw === r.target.w && dh === r.target.h);
     rows += diagRow('比例', ratioLabel(dw, dh));
@@ -844,6 +855,7 @@
       var name = base + '-' + target.w + 'x' + target.h + '-' + CODECS[state.spec.codec].name.replace('.', '') + '.mp4';
 
       state.result = {
+        estimatedMb: estimateMb(state.spec.bitrate > 0 ? state.spec.bitrate : autoMbps()).mb,
         blob: out.blob,
         verify: verify,
         name: name,
@@ -975,10 +987,11 @@
     if (brNote) {
       if (s.bitrate > 0) {
         var est = estimateMb(s.bitrate);
-        brNote.textContent = '按 ' + s.bitrate + ' Mbps、' + est.sec.toFixed(1) + ' 秒估算，最多约 ' + est.mb.toFixed(1) + ' MB';
+        brNote.textContent = '按 ' + s.bitrate + ' Mbps、' + est.sec.toFixed(1) + ' 秒估算，导出约 ' + est.mb.toFixed(1) + ' MB';
       } else {
-        var lo = estimateMb(1.5), hi = estimateMb(4);
-        brNote.textContent = '自动：4 / 2.5 / 1.5 Mbps 依次尝试，' + lo.sec.toFixed(1) + ' 秒最多约 ' + hi.mb.toFixed(1) + ' MB';
+        var autoBr = autoMbps();
+        var autoEst = estimateMb(autoBr);
+        brNote.textContent = '自动：按 ' + autoBr + ' Mbps 估算，' + autoEst.sec.toFixed(1) + ' 秒导出约 ' + autoEst.mb.toFixed(1) + ' MB';
       }
     }
 
@@ -989,10 +1002,11 @@
       var brText;
       if (s.bitrate > 0) {
         var se = estimateMb(s.bitrate);
-        brText = s.bitrate + ' Mbps，预计最多约 ' + se.mb.toFixed(1) + ' MB';
+        brText = s.bitrate + ' Mbps，导出约 ' + se.mb.toFixed(1) + ' MB';
       } else {
-        var sLo = estimateMb(1.5), sHi = estimateMb(4);
-        brText = '自动码率，预计最多约 ' + sHi.mb.toFixed(1) + ' MB';
+        var sAutoBr = autoMbps();
+        var sAuto = estimateMb(sAutoBr);
+        brText = '自动码率（约 ' + sAutoBr + ' Mbps），预计约 ' + sAuto.mb.toFixed(1) + ' MB';
       }
       summary.textContent = '输出将是 ' + t.w + ' × ' + t.h + '（' +
         ratioLabel(t.w, t.h) + '），' + CODECS[s.codec].name + ' / MP4，最长 ' + s.maxDur + ' 秒，' + brText;
