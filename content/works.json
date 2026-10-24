@@ -1,6 +1,81 @@
 {
   "works": [
     {
+      "id": "bilibili-pvp-textures",
+      "title": "Bilibili PVP Textures",
+      "img": "assets/img/qingju-bilibili-pvp.jpg",
+      "category": "tex",
+      "meta": "作者：青橘",
+      "desc": "取自作者早期作品 Bilibili UI 衍生而成的 PVP 材质，贴图与天空皆为原创",
+      "detail": {
+        "author": "青橘",
+        "type": "材质 / Texture（PVP）",
+        "tagline": "取自作者早期作品 Bilibili UI 衍生而成的 PVP 材质",
+        "cover": "assets/img/qingju-bilibili-pvp.jpg",
+        "coverAlt": "Bilibili PVP Textures：粉色主题的角色、武器与物品栏",
+        "factsText": "作品名 | Bilibili PVP Textures\n作者 | 青橘\n类型 | 材质 / Texture（PVP）",
+        "body": "贴图与天空皆为原创。",
+        "shotsText": "assets/img/qingju-bilibili-pvp.jpg | Bilibili PVP Textures：粉色主题的角色、武器、血条与物品栏 | "
+      }
+    },
+    {
+      "id": "qiushui-sanchi",
+      "title": "秋水三尺",
+      "img": "assets/img/qiushui-1.jpg",
+      "category": "map",
+      "meta": "作者：余末YuuMo",
+      "desc": "祈水，祈的是秋水三尺！",
+      "detail": {
+        "author": "创想时代 余末YuuMo",
+        "type": "地图 / Map",
+        "tagline": "祈水，祈的是秋水三尺！",
+        "cover": "assets/img/qiushui-1.jpg",
+        "coverAlt": "秋水三尺：夜色下的悬空宫殿正面全景",
+        "factsText": "作品名 | 秋水三尺\n作者 | 创想时代 余末YuuMo\n类型 | 地图 / Map\n平台 | Minecraft 基岩版",
+        "body": "祈水，祈的是秋水三尺！",
+        "shotsText": "assets/img/qiushui-1.jpg | 夜色下的悬空宫殿正面全景，金饰与发光题字 | \nassets/img/qiushui-2.jpg | 白天的悬空宫殿正面全景，蓝天与海面 | \nassets/img/qiushui-3.jpg | 侧面视角的悬空宫殿与金色环形结构，右上方竖排题字 | "
+      }
+    },
+    {
+      "id": "deer-pvp-textures",
+      "title": "Deer PVP 材质",
+      "img": "assets/img/qingju-deer-pvp.jpg",
+      "category": "tex",
+      "meta": "作者：青橘",
+      "desc": "100% 原创的 PVP 材质，从方块到物品全部手绘，天空另外做了处理",
+      "detail": {
+        "author": "青橘",
+        "type": "材质 / Texture（PVP）",
+        "tagline": "100% 原创的 PVP 材质，从方块到物品全部手绘",
+        "cover": "assets/img/qingju-deer-pvp.jpg",
+        "coverAlt": "Deer PVP 材质：青绿色主题的角色与武器",
+        "factsText": "作品名 | Deer PVP 材质\n作者 | 青橘\n类型 | 材质 / Texture（PVP）",
+        "body": "从方块到物品全部手绘而成，天空部分另外做了处理。\n\n材质绘制以 PVP 使用为主，不太建议日常使用，用不惯者慎用。",
+        "shotsText": "assets/img/qingju-deer-pvp.jpg | Deer PVP 材质：青绿色主题的角色、武器与物品 | "
+      }
+    },
+    {
+      "id": "log-shader-sa",
+      "title": "Log橡木SA",
+      "img": "assets/img/shader-2.jpg",
+      "category": "shader",
+      "meta": "作者：Log坤",
+      "desc": "基岩版光影，主打水面镜面反射与自然光过渡",
+      "detail": {
+        "author": "创想时代 Log坤",
+        "type": "光影 / Shader",
+        "tagline": "Log 光影两周年特别版：方块卷云、氛围雨天、流动星辰、特调 ACES 色调映射",
+        "cover": "assets/img/shader-rain.jpg",
+        "coverAlt": "雨天场景：石板路积水倒影、暖色窗光与雨幕",
+        "factsText": "作品名 | LogSA（Log Second Anniversary）\n作者 | 创想时代 Log坤\n类型 | 光影 / Shader\n平台 | Minecraft 基岩版\n前置 | SRC 光影（组件码 0559302）\n反馈群 | 1017068586\nLog 光影外群 | 822955272\nLog 光影内群 | 980037287",
+        "shotsText": "assets/img/shader-rain.jpg | 雨天场景：石板路面积水倒影、雨幕与暖色窗光 | \nassets/img/shader-1.jpg | 晴天场景：雪山与松林，天空过曝与积雪明暗过渡 | \nassets/img/shader-3.jpg | 水面场景：峡谷水道的镜面反射 | \nassets/img/shader-2.jpg | 林地场景：樱花树冠与草地花簇 | ",
+        "poster": "assets/img/logsa-poster.jpg",
+        "posterAlt": "LogSA 组件介绍海报：总介绍、雨天 / 晴天 / 水面实机效果、开发作者与鸣谢",
+        "notice": "开发作者：创想时代 Log坤。鸣谢：冷夜、被遗忘的青色剑士、关于本人、只问为何、老楚、范帛、柑柠、linlin 等人的支持和帮助，同时也感谢各位玩家一直以来的陪伴与支持（排名不分先后）。",
+        "thanksText": "开发作者 | 创想时代 Log坤\n鸣谢 | 冷夜、被遗忘的青色剑士、关于本人、只问为何、老楚、范帛、柑柠、linlin\n反馈途径 | 创想时代反馈群 1017068586"
+      }
+    },
+    {
       "id": "enterprise-gray-ghost",
       "title": "企业-灰色幽灵",
       "img": "assets/img/enterprise-gray-ghost.jpg",
@@ -33,45 +108,6 @@
         "factsText": "作品名 | Log7桦木 · 完整版\n光影作者 | 创想时代 Log_坤\n美术顾问 | 犹疑月落\n类型 | 光影 / Shader\n平台 | Minecraft 基岩版\n价格 | 300 钻石（付费作品）\n推荐配置 | 骁龙 8 Gen1 / 天玑 9000 / A16，运行内存 6GB 以上\n性能 | 12 区块、1080p 分辨率下可 60 帧\n反馈群 | 1017068586",
         "body": "## 特性\n\n- 可以触碰的体积云\n- 体积光与丁达尔效应\n- 水面实时反射周围景物\n- 屏幕空间阴影\n- 全分辨率\n\n## 推荐配置\n\n高通：骁龙 8 Gen1\n\n联发科：天玑 9000\n\n苹果：A16\n\n运行内存 6GB 以上（12 区块、1080p 分辨率可以 60 帧）",
         "shotsText": "assets/img/log7-1.jpg | 紫色花海与村庄：木栅栏、远处建筑与花丛的体积光 | \nassets/img/log7-2.jpg | 浮岛树林：体积云与穿林光束、水面倒影 | \nassets/img/log7-3.jpg | 水面与树林：丁达尔光束穿过云层投下 | "
-      }
-    },
-    {
-      "id": "log-shader-sa",
-      "title": "Log橡木SA",
-      "img": "assets/img/shader-2.jpg",
-      "category": "shader",
-      "meta": "作者：Log坤",
-      "desc": "基岩版光影，主打水面镜面反射与自然光过渡",
-      "detail": {
-        "author": "创想时代 Log坤",
-        "type": "光影 / Shader",
-        "tagline": "Log 光影两周年特别版：方块卷云、氛围雨天、流动星辰、特调 ACES 色调映射",
-        "cover": "assets/img/shader-rain.jpg",
-        "coverAlt": "雨天场景：石板路积水倒影、暖色窗光与雨幕",
-        "factsText": "作品名 | LogSA（Log Second Anniversary）\n作者 | 创想时代 Log坤\n类型 | 光影 / Shader\n平台 | Minecraft 基岩版\n前置 | SRC 光影（组件码 0559302）\n反馈群 | 1017068586\nLog 光影外群 | 822955272\nLog 光影内群 | 980037287",
-        "shotsText": "assets/img/shader-rain.jpg | 雨天场景：石板路面积水倒影、雨幕与暖色窗光 | \nassets/img/shader-1.jpg | 晴天场景：雪山与松林，天空过曝与积雪明暗过渡 | \nassets/img/shader-3.jpg | 水面场景：峡谷水道的镜面反射 | \nassets/img/shader-2.jpg | 林地场景：樱花树冠与草地花簇 | ",
-        "poster": "assets/img/logsa-poster.jpg",
-        "posterAlt": "LogSA 组件介绍海报：总介绍、雨天 / 晴天 / 水面实机效果、开发作者与鸣谢",
-        "notice": "开发作者：创想时代 Log坤。鸣谢：冷夜、被遗忘的青色剑士、关于本人、只问为何、老楚、范帛、柑柠、linlin 等人的支持和帮助，同时也感谢各位玩家一直以来的陪伴与支持（排名不分先后）。",
-        "thanksText": "开发作者 | 创想时代 Log坤\n鸣谢 | 冷夜、被遗忘的青色剑士、关于本人、只问为何、老楚、范帛、柑柠、linlin\n反馈途径 | 创想时代反馈群 1017068586"
-      }
-    },
-    {
-      "id": "qiushui-sanchi",
-      "title": "秋水三尺",
-      "img": "assets/img/qiushui-1.jpg",
-      "category": "map",
-      "meta": "作者：余末YuuMo",
-      "desc": "祈水，祈的是秋水三尺！",
-      "detail": {
-        "author": "创想时代 余末YuuMo",
-        "type": "地图 / Map",
-        "tagline": "祈水，祈的是秋水三尺！",
-        "cover": "assets/img/qiushui-1.jpg",
-        "coverAlt": "秋水三尺：夜色下的悬空宫殿正面全景",
-        "factsText": "作品名 | 秋水三尺\n作者 | 创想时代 余末YuuMo\n类型 | 地图 / Map\n平台 | Minecraft 基岩版",
-        "body": "祈水，祈的是秋水三尺！",
-        "shotsText": "assets/img/qiushui-1.jpg | 夜色下的悬空宫殿正面全景，金饰与发光题字 | \nassets/img/qiushui-2.jpg | 白天的悬空宫殿正面全景，蓝天与海面 | \nassets/img/qiushui-3.jpg | 侧面视角的悬空宫殿与金色环形结构，右上方竖排题字 | "
       }
     },
     {
@@ -110,42 +146,6 @@
         "shotsText": "assets/img/lingling-u-1.jpg | 效果图：深色石墙与窗口日光，PBR 材质反射 | \nassets/img/lingling-u-2.jpg | 效果图：木质建筑与积雪场景的材质表现 | \nassets/img/lingling-u-3.jpg | 效果图：樱花林地，树冠与草地材质层次 | ",
         "poster": "assets/img/lingling-universal-poster.webp",
         "posterAlt": "零雾构想通用版 V2.3 组件介绍海报"
-      }
-    },
-    {
-      "id": "bilibili-pvp-textures",
-      "title": "Bilibili PVP Textures",
-      "img": "assets/img/qingju-bilibili-pvp.jpg",
-      "category": "tex",
-      "meta": "作者：青橘",
-      "desc": "取自作者早期作品 Bilibili UI 衍生而成的 PVP 材质，贴图与天空皆为原创",
-      "detail": {
-        "author": "青橘",
-        "type": "材质 / Texture（PVP）",
-        "tagline": "取自作者早期作品 Bilibili UI 衍生而成的 PVP 材质",
-        "cover": "assets/img/qingju-bilibili-pvp.jpg",
-        "coverAlt": "Bilibili PVP Textures：粉色主题的角色、武器与物品栏",
-        "factsText": "作品名 | Bilibili PVP Textures\n作者 | 青橘\n类型 | 材质 / Texture（PVP）",
-        "body": "贴图与天空皆为原创。",
-        "shotsText": "assets/img/qingju-bilibili-pvp.jpg | Bilibili PVP Textures：粉色主题的角色、武器、血条与物品栏 | "
-      }
-    },
-    {
-      "id": "deer-pvp-textures",
-      "title": "Deer PVP 材质",
-      "img": "assets/img/qingju-deer-pvp.jpg",
-      "category": "tex",
-      "meta": "作者：青橘",
-      "desc": "100% 原创的 PVP 材质，从方块到物品全部手绘，天空另外做了处理",
-      "detail": {
-        "author": "青橘",
-        "type": "材质 / Texture（PVP）",
-        "tagline": "100% 原创的 PVP 材质，从方块到物品全部手绘",
-        "cover": "assets/img/qingju-deer-pvp.jpg",
-        "coverAlt": "Deer PVP 材质：青绿色主题的角色与武器",
-        "factsText": "作品名 | Deer PVP 材质\n作者 | 青橘\n类型 | 材质 / Texture（PVP）",
-        "body": "从方块到物品全部手绘而成，天空部分另外做了处理。\n\n材质绘制以 PVP 使用为主，不太建议日常使用，用不惯者慎用。",
-        "shotsText": "assets/img/qingju-deer-pvp.jpg | Deer PVP 材质：青绿色主题的角色、武器与物品 | "
       }
     }
   ]
