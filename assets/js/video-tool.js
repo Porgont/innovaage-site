@@ -39,6 +39,16 @@
       ],
       isMatch: function (c) { return /^(hvc1|hev1)/i.test(c || ''); },
       name: 'H.265'
+    },
+    av1: {
+      label: 'AV1',
+      mimes: [
+        'video/mp4;codecs=av01.0.08M.08',
+        'video/mp4;codecs=av01.0.05M.08',
+        'video/mp4;codecs=av01'
+      ],
+      isMatch: function (c) { return /^av01/i.test(c || ''); },
+      name: 'AV1'
     }
   };
 
@@ -134,11 +144,11 @@
     });
   }
 
-  /** H.264/H.265 要求宽高是偶数，很多编码器还要求是 16 的倍数，这里统一抹平 */
+  /** H.264 / H.265 要求宽高是偶数；只抹到偶数，别把 180 压成 176 */
   function alignDim(n) {
     n = Math.round(Number(n) || 0);
     if (n < 16) return 16;
-    return Math.floor(n / 16) * 16;
+    return Math.floor(n / 2) * 2;
   }
 
   /** 找一个当前浏览器真的能用的 MP4 录制格式 */
@@ -154,9 +164,55 @@
     return '';
   }
 
-  /** 这个编码能不能用（用于把 H.265 置灰） */
+  /** 这个编码能不能用（用于把不支持的编码置灰） */
   function codecAvailable(codecKey) {
     return !!pickMime(codecKey);
+  }
+
+  /** 当前浏览器录不了的编码名，用来写提示 */
+  function unavailableCodecs() {
+    return Object.keys(CODECS).filter(function (k) {
+      return !codecAvailable(k);
+    }).map(function (k) {
+      return CODECS[k].name;
+    });
+  }
+
+  /** 源帧率：优先用 mp4box 读到的，读不到就返回 0 */
+  function sourceFps() {
+    var info = state.info;
+    if (!info) return 0;
+    if (info.fps > 0) return info.fps;
+    if (info.codecInfo && info.codecInfo.fps > 0) return info.codecInfo.fps;
+    return 0;
+  }
+
+  /** 把 29.97 / 23.976 这类广播帧率归到常见整数值，避免显示 30.5 这种数 */
+  function snapFps(f) {
+    if (!isFinite(f) || f <= 0) return 0;
+    var common = [24, 25, 30, 48, 50, 60, 120];
+    for (var i = 0; i < common.length; i++) {
+      if (Math.abs(f - common[i]) < 1.2) return common[i];
+    }
+    return Math.round(f);
+  }
+
+  /** 实际录制帧率：用户填了就按用户的，否则跟随源文件，再兜底 30 */
+  function resolveFps() {
+    var want = Number(state.spec.fps) || 0;
+    if (want > 0) return Math.max(1, Math.min(120, Math.round(want)));
+    var src = sourceFps();
+    if (src > 0) return Math.max(1, Math.min(120, snapFps(src) || 30));
+    return 30;
+  }
+
+  function fpsLabel() {
+    var want = Number(state.spec.fps) || 0;
+    if (want > 0) return want + ' fps';
+    var src = sourceFps();
+    return src > 0
+      ? '跟随源文件（' + (snapFps(src) || Math.round(src)) + ' fps）'
+      : '跟随源文件（读不到，按 30 fps）';
   }
 
   /* ---------- 状态 ---------- */
@@ -172,6 +228,7 @@
       maxDur: 0,
       maxMb: 0,
       bitrate: 0,
+      fps: 0,
       locked: false
     },
     info: null,
@@ -375,13 +432,28 @@
           out.isMp4 = true;
           out.brands = (md.brands || []).join(',');
           out.tracks = (md.tracks || []).map(function (t) {
+            var fps = 0;
+            try {
+              // 用影片时间轴算时长；track 自己的 duration/timescale 是采样时间，不能用来估帧率
+              var durSec = 0;
+              if (t.movie_duration && t.movie_timescale) {
+                durSec = t.movie_duration / t.movie_timescale;
+              } else if (t.duration && t.timescale) {
+                durSec = t.duration / t.timescale;
+              }
+              if (t.nb_samples && durSec > 0) fps = t.nb_samples / durSec;
+            } catch (e) { fps = 0; }
+            if (!isFinite(fps) || fps <= 0 || fps > 240) fps = 0;
             return {
               type: t.type,
               codec: t.codec || '',
+              fps: fps ? Math.round(fps * 100) / 100 : 0,
               width: t.video ? t.video.width : 0,
               height: t.video ? t.video.height : 0
             };
           });
+          var vTrack = out.tracks.filter(function (x) { return x.type === 'video'; })[0];
+          out.fps = vTrack ? vTrack.fps : 0;
           settle();
         };
         f.onError = function (e) { out.error = String(e); settle(); };
@@ -412,6 +484,8 @@
     d.ratioOk = basic.width && basic.height
       ? Math.abs((basic.width / basic.height) - (target.w / target.h)) < 0.01
       : false;
+    d.fps = sourceFps();
+    d.targetFps = resolveFps();
 
     var vTrack = (codecInfo.tracks || []).filter(function (t) { return t.type === 'video'; })[0];
     d.videoCodec = vTrack ? vTrack.codec : '';
@@ -434,6 +508,7 @@
       (state.spec.maxDur > 0 ? '上限 ' + state.spec.maxDur + ' 秒' : '不限') + '）', d.durationOk);
     html += diagRow('源分辨率', d.width + ' × ' + d.height, null);
     html += diagRow('源比例', ratioLabel(d.width, d.height), null);
+    html += diagRow('源帧率', d.fps > 0 ? snapFps(d.fps) + ' fps' : '读不到（转换时按 30 fps 处理）');
 
     var estBr = state.spec.bitrate > 0 ? state.spec.bitrate : autoMbps();
     var est = estimateMb(estBr);
@@ -446,7 +521,9 @@
       if (d.containerOk) {
         var cname = CODECS[state.spec.codec].isMatch(d.videoCodec)
           ? CODECS[state.spec.codec].name
-          : (CODECS.h264.isMatch(d.videoCodec) ? 'H.264' : (CODECS.h265.isMatch(d.videoCodec) ? 'H.265' : d.videoCodec || '未知'));
+          : (CODECS.h264.isMatch(d.videoCodec) ? 'H.264'
+            : (CODECS.h265.isMatch(d.videoCodec) ? 'H.265'
+              : (CODECS.av1.isMatch(d.videoCodec) ? 'AV1' : d.videoCodec || '未知')));
         html += diagRow('源编码', 'MP4 / ' + cname, d.codecOk);
       } else {
         html += diagRow('源编码', '不是 MP4 容器（读不到编码信息）', false);
@@ -462,6 +539,9 @@
 
     html += diagRow('目标规格', d.target.w + ' × ' + d.target.h + '（' +
       ratioLabel(d.target.w, d.target.h) + '，' + CODECS[state.spec.codec].name + '）');
+    html += diagRow('目标帧率', state.spec.fps > 0
+      ? state.spec.fps + ' fps（手动指定）'
+      : (d.fps > 0 ? snapFps(d.fps) + ' fps（跟随源文件）' : '30 fps（源帧率读不到）'));
     html += diagRow('体积', fmtBytes(state.file.size), d.sizeOk);
 
     var issues = [];
@@ -487,7 +567,8 @@
         ['时长', state.spec.maxDur > 0
           ? '取前 ' + Math.min(state.spec.maxDur, Math.ceil(d.duration || state.spec.maxDur)) + ' 秒'
           : '完整保留'],
-        ['编码', CODECS[state.spec.codec].name + ' / MP4']
+        ['编码', CODECS[state.spec.codec].name + ' / MP4'],
+        ['帧率', fpsLabel()]
       ];
       plan.innerHTML = '<b class="plan-title">将要执行</b>' + planRows.map(function (r) {
         return '<span class="plan-row"><i>' + r[0] + '</i><b>' + escapeHtml(r[1]) + '</b></span>';
@@ -596,7 +677,7 @@
           }
         } catch (e) { audioTracks = []; }
 
-        canvasStream = canvas.captureStream(30);
+        canvasStream = canvas.captureStream(resolveFps());
         trackStream(canvasStream);
         allStreams.push(canvasStream);
 
@@ -810,7 +891,8 @@
     rows += diagRow('容器', r.verify.isMp4 ? 'MP4' : '未知（复检未能解析）', r.verify.isMp4);
     rows += diagRow('编码', r.verify.codec || '未知',
       CODECS[state.spec.codec].isMatch(r.verify.codec) ? true : null);
-    if (r.bitrate) rows += diagRow('码率', (r.bitrate / 1000000).toFixed(1) + ' Mbps');
+    if (r.targetFps) rows += diagRow('帧率', r.targetFps + ' fps');
+    if (r.bitrate) rows += diagRow('目标码率', (r.bitrate / 1000000).toFixed(1) + ' Mbps');
     rows += diagRow('音频', r.hadAudio ? '已保留' : '无（原视频没有可用的音轨）');
 
     var host = $('#v-result-stats');
@@ -902,7 +984,8 @@
       var target = d.target;
 
       var base = (state.file.name || 'video').replace(/\.[^.]+$/, '');
-      var name = base + '-' + target.w + 'x' + target.h + '-' + CODECS[state.spec.codec].name.replace('.', '') + '.mp4';
+      var name = base + '-' + target.w + 'x' + target.h + '-' +
+        CODECS[state.spec.codec].name.replace('.', '') + '-' + d.targetFps + 'fps.mp4';
 
       state.result = {
         estimatedMb: estimateMb(state.spec.bitrate > 0 ? state.spec.bitrate : autoMbps()).mb,
@@ -912,7 +995,8 @@
         mimeUsed: out.mimeUsed,
         hadAudio: out.hadAudio,
         bitrate: converted.bitrate,
-        target: target
+        target: target,
+        targetFps: d.targetFps
       };
 
       setProgress(null);
@@ -1014,9 +1098,13 @@
     if (codecEl) {
       codecEl.value = s.codec;
       $$('option', codecEl).forEach(function (o) {
-        if (o.value === 'h265' && !codecAvailable('h265')) o.disabled = true;
+        if (o.value !== 'h264' && !codecAvailable(o.value)) o.disabled = true;
       });
     }
+
+    // 帧率
+    var fpsEl = $('#v-fps');
+    if (fpsEl && document.activeElement !== fpsEl) { fpsEl.value = s.fps; }
 
     // 时长
     var durEl = $('#v-max-dur');
@@ -1026,9 +1114,18 @@
     var lockNote = $('#v-lock-note');
     if (lockNote) lockNote.hidden = !s.locked;
 
-    // H.265 不可用时的说明
-    var h265Note = $('#v-h265-note');
-    if (h265Note) h265Note.hidden = codecAvailable('h265');
+    // 不支持的编码说明
+    var codecNote = $('#v-codec-note');
+    if (codecNote) {
+      var bad = unavailableCodecs();
+      if (bad.length) {
+        codecNote.hidden = false;
+        codecNote.textContent = '当前浏览器不支持 ' + bad.join(' / ') +
+          ' 编码，相关选项已禁用；多数场景用 H.264 兼容性最好';
+      } else {
+        codecNote.hidden = true;
+      }
+    }
 
     // 目标码率
     var brEl = $('#v-bitrate');
@@ -1072,6 +1169,7 @@
           '<div class="spec-line"><span>输出</span><b>' + t.w + ' × ' + t.h +
             '（' + ratioLabel(t.w, t.h) + '）</b></div>' +
           '<div class="spec-line"><span>编码</span><b>' + CODECS[s.codec].name + ' / MP4</b></div>' +
+          '<div class="spec-line"><span>帧率</span><b>' + fpsLabel() + '</b></div>' +
           '<div class="spec-line spec-line--volume"><span>预估体积</span><b>' + volText + '</b></div>' +
           '<div class="spec-line"><span>最长时长</span><b>' + (s.maxDur > 0 ? s.maxDur + ' 秒' : '不限') + '</b></div>';
       }
@@ -1088,7 +1186,7 @@
     var codecEl = $('#v-codec');
     if (codecEl) {
       $$('option', codecEl).forEach(function (o) {
-        if (o.value === 'h265' && !codecAvailable('h265')) o.disabled = true;
+        if (o.value !== 'h264' && !codecAvailable(o.value)) o.disabled = true;
       });
     }
 
@@ -1176,6 +1274,17 @@
       });
     }
 
+    // 帧率
+    var fpsEl = $('#v-fps');
+    if (fpsEl) {
+      fpsEl.addEventListener('change', function () {
+        if (state.spec.locked || state.spec.preset === 'original') applyPreset('custom');
+        state.spec.fps = Math.max(0, Math.min(120, Math.round(Number(fpsEl.value) || 0)));
+        syncSpecUi();
+        refreshDiagnosis();
+      });
+    }
+
     // 最长时长
     var durEl = $('#v-max-dur');
     if (durEl) {
@@ -1234,6 +1343,10 @@
       PRESETS: PRESETS,
       pickMime: pickMime,
       codecAvailable: codecAvailable,
+      unavailableCodecs: unavailableCodecs,
+      resolveFps: resolveFps,
+      sourceFps: sourceFps,
+      fpsLabel: fpsLabel,
       ratioLabel: ratioLabel,
       alignDim: alignDim,
       resolveTarget: resolveTarget,

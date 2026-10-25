@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>视频处理 | 工具箱 | 创想时代开发组</title>
-<meta name="description" content="诊断视频时长、分辨率、比例与编码，按需转换分辨率、比例、编码与码率，默认保持原尺寸，文件在本地处理。">
-<meta name="keywords" content="视频转换,H.264,MP4,改分辨率,改比例,压缩码率,视频压缩">
+<meta name="description" content="诊断视频时长、分辨率、比例与编码，按需转换分辨率、比例、编码、帧率与码率，默认保持原尺寸，文件在本地处理。">
+<meta name="keywords" content="视频转换,H.264,H.265,AV1,MP4,改帧率,改分辨率,改比例,压缩码率">
 <link rel="canonical" href="https://innovaage.cn/tools-video.html">
 <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0e1013" media="(prefers-color-scheme: dark)">
@@ -13,7 +13,7 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="创想时代开发组">
 <meta property="og:title" content="视频处理 | 工具箱 | 创想时代开发组">
-<meta property="og:description" content="诊断视频时长、分辨率、比例与编码，按需转换分辨率、比例、编码与码率，默认保持原尺寸，文件在本地处理。">
+<meta property="og:description" content="诊断视频时长、分辨率、比例与编码，按需转换分辨率、比例、编码、帧率与码率，默认保持原尺寸，文件在本地处理。">
 <meta property="og:url" content="https://innovaage.cn/tools-video.html">
 <meta property="og:image" content="https://innovaage.cn/assets/img/og-image.jpg">
 <meta property="og:image:width" content="1200">
@@ -35,9 +35,9 @@
 })();
 </script>
 <link rel="preload" href="assets/fonts/noto-sans-sc.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/fonts.css?v=20261324">
-<link rel="stylesheet" href="assets/css/theme.css?v=20261324">
-<link rel="stylesheet" href="assets/css/style.css?v=20261324">
+<link rel="stylesheet" href="assets/css/fonts.css?v=20261325">
+<link rel="stylesheet" href="assets/css/theme.css?v=20261325">
+<link rel="stylesheet" href="assets/css/style.css?v=20261325">
   <link rel="alternate" type="application/rss+xml" title="创想时代开发组 · 公告" href="feed.xml">
 </head>
 
@@ -115,7 +115,7 @@
       <h1 style="font-size:clamp(24px,3.6vw,34px)">视频诊断与转换</h1>
       <div class="page-note">
         <p>把视频转成需要的格式、尺寸或体积</p>
-        <p>读时长、分辨率、画面比例、编码和体积，默认按原尺寸导出，需要时再改比例、分辨率、编码、码率和体积上限；「投稿规范」只是其中一个预设，文件在本地处理，不上传</p>
+        <p>读时长、分辨率、画面比例、编码和体积，默认按原尺寸导出，需要时再改比例、分辨率、编码、帧率、码率和体积上限；「投稿规范」只是其中一个预设，文件在本地处理，不上传</p>
       </div>
 
       <div class="page-index" id="page-index" hidden></div>
@@ -196,18 +196,26 @@
                 <select id="v-codec">
                   <option value="h264">H.264 (AVC)</option>
                   <option value="h265">H.265 (HEVC)</option>
+                  <option value="av1">AV1</option>
                 </select>
               </div>
               <span style="text-align:center;color:var(--text-mute);font-size:13px">/</span>
               <div class="field">
-                <label for="v-max-dur">最长时长（秒）<span class="hint">0 = 不限</span></label>
-                <input type="number" id="v-max-dur" value="0" min="0" max="86400" step="1">
+                <label for="v-fps">帧率（fps）<span class="hint">0 = 跟随源文件</span></label>
+                <input type="number" id="v-fps" value="0" min="0" max="120" step="1">
               </div>
             </div>
 
-            <div class="field" style="margin-top:16px">
-              <label for="v-max-mb">最大体积（MB）<span class="hint">0 = 不限，仅用于检查</span></label>
-              <input type="number" id="v-max-mb" value="0" min="0" max="2000" step="1">
+            <div class="size-row" style="margin-top:16px">
+              <div class="field">
+                <label for="v-max-dur">最长时长（秒）<span class="hint">0 = 不限</span></label>
+                <input type="number" id="v-max-dur" value="0" min="0" max="86400" step="1">
+              </div>
+              <span style="text-align:center;color:var(--text-mute);font-size:13px">/</span>
+              <div class="field">
+                <label for="v-max-mb">最大体积（MB）<span class="hint">0 = 不限，仅用于检查</span></label>
+                <input type="number" id="v-max-mb" value="0" min="0" max="2000" step="1">
+              </div>
             </div>
 
             <div class="field" style="margin-top:16px">
@@ -216,9 +224,7 @@
               <p class="note" id="v-bitrate-est" style="margin:8px 0 0"></p>
             </div>
 
-            <p class="note" id="v-h265-note" hidden>
-              当前浏览器不支持 H.265 编码，该项已禁用；多数场景用 H.264 兼容性最好
-            </p>
+            <p class="note" id="v-codec-note" hidden style="margin:10px 0 0"></p>
 
             <div class="spec-summary" id="v-spec-summary" aria-live="polite">
               <p class="spec-empty">选好视频后显示目标规格与预计体积</p>
@@ -278,7 +284,7 @@
             <span class="icon" aria-hidden="true">ℹ️</span>
             <div>
               <b>限制：</b>编码检测仅支持 MP4 容器，WebM、MKV 等只做重新编码。
-              重编码会有画质损失。H.265 输出取决于浏览器与显卡支持。
+              重编码会有画质损失。H.265 与 AV1 输出取决于浏览器与显卡支持。
             </div>
           </div>
         </div>
@@ -339,8 +345,8 @@
     </div>
   </div>
 </footer>
-<script src="assets/js/site.js?v=20261324"></script>
+<script src="assets/js/site.js?v=20261325"></script>
 <script src="assets/vendor/mp4box.all.min.js"></script>
-<script src="assets/js/video-tool.js?v=20261323"></script>
+<script src="assets/js/video-tool.js?v=20261325"></script>
 </body>
 </html>
