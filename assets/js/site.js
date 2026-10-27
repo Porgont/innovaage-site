@@ -1576,31 +1576,60 @@
 
   function applyTheme(theme, animate) {
     var root = document.documentElement;
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function updateUi() {
+      var icon = $('[data-theme-icon]');
+      var label = $('[data-theme-label]');
+      var btn = $('#theme-toggle');
+
+      // 显示“将要切到的模式”，而不是当前模式
+      var next = theme === 'dark' ? '浅色' : '深色';
+      if (icon) icon.textContent = theme === 'dark' ? '☀' : '☾';
+      if (label) label.textContent = next;
+      if (btn) btn.setAttribute('aria-label', '切换到' + next + '主题');
+    }
+
+    function commit() {
+      root.setAttribute('data-theme', theme);
+      updateUi();
+    }
+
+    clearTimeout(root._themeTimer);
+
+    // 支持 View Transition 时，从切换按钮的位置向外扩散
+    if (animate && !reduce && typeof document.startViewTransition === 'function') {
+      var btn = $('#theme-toggle');
+      var box = btn ? btn.getBoundingClientRect() : null;
+      var x = box ? box.left + box.width / 2 : window.innerWidth - 80;
+      var y = box ? box.top + box.height / 2 : 0;
+      root.style.setProperty('--theme-x', Math.round(x) + 'px');
+      root.style.setProperty('--theme-y', Math.round(y) + 'px');
+      root.classList.add('theme-reveal');
+      var vt;
+      try { vt = document.startViewTransition(commit); } catch (e) { vt = null; }
+      if (vt && vt.finished) {
+        vt.finished.then(cleanup, cleanup);
+        return;
+      }
+      root.classList.remove('theme-reveal');
+      commit();
+      return;
+    }
+
+    function cleanup() { root.classList.remove('theme-reveal'); }
 
     if (animate) {
-      // 蒙版闪一下：颜色本身是瞬时切换的，蒙版只负责视觉过渡。
-      // 定个时限摘掉类，避免在动画不推进的环境里一直挂着。
+      // 没有 View Transition 时就退回蒙版闪一下
       root.classList.add('theme-switching');
-      clearTimeout(root._themeTimer);
       root._themeTimer = setTimeout(function () {
         root.classList.remove('theme-switching');
       }, 400);
     } else {
-      clearTimeout(root._themeTimer);
       root.classList.remove('theme-switching');
     }
 
-    root.setAttribute('data-theme', theme);
-
-    var icon = $('[data-theme-icon]');
-    var label = $('[data-theme-label]');
-    var btn = $('#theme-toggle');
-
-    // 显示“将要切到的模式”，而不是当前模式
-    var next = theme === 'dark' ? '浅色' : '深色';
-    if (icon) icon.textContent = theme === 'dark' ? '☀' : '☾';
-    if (label) label.textContent = next;
-    if (btn) btn.setAttribute('aria-label', '切换到' + next + '主题');
+    commit();
   }
 
   function initTheme() {

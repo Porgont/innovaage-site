@@ -9587,3 +9587,122 @@ a.pack-link::after {
 
 /* 音频转换结果：多行 */
 #audio-note { white-space: pre-line; line-height: 1.7; }
+
+
+/* ============================================================
+   动效与界面细节 2026-10
+   ------------------------------------------------------------
+   1) 跨页过渡：支持 View Transition 的浏览器用原生交叉淡入
+   2) 主题切换：从按钮位置扩散的圆形揭示
+   3) 滚动条、光标、选中色统一
+   4) 触屏设备去掉悬停位移（避免点一下卡在抬起状态）
+   ============================================================ */
+
+@view-transition { navigation: auto; }
+
+::view-transition-old(root) {
+  animation: vt-page-out .18s ease both;
+}
+::view-transition-new(root) {
+  animation: vt-page-in .34s var(--ease-out, cubic-bezier(.16, 1, .3, 1)) both;
+}
+
+@keyframes vt-page-out { to { opacity: 0; } }
+@keyframes vt-page-in { from { opacity: 0; transform: translateY(8px); } }
+
+/* 主题揭示：新主题从点击处向外铺开 */
+html.theme-reveal::view-transition-old(root) { animation: none; }
+html.theme-reveal::view-transition-new(root) {
+  animation: theme-reveal-in .52s cubic-bezier(.16, 1, .3, 1) both;
+}
+
+@keyframes theme-reveal-in {
+  from { clip-path: circle(0 at var(--theme-x, 50%) var(--theme-y, 0)); }
+  to   { clip-path: circle(145% at var(--theme-x, 50%) var(--theme-y, 0)); }
+}
+
+/* ③ 滚动条 */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-2) transparent;
+}
+
+::-webkit-scrollbar { width: 11px; height: 11px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: var(--line-2);
+  border: 3px solid transparent;
+  border-radius: 10px;
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-mute);
+  border: 3px solid transparent;
+  background-clip: padding-box;
+}
+
+/* 表单控件跟随主题强调色 */
+:root { accent-color: var(--gold-dk); }
+input, select, textarea { caret-color: var(--gold-dk); }
+
+/* ④ 触屏不保留悬停位移 */
+@media (hover: none) {
+  .btn:hover,
+  .work:hover,
+  .module-card:hover,
+  .showcase-card:hover,
+  .pack-link:hover {
+    transform: none;
+    box-shadow: none;
+  }
+  .work:hover .work-media img,
+  .showcase-card:hover img {
+    transform: none;
+  }
+}
+
+/* 减少动态偏好：关掉新增过渡 */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root),
+  html.theme-reveal::view-transition-new(root) {
+    animation: none !important;
+  }
+}
+
+
+/* ⑤ 区块标题：随进场把左侧标记点亮 */
+.section-head[data-reveal] { border-left-color: transparent; }
+.section-head[data-reveal].is-in {
+  border-left-color: var(--gold);
+  transition: border-left-color .5s var(--ease-out) .12s;
+}
+
+/* ⑥ 卡片/按钮右下切角线，悬停时变强调色 */
+.panel::after,
+.card::after,
+.module-card::after,
+.officer::after,
+.dept::after,
+.tool-feature::after,
+.work-media::after,
+.hero-stats::after,
+.btn::after {
+  transition: background-color .28s ease;
+}
+
+.btn:hover::after,
+.card:hover::after,
+.module-card:hover::after,
+.tool-feature:hover::after,
+.work:hover .work-media::after {
+  background: var(--gold);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .section-head[data-reveal],
+  .section-head[data-reveal].is-in { transition: none; }
+  .panel::after, .card::after, .module-card::after, .officer::after,
+  .dept::after, .tool-feature::after, .work-media::after, .hero-stats::after,
+  .btn::after { transition: none; }
+}
