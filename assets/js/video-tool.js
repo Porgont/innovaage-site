@@ -1202,8 +1202,11 @@
       var bad = unavailableCodecs();
       if (bad.length) {
         codecNote.hidden = false;
-        codecNote.textContent = '当前浏览器不支持 ' + bad.join(' / ') +
-          ' 编码，相关选项已禁用；AV1 录制需要较新的 Chrome / Edge（126 以上），也可换用能录 AV1 的显卡驱动版本';
+        var badAv1 = bad.indexOf('AV1') >= 0;
+        codecNote.textContent = '当前浏览器不支持 ' + bad.join(' / ') + ' 编码，相关选项已禁用；' +
+          (badAv1
+            ? 'AV1 录制需要较新的 Chrome / Edge（126 以上），也可换用支持 AV1 编码的显卡驱动'
+            : '多数场景用 H.264 兼容性最好');
       } else {
         codecNote.hidden = true;
       }
