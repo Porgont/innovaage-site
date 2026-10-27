@@ -9706,3 +9706,39 @@ input, select, textarea { caret-color: var(--gold-dk); }
   .dept::after, .tool-feature::after, .work-media::after, .hero-stats::after,
   .btn::after { transition: none; }
 }
+
+
+/* ⑦ 手机端页眉：品牌收窄、右侧给菜单按钮留位、按钮同高同中线 */
+@media (max-width: 800px) {
+  .site-header .bar {
+    flex-wrap: nowrap;
+    gap: 10px;
+  }
+
+  .brand { min-width: 0; }
+
+  .brand-name {
+    font-size: 15.5px;
+    letter-spacing: 0;
+    white-space: nowrap;
+  }
+
+  .brand-sep,
+  .brand-sub {
+    display: none;
+  }
+
+  .mnav-btn {
+    top: 10px;
+    right: 14px;
+    height: 36px;
+    padding: 0 12px;
+  }
+}
+
+/* ⑧ 320px 档：再收一档，保证页眉只占一行 */
+@media (max-width: 350px) {
+  .site-header .bar { gap: 8px; }
+  .brand-name { font-size: 14px; }
+  .theme-toggle { margin-right: 82px; }
+}
