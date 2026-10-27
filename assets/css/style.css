@@ -9742,3 +9742,7 @@ input, select, textarea { caret-color: var(--gold-dk); }
   .brand-name { font-size: 14px; }
   .theme-toggle { margin-right: 82px; }
 }
+
+
+/* 视频工具：码率模式下拉与其它输入同宽 */
+#v-bitrate-mode { width: 100%; }

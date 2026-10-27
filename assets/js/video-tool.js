@@ -45,7 +45,9 @@
       mimes: [
         'video/mp4;codecs=av01.0.08M.08',
         'video/mp4;codecs=av01.0.05M.08',
-        'video/mp4;codecs=av01'
+        'video/mp4;codecs=av01',
+        // 部分浏览器只开放 WebM 容器里的 AV1，退到 WebM 也能录
+        'video/webm;codecs=av01'
       ],
       isMatch: function (c) { return /^av01/i.test(c || ''); },
       name: 'AV1'
@@ -62,7 +64,8 @@
       : (state.spec.maxDur > 0 ? state.spec.maxDur : 600);
     if (state.spec.maxDur > 0) dur = Math.min(dur, state.spec.maxDur);
     // 源文件本身的码率是天然上限：重编码一般不会比原文件更大
-    var srcMbps = state.file && dur > 0 ? state.file.size * 8 / dur / 1000000 : Infinity;
+    var src = sourceMbps();
+    var srcMbps = src > 0 ? src : Infinity;
     var used = Math.min(bitrateMbps, srcMbps);
     return { mb: used * dur / 8, sec: dur, used: used, capped: used < bitrateMbps - 1e-9 };
   }
@@ -84,11 +87,11 @@
     return 1.5;
   }
 
-  /** 用户指定了目标码率就用它，失败时按 72% 和 50% 依次降级 */
+  /** 指定了码率（手动或源码率）就用它，失败时按 72% 和 50% 依次降级 */
   function bitrateTiers() {
-    var want = Number(state.spec.bitrate) || 0;
-    if (want > 0) {
-      var base = Math.round(Math.min(50, Math.max(0.3, want)) * 1000000);
+    var mode = bitrateMode();
+    if (mode === 'manual' || mode === 'source') {
+      var base = Math.round(Math.min(50, Math.max(0.3, targetMbps())) * 1000000);
       return [base, Math.round(base * 0.72), Math.round(base * 0.5)];
     }
     return BITRATE_TIERS;
@@ -215,6 +218,57 @@
       : '跟随源文件（读不到，按 30 fps）';
   }
 
+  /** 源文件平均码率（Mbps）：体积 ÷ 时长，读不到时长返回 0 */
+  function sourceMbps() {
+    var dur = state.info && isFinite(state.info.duration) && state.info.duration > 0
+      ? state.info.duration
+      : 0;
+    if (!dur || !state.file) return 0;
+    return state.file.size * 8 / dur / 1000000;
+  }
+
+  /** 当前码率模式：auto / source / manual */
+  function bitrateMode() {
+    var m = state.spec.bitrateMode;
+    return (m === 'source' || m === 'manual') ? m : 'auto';
+  }
+
+  /** 实际要用的目标码率（Mbps） */
+  function targetMbps() {
+    var mode = bitrateMode();
+    if (mode === 'manual') {
+      var want = Number(state.spec.bitrate) || 0;
+      return Math.min(50, Math.max(0.3, want));
+    }
+    if (mode === 'source') {
+      var src = sourceMbps();
+      if (src > 0) return src;
+    }
+    return autoMbps();
+  }
+
+  function bitrateLabel() {
+    var mode = bitrateMode();
+    var mbps = targetMbps();
+    if (mode === 'source') {
+      return sourceMbps() > 0
+        ? '保持原码率（约 ' + mbps.toFixed(1) + ' Mbps）'
+        : '保持原码率（读不到，按自动 ' + mbps + ' Mbps）';
+    }
+    if (mode === 'manual') return '手动 ' + mbps + ' Mbps';
+    return '自动（约 ' + mbps + ' Mbps）';
+  }
+
+  /** 当前编码实际会落到哪个容器：MP4 或 WebM */
+  function codecContainer(codecKey) {
+    var mime = pickMime(codecKey);
+    return mime && mime.indexOf('webm') >= 0 ? 'WebM' : 'MP4';
+  }
+
+  function outputExt() {
+    return codecContainer(state.spec.codec).toLowerCase();
+  }
+
   /* ---------- 状态 ---------- */
   var state = {
     file: null,
@@ -228,6 +282,7 @@
       maxDur: 0,
       maxMb: 0,
       bitrate: 0,
+      bitrateMode: 'auto',
       fps: 0,
       locked: false
     },
@@ -510,11 +565,15 @@
     html += diagRow('源比例', ratioLabel(d.width, d.height), null);
     html += diagRow('源帧率', d.fps > 0 ? snapFps(d.fps) + ' fps' : '读不到（转换时按 30 fps 处理）');
 
-    var estBr = state.spec.bitrate > 0 ? state.spec.bitrate : autoMbps();
+    var estBr = targetMbps();
     var est = estimateMb(estBr);
+    var brWord = bitrateMode() === 'source'
+      ? '保持原码率约 ' + estBr.toFixed(1) + ' Mbps'
+      : (bitrateMode() === 'manual'
+        ? estBr + ' Mbps'
+        : '自动按 ' + estBr + ' Mbps 估');
     html += diagRow('预计导出体积', '约 ' + fmtVolume(est.mb) + '（' +
-      (est.capped ? '按源文件码率上限' :
-        (state.spec.bitrate > 0 ? state.spec.bitrate + ' Mbps' : '自动按 ' + estBr + ' Mbps 估')) +
+      (est.capped && bitrateMode() !== 'source' ? '按源文件码率上限' : brWord) +
       '，实际随画面复杂度浮动）', null);
 
     if (d.codecInfo.available) {
@@ -538,10 +597,12 @@
     else html += diagRow('音频', '无法确认（转换时以实际为准）');
 
     html += diagRow('目标规格', d.target.w + ' × ' + d.target.h + '（' +
-      ratioLabel(d.target.w, d.target.h) + '，' + CODECS[state.spec.codec].name + '）');
+      ratioLabel(d.target.w, d.target.h) + '，' + CODECS[state.spec.codec].name +
+      ' / ' + codecContainer(state.spec.codec) + '）');
     html += diagRow('目标帧率', state.spec.fps > 0
       ? state.spec.fps + ' fps（手动指定）'
       : (d.fps > 0 ? snapFps(d.fps) + ' fps（跟随源文件）' : '30 fps（源帧率读不到）'));
+    html += diagRow('目标码率', bitrateLabel());
     html += diagRow('体积', fmtBytes(state.file.size), d.sizeOk);
 
     var issues = [];
@@ -567,8 +628,9 @@
         ['时长', state.spec.maxDur > 0
           ? '取前 ' + Math.min(state.spec.maxDur, Math.ceil(d.duration || state.spec.maxDur)) + ' 秒'
           : '完整保留'],
-        ['编码', CODECS[state.spec.codec].name + ' / MP4'],
-        ['帧率', fpsLabel()]
+        ['编码', CODECS[state.spec.codec].name + ' / ' + codecContainer(state.spec.codec)],
+        ['帧率', fpsLabel()],
+        ['码率', bitrateLabel()]
       ];
       plan.innerHTML = '<b class="plan-title">将要执行</b>' + planRows.map(function (r) {
         return '<span class="plan-row"><i>' + r[0] + '</i><b>' + escapeHtml(r[1]) + '</b></span>';
@@ -702,12 +764,14 @@
           // 先记下音轨情况，再 cleanup —— cleanup 会把 audioTracks 清空
           var hadAudio = audioTracks.length > 0;
           var mimeUsed = rec.mimeType;
+          var type = (mimeUsed || mime).split(';')[0];
           cleanup();
           resolve({
-            blob: new Blob(chunks, { type: 'video/mp4' }),
+            blob: new Blob(chunks, { type: type }),
             mimeUsed: mimeUsed,
             hadAudio: hadAudio,
-            seconds: limit
+            seconds: limit,
+            container: type.indexOf('webm') >= 0 ? 'webm' : 'mp4'
           });
         };
 
@@ -781,7 +845,11 @@
       document.body.appendChild(v);
       v.src = url;
 
-      var out = { url: url, duration: 0, width: 0, height: 0, codec: '', isMp4: false, playable: false };
+      var out = {
+        url: url, duration: 0, width: 0, height: 0,
+        durationKnown: false,
+        codec: '', isMp4: false, playable: false
+      };
       var settled = false;
       function done() {
         if (settled) return;
@@ -796,7 +864,9 @@
         out.duration = v.duration;
         out.width = v.videoWidth;
         out.height = v.videoHeight;
-        out.playable = v.videoWidth > 0 && isFinite(v.duration) && v.duration > 0;
+        out.durationKnown = isFinite(v.duration) && v.duration > 0;
+        // WebM 录制结果常不写总时长，能读出画面尺寸就算可播放
+        out.playable = v.videoWidth > 0 && v.videoHeight > 0;
         done();
       };
       v.onerror = done;
@@ -856,7 +926,7 @@
       lastResult = { out: out, verify: verify, bitrate: bitrate };
       state.attempts.push({ bitrate: bitrate, stage: 'verify', size: out.blob.size, playable: verify.playable });
 
-      if (verify.playable && verify.isMp4) return lastResult;
+      if (verify.playable && (verify.isMp4 || out.container === 'webm')) return lastResult;
       lastError = new Error('这次录出来的文件无法播放（码率 ' + (bitrate / 1000000).toFixed(1) + ' Mbps 过高）');
     }
 
@@ -884,15 +954,21 @@
     rows += diagRow('文件名', r.name);
     rows += diagRow('体积', fmtBytes(r.blob.size) +
       (r.estimatedMb ? '（导出前预估约 ' + fmtVolume(r.estimatedMb) + '）' : ''));
-    rows += diagRow('时长', fmtTime(r.verify.duration),
-      state.spec.maxDur <= 0 ? null : r.verify.duration <= state.spec.maxDur + 0.5);
+    rows += diagRow('时长', r.verify.durationKnown
+      ? fmtTime(r.verify.duration)
+      : '未知（WebM 未写入总时长）',
+      state.spec.maxDur <= 0 ? null : (!r.verify.durationKnown || r.verify.duration <= state.spec.maxDur + 0.5));
     rows += diagRow('分辨率', dw + ' × ' + dh, dw === r.target.w && dh === r.target.h);
     rows += diagRow('比例', ratioLabel(dw, dh));
-    rows += diagRow('容器', r.verify.isMp4 ? 'MP4' : '未知（复检未能解析）', r.verify.isMp4);
-    rows += diagRow('编码', r.verify.codec || '未知',
-      CODECS[state.spec.codec].isMatch(r.verify.codec) ? true : null);
+    var containerName = r.container === 'webm' ? 'WebM' : (r.verify.isMp4 ? 'MP4' : '未知（复检未能解析）');
+    rows += diagRow('容器', containerName, r.container === 'webm' ? true : r.verify.isMp4);
+    var shownCodec = r.verify.codec ||
+      (r.container === 'webm' ? CODECS[state.spec.codec].name : '未知');
+    rows += diagRow('编码', shownCodec,
+      CODECS[state.spec.codec].isMatch(r.verify.codec) || r.container === 'webm' ? true : null);
     if (r.targetFps) rows += diagRow('帧率', r.targetFps + ' fps');
-    if (r.bitrate) rows += diagRow('目标码率', (r.bitrate / 1000000).toFixed(1) + ' Mbps');
+    if (r.bitrate) rows += diagRow('目标码率', (r.bitrate / 1000000).toFixed(1) + ' Mbps' +
+      (bitrateMode() === 'source' ? '（源码率）' : ''));
     rows += diagRow('音频', r.hadAudio ? '已保留' : '无（原视频没有可用的音轨）');
 
     var host = $('#v-result-stats');
@@ -984,17 +1060,19 @@
       var target = d.target;
 
       var base = (state.file.name || 'video').replace(/\.[^.]+$/, '');
+      var ext = out.container === 'webm' ? 'webm' : 'mp4';
       var name = base + '-' + target.w + 'x' + target.h + '-' +
-        CODECS[state.spec.codec].name.replace('.', '') + '-' + d.targetFps + 'fps.mp4';
+        CODECS[state.spec.codec].name.replace('.', '') + '-' + d.targetFps + 'fps.' + ext;
 
       state.result = {
-        estimatedMb: estimateMb(state.spec.bitrate > 0 ? state.spec.bitrate : autoMbps()).mb,
+        estimatedMb: estimateMb(targetMbps()).mb,
         blob: out.blob,
         verify: verify,
         name: name,
         mimeUsed: out.mimeUsed,
         hadAudio: out.hadAudio,
         bitrate: converted.bitrate,
+        container: out.container,
         target: target,
         targetFps: d.targetFps
       };
@@ -1003,9 +1081,10 @@
       renderResult(state.result);
 
       var allOk = verify.playable &&
-        (state.spec.maxDur <= 0 || verify.duration <= state.spec.maxDur + 0.5) &&
+        (state.spec.maxDur <= 0 || !verify.durationKnown || verify.duration <= state.spec.maxDur + 0.5) &&
         verify.width === target.w && verify.height === target.h &&
-        verify.isMp4 && CODECS[state.spec.codec].isMatch(verify.codec);
+        (out.container === 'webm' || verify.isMp4) &&
+        (out.container === 'webm' || CODECS[state.spec.codec].isMatch(verify.codec));
 
       if (allOk) {
         state.convCount = (state.convCount || 0) + 1;
@@ -1098,7 +1177,10 @@
     if (codecEl) {
       codecEl.value = s.codec;
       $$('option', codecEl).forEach(function (o) {
-        if (o.value !== 'h264' && !codecAvailable(o.value)) o.disabled = true;
+        if (!o.dataset.label) o.dataset.label = o.textContent.trim();
+        var ok = o.value === 'h264' || codecAvailable(o.value);
+        o.disabled = !ok;
+        o.textContent = o.dataset.label + (ok ? '' : '（此浏览器不支持）');
       });
     }
 
@@ -1121,29 +1203,39 @@
       if (bad.length) {
         codecNote.hidden = false;
         codecNote.textContent = '当前浏览器不支持 ' + bad.join(' / ') +
-          ' 编码，相关选项已禁用；多数场景用 H.264 兼容性最好';
+          ' 编码，相关选项已禁用；AV1 录制需要较新的 Chrome / Edge（126 以上），也可换用能录 AV1 的显卡驱动版本';
       } else {
         codecNote.hidden = true;
       }
     }
 
-    // 目标码率
+    // 目标码率：自动 / 保持原码率 / 手动
+    var modeEl = $('#v-bitrate-mode');
+    if (modeEl) modeEl.value = bitrateMode();
+
+    var brField = $('#v-bitrate-field');
+    if (brField) brField.hidden = bitrateMode() !== 'manual';
+
     var brEl = $('#v-bitrate');
     if (brEl) brEl.value = s.bitrate;
 
     var brNote = $('#v-bitrate-est');
     if (brNote) {
+      var srcBr = sourceMbps();
+      var brEst = estimateMb(targetMbps());
       if (!state.info) {
         brNote.textContent = '选好视频后按实际时长估算导出体积';
-      } else if (s.bitrate > 0) {
-        var est = estimateMb(s.bitrate);
-        brNote.textContent = (est.capped ? '按源文件码率估算' : '按 ' + s.bitrate + ' Mbps 估算') +
-          '，' + est.sec.toFixed(1) + ' 秒导出约 ' + fmtVolume(est.mb);
+      } else if (bitrateMode() === 'source') {
+        brNote.textContent = (srcBr > 0
+          ? '保持源文件码率约 ' + srcBr.toFixed(1) + ' Mbps'
+          : '读不到源文件码率，改按自动处理') +
+          '，' + brEst.sec.toFixed(1) + ' 秒约 ' + fmtVolume(brEst.mb);
+      } else if (bitrateMode() === 'manual') {
+        brNote.textContent = '按 ' + targetMbps() + ' Mbps 估算，' +
+          brEst.sec.toFixed(1) + ' 秒约 ' + fmtVolume(brEst.mb);
       } else {
-        var autoBr = autoMbps();
-        var autoEst = estimateMb(autoBr);
-        brNote.textContent = '自动：' + (autoEst.capped ? '按源文件码率估算' : '按 ' + autoBr + ' Mbps 估算') +
-          '，' + autoEst.sec.toFixed(1) + ' 秒导出约 ' + fmtVolume(autoEst.mb);
+        brNote.textContent = '自动：按 ' + autoMbps() + ' Mbps 估算，' +
+          brEst.sec.toFixed(1) + ' 秒约 ' + fmtVolume(brEst.mb);
       }
     }
 
@@ -1154,22 +1246,19 @@
         summary.innerHTML = '<p class="spec-empty">选好视频后显示目标规格与预计体积</p>';
       } else {
         var t = resolveTarget();
-        var volText;
-        if (s.bitrate > 0) {
-          var se = estimateMb(s.bitrate);
-          volText = '约 ' + fmtVolume(se.mb) +
-            (se.capped ? '（源文件码率上限）' : '（' + s.bitrate + ' Mbps）');
-        } else {
-          var sAutoBr = autoMbps();
-          var sAuto = estimateMb(sAutoBr);
-          volText = '约 ' + fmtVolume(sAuto.mb) +
-            (sAuto.capped ? '（源文件码率上限）' : '（自动约 ' + sAutoBr + ' Mbps）');
-        }
+        var usedBr = targetMbps();
+        var se = estimateMb(usedBr);
+        var brDesc = bitrateMode() === 'source'
+          ? (sourceMbps() > 0 ? '源文件码率' : '源文件码率读不到，按自动')
+          : (bitrateMode() === 'manual' ? usedBr + ' Mbps' : '自动 ' + usedBr + ' Mbps');
+        var volText = '约 ' + fmtVolume(se.mb) + '（' + brDesc + '）';
         summary.innerHTML =
           '<div class="spec-line"><span>输出</span><b>' + t.w + ' × ' + t.h +
             '（' + ratioLabel(t.w, t.h) + '）</b></div>' +
-          '<div class="spec-line"><span>编码</span><b>' + CODECS[s.codec].name + ' / MP4</b></div>' +
+          '<div class="spec-line"><span>编码</span><b>' + CODECS[s.codec].name +
+            ' / ' + codecContainer(s.codec) + '</b></div>' +
           '<div class="spec-line"><span>帧率</span><b>' + fpsLabel() + '</b></div>' +
+          '<div class="spec-line"><span>码率</span><b>' + bitrateLabel() + '</b></div>' +
           '<div class="spec-line spec-line--volume"><span>预估体积</span><b>' + volText + '</b></div>' +
           '<div class="spec-line"><span>最长时长</span><b>' + (s.maxDur > 0 ? s.maxDur + ' 秒' : '不限') + '</b></div>';
       }
@@ -1305,11 +1394,25 @@
       });
     }
 
-    // 目标码率
+    // 目标码率：自动 / 保持原码率 / 手动
+    var modeEl = $('#v-bitrate-mode');
+    if (modeEl) {
+      modeEl.addEventListener('change', function () {
+        state.spec.bitrateMode = modeEl.value;
+        if (state.spec.bitrateMode === 'manual' && !(state.spec.bitrate > 0)) {
+          state.spec.bitrate = autoMbps();
+        }
+        syncSpecUi();
+        refreshDiagnosis();
+      });
+    }
+
     var brEl = $('#v-bitrate');
     if (brEl) {
       brEl.addEventListener('change', function () {
-        state.spec.bitrate = Math.max(0, Math.min(50, Number(brEl.value) || 0));
+        var v = Number(brEl.value) || 0;
+        state.spec.bitrate = Math.max(0.3, Math.min(50, v || autoMbps()));
+        state.spec.bitrateMode = 'manual';
         syncSpecUi();
         refreshDiagnosis();
       });
@@ -1347,6 +1450,10 @@
       resolveFps: resolveFps,
       sourceFps: sourceFps,
       fpsLabel: fpsLabel,
+      sourceMbps: sourceMbps,
+      targetMbps: targetMbps,
+      bitrateLabel: bitrateLabel,
+      codecContainer: codecContainer,
       ratioLabel: ratioLabel,
       alignDim: alignDim,
       resolveTarget: resolveTarget,
