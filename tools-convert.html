@@ -35,9 +35,9 @@
 })();
 </script>
 <link rel="preload" href="assets/fonts/noto-sans-sc.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/fonts.css?v=20261332">
-<link rel="stylesheet" href="assets/css/theme.css?v=20261332">
-<link rel="stylesheet" href="assets/css/style.css?v=20261332">
+<link rel="stylesheet" href="assets/css/fonts.css?v=20261333">
+<link rel="stylesheet" href="assets/css/theme.css?v=20261333">
+<link rel="stylesheet" href="assets/css/style.css?v=20261333">
   <link rel="alternate" type="application/rss+xml" title="创想时代开发组 · 公告" href="feed.xml">
 </head>
 
@@ -114,7 +114,7 @@
       <p class="page-head__num" aria-hidden="true">04</p>
       <h1 style="font-size:clamp(24px,3.6vw,34px)">格式转换</h1>
       <div class="page-note">
-        <p>常用格式转换放在一页：音频提取、PDF 转 Word、JSON 与 CSV 互转、Base64 编解码</p>
+        <p>常用格式转换放在一页：音频提取、PDF 转 Word、Markdown 与 HTML 互转、图片格式互转、字幕 SRT 与 VTT 互转、进制转换、JSON 与 CSV 互转、Base64 编解码</p>
         <p>音频可输出 WAV 或 MP3，采样率、声道和 MP3 码率可选；PDF 转成可编辑的 Word，全部在本地完成，文件不上传</p>
       </div>
 
@@ -296,6 +296,163 @@
     </div>
   </section>
 
+  <!-- ============ 五、Markdown ⇄ HTML ============ -->
+  <section class="section section--tight" id="md">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker">Markdown</span>
+        <h2>Markdown ⇄ HTML</h2>
+        <p>Markdown 渲染成 HTML，HTML 还原成 Markdown</p>
+      </div>
+
+      <div class="panel">
+        <div class="grid grid--2">
+          <div class="field">
+            <label for="md-in">输入</label>
+            <textarea id="md-in" rows="12" spellcheck="false"
+              placeholder="# 标题&#10;支持 **加粗**、*斜体*、`代码`、列表、链接等常用语法"></textarea>
+          </div>
+          <div class="field">
+            <label for="md-out">输出</label>
+            <textarea id="md-out" rows="12" spellcheck="false" readonly></textarea>
+          </div>
+        </div>
+
+        <div class="btn-row" style="margin-top:16px">
+          <button class="btn btn--sm" type="button" id="md-to-html">Markdown → HTML</button>
+          <button class="btn btn--sm" type="button" id="md-to-markdown">HTML → Markdown</button>
+          <button class="btn btn--ghost btn--sm" type="button" id="md-copy">复制输出</button>
+        </div>
+
+        <p class="note" id="md-note" style="margin-top:12px">
+          转换由自托管的 marked 与 turndown 完成，内容不会上传
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 六、图片格式互转 ============ -->
+  <section class="section section--tight" id="imgconv">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker">Image</span>
+        <h2>图片格式互转</h2>
+        <p>PNG / JPG / WebP / BMP 之间互转，透明区域可垫白底</p>
+      </div>
+
+      <div class="panel">
+        <label class="dropzone" id="imgconv-dropzone" for="imgconv-input" tabindex="0">
+          <span class="dropzone-icon" aria-hidden="true">🖼️</span>
+          <b>点这里选图片，或把图片拖进来</b>
+          <span>支持 PNG / JPG / WebP / BMP，一次选一张</span>
+          <input type="file" id="imgconv-input" accept="image/*" hidden>
+        </label>
+
+        <div class="file-list" id="imgconv-file" hidden></div>
+
+        <div class="grid grid--2" style="margin-top:18px">
+          <div class="field">
+            <label>输出格式</label>
+            <div class="preset-row">
+              <button class="chip is-active" type="button" data-img-out="image/png">PNG（无损）</button>
+              <button class="chip" type="button" data-img-out="image/jpeg">JPG（有损）</button>
+              <button class="chip" type="button" data-img-out="image/webp">WebP（最小）</button>
+              <button class="chip" type="button" data-img-out="image/bmp">BMP（不压缩）</button>
+            </div>
+          </div>
+
+          <div class="field" id="imgconv-quality-field">
+            <label for="imgconv-quality">JPG / WebP 画质：<b id="imgconv-quality-value">92</b></label>
+            <input type="range" id="imgconv-quality" min="40" max="100" value="92" step="1" style="width:100%">
+          </div>
+        </div>
+
+        <div class="field" style="margin-top:18px">
+          <label>
+            <input type="checkbox" id="imgconv-whitebg" checked>
+            透明区域垫白底（转 JPG / BMP 时必选，否则透明会变黑）
+          </label>
+        </div>
+
+        <div class="btn-row" style="margin-top:20px">
+          <button class="btn" type="button" id="imgconv-run" disabled>转换格式</button>
+          <button class="btn btn--ghost btn--sm" type="button" id="imgconv-clear" hidden>清空</button>
+        </div>
+
+        <p class="note" id="imgconv-note" style="margin-top:14px">
+          转换在本地完成，图片不会上传
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 七、字幕 SRT ⇄ VTT ============ -->
+  <section class="section section--tight" id="sub">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker">Subtitle</span>
+        <h2>字幕 SRT ⇄ VTT</h2>
+        <p>SRT 转 WebVTT，或 WebVTT 还原成 SRT</p>
+      </div>
+
+      <div class="panel">
+        <div class="grid grid--2">
+          <div class="field">
+            <label for="sub-in">输入</label>
+            <textarea id="sub-in" rows="10" spellcheck="false"
+              placeholder="1&#10;00:00:01,000 --> 00:00:03,000&#10;你好，世界"></textarea>
+          </div>
+          <div class="field">
+            <label for="sub-out">输出</label>
+            <textarea id="sub-out" rows="10" spellcheck="false" readonly></textarea>
+          </div>
+        </div>
+
+        <div class="btn-row" style="margin-top:16px">
+          <button class="btn btn--sm" type="button" id="sub-srt2vtt">SRT → VTT</button>
+          <button class="btn btn--sm" type="button" id="sub-vtt2srt">VTT → SRT</button>
+          <button class="btn btn--ghost btn--sm" type="button" id="sub-copy">复制输出</button>
+        </div>
+
+        <p class="note" id="sub-note" style="margin-top:12px">
+          时间戳自动换算（逗号 ⇄ 小数点），文件全部在本地处理
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 八、进制转换 ============ -->
+  <section class="section section--tight" id="radix">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker">Radix</span>
+        <h2>进制转换</h2>
+        <p>十进制、十六进制、二进制互相转换，写 Add-on 填色值与数据值随手查</p>
+      </div>
+
+      <div class="panel">
+        <div class="grid grid--3" style="gap:14px">
+          <div class="field">
+            <label for="radix-dec">十进制</label>
+            <input type="text" id="radix-dec" data-base="10" inputmode="numeric" spellcheck="false" placeholder="255">
+          </div>
+          <div class="field">
+            <label for="radix-hex">十六进制</label>
+            <input type="text" id="radix-hex" data-base="16" spellcheck="false" placeholder="0xFF 或 FF">
+          </div>
+          <div class="field">
+            <label for="radix-bin">二进制</label>
+            <input type="text" id="radix-bin" data-base="2" inputmode="numeric" spellcheck="false" placeholder="11111111">
+          </div>
+        </div>
+
+        <p class="note" id="radix-note" style="margin-top:12px">
+          支持 0 ~ 2^53-1 的整数，输入任意一格，其余两格自动更新
+        </p>
+      </div>
+    </div>
+  </section>
+
 </main>
 
 <footer class="site-footer">
@@ -343,9 +500,11 @@
     </div>
   </div>
 </footer>
-<script src="assets/js/site.js?v=20261332"></script>
+<script src="assets/js/site.js?v=20261333"></script>
 <script src="assets/vendor/lamejs/lamejs.iife.js"></script>
-<script src="assets/js/convert-tool.js?v=20261323"></script>
+<script src="assets/js/convert-tool.js?v=20261333"></script>
 <script src="assets/js/pdf-tool.js"></script>
+<script src="assets/vendor/marked/marked.umd.js"></script>
+<script src="assets/vendor/turndown/turndown.js"></script>
 </body>
 </html>

@@ -1,7 +1,8 @@
 /* ============================================================
    创想时代开发组 · 工具箱
    ------------------------------------------------------------
-   当前只有一件工具：把图片压到指定分辨率以内（默认 1000 × 4000）。
+   工具一：把图片压到指定分辨率以内（默认 1000 × 4000）。
+   工具二：透明底图片加白底，输出格式与原图一致。
    全部在浏览器本地完成，图片不上传。
 
    「1000 × 4000」是竖长画布：宽最多 1000、高最多 4000。
@@ -310,6 +311,153 @@
     return '<div><dt>' + escapeHtml(k) + '</dt><dd>' + escapeHtml(v) + '</dd></div>';
   }
 
+  /* ---------- 透明底加白底 ---------- */
+
+  /* 输出格式跟着原图走：PNG→PNG、WebP→WebP、JPG→JPG（JPG 无透明不受影响）。
+     BMP 这类浏览器导不出的，回退 PNG 并提示。 */
+  const WHITE_OK = { 'image/png': 'png', 'image/webp': 'webp', 'image/jpeg': 'jpg' };
+
+  const whiteBg = { file: null, url: null };
+
+  function whiteBgStatus(kind, html) {
+    const box = $('#whitebg-status');
+    if (!box) return;
+    box.hidden = false;
+    box.className = 'form-status form-status--' + kind;
+    box.innerHTML = html;
+  }
+
+  /** 画到原尺寸 canvas，看有没有 alpha < 255 的像素 */
+  function hasAlpha(source, w, h) {
+    const c = document.createElement('canvas');
+    c.width = w;
+    c.height = h;
+    const ctx = c.getContext('2d', { willReadFrequently: true });
+    ctx.drawImage(source, 0, 0, w, h);
+    const data = ctx.getImageData(0, 0, w, h).data;
+    for (let i = 3; i < data.length; i += 4) {
+      if (data[i] < 255) return true;
+    }
+    return false;
+  }
+
+  async function runWhiteBg() {
+    const file = whiteBg.file;
+    if (!file) return;
+
+    const btn = $('#whitebg-run');
+    if (btn) { btn.disabled = true; btn.textContent = '处理中…'; }
+    whiteBgStatus('ok', '正在检查透明通道…');
+
+    let decoded = null;
+    try {
+      decoded = await decode(file);
+      const w = decoded.width;
+      const h = decoded.height;
+
+      const resultBox = $('#whitebg-result');
+      if (resultBox) { resultBox.hidden = true; resultBox.innerHTML = ''; }
+
+      const srcType = file.type || '';
+      const outExt = WHITE_OK[srcType] || 'png';
+      const needPngFallback = !WHITE_OK[srcType];
+
+      if (!hasAlpha(decoded.source, w, h)) {
+        whiteBgStatus('err', '这张图没有透明区域，不需要加白底。');
+        return;
+      }
+
+      const canvas = document.createElement('canvas');
+      canvas.width = w;
+      canvas.height = h;
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, w, h);
+      ctx.drawImage(decoded.source, 0, 0, w, h);
+
+      const outType = needPngFallback ? 'image/png' : srcType;
+      const blob = await canvasToBlob(canvas, outType, 1);
+
+      if (whiteBg.url) URL.revokeObjectURL(whiteBg.url);
+      whiteBg.url = URL.createObjectURL(blob);
+
+      const name = file.name.replace(/\.[^.]+$/, '');
+      const outName = name + '-白底.' + outExt;
+
+      if (resultBox) {
+        resultBox.hidden = false;
+        const a = document.createElement('a');
+        a.className = 'btn btn--sm';
+        a.href = whiteBg.url;
+        a.download = outName;
+        a.textContent = '下载 ' + outName + '（' + fmtBytes(blob.size) + '）';
+        resultBox.appendChild(a);
+      }
+
+      whiteBgStatus('ok', '已加白底，' + w + ' × ' + h + '，输出仍是 ' + outExt.toUpperCase() +
+        (needPngFallback ? '（原格式导不出，已回退 PNG）' : '') + '。');
+    } catch (err) {
+      whiteBgStatus('err', '处理失败：' + escapeHtml(err.message));
+    } finally {
+      if (decoded && decoded.revoke) decoded.revoke();
+      if (btn) { btn.disabled = false; btn.textContent = '加白底'; }
+    }
+  }
+
+  function renderWhiteBgFile() {
+    const box = $('#whitebg-file');
+    const runBtn = $('#whitebg-run');
+    if (!box) return;
+    if (!whiteBg.file) {
+      box.hidden = true;
+      box.innerHTML = '';
+      if (runBtn) runBtn.disabled = true;
+      return;
+    }
+    box.hidden = false;
+    box.innerHTML = '<div class="file-item"><span class="file-name">' + escapeHtml(whiteBg.file.name) +
+      '</span><span class="file-size">' + fmtBytes(whiteBg.file.size) + '</span></div>';
+    if (runBtn) runBtn.disabled = false;
+  }
+
+  function initWhiteBg() {
+    const dropzone = $('#whitebg-dropzone');
+    const input = $('#whitebg-input');
+    if (!dropzone || !input) return;
+
+    input.addEventListener('change', () => {
+      if (input.files && input.files[0]) {
+        whiteBg.file = input.files[0];
+        const box = $('#whitebg-status');
+        if (box) { box.hidden = true; box.innerHTML = ''; }
+        renderWhiteBgFile();
+      }
+      input.value = '';
+    });
+
+    ['dragenter', 'dragover'].forEach((ev) =>
+      dropzone.addEventListener(ev, (e) => { e.preventDefault(); dropzone.classList.add('is-over'); }));
+
+    ['dragleave', 'drop'].forEach((ev) =>
+      dropzone.addEventListener(ev, (e) => { e.preventDefault(); dropzone.classList.remove('is-over'); }));
+
+    dropzone.addEventListener('drop', (e) => {
+      const f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+      if (f) {
+        whiteBg.file = f;
+        const box = $('#whitebg-status');
+        if (box) { box.hidden = true; box.innerHTML = ''; }
+        renderWhiteBgFile();
+      }
+    });
+
+    dropzone.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); input.click(); }
+    });
+
+    $('#whitebg-run').addEventListener('click', runWhiteBg);
+  }
+
   /* ---------- 事件绑定 ---------- */
   function init() {
     const dropzone = $('#dropzone');
@@ -461,11 +609,14 @@
       fitSize: fitSize,
       state: state,
       addFiles: addFiles,
-      run: run
+      run: run,
+      hasAlpha: hasAlpha,
+      whiteBg: whiteBg
     };
 
     syncMax();
     renderFileList();
+    initWhiteBg();
   }
 
   if (document.readyState === 'loading') {

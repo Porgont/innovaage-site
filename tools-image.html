@@ -35,9 +35,9 @@
 })();
 </script>
 <link rel="preload" href="assets/fonts/noto-sans-sc.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/fonts.css?v=20261332">
-<link rel="stylesheet" href="assets/css/theme.css?v=20261332">
-<link rel="stylesheet" href="assets/css/style.css?v=20261332">
+<link rel="stylesheet" href="assets/css/fonts.css?v=20261333">
+<link rel="stylesheet" href="assets/css/theme.css?v=20261333">
+<link rel="stylesheet" href="assets/css/style.css?v=20261333">
   <link rel="alternate" type="application/rss+xml" title="创想时代开发组 · 公告" href="feed.xml">
 </head>
 
@@ -192,6 +192,29 @@
               <button class="btn btn--ghost" type="button" id="clear-btn" disabled>清空</button>
             </div>
           </div>
+
+          <div class="panel" style="margin-top:18px">
+            <h3 style="margin-top:0">透明底加白底</h3>
+            <p class="note" style="margin:6px 0 12px">
+              给透明背景的图片垫上白底，输出格式与原图一致（PNG→PNG、WebP→WebP），JPG 没有透明通道不受影响
+            </p>
+
+            <label class="dropzone" id="whitebg-dropzone" for="whitebg-input" tabindex="0">
+              <span class="dropzone-icon" aria-hidden="true">🤍</span>
+              <b>点这里选透明底图片，或把图片拖进来</b>
+              <span>支持 PNG / WebP，一次一张</span>
+              <input type="file" id="whitebg-input" accept="image/*" hidden>
+            </label>
+
+            <div class="file-list" id="whitebg-file" hidden></div>
+
+            <div class="btn-row" style="margin-top:16px">
+              <button class="btn" type="button" id="whitebg-run" disabled>加白底</button>
+            </div>
+
+            <div class="form-status" id="whitebg-status" hidden role="status" aria-live="polite"></div>
+            <div class="btn-row" id="whitebg-result" hidden style="margin-top:12px"></div>
+          </div>
         </div>
 
         <!-- ---------- 右：预览与下载 ---------- -->
@@ -292,7 +315,7 @@
     </div>
   </div>
 </footer>
-<script src="assets/js/site.js?v=20261332"></script>
-<script src="assets/js/toolbox.js"></script>
+<script src="assets/js/site.js?v=20261333"></script>
+<script src="assets/js/toolbox.js?v=20261333"></script>
 </body>
 </html>

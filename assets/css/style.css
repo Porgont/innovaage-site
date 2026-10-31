@@ -421,6 +421,7 @@ code {
 }
 
 .grid--2 { grid-template-columns: repeat(auto-fill, minmax(min(100%, 350px), 1fr)); }
+.grid--3 { grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr)); }
 .grid--4 { grid-template-columns: repeat(auto-fill, minmax(215px, 1fr)); }
 
 /* 卡片：细边框盒子，顶部一道黄标记，悬停时边框转黑 */
