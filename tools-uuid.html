@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UUID 生成器 | 工具箱 | 创想时代开发组</title>
+<meta name="description" content="在浏览器里批量生成 UUID v4，一键复制。Add-on 开发给实体、物品、方块分配标识用，不上传服务器。">
+<meta name="keywords" content="UUID,guid,Add-on,MCBE,基岩版,随机标识">
+<link rel="canonical" href="https://innovaage.cn/tools-uuid.html">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0e1013" media="(prefers-color-scheme: dark)">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="创想时代开发组">
+<meta property="og:title" content="UUID 生成器 | 工具箱 | 创想时代开发组">
+<meta property="og:description" content="在浏览器里批量生成 UUID v4，一键复制。Add-on 开发给实体、物品、方块分配标识用。">
+<meta property="og:url" content="https://innovaage.cn/tools-uuid.html">
+<meta property="og:image" content="https://innovaage.cn/assets/img/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://innovaage.cn/assets/img/og-image.jpg">
+
+<link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
+<link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#61a5ff">
+<!-- 主题：在页面渲染前决定用哪套，避免刷新时闪一下 -->
+<script>
+(function () {
+  try {
+    var t = localStorage.getItem('ia-theme');
+    if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+  } catch (e) {}
+})();
+</script>
+<link rel="preload" href="assets/fonts/noto-sans-sc.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/css/fonts.css?v=20261332">
+<link rel="stylesheet" href="assets/css/theme.css?v=20261332">
+<link rel="stylesheet" href="assets/css/style.css?v=20261332">
+  <link rel="alternate" type="application/rss+xml" title="创想时代开发组 · 公告" href="feed.xml">
+</head>
+
+<body data-page="tools">
+<a class="skip-link" href="#main">跳到主要内容</a>
+
+<header class="site-header">
+  <div class="wrap bar">
+    <a class="brand" href="index.html">
+      <img class="brand-mark" src="assets/img/logo-mark.png" alt="" width="112" height="128" aria-hidden="true">
+      <strong class="brand-name">创想时代开发组</strong>
+      <span class="brand-sep" aria-hidden="true"></span>
+      <span class="brand-sub">官网</span>
+    </a>
+
+    <nav class="nav" aria-label="主导航">
+      <a href="index.html" data-nav="home"><span>首页</span><small>INDEX</small></a>
+      <a href="works.html" data-nav="works"><span>作品</span><small>WORKS</small></a>
+      <a href="news.html" data-nav="news"><span>公告</span><small>NEWS</small></a>
+      <a href="tools.html" data-nav="tools"><span>工具箱</span><small>TOOLS</small></a>
+      <a href="join.html" data-nav="join"><span>加入我们</span><small>JOIN</small></a>
+      <a href="about.html" data-nav="about"><span>关于我们</span><small>ABOUT</small></a>
+    </nav>
+
+    <button class="theme-toggle" id="theme-toggle" type="button"
+            aria-label="切换深浅主题" title="切换深浅主题">
+      <span class="ico" data-theme-icon aria-hidden="true">◐</span>
+      <span data-theme-label>主题</span>
+    </button>
+
+    <a class="btn btn--sm header-cta" href="join.html#panel-form">加入我们</a>
+  </div>
+</header>
+
+<!-- mobile-drawer:start -->
+<div class="mnav">
+  <input type="checkbox" id="mnav-toggle" class="mnav-toggle" aria-label="展开或收起导航菜单">
+
+  <label class="mnav-btn" for="mnav-toggle" aria-label="打开导航菜单">
+    <span class="mnav-bars" aria-hidden="true"><i></i><i></i><i></i></span>
+    <span class="mnav-label">菜单</span>
+  </label>
+
+  <label class="mnav-overlay" for="mnav-toggle" aria-label="关闭导航菜单"></label>
+
+  <div class="mnav-drawer">
+    <div class="mnav-head">
+      <span class="mnav-title">站内导航</span>
+      <label class="mnav-close" for="mnav-toggle" aria-label="关闭导航菜单">×</label>
+    </div>
+    <nav class="mnav-links" aria-label="手机端导航">
+      <a href="index.html" data-nav="home">首页</a>
+      <a href="works.html" data-nav="works">作品</a>
+      <a href="news.html" data-nav="news">公告</a>
+      <a href="tools.html" data-nav="tools">工具箱</a>
+      <a href="join.html" data-nav="join">加入我们</a>
+      <a href="about.html" data-nav="about">关于我们</a>
+    </nav>
+    <a class="btn btn--sm mnav-cta" href="join.html#panel-form">加入我们</a>
+  </div>
+</div>
+<!-- mobile-drawer:end -->
+
+<main id="main">
+
+  <section class="hero hero--page">
+    <div class="wrap">
+      <p class="crumb"><a href="tools.html">工具箱</a> / UUID 生成器</p>
+      <p class="page-head__code"><a class="page-head__home" href="index.html">INDEX</a> <span>/</span> 04 <span>/</span> <b>TOOLS · UUID</b></p>
+      <p class="page-head__num" aria-hidden="true">04</p>
+      <h1 style="font-size:clamp(24px,3.6vw,34px)">UUID 生成器</h1>
+      <div class="page-note">
+        <p>一键批量生成 UUID v4，Add-on 开发给实体、物品、方块、菜单分配标识用</p>
+        <p>UUID 在浏览器本地用加密随机数生成，不上传任何服务器</p>
+      </div>
+
+      <div class="page-index" id="page-index" hidden></div>
+    </div>
+  </section>
+
+  <section class="section section--tight" id="uuid">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker">UUID</span>
+        <h2>生成与复制</h2>
+        <p>选数量，点生成，复制即用</p>
+      </div>
+
+      <div class="panel">
+        <div class="field">
+          <label>数量</label>
+          <div class="preset-row" id="uuid-count">
+            <button class="chip" type="button" data-count="1">1 个</button>
+            <button class="chip is-active" type="button" data-count="5">5 个</button>
+            <button class="chip" type="button" data-count="10">10 个</button>
+            <button class="chip" type="button" data-count="20">20 个</button>
+          </div>
+        </div>
+
+        <div class="btn-row" style="margin-top:18px">
+          <button class="btn" type="button" id="uuid-run">生成 UUID</button>
+          <button class="btn btn--ghost btn--sm" type="button" id="uuid-copy">复制全部</button>
+          <button class="btn btn--ghost btn--sm" type="button" id="uuid-clear">清空</button>
+        </div>
+
+        <div class="field" style="margin-top:18px">
+          <label for="uuid-out">输出</label>
+          <textarea id="uuid-out" rows="12" spellcheck="false" readonly placeholder="点上面的「生成 UUID」按钮"></textarea>
+        </div>
+
+        <p class="note" id="uuid-note" style="margin-top:12px">
+          每次生成都用 window.crypto.getRandomValues，重复概率可以忽略；点「生成 UUID」会清空旧结果
+        </p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <h4>创想时代开发组</h4>
+        <p style="margin:0">
+          Innova-Age Development Team<br>
+          专注 Minecraft 基岩版（MCBE）资源创作，<br>
+          成立于 2016 年 3 月 10 日
+        </p>
+      </div>
+
+      <div>
+        <h4>站内导航</h4>
+        <ul>
+          <li><a href="index.html">首页</a></li>
+          <li><a href="about.html">关于我们</a></li>
+          <li><a href="works.html">作品展示</a></li>
+          <li><a href="news.html">公告</a></li>
+          <li><a href="tools.html">工具箱</a></li>
+          <li><a href="join.html#panel-form">加入我们</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4>联系方式</h4>
+        <ul>
+          <li>反馈交流群：<span data-fill="qqFeedback">—</span></li>
+          <li>对外审核群：<span data-fill="qqAudit">—</span></li>
+          <li>开发理事会：<span data-fill="qqCouncil">—</span></li>
+          <li>对外交流群：<span data-fill="qqPublic">—</span></li>
+          <li>我的世界中国版资源中心搜索：<span data-fill="neteaseMc">—</span></li>
+          <li>网易大神：<span data-fill="neteaseHd">—</span></li>
+          <li>哔哩哔哩：<a href="#" data-fill-href="bilibili" target="_blank" rel="noopener" data-fill="bilibiliName">—</a></li>
+          <li>抖音：<span data-fill="douyin">—</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>© <span data-year>2026</span> 创想时代开发组 · Innova-Age Development Team</span>
+      <span><a href="https://innovaage.cn">innovaage.cn</a></span>
+    </div>
+  </div>
+</footer>
+<script src="assets/js/site.js?v=20261332"></script>
+<script src="assets/js/.js?v=20261332"></script>
+</body>
+</html>
