@@ -38,7 +38,7 @@
        baiduId   填百度统计的站点 ID（形如 a1b2c3d4e5f6...）就同时上报到百度统计后台
        两个都要的话就都填 */
     analytics: {
-      busuanzi: false,
+      busuanzi: true,
       baiduId: ''
     },
     discord: '',                       // Discord 邀请链接
